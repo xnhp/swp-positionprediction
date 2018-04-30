@@ -1,0 +1,292 @@
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{graphicx} % Required for including pictures
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage[shortlabels]{enumitem}
+                    
+\usepackage{xcolor}
+
+\usepackage{glossaries}
+\makeglossaries
+
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+
+\begin{document}
+\setlist[enumerate, 1]{1\textsuperscript{o}}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\Large Position Prediction based on Movement Data}\\[0.5cm] % Major heading such as course name
+\textsc{\large Software Requirements Specification}\\[0.5cm] % Minor heading such as course title
+
+\vfill
+
+\emph{Authors:}\\
+...
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Include a table of contents
+
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\section{Introduction} % Major section
+
+%------------------------------------------------
+
+\subsection{Purpose}
+
+% Why do we write an SRS?
+% Whom do we write this document for?
+
+....
+
+%------------------------------------------------
+% Scope
+\subsection{Umfang}
+
+% State the product to be produced
+% Take care to make this consistent with other documents.
+Die zu entwickelnde Android-Applikation trifft Vorhersagen über den Aufenthaltsort eines Vogels zu einem gegebenen Zeitpunkt in der Zukunft. 
+
+Dabei kann der Nutzer wählen, welche der Verfügbaren Daten und Verfahren in die Vorhersage einfließen. 
+
+Das Ergebnis der Vorhersage werden in einer zwei- oder dreidimensionalen Kartenlandschaft visualisiert.
+{\colorbox{orange!30}{Weiterhin ist integriert eine VR-Visualisierung.} }
+
+% The software will be composed of several components to enable various
+% management and reporting features with centralised access from different
+% clients.
+
+\subsection{Definitions, Acronyms, Abbreviations}
+
+% Könnte man machen, evtl. zu Umständlich
+% \newglossaryentry{forscher}{name=Forscher, description={%
+% 	Ein Mitarbeiter des Max-Planck-Instituts und Nutzer der App.
+% }}
+
+% \newglossaryentry{utc}{name=UTC, description={Coordinated Universal Time}}
+% \newglossaryentry{adt}{name=ADT, description={Atlantic Daylight Time}}
+% \newglossaryentry{est}{name=EST, description={Eastern Standard Time}}
+
+% \printglossaries
+ 
+% % Use the terms
+% \gls{utc} is 3 hours behind \gls{adt} and 10 hours ahead of \gls{est}.
+
+\begin{itemize} 
+	\item \textbf{App}: Soweit nicht anders angemerkt wird hiermit die zu entwickelnde Android-Applikation bezeichnet.
+ 	 \item  \textbf{Forscher}: Ein Mitarbeiter des Max-Planck-Instituts und Nutzer der App.
+\end{itemize} 
+
+
+\subsection{References}
+
+% \begin{itemize} 
+%  	 \item [Google-Doc] 
+%  	 \item [Gitlab]
+% \end{itemize} 
+
+
+
+\subsection{Overview}
+
+% Explain, how your document will proceed. (Tell them, what
+% you will tell them).
+
+% This document is made up of three chapters. This first chapter describes
+% the scope and purpose of this document, used definitions, acronyms and
+% abbrevians. It follows a list of references.
+% \noindent
+% In the second chapter, a rough overview of the system to be developed is
+% given.
+% \noindent
+% The third chapter lists the requirements in a rigorous manner according
+% to the IEEE Standard. Use-case and sequence diagrams are used to
+% illustrate relationships.
+
+
+\section{Description}
+
+\subsection{Product Perspective}
+% Relation to other products (e.g. overall system ⇒ Class diagram?)
+% • Known interfaces (e.g. Mailserver)
+...
+
+
+\subsection{Product Function}
+
+% [text zum Funktionsumfang]
+
+% Movebank, Movebank Livefeeds, Cesium
+
+% Rough description of what the system will be able to do.
+% The system shall become a centralised means to manage business processes
+% that are central to the zoo's daily business.
+% \noindent
+% It shall work on top of and interface with the already present hard- and
+% software infrastructure.
+% \noindent
+% The is no such system currently in use.
+
+...
+
+% User Characteristics
+\subsection{Charakterisierung der Nutzer}
+
+% Die Nutzer der Applikation sind Forscher am Max-Planck-Institut.
+% Diese besitzen ein gutes Verständnis für abstrakte und technische Konzepte und verfügen über gutes bis sehr gutes technisches Fachwissen.
+
+% The users of the software will adhere to one of the following
+% archetypes:
+
+% Describe the user: knowledge, (computer) education of users
+% • The kind of users you expect (trained experts, users without
+% knowledge)
+
+% \paragraph{Zookeepers} The employees who work on tasks that are not
+% administrative. These persons can be assumed to have average level
+% computer skills. However, since their main place of work is around the
+% zoo and with the animals, they might not enjoy indulging in long and
+% complicated interactions with a stationary digital system.
+
+% \paragraph{Executive Managers} The people who handle major ecological
+% and ideological decisions. These people are assumed to have average to
+% above-average computer skills, as well as some preference to abstract
+% thinking.
+% % zoo director
+
+% \paragraph{Business Administration} People who manage day-to-day
+% business processes. These people are assumed to be used to regular work
+% with computers, however their proficiency might still be basic. 
+% % secretary 
+
+\subsection{Constraints}
+% Things that could constraint the development
+% • Law, Company internals, hardware limitations, safety
+% criticality, ...
+
+% \begin{itemize} 
+%  	 \item \textbf{Lizenzen} 
+%  	 \item API-Limits? (Movebank, Cesium)
+%  	 \item (Eingeschränkt) Nutzbar ohne Internetverbindung
+%  	 \item schlechte Sicht
+% \end{itemize} 
+
+% The system shall adhere to known standards and built systems and be
+% strictly on budget (TODO: Reference to "no fancy new expensive stuff").
+% \noindent
+% The system shall always enforce the wealth of the animal beings.
+% \subsection{Assumptions and Dependencies}
+
+% Any other things, that have to be mentioned (e.g. external
+% schemata or similar).
+
+% tablets, tablet apps are given/do not have to be developed
+% messaging system is given
+% list of feed vendors is given
+
+% The following systems are assumed to be present and able to interface
+% with the new management software.
+% \begin{itemize} 
+% 	\item There is an identification and authentification system in place.
+%  	\item  There is a messaging system already in place that can be used
+%  	 to send text messages and data reports to one or more employees.
+%  	 \item Basic hard- and software infrastructure is present. The newly
+%  	 developed system will run as applications on that infrastructure.
+% \end{itemize}
+
+
+\section{Specific Requirements}
+
+% struktur korrekt? \\
+
+% class diagram, use case diagram, seq diag
+
+\subsection{Functions}
+
+\begin{enumerate}[(R1)]
+		\item Die App sollte auf Smartphones mit Android 5.1 oder höher, Internet-Zugang und einer armeabi, armeabi-v7a oder amr64-v8a Architektur lauffähig sein. \\
+		Function: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod \\
+		Description:  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do \\
+		Source:  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do djka qwj jskd. \\
+		Dependency: -
+		\item Die App sollte bei fehlender Internetverbindung mit eingeschränkter Funktionalität weiter nutzbar sein
+		\item Die Vorhersagen sollen visuell dargestellt werden
+		\item Daten sollen aus der Movebank geladen werden
+		\item Die vorhandenen Daten für einen gegebenen Vogel und Zeitraum sollen visualisiert werden
+		\item Für einen gegebenen Vogel soll ein wahrscheinlicher Aufenthaltsraum berechnet werden
+		\item Die Positionsvorhersage soll in Zonen mit unterschiedlicher Wahrscheinlichkeit unterteilt werden
+		\item Die Positionsvorhersage soll für einen gegebenen Zeitraum berechnet werden
+		\item Die Software soll modular gestaltet sein
+		\item Die App soll über eine einheitliche Schnittstelle für verschiedene Vorhersagealgorithmen besitzen
+		\item Es soll nach einem bestimmten Vogel gesucht werden können
+		\item Bei WLAN-Zugang sollen die Daten in Cesium visualisiert werden.
+		\item Bei Zugang zum mobielen Internet sollen die Daten 2-dimensional visualisiert werden
+		\item Offline sollen die Daten falls offline-Karten verfügbar sind auf diesen visualisiert werden
+		\item Zeitraum für die Vorhersage soll vom Nutzer eingestellt werden können
+		\item Der Nutzer soll einstellen können welche der verfügbaren Daten in die Vorhersage mit einfließen
+		\item Die App soll robust gegenüber formal falschen Daten aus der Movebank sein
+		\item Der nutzer soll auf einen hohen Anteil formal falscher Daten hingewiesen werden
+		\item Die Berechnungszeit der Vorhersage soll den vom Nutzer erwarteten Zeitraum nicht deutlich überschreiten
+		\item Die App soll über eine Touch-basierte Benutzeroberfläche verfügen
+		\item Die App soll für die aktuelle Vorhersage offline-Daten speichern
+		\item Über mobile Daten soll die aktuelle Vorhersage aktualisiert werden können
+		\item Code sollte kommentiert und dokumentiert werden
+		\item Nutzerdaten für die Movebank sollen in den Einstellungen eingetragen werden können	
+ 	\end{enumerate}
+	
+
+% \begin{enumerate}[(R1)] 
+%  	\item Ordering new feed \\
+% 	Function: The system shall be able to order new feed from the chosen dealer if necessary. \\
+% 	Description: If there is no feed, the zookeepers shall be able to order new feed. \\
+% 	Source: Description of the zoo keeper \\
+% 	Dependency: -
+%  \end{enumerate}
+
+
+
+
+\section{Appendices}
+
+...
+
+\end{document}
