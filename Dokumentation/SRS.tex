@@ -165,88 +165,80 @@ In der Vergangenheit aufgezeichnete Positionsdaten werden dabei von \textit{Move
 % \noindent
 % The is no such system currently in use.
 
-...
 
 % User Characteristics
 \subsection{Charakterisierung der Nutzer}
 
-% Die Nutzer der Applikation sind Forscher am Max-Planck-Institut.
-% Diese besitzen ein gutes Verständnis für abstrakte und technische Konzepte und verfügen über gutes bis sehr gutes technisches Fachwissen.
+Die Nutzer der Applikation sind Forscher am Max-Planck-Institut für Ornithologie in Radolfzell.
 
-% The users of the software will adhere to one of the following
-% archetypes:
+Sie besitzen ein gutes Verständnis für abstrakte und technische Konzepte und verfügen über gutes bis sehr gutes Fachwissen in der Bedienung bzw. Programmierung digitaler Systeme.
 
-% Describe the user: knowledge, (computer) education of users
-% • The kind of users you expect (trained experts, users without
-% knowledge)
+Der Nutzer verfügt über mindestens gute Erfahrung im Umgang mit Smartphones und deren Bedienung.
 
-% \paragraph{Zookeepers} The employees who work on tasks that are not
-% administrative. These persons can be assumed to have average level
-% computer skills. However, since their main place of work is around the
-% zoo and with the animals, they might not enjoy indulging in long and
-% complicated interactions with a stationary digital system.
+Der Nutzer hat im Allgemeinen eine Vorstellung vom Umfang der verwendeten Datenmengen und der Komplexität der Analyse und ist sich bewusst dass eventuell bei Berechnungsvorgängen kürzere Wartezeiten auftreten können.
+% zu vage?
 
-% \paragraph{Executive Managers} The people who handle major ecological
-% and ideological decisions. These people are assumed to have average to
-% above-average computer skills, as well as some preference to abstract
-% thinking.
-% % zoo director
+Der Nutzer hat Erfahrung im Umgang mit geographischen Daten und deren Interpretation.
 
-% \paragraph{Business Administration} People who manage day-to-day
-% business processes. These people are assumed to be used to regular work
-% with computers, however their proficiency might still be basic. 
-% % secretary 
+Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierungen.
+% evtl. zu offensichtlich
 
-\subsection{Constraints}
+
+\subsection{Einschränkungen}
 % Things that could constraint the development
 % • Law, Company internals, hardware limitations, safety
 % criticality, ...
 
-% \begin{itemize} 
-%  	 \item \textbf{Lizenzen} 
-%  	 \item API-Limits? (Movebank, Cesium)
-%  	 \item (Eingeschränkt) Nutzbar ohne Internetverbindung
-%  	 \item schlechte Sicht
-% \end{itemize} 
+\hl{todo}
+
+\begin{itemize} 
+ 	 \item Die Applikation soll als \textit{Open Source} entwickelt werden. Wird Code oder werden Bibliotheken von Dritten verwendet, so müssen die Lizenzen kompatibel sein.
+ 	 \item \hl{Die Abfrage von Daten von Schnittstellen kann limitiert sein.}
+ 	 \item Die Internetverbindung des Gerätes kann während der Nutzung für kurze oder längere Zeit ausfallen.
+ 	 \item Bei Verwendung des mobilen Datennetzes kann nur eine kleine Übertragungsgeschwindkeit verfügbar sein.
+ 	 \item Von \textit{Movebank} bezogene Daten können unvollständig oder fehlerhaft sein.
+\end{itemize} 
 
 % The system shall adhere to known standards and built systems and be
 % strictly on budget (TODO: Reference to "no fancy new expensive stuff").
 % \noindent
 % The system shall always enforce the wealth of the animal beings.
-% \subsection{Assumptions and Dependencies}
+\subsection{Annahmen und Abhängigkeiten}
+
+% \begin{itemize} 
+%  	 \item vorhersage-modelle
+%  	 \item datenbank vorhanden
+%  	 \item movebank erreichbar 
+%  	 \item vogel-id/name vorhanden
+% \end{itemize} 
+
+\begin{itemize} 
+ 	 \item Die verwendeten Schnittstellen (\textit{Movebank}, \textit{Caesium}, ...) sind zu jedem Zeitpunkt verfügbar.
+ 	 \item Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden. 
+ 	 \item Werden für die Datenabfrage aus \textit{Movebank} weitere Schritte oder Informationen benötigt (Zugangsdaten, vorherige Anfrage bei Provider der Daten, ...) so werden diese vom Nutzer erledigt bzw. bereitgestellt.
+ 	 \item Es wird bis zu Milestone 2 ein rudimentäres Vorhersagemodell auf Basis von Positionsdaten aus der Vergangenheit implementiert. Im Laufe der Entwicklung wird in Absprache mit Betreuuern und Kunde ermittelt, welche weiteren Daten und welche weiteren Vorhersagemodelle sinnvoll einbezogen werden können.
+\end{itemize} 
 
 % Any other things, that have to be mentioned (e.g. external
 % schemata or similar).
 
-% tablets, tablet apps are given/do not have to be developed
-% messaging system is given
-% list of feed vendors is given
-
-% The following systems are assumed to be present and able to interface
-% with the new management software.
-% \begin{itemize} 
-% 	\item There is an identification and authentification system in place.
-%  	\item  There is a messaging system already in place that can be used
-%  	 to send text messages and data reports to one or more employees.
-%  	 \item Basic hard- and software infrastructure is present. The newly
-%  	 developed system will run as applications on that infrastructure.
-% \end{itemize}
 
 
-\section{Specific Requirements}
+\section{Anforderungen}
 
 % struktur korrekt? \\
 
 % class diagram, use case diagram, seq diag
 
-\subsection{Functions}
+\subsection{Funktionen}
 
 \begin{enumerate}[(R1)]
-		\item Die App sollte auf Smartphones mit Android 5.1 oder höher, Internet-Zugang und einer armeabi, armeabi-v7a oder amr64-v8a Architektur lauffähig sein. \\
-		Function: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod \\
-		Description:  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do \\
-		Source:  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do djka qwj jskd. \\
-		Dependency: -
+		\item 
+		\textbf{Funktion}: Geräte-Architektur entsprechend ... \\
+		\textbf{Beschreibung}:  Die App sollte auf Smartphones mit Android 5.1 oder höher, Internet-Zugang und einer armeabi, armeabi-v7a oder amr64-v8a Architektur lauffähig sein. \\
+		\textbf{Quelle}:  Begleitdokument \\
+		\textbf{Abhängkeiten}: Keine
+
 		\item Die App sollte bei fehlender Internetverbindung mit eingeschränkter Funktionalität weiter nutzbar sein
 		\item Die Vorhersagen sollen visuell dargestellt werden
 		\item Daten sollen aus der Movebank geladen werden
