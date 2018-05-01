@@ -21,6 +21,10 @@
                     
 \usepackage{xcolor}
 
+% text-marker-like highlighting of text
+% https://tex.stackexchange.com/questions/141569/highlight-textcolor-and-boldface-simultaneously#141572
+\usepackage{soulutf8}
+
 \usepackage{glossaries}
 \makeglossaries
 
@@ -31,6 +35,7 @@
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
 \begin{document}
+
 \setlist[enumerate, 1]{1\textsuperscript{o}}
 
 %----------------------------------------------------------------------------------------
@@ -89,7 +94,7 @@ Die zu entwickelnde Android-Applikation trifft Vorhersagen über den Aufenthalts
 Dabei kann der Nutzer wählen, welche der Verfügbaren Daten und Verfahren in die Vorhersage einfließen. 
 
 Das Ergebnis der Vorhersage werden in einer zwei- oder dreidimensionalen Kartenlandschaft visualisiert.
-{\colorbox{orange!30}{Weiterhin ist integriert eine VR-Visualisierung.} }
+\hl{Weiterhin ist integriert eine VR-Visualisierung. (Zu klären!)}
 
 % The software will be composed of several components to enable various
 % management and reporting features with centralised access from different
