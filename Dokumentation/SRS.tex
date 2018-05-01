@@ -25,12 +25,16 @@
 % https://tex.stackexchange.com/questions/141569/highlight-textcolor-and-boldface-simultaneously#141572
 \usepackage{soulutf8}
 
+\usepackage{hyperref}
+
 \usepackage{glossaries}
 \makeglossaries
 
 \linespread{1.2} % Line spacing
 
-%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+\setlength\parindent{0em} % Uncomment to remove all indentation from paragraphs
+
+\setlength{\parskip}{1.25ex}
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
@@ -94,6 +98,7 @@ Die zu entwickelnde Android-Applikation trifft Vorhersagen über den Aufenthalts
 Dabei kann der Nutzer wählen, welche der Verfügbaren Daten und Verfahren in die Vorhersage einfließen. 
 
 Das Ergebnis der Vorhersage werden in einer zwei- oder dreidimensionalen Kartenlandschaft visualisiert.
+
 \hl{Weiterhin ist integriert eine VR-Visualisierung. (Zu klären!)}
 
 % The software will be composed of several components to enable various
@@ -117,8 +122,9 @@ Das Ergebnis der Vorhersage werden in einer zwei- oder dreidimensionalen Kartenl
 % \gls{utc} is 3 hours behind \gls{adt} and 10 hours ahead of \gls{est}.
 
 \begin{itemize} 
-	\item \textbf{App}: Soweit nicht anders angemerkt wird hiermit die zu entwickelnde Android-Applikation bezeichnet.
+	\item \textbf{App, Applikation}: Soweit nicht anders angemerkt wird hiermit die zu entwickelnde Android-Applikation bezeichnet.
  	 \item  \textbf{Forscher}: Ein Mitarbeiter des Max-Planck-Instituts und Nutzer der App.
+ 	 \item \textbf{Mobile Daten}: Ein Smartphone kann sich entweder über ein WiFi-Netzwerk oder über ein mobiles Datennetzwerk (3G, LTE, ...) mit dem Internet verbinden. 
 \end{itemize} 
 
 
