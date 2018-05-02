@@ -38,6 +38,18 @@
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
+
+% enumerate list with less spacing
+% usage:
+% \begin{cptenumerate}
+% 	\advantageit Is a very good one
+% 	\disadvantageit Is a very, very complex one.
+% \end{cptenumerate}
+\newenvironment{cptenumerate}[1][label=\arabic*.]{\begin{enumerate}[#1] \setlength\itemsep{0em}}{\end{enumerate}}
+
+\newenvironment{cptitemize}[1][,]{\begin{itemize} \setlength\itemsep{0em}}{\end{itemize}}
+
+
 \begin{document}
 
 \setlist[enumerate, 1]{1\textsuperscript{o}}
@@ -223,7 +235,7 @@ Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierunge
 
 \textbf{R24.)} SpeicherungMovebankNutzerdaten \\
 \textbf{Funktion:} Nutzerdaten für die Movebank sollen in den Einstellungen eingetragen werden können \\
-\textbf{Beschreibung:} Die App soll in den Einstellungen eine Möglichkeit anbieten, Movebank Nutzerdaten eintragen zu können, um auch Daten aus der Movebank zu laden, die nur mit einem dortigen Account abrufbar sind. \\
+\textbf{Beschreibung:} Die App soll in den Einstellungen eine Möglichkeit anbieten, Movebank-Nutzerdaten eintragen zu können, um auch Daten aus der Movebank zu laden, die nur mit einem dortigen Account abrufbar sind. \\
 \textbf{Quelle:} Treffen am 26.04.2018 \\
 \textbf{Abhängigkeiten:} R4 \\
 
@@ -234,7 +246,7 @@ Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierunge
 \textbf{Abhängigkeiten:} R6 \\
 
 \textbf{R22.)} AktualisierungÜberMobileDaten \\
-\textbf{Funktion:} Über mobile Daten soll die aktuelle Vorhersage aktualisiert werden können \\
+\textbf{Funktion:} Über mobile Daten soll die aktuelle Vorhersage aktualisiert werden können. \\
 \textbf{Beschreibung:} Die App soll auch über mobile Daten aktuelle Daten aus der Movebank empfangen und für eine aktuelle Vorhersage verwenden können. \\
 \textbf{Quelle:} Treffen am 30.04.2018 \\
 \textbf{Abhängigkeiten:} R3, R4, R5, R6, R7, R8, R13 \\
@@ -243,13 +255,13 @@ Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierunge
 
 \textbf{R6.)} BerechnungDesAufenthaltsraumes \\
 \textbf{Funktion:} Für einen gegebenen Vogel soll ein wahrscheinlicher Aufenthaltsraum berechnet werden. \\
-\textbf{Beschreibung:} Wird ein Vogel ausgewählt, soll aufgrund seiner vergangenen Daten der Aufenthaltsraum berechnet werden, in der er sich am wahrscheinlichsten befindet. \\
+\textbf{Beschreibung:} Wird ein Vogel ausgewählt, soll aufgrund seiner vergangenen Daten der Aufenthaltsraum berechnet werden, in dem er sich am wahrscheinlichsten befindet. \\
 \textbf{Quelle:} Treffen am 26.04.2018 \\
 \textbf{Abhängigkeiten:} R4 \\
 
 \textbf{R7.)} AufteilungDerPositionsvorhersage \\
 \textbf{Funktion:} Die Positionsvorhersage soll in Zonen mit unterschiedlicher Wahrscheinlichkeit unterteilt werden. \\
-\textbf{Beschreibung:} Um die Vorhersage übersichtlichter und verständlicher zu machen, soll die Positionsvorhersagen in Zonen eingeteilt werden.  \\
+\textbf{Beschreibung:} Um die Vorhersage übersichtlichter und verständlicher zu machen, soll die Positionsvorhersage in Zonen eingeteilt werden.  \\
 \textbf{Quelle:} Treffen am 30.04.2018 \\
 \textbf{Abhängigkeiten:} R6 \\
 
@@ -284,28 +296,28 @@ Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierunge
 
 \textbf{R5.)} VisualisierungDerVorhandenenDaten \\
 \textbf{Funktion:} Die vorhandenen Daten für einen gegebenen Vogel und Zeitraum sollen visualisiert werden. \\
-\textbf{Beschreibung:} Wird ein Vogel ausgewählt, sollen dessen vorhandenen Daten in einem bestimmtem Zeitraum angezeigt werden können.\\
+\textbf{Beschreibung:} Wird ein Vogel ausgewählt, so sollen dessen vorhandenen Daten in einem bestimmtem Zeitraum angezeigt werden können.\\
 \textbf{Quelle:} Treffen am 26.04.2018 \\
 \textbf{Abhängigkeiten:} R4 \\
 
 
 \textbf{R12.)} VisualisierungInCesiumBeiWLAN\\
-\textbf{Funktion:} Bei WLAN-Zugang sollen die Daten in Cesium visualisiert werden\\
-\textbf{Beschreibung:} Wenn das Smartphone Internetzugang über WLAN hat sollen die getrackten Positionen und und die Vorhersagen mit Cesium visualisiert werden\\
+\textbf{Funktion:} Bei WLAN-Zugang sollen die Daten in Cesium visualisiert werden.\\
+\textbf{Beschreibung:} Wenn das Smartphone Internetzugang über WLAN hat sollen die getrackten Positionen und und die Vorhersagen mit Cesium visualisiert werden.\\
 \textbf{Quelle:} Treffen am 26.04.2018\\
 \textbf{Abhängigkeiten:} R4, R5, R6, R7, R8\\
 
 
 \textbf{R13.)} VisualisierungMitMapbox\\
-\textbf{Funktion:} Bei Zugang zum mobilen Internet sollen die Daten mit Mapbox visualisiert werdne\\
-\textbf{Beschreibung:} Wenn das Smartphone Internetzugang ausschließlich über mobieles Internet hat sollen die getrackten Positionen und und die Vorhersagen mit Mapbox visualisiert werden\\
+\textbf{Funktion:} Bei Zugang über das mobile Datennetz sollen die Daten mit Mapbox visualisiert werden.\\
+\textbf{Beschreibung:} Wenn das Smartphone Internetzugang ausschließlich über mobieles Internet hat sollen die getrackten Positionen und und die Vorhersagen mit Mapbox visualisiert werden.\\
 \textbf{Quelle:} Treffen am 30.04.2018\\
 \textbf{Abhängigkeiten:} R4, R5, R6, R7, R8\\
 
 
 \textbf{R14.)} VisualisierungAufOfflineKarten\\
-\textbf{Funktion:} Ohne Internetzugang sollen die Daten auf offline-Karten visualisiert werden\\
-\textbf{Beschreibung:} Falls offline-Karten vorhanden sind sollen die getrackten Positionen und und die Vorhersage auf diesen visualisiert werden.
+\textbf{Funktion:} Ohne Internetzugang sollen die Daten auf offline-Karten visualisiert werden.\\
+\textbf{Beschreibung:} Falls offline-Karten vorhanden sind sollen diese für die Visualisierung der Vorhersage und der getrackten Positionen verwendet werden. \\
 \textbf{Quelle:} Treffen am 30.04.2018\\
 \textbf{Abhängigkeiten:} R4, R5, R6, R7, R8\\
 
@@ -313,19 +325,19 @@ Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierunge
 \subsubsection{Nutzerinteraktion}
 
 \textbf{R20.)} TouchBasierteBenutzeroberfläche \\
-\textbf{Funktion:} Die App soll über eine touch-basierte Benutzeroberfläche verfügen \\
+\textbf{Funktion:} Die App soll über eine touch-basierte Benutzeroberfläche verfügen. \\
 \textbf{Beschreibung:} Die App soll über eine touch-basierte Benutzeroberfläche bedienbar sein. \\
 \textbf{Quelle:} Treffen am 26.04.2018 \\
 \textbf{Abhängigkeiten:} - \\
 
 \textbf{R11.)} SucheNachVogel\\
 \textbf{Funktion:} In der Software soll nach einem Vogel gesucht werden können\\
-\textbf{Beschreibung:} Der Benutzer soll anhand einer ID nach einem bestimmten Vogel suchen können\\
+\textbf{Beschreibung:} Der Benutzer soll anhand einer ID nach einem bestimmten Vogel suchen können.\\
 \textbf{Quelle:} Treffen am 26.04.2018\\
 \textbf{Abhängigkeiten:} -\\
 
 \textbf{R18.)} HinweisAufFormalFalscheDaten \\
-\textbf{Funktion:} Der Nutzer soll auf einen hohen Anteil formal falscher Daten hingewiesen werden \\
+\textbf{Funktion:} Der Nutzer soll auf einen hohen Anteil formal falscher Daten hingewiesen werden. \\
 \textbf{Beschreibung:} Die App soll dem Nutzer einen Hinweis anzeigen, wenn viele formal falsche Daten zur Berechnung verwendet werden mussten, damit dieser einordnen kann wie aussagekräftig das Ergebnis ist. \\
 \textbf{Quelle:} Treffen am 30.04.2018 \\
 \textbf{Abhängigkeiten:} R4 \\
@@ -387,7 +399,9 @@ Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierunge
 
  \section{Optionale Anforderungen} \label{optionale_anforderungen}
 
-Die Einbindung von Virtual Reality Technik ist angedacht, aber keine Muss-Anforderung.
+Die Einbindung von \textit{Virtual Reality}-Technik ist angedacht, aber keine Muss-Anforderung.
+
+
 
  \section{Nicht-Anforderungen} \label{nicht-anforderungen}
 
