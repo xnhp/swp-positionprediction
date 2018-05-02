@@ -399,7 +399,56 @@ Der Nutzer hat grundliegende Erfahrung in der Interpretation von Visualisierunge
 
  \section{Optionale Anforderungen} \label{optionale_anforderungen}
 
-Die Einbindung von \textit{Virtual Reality}-Technik ist angedacht, aber keine Muss-Anforderung.
+ Die folgenden Anforderungen sind optional und müssen nicht zwingend erfüllt werden.
+
+\textbf{O1.)} VirtualReality \\
+\textbf{Funktion:} Integration von \textit{Virtual Reality}-Modul \\
+\textbf{Beschreibung:} Es wird ein zur Verfügung gestelltes Modul in die Applikation integriert, dass die Visualisierungen in einem \textit{Virtual Reality}-Raum visualisiert. \\
+\textbf{Quelle:} Treffen am 26.04.2018 \\
+\textbf{Abhängigkeiten:} - \\
+
+\textbf{O1.)} ZusätzlicheParameter \\
+\textbf{Funktion:} Es werden - neben den Positionsdaten aus der Vergangenheit - noch weitere Parameter für die Berechnung der Vorhersage verwendet.
+\textbf{Beschreibung:} Weitere Parameter / Datenquellen fließen in die Berechnung der Vorhersage ein. \\
+\textbf{Quelle:} Begleitdokument \\
+\textbf{Abhängigkeiten:} - \\
+
+\textbf{O2.)} GewichtungParameter \\
+\textbf{Funktion:} Parameter, die in die Berechnung der Vorhersage einfließen sollen gewichtet werden können. \\
+\textbf{Beschreibung:} Der Nutzer soll die Möglichkeit haben einzustellen, mit welchem Gewicht die jeweiligen Parameter in die Berechnung der Vorhersage einfließen.\\
+\textbf{Quelle:} Begleitdokument \\
+\textbf{Abhängigkeiten:} R6 \\
+
+\textbf{O3.)} VariableDarstellung \\
+\textbf{Funktion:} Es sind verschiedene Arten der Visualisierung verfügbar.
+\textbf{Beschreibung:} Der Nutzer hat die Möglichkeit, das Ergebnis der Vorhersage auf verschiedene Arten zu visualisieren.
+\textbf{Quelle:} Begleitdokument \\
+\textbf{Abhängigkeiten:} R6, R3 \\
+
+\textbf{O4.)} Evaluation \\
+\textbf{Funktion:} Eine Evaluation der Vorhersage ist möglich. \\
+\textbf{Beschreibung:} Der Nutzer hat die Möglichkeit, das Ergebnis der Vorhersage zu bewerten. \\
+\textbf{Quelle:} Begleitdokument \\
+\textbf{Abhängigkeiten:} R6 \\
+
+\textbf{O5.)} MehrereVögel \\
+\textbf{Funktion:} Es kann eine Vorhersage für mehrere Vögel gemeinsam getroffen und visualisiert werden. \\
+\textbf{Beschreibung:} Für eine gegebene Menge von Vögeln kann eine Vorhersage getroffen und eine Visualisierung erstellt werden. \\
+\textbf{Quelle:} Begleitdokument \\
+\textbf{Abhängigkeiten:} R6, R3 \\
+
+\textbf{O7.)} Gattung \\
+\textbf{Funktion:} Andere Tiere derselben Gattung werden in die Berechnung der Vorhersage einbezogen. \\
+\textbf{Beschreibung:} Es werden die Daten von anderen Tieren derselben Gattung für die Berechnung der Vorhersage eines bestimmten Vogels verwendet. \\
+\textbf{Abhängigkeiten:} O5, O1 \\
+
+\textbf{O6.)} ÄhnlichkeitenFinden \\
+\textbf{Funktion:} Es werden Muster in den Daten aus der Vergangenheit für die Berechnung der Vorhersage verwendet. \\
+\textbf{Beschreibung:} Die Analyse von Mustern in Daten aus der Vergangenheit fließt in die Berechnung der Vorhersage ein. \\
+\textbf{Quelle:} Begleitdokument \\
+\textbf{Abhängigkeiten:} R6, O1 \\
+
+
 
 
 
