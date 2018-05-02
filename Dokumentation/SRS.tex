@@ -510,6 +510,49 @@ Fertigstellung am 10.7.
 In folgendem Diagramm sind die wesentlichen Anwendungsfälle der Applikation und ihre Beziehungen dargestellt. Die einzelnen Anwendungsfälle werden im Folgenden detailliert erläutert und eventuell alternative Abläufe beschreiben.
 
 \includegraphics[width = 1\linewidth]{Usecasediagramm.png}
+
+\paragraph{Einloggen} Der Nutzer hat die Möglichkeit, sich bei der \textit{Movebank}-API zu authentifizieren.
+\begin{cptenumerate} 
+  	 \item Eingabe der Zugangsdaten
+  	 \item Übermittlung der Zugangsdaten bei Anfrage an \textit{Movebank}
+  	 \begin{cptenumerate}[a.]
+  	  	 \item Rückgabe der angefordeten Daten
+  	  	 \item Benachrichtigung über fehlgeschlagene Authentifizierung
+  	 \end{cptenumerate} 
+ \end{cptenumerate}  
+
+ \paragraph{Einstellungen ändern} Der Nutzer hat die Möglichkeit, Einstellungen der Applikation zu ändern.
+
+ \paragraph{Richtung des Vogels anzeigen} Es wird das Ergebnis der Vorhersage visualisiert.
+
+ \paragraph{Vogel auswählen} Der Nutzer kann einen Vogel anhand seiner ID auswählen.
+ \begin{cptenumerate} 
+     	 \item Eingabe der ID
+     	 \item Abfrage der ID von \textit{Movebank}
+     	 \begin{cptenumerate}[a.]
+     	   	 \item Weiter zur Visualisierung
+     	   	 \item Benachrichtung über fehlerhafte oder nicht gefundene ID
+     	  \end{cptenumerate}  
+    \end{cptenumerate}    
+
+\paragraph{Kartenvisualisierung ansehen} \hl{Der Nutzer betrachtet die Visualisierung des Ergebnisses der Vorhersage auf einer Kartenlandschaft.} 
+\begin{cptenumerate}[a.]
+ 	 \item Bei Internetzugang über WLAN: Darstellung in Cesium.
+ 	 \item Bei Internetzugang über mobiles Datennetz: Darstellung in Mapbox. 
+\end{cptenumerate}
+
+
+\subsection{Abläufe}
+
+Im folgenden Diagramm wird exemplarisch der Informationsaustausch zwischen beteiligten Komponenten und dessen zeitlicher Ablauf in einer vollständige Sitzung des Nutzers illustriert. 
+
 \includegraphics[width = 1\linewidth]{Sequenzdiagramm.png}
+
+\begin{cptenumerate} 
+ 	 \item Der Nutzer startet die Applikation.
+ 	 \item Der Nutzer wählt über das User Interface einen Vogel aus.
+ 	 \item Die Applikation ruft für den spezifizierten Vogel Daten aus \textit{Movebank} ab.
+ 	 \item \hl{...}
+\end{cptenumerate} 
 
 \end{document}
