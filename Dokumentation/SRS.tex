@@ -63,6 +63,7 @@
   {\par\xdef\tpd{\the\prevdepth}\egroup
    \prevdepth=\tpd}
 
+% https://tex.stackexchange.com/questions/128605/enumitem-referencing-items-in-enumerate
 % 1 -- shortname
 % 2 -- Funktion
 % 3 -- Beschreibung
@@ -265,7 +266,7 @@ Die aktuelle Position von Herr Storch wird mittels des GPS-Sensors seines Smartp
 
 \begin{itemize} 
  	 \item Die verwendeten Schnittstellen (\textit{Movebank}, \textit{Cesium}, ...) sind zu jedem Zeitpunkt verfügbar.
- 	 \item \hl{Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden. }
+ 	 \item \hl{Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden.}
  	 \item Werden für die Datenabfrage aus \textit{Movebank} weitere Schritte oder Informationen benötigt (Zugangsdaten, vorherige Anfrage bei Provider der Daten, ...) so werden diese vom Nutzer erledigt bzw. bereitgestellt.
  	 \item Es wird bis zu Milestone 2 ein rudimentäres Vorhersagemodell auf Basis von Positionsdaten aus der Vergangenheit implementiert. Im Laufe der Entwicklung wird in Absprache mit Betreuuern und Kunde ermittelt, welche weiteren Daten und welche weiteren Vorhersagemodelle sinnvoll einbezogen werden können.
 \end{itemize} 
@@ -380,7 +381,7 @@ Treffen am 30.04.2018
 {
  Der Nutzer soll einstellen können auf welchen Daten die Vorhersage basiert.
  }{
- Der Nutzer soll über Parameter die Vorhersage justieren können.}{
+ Der Nutzer soll über Parameter die Berechung der Vorhersage justieren können.}{
  Treffen am 26.04.2018
  }{
  \ref{DatenLadenAusMovebank} 
@@ -780,7 +781,7 @@ In folgendem Diagramm sind die wesentlichen Anwendungsfälle der Applikation und
 
 \subsection{Abläufe}
 
-Im folgenden Diagramm wird exemplarisch der Informationsaustausch zwischen beteiligten Komponenten und dessen zeitlicher Ablauf in einer vollständige Sitzung des Nutzers illustriert. 
+Im folgenden Diagramm wird exemplarisch ein Informationsaustausch zwischen beteiligten Komponenten und dessen zeitlicher Ablauf in einer vollständigen Sitzung des Nutzers illustriert. 
 
 \includegraphics[width = 1\linewidth]{Sequenzdiagramm.png}
 
