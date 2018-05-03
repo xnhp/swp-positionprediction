@@ -19,15 +19,7 @@ Google-Doc wurde während des Meetings aktualisiert. uA sind nun Mindestanforder
 -----
 
 # Ideen / **nice-to-have**:
-*  Gewichtung von Parametern
-*  Vorhersage mit Zeitrahmen (Start-Ende) als Parameter ("Wo wäre Vogel nächsten Sonntag zwischen 9 und 12 Uhr?")
-*  Zusätzliche Methoden zur Vorhersage (Beispiel "Nistplatz" - hierfür käme Info von MPI)
-* weiter siehe Google Doc
-*  Andere Ein-/Ausgabe:
-   * Eingabe: Radius, Ausgabe: Wahrscheinlichkeit
-   * Eingabe: Wahrscheinlichkeit, Ausgabe: Radius
-*  Evaluationsfeature
-
+cf eigene Datei wo Ideen gesammelt werden.
 
 
 -----

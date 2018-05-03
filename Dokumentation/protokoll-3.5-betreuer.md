@@ -16,13 +16,8 @@ MB ^= Moritz Bock
 
 * (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
 
-
-* (MA) Hinzufügen zu "Referenzen": Links zu API-Dokumentionen
-
 * Szenario: Update-Funktion in Erzählung  integrieren, nicht davon ausgehen, dass Vogel tatsächlich angetroffen wird. (KK)
 
-* Idee in extra Dokument aufnehmen: Tracking von suchender Person (KK)
-* In Protokoll von letztem Meeting schauen ob da noch Ideen stehen die man noch zentral sammeln kann (BM)
 
 * (R5) Umformulieren, statt "gegeben Vogel" eher "gegeben StudyID & VogelID" (KK)
 * (R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)
@@ -71,3 +66,6 @@ MB ^= Moritz Bock
 * Def. von "Forscher" ändern (MA)
 * (KK) Nutzercharakterisierung, Szenario: Nicht beschränken auf Mitgliedschaft beim MPI. Eher: "Forscher, die Verhalten von Vögeln untersuchten".
 * (MA) Hinzufügen zu Abschnitt "Definitonen": Movebank, Cesium [BM: Movebank habe ich nun nicht erwähnt, dass das ja generell im SRS nicht mehr erwähnt werden wird.]
+* (MA) Hinzufügen zu "Referenzen": Links zu API-Dokumentionen
+* Idee in extra Dokument aufnehmen: Tracking von suchender Person (KK)
+* In Protokoll von letztem Meeting schauen ob da noch Ideen stehen die man noch zentral sammeln kann (BM)
