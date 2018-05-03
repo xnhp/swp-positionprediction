@@ -76,7 +76,7 @@
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-startet im wlan</panel_attributes>
+startet</panel_attributes>
     <additional_attributes>160.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -252,7 +252,7 @@ gibt Kartendaten zurück</panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-verlässt wlan</panel_attributes>
+startet Outdoormodus</panel_attributes>
     <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
