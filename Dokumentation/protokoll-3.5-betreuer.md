@@ -16,7 +16,7 @@ MB ^= Moritz Bock
 
 * (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
 
-* (MA) Hinzufügen zu Abschnitt "Definitonen": Movebank, Cesium
+
 * (MA) Hinzufügen zu "Referenzen": Links zu API-Dokumentionen
 
 * Szenario: Update-Funktion in Erzählung  integrieren, nicht davon ausgehen, dass Vogel tatsächlich angetroffen wird. (KK)
@@ -70,3 +70,4 @@ MB ^= Moritz Bock
 * (R8) Satzbau
 * Def. von "Forscher" ändern (MA)
 * (KK) Nutzercharakterisierung, Szenario: Nicht beschränken auf Mitgliedschaft beim MPI. Eher: "Forscher, die Verhalten von Vögeln untersuchten".
+* (MA) Hinzufügen zu Abschnitt "Definitonen": Movebank, Cesium [BM: Movebank habe ich nun nicht erwähnt, dass das ja generell im SRS nicht mehr erwähnt werden wird.]
