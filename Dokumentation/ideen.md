@@ -14,4 +14,7 @@ Eingabe: Wahrscheinlichkeit, Ausgabe: Radius
 
 Evaluationsfeature
 
+(MA) Wenn tatsächlcih sehr alte Daten in die Vorhersage einfließen, dann nur alte Daten visualisieren, die auch tatsächlich relevant sind (zB Flugroute vor genau einem Jahr aber nicht Rest
+
+
 weiter siehe Begleitdokument (Google Doc)

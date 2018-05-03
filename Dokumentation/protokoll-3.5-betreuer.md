@@ -22,13 +22,12 @@ MB ^= Moritz Bock
 * (R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)
 
 * (MA) nur maximal kleine Mengen von Vergangenheits-Daten anzeigen
-* (MA) *überlegen*: Was ist vernünftige Einschränkung aus *unserer* Sicht? Harte Grenze muss von Betreuung abgeklärt werden, weiche Grenze kann von uns festgelegt werden und soll ins SRS geschrieben werden.
+
+* (MA) *WIR müssen uns überlegen*: Was ist vernünftige Einschränkung aus *unserer* Sicht? Harte Grenze muss von Betreuung abgeklärt werden, weiche Grenze kann von uns festgelegt werden und soll ins SRS geschrieben werden.
 
 * (MB) Lieber gmaps oder openstreetmap als Mapbox verwenden (cf osmdroid)
 
 * (MA) In SRS nirgends auf Mapbox festlegen, allgemein formulieren ("Karten-Provider" oder so)
-
-
 
 * (KK) (R25) explizit reinschreiben, was wir uns davon eigentlich wünschen, Darstellung/response-time *verhältnismäßig* zu Rechenaufwand; MA "modulo Rechenzeit, ..." --- Performance der Hardware und Komplexität der Algorithmen sollte bei den Wartezeiten erwähnt werden
 
