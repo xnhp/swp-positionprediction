@@ -116,7 +116,7 @@ Dabei kann der Nutzer wählen, welche der verfügbaren Daten und Verfahren in di
 
 Das Ergebnis der Vorhersage wird in einer zwei- oder dreidimensionalen Kartenlandschaft visualisiert.
 
-\hl{Weiterhin ist integriert eine VR-Visualisierung. (Zu klären!)}
+% \hl{Weiterhin ist integriert eine VR-Visualisierung. (Zu klären!)}
 
 
 \subsection{Definitionen und Abkürzungen}
@@ -171,7 +171,7 @@ Sie besitzen ein gutes Verständnis für abstrakte und technische Konzepte und v
 
 Der Nutzer verfügt über mindestens gute Erfahrung im Umgang mit Smartphones und deren Bedienung.
 
-Der Nutzer hat im Allgemeinen eine Vorstellung vom Umfang der verwendeten Datenmengen und der Komplexität der Analyse und ist sich bewusst dass eventuell bei Berechnungsvorgängen kürzere Wartezeiten auftreten können.
+Der Nutzer hat im Allgemeinen eine Vorstellung vom Umfang der verwendeten Datenmengen und der Komplexität der Analyse und ist sich bewusst, dass eventuell bei Berechnungsvorgängen Wartezeiten auftreten können.
 % zu vage?
 
 Der Nutzer hat Erfahrung im Umgang mit geographischen Daten und deren Interpretation.
@@ -211,8 +211,8 @@ Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone led
 
 \begin{itemize} 
  	 \item Die verwendeten Schnittstellen (\textit{Movebank}, \textit{Cesium}, ...) sind zu jedem Zeitpunkt verfügbar.
- 	 \item Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden. 
- 	 \item \hl{Werden für die Datenabfrage aus \textit{Movebank} weitere Schritte oder Informationen benötigt (Zugangsdaten, vorherige Anfrage bei Provider der Daten, ...) so werden diese vom Nutzer erledigt bzw. bereitgestellt.}
+ 	 \item \hl{Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden. }
+ 	 \item Werden für die Datenabfrage aus \textit{Movebank} weitere Schritte oder Informationen benötigt (Zugangsdaten, vorherige Anfrage bei Provider der Daten, ...) so werden diese vom Nutzer erledigt bzw. bereitgestellt.
  	 \item Es wird bis zu Milestone 2 ein rudimentäres Vorhersagemodell auf Basis von Positionsdaten aus der Vergangenheit implementiert. Im Laufe der Entwicklung wird in Absprache mit Betreuuern und Kunde ermittelt, welche weiteren Daten und welche weiteren Vorhersagemodelle sinnvoll einbezogen werden können.
 \end{itemize} 
 
@@ -224,14 +224,12 @@ Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone led
 % • Law, Company internals, hardware limitations, safety
 % criticality, ...
 
-\hl{todo}
-
 \begin{itemize} 
-	\item Die Applikation soll als \textit{Open Source} entwickelt werden. Wird Code oder werden Bibliotheken von Dritten verwendet, so müssen die Lizenzen kompatibel sein.
-	\item \hl{Die Abfrage von Daten von Schnittstellen kann limitiert sein.}
+	\item Die Applikation soll unter einer Open-Source-Lizenz entwickelt werden. Wird Code oder werden Bibliotheken von Dritten verwendet, so müssen die Lizenzen kompatibel sein.
+	\item Die Abfrage von Daten von Schnittstellen kann limitiert sein.
 	\item Die Internetverbindung des Gerätes kann während der Nutzung für kurze oder längere Zeit ausfallen.
 	\item Bei Verwendung des mobilen Datennetzes kann nur eine kleine Übertragungsgeschwindkeit verfügbar sein.
-	\item Von \textit{Movebank} bezogene Daten können unvollständig oder fehlerhaft sein.
+	\item Von \textit{Movebank} bezogene Daten können unvollständig oder falsch formatiert sein.
 \end{itemize} 
 
 % The system shall adhere to known standards and built systems and be
@@ -362,7 +360,7 @@ Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone led
 
 \textbf{R18.)} HinweisAufFormalFalscheDaten \\
 \textbf{Funktion:} Der Nutzer soll auf einen hohen Anteil formal falscher Daten hingewiesen werden. \\
-\textbf{Beschreibung:} Die App soll dem Nutzer einen Hinweis anzeigen, wenn viele formal falsche Daten zur Berechnung verwendet werden mussten, damit dieser einordnen kann wie aussagekräftig das Ergebnis ist. \\
+\textbf{Beschreibung:} Die App soll dem Nutzer einen Hinweis anzeigen, wenn viele formal falsche Daten zur Berechnung verwendet werden mussten.\\
 \textbf{Quelle:} Treffen am 30.04.2018 \\
 \textbf{Abhängigkeiten:} R4 \\
 
@@ -432,7 +430,7 @@ Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone led
 \textbf{Abhängigkeiten:} - \\
 
 \textbf{O1.)} ZusätzlicheParameter \\
-\textbf{Funktion:} Es werden - neben den Positionsdaten aus der Vergangenheit - noch weitere Parameter für die Berechnung der Vorhersage verwendet.
+\textbf{Funktion:} Es werden - neben den Positionsdaten aus der Vergangenheit - noch weitere Parameter für die Berechnung der Vorhersage verwendet. \\
 \textbf{Beschreibung:} Weitere Parameter / Datenquellen fließen in die Berechnung der Vorhersage ein. \\
 \textbf{Quelle:} Begleitdokument \\
 \textbf{Abhängigkeiten:} - \\
@@ -478,10 +476,11 @@ Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone led
 
  \section{Nicht-Anforderungen} \label{nicht-anforderungen}
 
-Die App soll keine eigenen Vorhersageverfahren beinhalten, sondern lediglich eine Schnittstelle zur Verfügung stellen, um die vom Kunden zur Verfügung gestellten Modelle/Algorthmen zu integrieren.
+Die App soll lediglich ein einfaches Vorhersageverfahren beinhalten, und zusätzlich eine interne Schnittstelle zur Verfügung stellen, um die vom Kunden zur Verfügung gestellten Modelle/Algorthmen zu integrieren.
 
-\hl{Eine Positionsvorhersage für genaue Zeitpunkte in der Zukunft ist nicht vorgesehen.} Die Vorhersagen beziehen sich auf Zeiträume der nahen Zukunft (Größenordnung von Stunden).
+Es ist nicht Teil des Entwicklungsprozesses, ein komplexes Vorhersagemodell zu entwickeln.
 
+Es werden keine Vorhersagen für lange Zeiträume (im Maßstab von mehreren Tagen) getroffen.
 
 %================================================================================================================
 
@@ -491,14 +490,15 @@ Die App soll keine eigenen Vorhersageverfahren beinhalten, sondern lediglich ein
 \subsection*{Milestone 1}
 Fertigstellung am 15.5.
 \begin{itemize} 
-	\item \hl{Software-Architektur festgelegt?}
-	\item \hl{Software-Design festgelegt?}	
-	\item Ein Grundgerüst der Applikation ist fertiggestellt: Es sind folgende Views funktional umgesetzt:
+	\item Grundliegende Software-Architektur festgelegt
+	\item Grundliegendes Software-Design festgelegt
+	\item Ein Grundgerüst der Applikation ist fertiggestellt: Es sind folgende Ansichten funktional umgesetzt:
 	\begin{itemize} 
 		\item Cesium (eine Kartenumgebung wird angezeigt, Navigation möglich)
 		\item Mapbox (eine Kartenumgebung wird angezeigt, Navigation möglich)
 		\item Diverse UI-Elemente (mindestens Eingabefeld, Button)
 	\end{itemize} 
+	\item Die Positionsdaten für die Vorhersage werden von der \textit{Movebank}-API bezogen.
 \end{itemize} 
 
 \vspace{1em}
@@ -508,7 +508,6 @@ Fertigstellung am 5.6.
 \begin{itemize} 
 	\item Es wird eine Vorhersage mittels eines einfachen Vorhersagemodells berechnet.
 	\item Es existiert eine funktionale Visualisierung des Vorhersage-Ergebnisses.
-	\item Die Positionsdaten für die Vorhersage werden von der \textit{Movebank}-API bezogen.
 	\item Der Aufbau des User-Interfaces ist festgelegt (nicht-funktionale Mockups).
 \end{itemize}
 
@@ -547,7 +546,7 @@ In folgendem Diagramm sind die wesentlichen Anwendungsfälle der Applikation und
 
  \paragraph{Einstellungen ändern} Der Nutzer hat die Möglichkeit, Einstellungen der Applikation zu ändern.
 
- \paragraph{Richtung des Vogels anzeigen} Es wird das Ergebnis der Vorhersage visualisiert.
+ \paragraph{Richtung des Vogels anzeigen} Es wird visualisiert, in welcher Richtung - ausgehend vom Nutzer - der Vogel anzutreffen ist.
 
  \paragraph{Vogel auswählen} Der Nutzer kann einen Vogel anhand seiner ID auswählen.
  \begin{cptenumerate} 
