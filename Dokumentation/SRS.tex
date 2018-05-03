@@ -53,8 +53,60 @@
 
 \newenvironment{cptitemize}[1][,]{\begin{itemize} \setlength\itemsep{0em}}{\end{itemize}}
 
+\usepackage{cleveref}
 
 \begin{document}
+
+\newenvironment{absolutelynopagebreak}
+  {\par\nobreak\vfil\penalty0\vfilneg
+   \vtop\bgroup}
+  {\par\xdef\tpd{\the\prevdepth}\egroup
+   \prevdepth=\tpd}
+
+% 1 -- shortname
+% 2 -- Funktion
+% 3 -- Beschreibung
+% 4 -- Quelle
+% 5 -- Abhängigkeiten
+\newcommand{\req}[5]{%
+	\begin{absolutelynopagebreak}
+	\item % this is a list item
+	\label{#1} % set shortname as label for references
+	\textsf{#1} \\ % print shortname
+	\textbf{Funktion:} #2 \\
+	\textbf{Beschreibung:} #3 \\
+	\textbf{Quelle:} #4 \\
+	\textbf{Abhängigkeiten:} #5 \\
+	\end{absolutelynopagebreak}
+}
+
+\newlist{requirements}{enumerate}{100}
+\setlist[requirements]{itemsep=-1em}
+\newlist{optrequirements}{enumerate}{100}
+
+
+% Usage:
+% \begin{requirements}[ref={(R\arabic*)},label=(R\arabic*)]
+%  	 \req{shortname}{foo}{bar}{baz}{qux} 
+%  	 \req{myreq}{a}{b}{\ref{shortname}}{d}
+%  	 	\req{SpeicherungMovebankNutzerdaten}{
+% 		Nutzerdaten für die Movebank sollen in den Einstellungen eingetragen werden können. 
+% 		}{
+% 		Die App soll in den Einstellungen eine Möglichkeit anbieten, Movebank-Nutzerdaten eintragen zu können, um auch Daten aus der Movebank zu laden, die nur mit einem dortigen Account abrufbar sind. 
+% 		}{
+% 		Treffen am 26.04.2018 
+% 		}{
+% 		\ref{DatenLadenAusMovebank}
+% 		}
+% \end{requirements} 
+% Ich beziehe mich auf \ref{shortname} bla bla. Und hier auf \ref{myreq}.
+
+% \begin{optrequirements}[ref={(O\arabic*)},label=(O\arabic*)]
+%  	 \req{opta}{foo}{bar}{baz}{qux} 
+%  	 \req{optb}{a}{b}{c}{d}
+% \end{optrequirements} 
+% Ich beziehe mich auf \ref{opta} bla bla. Und hier auf \ref{optb}.
+
 
 \setlist[enumerate, 1]{1\textsuperscript{o}}
 
@@ -252,241 +304,385 @@ Die aktuelle Position von X wird mittels des GPS-Sensors seines Smartphones eben
 
 \subsubsection{Datenmanagement}
 
-\textbf{R4.)} DatenLadenAusDerMovebank \\
-\textbf{Funktion:} Daten sollen aus der Movebank geladen werden. \\
-\textbf{Beschreibung:} Das Laden der für die Berechnung benötigten Daten geschieht ausschließlich über die Movebank, die die gegeben Daten zur Verfügung stellt. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} - \\
-
-\textbf{R24.)} SpeicherungMovebankNutzerdaten \\
-\textbf{Funktion:} Nutzerdaten für die Movebank sollen in den Einstellungen eingetragen werden können. \\
-\textbf{Beschreibung:} Die App soll in den Einstellungen eine Möglichkeit anbieten, Movebank-Nutzerdaten eintragen zu können, um auch Daten aus der Movebank zu laden, die nur mit einem dortigen Account abrufbar sind. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
-
-\textbf{R21.)} OfflineDatenSpeicherung \\
-\textbf{Funktion:} Die App soll für die aktuelle Vorhersage Offline-Daten speichern. \\
-\textbf{Beschreibung:} Die App soll die aktuelle Vorhersage lokal speichern, damit man diese auch ohne aktiven Internetzugang betrachten kann. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} R6 \\
-
-\textbf{R22.)} AktualisierungÜberMobileDaten \\
-\textbf{Funktion:} Über mobile Daten soll die aktuelle Vorhersage aktualisiert werden können. \\
-\textbf{Beschreibung:} Die App soll auch über mobile Daten aktuelle Daten aus der Movebank empfangen und für eine aktuelle Vorhersage verwenden können. \\
-\textbf{Quelle:} Treffen am 30.04.2018 \\
-\textbf{Abhängigkeiten:} R3, R4, R5, R6, R8, R13 \\
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*)]
+\req{DatenLadenAusMovebank}{
+Daten sollen aus der Movebank geladen werden. 
+}{
+Das Laden der für die Berechnung benötigten Daten geschieht ausschließlich über die Movebank, die die gegeben Daten zur Verfügung stellt. 
+}{
+Treffen am 26.04.2018 
+}{
+- 
+}
+\req{SpeicherungMovebankNutzerdaten}{
+Nutzerdaten für die Movebank sollen in den Einstellungen eingetragen werden können. 
+}{
+Die App soll in den Einstellungen eine Möglichkeit anbieten, Movebank-Nutzerdaten eintragen zu können, um auch Daten aus der Movebank zu laden, die nur mit einem dortigen Account abrufbar sind. 
+}{
+Treffen am 26.04.2018 
+}{
+\ref{DatenLadenAusMovebank}
+}
+\req{OfflineDatenSpeicherung}{
+Die App soll für die aktuelle Vorhersage Offline-Daten speichern. 
+}{
+Die App soll die aktuelle Vorhersage lokal speichern, damit man diese auch ohne aktiven Internetzugang betrachten kann. 
+}{
+Treffen am 26.04.2018 
+}{
+\ref{BerechnungDesAufenthaltsraumes}
+}
+\req{AktualisierungUeberMobileDaten}{
+Über mobile Daten soll die aktuelle Vorhersage aktualisiert werden können. 
+}{
+Die App soll auch über mobile Daten aktuelle Daten aus der Movebank empfangen und für eine aktuelle Vorhersage verwenden können. 
+}{
+Treffen am 30.04.2018 
+}{
+\ref{VisuelleDarstellungDerVorhersage}, \ref{DatenLadenAusMovebank}, \ref{VisualisierungDerVorhandenenDaten}, \ref{BerechnungDesAufenthaltsraumes}, \ref{VorhersageFuerBestimmtenZeitraum}, \ref{VisualisierungInMapboxBeiOutdoorModus} 
+}
+\end{requirements}
 
 \subsubsection{Vorhersageberechnung}
 
-\textbf{R6.)} BerechnungDesAufenthaltsraumes \\
-\textbf{Funktion:} Für einen gegebenen Vogel soll ein wahrscheinlicher Aufenthaltsraum berechnet werden. \\
-\textbf{Beschreibung:} Es soll, gegeben ein Vogel, für jeden Punkt in der Umgebung des Vogels eine Vorhersage getroffen werden, mit welcher Wahrscheinlichkeit dieser dort anzutreffen ist. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
-
-% \textbf{R7.)} AufteilungDerPositionsvorhersage \\
-% \textbf{Funktion:} Die Positionsvorhersage soll in Zonen mit unterschiedlicher Wahrscheinlichkeit unterteilt werden. \\
-% \textbf{Beschreibung:}  \hl{Die Positionsvorhersage soll in Zonen verschiedener Wahrscheinlichkeit eingeteilt werden.} \\
-% \textbf{Quelle:} Treffen am 30.04.2018 \\
-% \textbf{Abhängigkeiten:} R6 \\
-
-\textbf{R8.)} VorhersageFürBestimmtenZeitraum \\
-\textbf{Funktion:} Die Positionsvorhersage soll für einen gegebenen Zeitraum berechnet werden. \\
-\textbf{Beschreibung:} Die Positionsvorhersage soll für einen gegeben Zeitraum ab dem aktuellen Moment berechnet werden. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
-
-\textbf{R15.)} WählbarerVorhersagezeitraum\\
-\textbf{Funktion:} Der Nutzer soll den Zeitraum für die Vorhersage wählen können.\\
-\textbf{Beschreibung:} Der Nutzer soll die Möglichkeit haben, einzustellen für welchen Zeitraum ab dem aktuellen Zeitpunkt die Vorhersage berechnet wird. \\
-\textbf{Quelle:} Treffen am 26.04.2018\\
-\textbf{Abhängigkeiten:} - \\
-
-\textbf{R16.)} WahlDerDatenFürVorhersage\\
-\textbf{Funktion:} Der Nutzer soll einstellen können auf welchen Daten die Vorhersage basiert.\\
-\textbf{Beschreibung:} Der Nutzer soll über Parameter die Vorhersage justieren können. \\
-\textbf{Quelle:} Treffen am 26.04.2018\\
-\textbf{Abhängigkeiten:} R4 \\
-\\
-
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*),resume]
+\req{BerechnungDesAufenthaltsraumes}{
+ Für einen gegebenen Vogel soll ein wahrscheinlicher Aufenthaltsraum berechnet werden. 
+ }{
+ Es soll, gegeben ein Vogel, für jeden Punkt in der Umgebung des Vogels eine Vorhersage getroffen werden, mit welcher Wahrscheinlichkeit dieser dort anzutreffen ist. 
+ }{
+ Treffen am 26.04.2018 
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\req{VorhersageFuerBestimmtenZeitraum}
+{
+ Die Positionsvorhersage soll für einen gegebenen Zeitraum berechnet werden. 
+ }{
+ Die Positionsvorhersage soll für einen gegeben Zeitraum ab dem aktuellen Moment berechnet werden. 
+ }{
+ Treffen am 26.04.2018 
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\req{WaehlbarerVorhersagezeitraum}
+{
+ Der Nutzer soll den Zeitraum für die Vorhersage wählen können.
+ }{
+ Der Nutzer soll die Möglichkeit haben, einzustellen für welchen Zeitraum ab dem aktuellen Zeitpunkt die Vorhersage berechnet wird. 
+ }{
+ Treffen am 26.04.2018
+ }{
+ - 
+}
+\req{WahlDerDatenFuerVorhersage}
+{
+ Der Nutzer soll einstellen können auf welchen Daten die Vorhersage basiert.
+ }{
+ Der Nutzer soll über Parameter die Vorhersage justieren können. 
+ }{
+ Treffen am 26.04.2018
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\end{requirements}
 
 \subsubsection{Visualisierung}
 
-\textbf{R3.)} VisuelleDarstellungDerVorhersage \\
-\textbf{Funktion:} Die Vorhersagen sollen visuell dargestellt werden. \\
-\textbf{Beschreibung:} Die Berechnungen zur Vorhersage der wahrscheinlichen Vogelposition sollen in der App angezeigt werden. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
-
-
-\textbf{R101.)} Kompass \\
-\textbf{Funktion:} Es soll ein Kompass angezeigt werden, der zum gesuchten Vogel zeigt. \\
-\textbf{Beschreibung:} Eine Visualisierung soll anzeigen, in welcher Richtung ausgehend vom aktuellen Standpunkt der gesuchte Vogel am wahrscheinlichsten anzutreffen ist. \\
-\textbf{Quelle:} Treffen am 02.05.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
-
-
-\textbf{R102.)} AktuellePosition \\
-\textbf{Funktion:} Es soll die aktuelle Position angezeigt werden. \\
-\textbf{Beschreibung:} Eine Visualisierung soll auf der dargestellten Kartenlandschaft anzeigen, wo sich der Nutzer momentan befindet.\\
-\textbf{Quelle}: Treffen am 02.04.2018 \\
-\textbf{Abhängigkeiten:} R12, R13 \\
-
-
-\textbf{R5.)} VisualisierungDerVorhandenenDaten \\
-\textbf{Funktion:} Die vorhandenen Daten für einen gegebenen Vogel und Zeitraum sollen visualisiert werden. \\
-\textbf{Beschreibung:} Wird ein Vogel ausgewählt, so sollen dessen vorhandene Daten in einem bestimmtem Zeitraum angezeigt werden können.\\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
-
-
-\textbf{R12.)} VisualisierungInCesiumBeiNormalModus\\
-\textbf{Funktion:} Im Normal-Modus sollen die Daten in Cesium visualisiert werden.\\
-\textbf{Beschreibung:} Befindet sich die Applikation im Normal-Modus, so sollen die getrackten Positionen und die Vorhersagen mit Cesium visualisiert werden.\\
-\textbf{Quelle:} Treffen am 26.04.2018\\
-\textbf{Abhängigkeiten:} R4, R5, R6, R8\\
-
-
-\textbf{R13.)} VisualisierungInMapboxBeiOutdoorModus\\
-\textbf{Funktion:} Im Outdoor-Modus sollen die Daten mit Mapbox visualisiert werden.\\
-\textbf{Beschreibung:} Befindet sich die Applikation im Outdoor-Modus, so sollen die getrackten Positionen und die Vorhersagen mit Mapbox visualisiert werden.\\
-\textbf{Quelle:} Treffen am 30.04.2018\\
-\textbf{Abhängigkeiten:} R4, R5, R6, R8\\
-
-
-\textbf{R14.)} VisualisierungAufOfflineKarten\\
-\textbf{Funktion:} Im Outdoor-Modus sollen die Daten auf offline-Karten visualisiert werden.\\
-\textbf{Beschreibung:} Falls offline-Karten vorhanden sind, sollen diese für die Visualisierung der Vorhersage und der getrackten Positionen verwendet werden. \\
-\textbf{Quelle:} Treffen am 30.04.2018\\
-\textbf{Abhängigkeiten:} R4, R5, R6, R8\\
-
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*),resume]
+\req{VisuelleDarstellungDerVorhersage}
+{
+ Die Vorhersagen sollen visuell dargestellt werden. 
+ }{
+ Die Berechnungen zur Vorhersage der wahrscheinlichen Vogelposition sollen in der App angezeigt werden. 
+ }{
+ Treffen am 26.04.2018 
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\req{Kompass}
+{
+ Es soll ein Kompass angezeigt werden, der zum gesuchten Vogel zeigt. 
+ }{
+ Eine Visualisierung soll anzeigen, in welcher Richtung ausgehend vom aktuellen Standpunkt der gesuchte Vogel am wahrscheinlichsten anzutreffen ist. 
+ }{
+ Treffen am 02.05.2018 
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\req{AktuellePosition}
+{
+ Es soll die aktuelle Position angezeigt werden. 
+ }{
+ Eine Visualisierung soll auf der dargestellten Kartenlandschaft anzeigen, wo sich der Nutzer momentan befindet.
+ }{
+ Treffen am 02.04.2018 
+ }{
+ \ref{VisualisierungInCesiumBeiNormalModus}, \ref{VisualisierungInMapboxBeiOutdoorModus} 
+}
+\req{VisualisierungDerVorhandenenDaten}
+{
+ Die vorhandenen Daten für einen gegebenen Vogel und Zeitraum sollen visualisiert werden. 
+ }{
+ Wird ein Vogel ausgewählt, so sollen dessen vorhandene Daten in einem bestimmtem Zeitraum angezeigt werden können.
+ }{
+ Treffen am 26.04.2018 
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\req{VisualisierungInCesiumBeiNormalModus}
+{
+ Im Normal-Modus sollen die Daten in Cesium visualisiert werden.
+ }{
+ Befindet sich die Applikation im Normal-Modus, so sollen die getrackten Positionen und die Vorhersagen mit Cesium visualisiert werden.
+ }{
+ Treffen am 26.04.2018
+ }{
+ \ref{DatenLadenAusMovebank}, \ref{VisualisierungDerVorhandenenDaten}, \ref{BerechnungDesAufenthaltsraumes}, \ref{VorhersageFuerBestimmtenZeitraum}
+}
+\req{VisualisierungInMapboxBeiOutdoorModus}
+{
+ Im Outdoor-Modus sollen die Daten mit Mapbox visualisiert werden.
+ }{
+ Befindet sich die Applikation im Outdoor-Modus, so sollen die getrackten Positionen und die Vorhersagen mit Mapbox visualisiert werden.
+ }{
+ Treffen am 30.04.2018
+ }{
+ \ref{DatenLadenAusMovebank}, \ref{VisualisierungDerVorhandenenDaten}, \ref{BerechnungDesAufenthaltsraumes}, \ref{VorhersageFuerBestimmtenZeitraum}
+}
+\req{VisualisierungAufOfflineKarten}
+{
+ Im Outdoor-Modus sollen die Daten auf offline-Karten visualisiert werden.
+ }{
+ Falls offline-Karten vorhanden sind, sollen diese für die Visualisierung der Vorhersage und der getrackten Positionen verwendet werden. 
+ }{
+ Treffen am 30.04.2018
+ }{
+ \ref{DatenLadenAusMovebank}, \ref{VisualisierungDerVorhandenenDaten}, \ref{BerechnungDesAufenthaltsraumes}, \ref{VorhersageFuerBestimmtenZeitraum}
+}
+\end{requirements}
 
 \subsubsection{Nutzerinteraktion}
 
-\textbf{R110.)} Modi \\
-\textbf{Funktion:} Die Applikation soll über einen Normal- und einen Outdoor-Modus verfügen. \\
-\textbf{Beschreibung:} Die Applikation soll über zwei Modi bzw. Zustände verfügen mit ähnlichem aber ungleichem User Interface und Funktionalität. \\
-\textbf{Quelle:} Treffen am 02.05.\\
-\textbf{Abhängigkeiten:} - \\
-
-\textbf{R111.)} WechselDesModus \\
-\textbf{Funktion:} Der Nutzer soll zwischen dem Normal- und dem Outdoor-Modus wechseln können. \\
-\textbf{Beschreibung:} Der Nutzer soll durch Bedienung des User Interfaces zwischen dem Normal und dem Outdoor-Modus wechseln können. \\
-\textbf{Quelle:} Treffen am 02.05 \\
-\textbf{Abhängigkeiten:} R110 \\
-
-\textbf{R20.)} TouchBasierteBenutzeroberfläche \\
-\textbf{Funktion:} Die App soll über eine touch-basierte Benutzeroberfläche verfügen. \\
-\textbf{Beschreibung:} Die App soll über eine touch-basierte Benutzeroberfläche bedienbar sein. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} - \\
-
-\textbf{R11.)} SucheNachVogel\\
-\textbf{Funktion:} In der Software soll nach einem Vogel gesucht werden können.\\
-\textbf{Beschreibung:} Der Benutzer soll anhand einer ID nach einem bestimmten Vogel suchen können.\\
-\textbf{Quelle:} Treffen am 26.04.2018\\
-\textbf{Abhängigkeiten:} -\\
-
-\textbf{R18.)} HinweisAufFormalFalscheDaten \\
-\textbf{Funktion:} Der Nutzer soll auf einen hohen Anteil formal falscher Daten hingewiesen werden. \\
-\textbf{Beschreibung:} Die App soll dem Nutzer einen Hinweis anzeigen, wenn viele formal falsche Daten zur Berechnung verwendet werden mussten.\\
-\textbf{Quelle:} Treffen am 30.04.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
-
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*),resume]
+\req{Modi}
+{
+ Die Applikation soll über einen Normal- und einen Outdoor-Modus verfügen. 
+ }{
+ Die Applikation soll über zwei Modi bzw. Zustände verfügen mit ähnlichem aber ungleichem User Interface und Funktionalität. 
+ }{
+ Treffen am 02.05.
+ }{
+ - 
+}
+\req{WechselDesModus}
+{
+ Der Nutzer soll zwischen dem Normal- und dem Outdoor-Modus wechseln können. 
+ }{
+ Der Nutzer soll durch Bedienung des User Interfaces zwischen dem Normal und dem Outdoor-Modus wechseln können. 
+ }{
+ Treffen am 02.05 
+ }{
+ \ref{Modi} 
+}
+\req{TouchBasierteBenutzeroberflaeche}
+{
+ Die App soll über eine touch-basierte Benutzeroberfläche verfügen. 
+ }{
+ Die App soll über eine touch-basierte Benutzeroberfläche bedienbar sein. 
+ }{
+ Treffen am 26.04.2018 
+ }{
+ - 
+}
+\req{SucheNachVogel}
+{
+ In der Software soll nach einem Vogel gesucht werden können.
+ }{
+ Der Benutzer soll anhand einer ID nach einem bestimmten Vogel suchen können.
+ }{
+ Treffen am 26.04.2018
+ }{
+ -
+}
+\req{HinweisAufFormalFalscheDaten}
+{
+ Der Nutzer soll auf einen hohen Anteil formal falscher Daten hingewiesen werden. 
+ }{
+ Die App soll dem Nutzer einen Hinweis anzeigen, wenn viele formal falsche Daten zur Berechnung verwendet werden mussten.
+ }{
+ Treffen am 30.04.2018 
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\end{requirements}
 
 \subsection{Nicht-funktionale Anforderungen}
 
 \subsubsection{Hardware}
 
-\textbf{R1.)} KorrekteArchitekturDerSmartphones \\
-\textbf{Funktion:} Die App sollte auf Smartphones mit Android 5.1 oder höher, Internet-Zugang und einer armeabi, armeabi-v7a oder amr64-v8a Architektur lauffähig sein. \\
-\textbf{Beschreibung:} Die App sollte auf Smartphones mit Android 5.1 oder höher, Internet-Zugang und einer armeabi, armeabi-v7a oder amr64-v8a Architektur lauffähig sein. \\
-\textbf{Quelle:} Treffen am 30.04.2018 \\
-\textbf{Abhängigkeiten:} - \\
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*),resume]
+\req{KorrekteArchitekturDerSmartphones}
+{
+ Die App sollte auf Smartphones mit Android 5.1 oder höher, Internet-Zugang und einer armeabi, armeabi-v7a oder amr64-v8a Architektur lauffähig sein. 
+ }{
+ Die App sollte auf Smartphones mit Android 5.1 oder höher, Internet-Zugang und einer armeabi, armeabi-v7a oder amr64-v8a Architektur lauffähig sein. 
+ }{
+ Treffen am 30.04.2018 
+ }{
+ - 
+}
+\end{requirements}
 
 \subsubsection{Implementierung}
 
-\textbf{R10.)} EinheitlicheSchnittstelleFürVorhersagealgorithmen\\
-\textbf{Funktion:} Die Software soll über eine einheitliche Schnittstelle für Vorhersagealgorithmen verfügen.\\
-\textbf{Beschreibung:} Zum einfachen Hinzufügen von weiteren Vorhersagealgorithmen soll die Software über ein einheitliches Interface für diese verfügen.\\
-\textbf{Quelle:} Treffen am 26.04.2018\\
-\textbf{Abhängigkeiten:} R9\\
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*),resume]
+\req{EinheitlicheSchnittstelleFuerVorhersagealgorithmen}
+{
+ Die Software soll über eine einheitliche Schnittstelle für Vorhersagealgorithmen verfügen.
+ }{
+ Zum einfachen Hinzufügen von weiteren Vorhersagealgorithmen soll die Software über ein einheitliches Interface für diese verfügen.
+ }{
+ Treffen am 26.04.2018
+ }{
+ -
+}
+\end{requirements}
 
 \subsubsection{Robustheit}
 
-\textbf{R2.)} VerhaltenOhneInternetverbindung \\
-\textbf{Funktion:} Die App sollte bei fehlender Internetverbindung mit eingeschränkter Funktionalität weiter nutzbar sein. \\
-\textbf{Beschreibung:} Bricht die Verbindung zum Internet ab, sollte die App robust darauf reagieren. Einige Grundfunktionen sollten dabei weiter nutzbar sein. \\
-\textbf{Quelle:} Treffen am 30.04.2018 \\
-\textbf{Abhängigkeiten:} - \\
-
-\textbf{R17.)} RobustGegenüberFormalFalschenDaten \\
-\textbf{Funktion:} Die App soll robust gegenüber formal falschen Daten aus der Movebank sein \\
-\textbf{Beschreibung:} Die App soll formal falsche Daten, die sie aus der Movebank bekommt, so aufbereiten, dass das Berechnen und Visualisieren eines Ergebnisses möglich ist. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} R4 \\
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*),resume]
+\req{VerhaltenOhneInternetverbindung}
+{
+ Die App sollte bei fehlender Internetverbindung mit eingeschränkter Funktionalität weiter nutzbar sein. 
+ }{
+ Bricht die Verbindung zum Internet ab, sollte die App robust darauf reagieren. Einige Grundfunktionen sollten dabei weiter nutzbar sein. 
+ }{
+ Treffen am 30.04.2018 
+ }{
+ - 
+}
+\req{RobustGegenueberFormalFalschenDaten}
+{
+ Die App soll robust gegenüber formal falschen Daten aus der Movebank sein 
+ }{
+ Die App soll formal falsche Daten, die sie aus der Movebank bekommt, so aufbereiten, dass das Berechnen und Visualisieren eines Ergebnisses möglich ist. 
+ }{
+ Treffen am 26.04.2018 
+ }{
+ \ref{DatenLadenAusMovebank} 
+}
+\end{requirements}
 
 \subsubsection{Performanz}
 
-\textbf{R19.)} BerechnungsdauerVorhersage \\
-\textbf{Funktion:} Der Berechnungsdauer der Vorhersage soll die vom Nutzer erwartete Dauer nicht deutlich überschreiten. \\
-\textbf{Beschreibung:} Die App soll die Vorhersage in einem adäquaten Zeitraum berechnen und diese dem Nutzer möglichst schnell visualisieren. \\
-\textbf{Quelle:} Treffen am 30.04.2018 \\
-\textbf{Abhängigkeiten:} R3, R4, R5, R6, R8, R16, R17 \\
+\begin{requirements}[ref={(R\arabic*)},label=(R\arabic*),resume]
 
+\req{BerechnungsdauerVorhersage}
+{
+ Der Berechnungsdauer der Vorhersage soll die vom Nutzer erwartete Dauer nicht deutlich überschreiten. 
+ }{
+ Die App soll die Vorhersage in einem adäquaten Zeitraum berechnen und diese dem Nutzer möglichst schnell visualisieren. 
+ }{
+ Treffen am 30.04.2018 
+ }{
+ \ref{VisuelleDarstellungDerVorhersage}, \ref{DatenLadenAusMovebank}, \ref{VisualisierungDerVorhandenenDaten}, \ref{BerechnungDesAufenthaltsraumes}, \ref{VorhersageFuerBestimmtenZeitraum}, \ref{WahlDerDatenFuerVorhersage}, \ref{RobustGegenueberFormalFalschenDaten} 
+}
 
+\end{requirements}
  \section{Optionale Anforderungen} \label{optionale_anforderungen}
 
  Die folgenden Anforderungen sind optional und müssen nicht zwingend erfüllt werden.
 
+\begin{requirements}[ref={(O\arabic*)},label=(O\arabic*)]
+\req{VirtualReality}
+{
+ Integration von \textit{Virtual Reality}-Modul 
+ }{
+ Es wird ein zur Verfügung gestelltes Modul in die Applikation integriert, dass die Visualisierungen in einem \textit{Virtual Reality}-Raum visualisiert. 
+ }{
+ Treffen am 26.04.2018 
+ }{
+ - 
+}
 
-\textbf{O1.)} VirtualReality \\
-\textbf{Funktion:} Integration von \textit{Virtual Reality}-Modul \\
-\textbf{Beschreibung:} Es wird ein zur Verfügung gestelltes Modul in die Applikation integriert, dass die Visualisierungen in einem \textit{Virtual Reality}-Raum visualisiert. \\
-\textbf{Quelle:} Treffen am 26.04.2018 \\
-\textbf{Abhängigkeiten:} - \\
+\req{ZusaetzlicheParameter}
+{
+ Es werden - neben den Positionsdaten aus der Vergangenheit - noch weitere Parameter für die Berechnung der Vorhersage verwendet. 
+ }{
+ Weitere Parameter / Datenquellen fließen in die Berechnung der Vorhersage ein. 
+ }{
+ Begleitdokument 
+ }{
+ - 
+}
 
-\textbf{O1.)} ZusätzlicheParameter \\
-\textbf{Funktion:} Es werden - neben den Positionsdaten aus der Vergangenheit - noch weitere Parameter für die Berechnung der Vorhersage verwendet. \\
-\textbf{Beschreibung:} Weitere Parameter / Datenquellen fließen in die Berechnung der Vorhersage ein. \\
-\textbf{Quelle:} Begleitdokument \\
-\textbf{Abhängigkeiten:} - \\
+\req{GewichtungParameter}
+{
+ Parameter, die in die Berechnung der Vorhersage einfließen sollen gewichtet werden können. 
+ }{
+ Der Nutzer soll die Möglichkeit haben einzustellen, mit welchem Gewicht die jeweiligen Parameter in die Berechnung der Vorhersage einfließen.
+ }{
+ Begleitdokument 
+ }{
+ \ref{BerechnungDesAufenthaltsraumes} 
+}
 
-\textbf{O2.)} GewichtungParameter \\
-\textbf{Funktion:} Parameter, die in die Berechnung der Vorhersage einfließen sollen gewichtet werden können. \\
-\textbf{Beschreibung:} Der Nutzer soll die Möglichkeit haben einzustellen, mit welchem Gewicht die jeweiligen Parameter in die Berechnung der Vorhersage einfließen.\\
-\textbf{Quelle:} Begleitdokument \\
-\textbf{Abhängigkeiten:} R6 \\
+\req{VariableDarstellung}
+{
+ Es sind verschiedene Arten der Visualisierung verfügbar. 
+ }{
+ Der Nutzer hat die Möglichkeit, das Ergebnis der Vorhersage auf verschiedene Arten zu visualisieren. 
+ }{
+ Begleitdokument 
+ }{
+ \ref{BerechnungDesAufenthaltsraumes}, \ref{VisuelleDarstellungDerVorhersage} 
+}
 
-\textbf{O3.)} VariableDarstellung \\
-\textbf{Funktion:} Es sind verschiedene Arten der Visualisierung verfügbar. \\
-\textbf{Beschreibung:} Der Nutzer hat die Möglichkeit, das Ergebnis der Vorhersage auf verschiedene Arten zu visualisieren. \\
-\textbf{Quelle:} Begleitdokument \\
-\textbf{Abhängigkeiten:} R6, R3 \\
+\req{Evaluation}
+{
+ Eine Evaluation der Vorhersage ist möglich. 
+ }{
+ Der Nutzer hat die Möglichkeit, das Ergebnis der Vorhersage zu bewerten. 
+ }{
+ Begleitdokument 
+ }{
+ \ref{BerechnungDesAufenthaltsraumes} 
+}
 
-\textbf{O4.)} Evaluation \\
-\textbf{Funktion:} Eine Evaluation der Vorhersage ist möglich. \\
-\textbf{Beschreibung:} Der Nutzer hat die Möglichkeit, das Ergebnis der Vorhersage zu bewerten. \\
-\textbf{Quelle:} Begleitdokument \\
-\textbf{Abhängigkeiten:} R6 \\
+\req{MehrereVoegel}
+{
+ Es kann eine Vorhersage für mehrere Vögel gemeinsam getroffen und visualisiert werden. 
+ }{
+ Für eine gegebene Menge von Vögeln kann eine Vorhersage getroffen und eine Visualisierung erstellt werden. 
+ }{
+ Begleitdokument 
+ }{
+ \ref{BerechnungDesAufenthaltsraumes}, \ref{VisuelleDarstellungDerVorhersage} 
+}
 
-\textbf{O5.)} MehrereVögel \\
-\textbf{Funktion:} Es kann eine Vorhersage für mehrere Vögel gemeinsam getroffen und visualisiert werden. \\
-\textbf{Beschreibung:} Für eine gegebene Menge von Vögeln kann eine Vorhersage getroffen und eine Visualisierung erstellt werden. \\
-\textbf{Quelle:} Begleitdokument \\
-\textbf{Abhängigkeiten:} R6, R3 \\
+\req{Gattung}
+{
+ Andere Tiere derselben Gattung werden in die Berechnung der Vorhersage einbezogen. 
+ }{
+ Es werden die Daten von anderen Tieren derselben Gattung für die Berechnung der Vorhersage eines bestimmten Vogels verwendet. 
+ }{
+ Begleitdokume
+ }{
+ \ref{MehrereVoegel}, \ref{ZusaetzlicheParameter} 
+}
 
-\textbf{O7.)} Gattung \\
-\textbf{Funktion:} Andere Tiere derselben Gattung werden in die Berechnung der Vorhersage einbezogen. \\
-\textbf{Beschreibung:} Es werden die Daten von anderen Tieren derselben Gattung für die Berechnung der Vorhersage eines bestimmten Vogels verwendet. \\
-\textbf{Abhängigkeiten:} O5, O1 \\
+\req{AehnlichkeitenFinden}{
+ Es werden Muster in den Daten aus der Vergangenheit für die Berechnung der Vorhersage verwendet. 
+ }{
+ Die Analyse von Mustern in Daten aus der Vergangenheit fließt in die Berechnung der Vorhersage ein. 
+ }{
+ Begleitdokument 
+ }{
+ \ref{BerechnungDesAufenthaltsraumes}, \ref{ZusaetzlicheParameter} 
+}
 
-\textbf{O6.)} ÄhnlichkeitenFinden \\
-\textbf{Funktion:} Es werden Muster in den Daten aus der Vergangenheit für die Berechnung der Vorhersage verwendet. \\
-\textbf{Beschreibung:} Die Analyse von Mustern in Daten aus der Vergangenheit fließt in die Berechnung der Vorhersage ein. \\
-\textbf{Quelle:} Begleitdokument \\
-\textbf{Abhängigkeiten:} R6, O1 \\
-
+\end{requirements}
 
 
 
