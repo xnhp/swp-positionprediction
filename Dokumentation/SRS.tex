@@ -140,6 +140,7 @@ Das Ergebnis der Vorhersage wird in einer zwei- oder dreidimensionalen Kartenlan
  \paragraph{Mobile Daten} Ein Smartphone kann sich entweder über ein WiFi-Netzwerk oder über ein mobiles Datennetzwerk (3G, LTE, ...) mit dem Internet verbinden. 
 \paragraph{Vorhersage-Modell/Algorithmus} Die zur Berechnung einer Vorhersage verwendete Methodik. 
 \paragraph{API} \textit{Application Programming Interface}, hier insbesondere Schnittstellen mit Providern wie \textit{Movebank} oder \textit{Cesium}. 
+\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. Einer davon ist der sog. Outdoor-Modus. (Siehe Anforderung R110)
 
 \subsection{Referenzen}
 
@@ -190,11 +191,11 @@ Herr X ist ein Forscher am Max-Planck-Institut für Ornithologie. X beschäftigt
 
 X möchte nun einen bestimmten in der Vergangenheit über einen solchen Sender verfolgten Vogel nun wieder auffinden, etwa um den Sender auszutauschen oder um das Tier zu betrachten.
 
-X befindet sich in seinem Büro und hat Zugriff auf ein WLAN-Netz. X startet die Applikation auf seinem Smartphone und gibt die Vogel-ID ein. Er benötigt noch etwas Zeit zur Vorbereitung und für das Zurücklegen des Weges, also fragt er eine Vorhersage für eine dreiviertelstunde in der Zukunft an.
+X befindet sich in seinem Büro und hat Zugriff auf eine schnelle Datenverbindung. X startet die Applikation auf seinem Smartphone im Normal-Modus und gibt die Vogel-ID ein. Er benötigt noch etwas Zeit zur Vorbereitung und für das Zurücklegen des Weges, also fragt er eine Vorhersage für eine dreiviertelstunde in der Zukunft an.
 
 Die Vorhersage wird X in der \textit{Cesium}-Umgebung visualisiert. Es wird ein Bereich angezeigt, in dem der Vogel mit hoher Wahrscheinlichkeit anzutreffen ist sowie weitere Abstufungen die einer geringeren Wahrscheinlichkeit entsprechen. Mithilfe der dreidimensionalen Kartendarstellung macht sich X außerdem mit der Beschaffenheit des Geländes vertraut. Währenddessen speichert die Applikation die Daten der Vorhersage und 2D-Kartendaten für spätere Verwendung.
 
-Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone lediglich über eine langsame mobile Datenverbindung und an manchen Stellen über gar keine Internetverbindung. Die Applikation greift nun zur Visualisierung der Vorhersage auf die vorher heruntergeladenen 2D-Karten zurück.
+Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone lediglich über eine langsame mobile Datenverbindung und an manchen Stellen über gar keine Internetverbindung. X wechselt nun in den Outdoor-Modus. Die Applikation greift nun zur Visualisierung der Vorhersage auf die vorher heruntergeladenen 2D-Karten zurück.
 
 Die aktuelle Position von X wird mittels des GPS-Sensors seines Smartphones ebenfalls in der Visualisierung angezeigt. Damit nähert sich X dem Zielgebiet an und trifft schließlich auf den gesuchten Vogel.
 \end{displayquote}
@@ -339,28 +340,40 @@ Die aktuelle Position von X wird mittels des GPS-Sensors seines Smartphones eben
 \textbf{Abhängigkeiten:} R4 \\
 
 
-\textbf{R12.)} VisualisierungInCesiumBeiWLAN\\
-\textbf{Funktion:} Bei WLAN-Zugang sollen die Daten in Cesium visualisiert werden.\\
-\textbf{Beschreibung:} Wenn das Smartphone Internetzugang über WLAN hat, sollen die getrackten Positionen und die Vorhersagen mit Cesium visualisiert werden.\\
+\textbf{R12.)} VisualisierungInCesiumBeiNormalModus\\
+\textbf{Funktion:} Im Normal-Modus sollen die Daten in Cesium visualisiert werden.\\
+\textbf{Beschreibung:} Befindet sich die Applikation im Normal-Modus, so sollen die getrackten Positionen und die Vorhersagen mit Cesium visualisiert werden.\\
 \textbf{Quelle:} Treffen am 26.04.2018\\
 \textbf{Abhängigkeiten:} R4, R5, R6, R8\\
 
 
-\textbf{R13.)} VisualisierungInMapboxBeiMobilenDaten\\
-\textbf{Funktion:} Bei Zugang über das mobile Datennetz sollen die Daten mit Mapbox visualisiert werden.\\
-\textbf{Beschreibung:} Wenn das Smartphone Internetzugang ausschließlich über mobiles Internet hat, sollen die getrackten Positionen und die Vorhersagen mit Mapbox visualisiert werden.\\
+\textbf{R13.)} VisualisierungInMapboxBeiOutdoorModus\\
+\textbf{Funktion:} Im Outdoor-Modus sollen die Daten mit Mapbox visualisiert werden.\\
+\textbf{Beschreibung:} Befindet sich die Applikation im Outdoor-Modus, so sollen die getrackten Positionen und die Vorhersagen mit Mapbox visualisiert werden.\\
 \textbf{Quelle:} Treffen am 30.04.2018\\
 \textbf{Abhängigkeiten:} R4, R5, R6, R8\\
 
 
 \textbf{R14.)} VisualisierungAufOfflineKarten\\
-\textbf{Funktion:} Ohne Internetzugang sollen die Daten auf offline-Karten visualisiert werden.\\
+\textbf{Funktion:} Im Outdoor-Modus sollen die Daten auf offline-Karten visualisiert werden.\\
 \textbf{Beschreibung:} Falls offline-Karten vorhanden sind, sollen diese für die Visualisierung der Vorhersage und der getrackten Positionen verwendet werden. \\
 \textbf{Quelle:} Treffen am 30.04.2018\\
 \textbf{Abhängigkeiten:} R4, R5, R6, R8\\
 
 
 \subsubsection{Nutzerinteraktion}
+
+\textbf{R110.)} Modi \\
+\textbf{Funktion:} Die Applikation soll über einen Normal- und einen Outdoor-Modus verfügen. \\
+\textbf{Beschreibung:} Die Applikation soll über zwei Modi bzw. Zustände verfügen mit ähnlichem aber ungleichem User Interface und Funktionalität. \\
+\textbf{Quelle:} Treffen am 02.05.\\
+\textbf{Abhängigkeiten:} - \\
+
+\textbf{R111.)} WechselDesModus \\
+\textbf{Funktion:} Der Nutzer soll zwischen dem Normal- und dem Outdoor-Modus wechseln können. \\
+\textbf{Beschreibung:} Der Nutzer soll durch Bedienung des User Interfaces zwischen dem Normal und dem Outdoor-Modus wechseln können. \\
+\textbf{Quelle:} Treffen am 02.05 \\
+\textbf{Abhängigkeiten:} R110 \\
 
 \textbf{R20.)} TouchBasierteBenutzeroberfläche \\
 \textbf{Funktion:} Die App soll über eine touch-basierte Benutzeroberfläche verfügen. \\
@@ -563,8 +576,8 @@ In folgendem Diagramm sind die wesentlichen Anwendungsfälle der Applikation und
 
 \paragraph{Kartenvisualisierung ansehen} \hl{Der Nutzer betrachtet die Visualisierung des Ergebnisses der Vorhersage auf einer Kartenlandschaft.} 
 \begin{cptenumerate}[a.]
- 	 \item Bei Internetzugang über WLAN: Darstellung in \textit{Cesium}.
- 	 \item Bei Internetzugang über mobiles Datennetz: Darstellung in \textit{Mapbox}. 
+ 	 \item Falls im Normal-Modus: Darstellung in \textit{Cesium}.
+ 	 \item Falls im Outdoor-Modus: Darstellung in \textit{Mapbox}. 
 \end{cptenumerate}
 
 
@@ -581,7 +594,7 @@ Im folgenden Diagramm wird exemplarisch der Informationsaustausch zwischen betei
  	 \item Die Applikation berechnet eine Vorhersage.
  	 \item Die Vorhersage wird in \textit{Cesium} visualisiert.
  	 \item Es werden 2D-Kartendaten von einem Kartenanbieter abgefragt und zwischengespeichert.
- 	 \item Der Nutzer hat keinen WLAN-Empfang mehr.
+ 	 \item Der Nutzer wechselt in den Outdoor-Modus.
  	 \item Die Vorhersage wird auf einer 2D-Kartenlandschaft visualisert.
  	 \item Die Applikation wird beendet.
 \end{cptenumerate} 
