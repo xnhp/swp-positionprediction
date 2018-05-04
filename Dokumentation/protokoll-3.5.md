@@ -11,8 +11,6 @@ MB ^= Moritz Bock
 * Designentscheidungen, Fragen, Absprachen, Annahmen; deren Auswirkungen in einem Dokument festhalten sodass nachvollziehbar. Außerdem weiterführende Ideen.
 * Protokollanten für das nächste Meeting festlegen
 
-Milestones: (muss man eh ganz umändern?!)
-* (KK) Es wird Cesium-Server von Uni bereitgestellt; wir übergeben dann Daten, "Einbindung" uns überlassen; entweder WebView oder externes öffnen in Browser
 
 
 ## SRS
@@ -29,6 +27,12 @@ R5: ... Vogel (und Study??) ...
 
 
 
+## Done BM 4.5. (nach Seb)
+
+Milestones: 
+* (KK) Es wird Cesium-Server von Uni bereitgestellt; wir übergeben dann Daten, "Einbindung" uns überlassen; entweder WebView oder externes öffnen in Browser
+(Seb.: muss man eh ganz umändern?!)
+(BM: In der Zeitplanung haben wir Cesium-Integration jetzt nicht mehr in der ersten Woche drin (sondern in Woche 4 bei MS2). Da das außerdem auch ganz allgemein noch völlig unklar ist und damit für MS1 unrealistisch habe ich den Punkt Cesium aus MS1 entfernt -- und dafür eine entschärfte Version zu MS2 dazugenommen sodass es auch dem Zeitplan entspricht.)
 
 
 ## Done Sebastian 4.5. 
