@@ -15,11 +15,6 @@ MB ^= Moritz Bock
 
 ## SRS
 
-
-
-
-
-
 ## Done BM 4.5. (nach Seb)
 
 * (KK) (R25) explizit reinschreiben, was wir uns davon eigentlich wünschen, Darstellung/response-time *verhältnismäßig* zu Rechenaufwand; MA "modulo Rechenzeit, ..." --- Performance der Hardware und Komplexität der Algorithmen sollte bei den Wartezeiten erwähnt werden
