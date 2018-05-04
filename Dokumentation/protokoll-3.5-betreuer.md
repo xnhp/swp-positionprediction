@@ -14,9 +14,7 @@ MB ^= Moritz Bock
 ## SRS
 
 
-* (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
 
-* Szenario: Update-Funktion in Erzählung  integrieren, nicht davon ausgehen, dass Vogel tatsächlich angetroffen wird. (KK)
 
 * (R5) Umformulieren, statt "gegeben Vogel" eher "gegeben StudyID & VogelID" (KK)
 * (R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)
@@ -48,6 +46,12 @@ MB ^= Moritz Bock
 * Zeitplan mit Wochentakt aufstellen (soll Testen beinhalten)
 
 * Testen zu MS3 hinzufügen
+
+
+
+## Done Sebastian 4.5. 
+* Szenario: Update-Funktion in Erzählung  integrieren, nicht davon ausgehen, dass Vogel tatsächlich angetroffen wird. (KK)
+* (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
 
 
 
