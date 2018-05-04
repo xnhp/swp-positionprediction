@@ -8,33 +8,37 @@
 \contentsline {paragraph}{Mobile Daten}{4}{section*.4}
 \contentsline {paragraph}{Vorhersage-Modell/Algorithmus}{4}{section*.5}
 \contentsline {paragraph}{API}{4}{section*.6}
+\contentsline {paragraph}{Outdoor-Modus, Normal-Modus}{4}{section*.7}
+\contentsline {paragraph}{Cesium}{4}{section*.8}
+\contentsline {paragraph}{Offline-Karten}{4}{section*.9}
 \contentsline {subsection}{\numberline {1.5}Referenzen}{4}{subsection.1.5}
-\contentsline {section}{\numberline {2}Produktkontext}{5}{section.2}
-\contentsline {subsection}{\numberline {2.1}Externe Produkte}{5}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Nutzercharakterisierung}{5}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Szenario}{5}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}Annahmen und Abh\IeC {\"a}ngigkeiten}{6}{subsection.2.4}
-\contentsline {subsection}{\numberline {2.5}Einschr\IeC {\"a}nkungen}{7}{subsection.2.5}
-\contentsline {section}{\numberline {3}Mindestanforderungen}{8}{section.3}
-\contentsline {subsection}{\numberline {3.1}Funktionen}{8}{subsection.3.1}
-\contentsline {subsubsection}{\numberline {3.1.1}Datenmanagement}{8}{subsubsection.3.1.1}
-\contentsline {subsubsection}{\numberline {3.1.2}Vorhersageberechnung}{9}{subsubsection.3.1.2}
-\contentsline {subsubsection}{\numberline {3.1.3}Visualisierung}{10}{subsubsection.3.1.3}
-\contentsline {subsubsection}{\numberline {3.1.4}Nutzerinteraktion}{11}{subsubsection.3.1.4}
-\contentsline {subsection}{\numberline {3.2}Nicht-funktionale Anforderungen}{12}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Hardware}{12}{subsubsection.3.2.1}
-\contentsline {subsubsection}{\numberline {3.2.2}Implementierung}{13}{subsubsection.3.2.2}
-\contentsline {subsubsection}{\numberline {3.2.3}Robustheit}{13}{subsubsection.3.2.3}
-\contentsline {subsubsection}{\numberline {3.2.4}Performanz}{14}{subsubsection.3.2.4}
-\contentsline {subsubsection}{\numberline {3.2.5}Herstellungsprozess}{14}{subsubsection.3.2.5}
-\contentsline {section}{\numberline {4}Optionale Anforderungen}{14}{section.4}
-\contentsline {section}{\numberline {5}Nicht-Anforderungen}{16}{section.5}
-\contentsline {section}{\numberline {6}Projektzeitplan}{18}{section.6}
-\contentsline {section}{\numberline {7}Diagramme}{20}{section.7}
-\contentsline {subsection}{\numberline {7.1}Anwendungsf\IeC {\"a}lle}{20}{subsection.7.1}
-\contentsline {paragraph}{Einloggen}{20}{section*.10}
-\contentsline {paragraph}{Einstellungen \IeC {\"a}ndern}{21}{section*.11}
-\contentsline {paragraph}{Richtung des Vogels anzeigen}{21}{section*.12}
-\contentsline {paragraph}{Vogel ausw\IeC {\"a}hlen}{21}{section*.13}
-\contentsline {paragraph}{Kartenvisualisierung ansehen}{21}{section*.14}
-\contentsline {subsection}{\numberline {7.2}Abl\IeC {\"a}ufe}{21}{subsection.7.2}
+\contentsline {section}{\numberline {2}Produktkontext}{6}{section.2}
+\contentsline {subsection}{\numberline {2.1}Externe Produkte}{6}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Nutzercharakterisierung}{6}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Szenario}{6}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Annahmen und Abh\IeC {\"a}ngigkeiten}{7}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Einschr\IeC {\"a}nkungen}{8}{subsection.2.5}
+\contentsline {section}{\numberline {3}Mindestanforderungen}{9}{section.3}
+\contentsline {subsection}{\numberline {3.1}Funktionen}{9}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Datenmanagement}{9}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}Vorhersageberechnung}{10}{subsubsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.3}Visualisierung}{11}{subsubsection.3.1.3}
+\contentsline {subsubsection}{\numberline {3.1.4}Nutzerinteraktion}{13}{subsubsection.3.1.4}
+\contentsline {subsection}{\numberline {3.2}Nicht-funktionale Anforderungen}{15}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Hardware}{15}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Implementierung}{15}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}Robustheit}{16}{subsubsection.3.2.3}
+\contentsline {subsubsection}{\numberline {3.2.4}Performanz}{16}{subsubsection.3.2.4}
+\contentsline {section}{\numberline {4}Optionale Anforderungen}{17}{section.4}
+\contentsline {section}{\numberline {5}Nicht-Anforderungen}{19}{section.5}
+\contentsline {section}{\numberline {6}Projektplanung}{20}{section.6}
+\contentsline {subsection}{\numberline {6.1}Zeitplan}{20}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Milestones}{21}{subsection.6.2}
+\contentsline {section}{\numberline {7}Diagramme}{23}{section.7}
+\contentsline {subsection}{\numberline {7.1}Anwendungsf\IeC {\"a}lle}{23}{subsection.7.1}
+\contentsline {paragraph}{Einloggen}{23}{section*.15}
+\contentsline {paragraph}{Einstellungen \IeC {\"a}ndern}{24}{section*.16}
+\contentsline {paragraph}{Richtung des Vogels anzeigen}{24}{section*.17}
+\contentsline {paragraph}{Vogel ausw\IeC {\"a}hlen}{24}{section*.18}
+\contentsline {paragraph}{Kartenvisualisierung ansehen, Cesiumvisualisierung ansehen}{24}{section*.19}
+\contentsline {subsection}{\numberline {7.2}Abl\IeC {\"a}ufe}{24}{subsection.7.2}
