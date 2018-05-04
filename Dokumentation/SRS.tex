@@ -63,6 +63,7 @@
   {\par\xdef\tpd{\the\prevdepth}\egroup
    \prevdepth=\tpd}
 
+% https://tex.stackexchange.com/questions/128605/enumitem-referencing-items-in-enumerate
 % 1 -- shortname
 % 2 -- Funktion
 % 3 -- Beschreibung
@@ -188,16 +189,18 @@ Das Ergebnis der Vorhersage wird in einer zwei- oder dreidimensionalen Kartenlan
 % \gls{utc} is 3 hours behind \gls{adt} and 10 hours ahead of \gls{est}.
 
 \paragraph{App, Applikation} Soweit nicht anders angemerkt wird hiermit die zu entwickelnde Android-Applikation bezeichnet.
- \paragraph{Forscher} Ein Mitarbeiter des Max-Planck-Instituts und Nutzer der App.
+ \paragraph{Forscher} Personen, die wissenschaftlich das Verhalten von Vögeln untersuchen.
  \paragraph{Mobile Daten} Ein Smartphone kann sich entweder über ein WiFi-Netzwerk oder über ein mobiles Datennetzwerk (3G, LTE, ...) mit dem Internet verbinden. 
 \paragraph{Vorhersage-Modell/Algorithmus} Die zur Berechnung einer Vorhersage verwendete Methodik. 
 \paragraph{API} \textit{Application Programming Interface}, hier insbesondere Schnittstellen mit Providern wie \textit{Movebank} oder \textit{Cesium}. 
 \paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. Einer davon ist der sog. Outdoor-Modus. (Siehe Anforderung \ref{Modi}.)
+\paragraph{Cesium} Ist eine Javascript-Bibliothek für die Arbeit mit dreidimensionalen Kartendaten.
 
 \subsection{Referenzen}
 
 \begin{itemize} 
  	 \item  \href{https://docs.google.com/document/d/1Yc2f18JFaHyhrgM2h2WiATQ0zVmZnsc9W1ImhwWJF-g/edit?usp=sharing}{Begleitdokument zum Softwareprojekt SS 2018}
+ 	 \item \href{https://cesiumjs.org/refdoc/}{Cesium API-Dokumentation}
 \end{itemize} 
 
 
@@ -218,7 +221,7 @@ In der Vergangenheit aufgezeichnete Positionsdaten werden dabei von \textit{Move
 % User Characteristics
 \subsection{Nutzercharakterisierung}
 
-Die Nutzer der Applikation sind Forscher am Max-Planck-Institut für Ornithologie in Radolfzell.
+Die Nutzer der Applikation sind Forscher, die das Verhalten von Vögeln untersuchen.
 
 Sie besitzen ein gutes Verständnis für abstrakte und technische Konzepte und verfügen über gutes bis sehr gutes Fachwissen in der Bedienung bzw. Programmierung digitaler Systeme.
 
@@ -239,17 +242,17 @@ Der folgende Text beschreibt beispielhaft ein Szenario, wie die Applikation verw
 
 \begin{displayquote}
 \small
-Herr X ist ein Forscher am Max-Planck-Institut für Ornithologie. X beschäftigt sich mit der Analyse von Tracking-Daten von Vögeln. Für das Tracking werden Vögel mit Sendern ausgestattet. 
+Herr Herr Storch ist ein Forscher am Max-Planck-Institut für Ornithologie. Herr Storch beschäftigt sich mit der Analyse von Tracking-Daten von Vögeln. Für das Tracking werden Vögel mit Sendern ausgestattet. 
 
-X möchte nun einen bestimmten in der Vergangenheit über einen solchen Sender verfolgten Vogel nun wieder auffinden, etwa um den Sender auszutauschen oder um das Tier zu betrachten.
+Herr Storch möchte nun einen bestimmten in der Vergangenheit über einen solchen Sender verfolgten Vogel nun wieder auffinden, etwa um den Sender auszutauschen oder um das Tier zu betrachten.
 
-X befindet sich in seinem Büro und hat Zugriff auf eine schnelle Datenverbindung. X startet die Applikation auf seinem Smartphone im Normal-Modus und gibt die Vogel-ID ein. Er benötigt noch etwas Zeit zur Vorbereitung und für das Zurücklegen des Weges, also fragt er eine Vorhersage für eine dreiviertelstunde in der Zukunft an.
+Herr Storch befindet sich in seinem Büro und hat Zugriff auf eine schnelle Datenverbindung. Herr Storch startet die Applikation auf seinem Smartphone im Normal-Modus und gibt die Vogel-ID ein. Er benötigt noch etwas Zeit zur Vorbereitung und für das Zurücklegen des Weges, also fragt er eine Vorhersage für eine dreiviertelstunde in der Zukunft an.
 
-Die Vorhersage wird X in der \textit{Cesium}-Umgebung visualisiert. Es wird ein Bereich angezeigt, in dem der Vogel mit hoher Wahrscheinlichkeit anzutreffen ist sowie weitere Abstufungen die einer geringeren Wahrscheinlichkeit entsprechen. Mithilfe der dreidimensionalen Kartendarstellung macht sich X außerdem mit der Beschaffenheit des Geländes vertraut. Währenddessen speichert die Applikation die Daten der Vorhersage und 2D-Kartendaten für spätere Verwendung.
+Die Vorhersage wird Herr Storch in der \textit{Cesium}-Umgebung visualisiert. Es wird ein Bereich angezeigt, in dem der Vogel mit hoher Wahrscheinlichkeit anzutreffen ist sowie weitere Abstufungen die einer geringeren Wahrscheinlichkeit entsprechen. Mithilfe der dreidimensionalen Kartendarstellung macht sich Herr Storch außerdem mit der Beschaffenheit des Geländes vertraut. Währenddessen speichert die Applikation die Daten der Vorhersage und 2D-Kartendaten für spätere Verwendung.
 
-Nun bricht X auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone lediglich über eine langsame mobile Datenverbindung und an manchen Stellen über gar keine Internetverbindung. X wechselt nun in den Outdoor-Modus. Die Applikation greift nun zur Visualisierung der Vorhersage auf die vorher heruntergeladenen 2D-Karten zurück.
+Nun bricht Herr Storch auf. Da das Gebiet recht abgelegen ist verfügt sein Smartphone lediglich über eine langsame mobile Datenverbindung und an manchen Stellen über gar keine Internetverbindung. Herr Storch wechselt nun in den Outdoor-Modus. Die Applikation greift nun zur Visualisierung der Vorhersage auf die vorher heruntergeladenen 2D-Karten zurück.
 
-Die aktuelle Position von X wird mittels des GPS-Sensors seines Smartphones ebenfalls in der Visualisierung angezeigt. Damit nähert sich X dem Zielgebiet an und trifft schließlich auf den gesuchten Vogel.
+Die aktuelle Position von Herr Storch wird mittels des GPS-Sensors seines Smartphones ebenfalls in der Visualisierung angezeigt. Damit nähert sich Herr Storch dem Zielgebiet an und trifft schließlich auf den gesuchten Vogel.
 \end{displayquote}
 
 
@@ -264,7 +267,7 @@ Die aktuelle Position von X wird mittels des GPS-Sensors seines Smartphones eben
 
 \begin{itemize} 
  	 \item Die verwendeten Schnittstellen (\textit{Movebank}, \textit{Cesium}, ...) sind zu jedem Zeitpunkt verfügbar.
- 	 \item \hl{Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden. }
+ 	 \item \hl{Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden.}
  	 \item Werden für die Datenabfrage aus \textit{Movebank} weitere Schritte oder Informationen benötigt (Zugangsdaten, vorherige Anfrage bei Provider der Daten, ...) so werden diese vom Nutzer erledigt bzw. bereitgestellt.
  	 \item Es wird bis zu Milestone 2 ein rudimentäres Vorhersagemodell auf Basis von Positionsdaten aus der Vergangenheit implementiert. Im Laufe der Entwicklung wird in Absprache mit Betreuuern und Kunde ermittelt, welche weiteren Daten und welche weiteren Vorhersagemodelle sinnvoll einbezogen werden können.
 \end{itemize} 
@@ -379,7 +382,7 @@ Treffen am 30.04.2018
 {
  Der Nutzer soll einstellen können auf welchen Daten die Vorhersage basiert.
  }{
- Der Nutzer soll über Parameter die Vorhersage justieren können.}{
+ Der Nutzer soll über Parameter die Berechung der Vorhersage justieren können.}{
  Treffen am 26.04.2018
  }{
  \ref{DatenLadenAusMovebank} 
@@ -506,9 +509,9 @@ Treffen am 30.04.2018
 }
 \req{HinweisAufFormalFalscheDaten}
 {
- Der Nutzer soll auf einen hohen Anteil formal falscher Daten hingewiesen werden. 
+ Der Nutzer soll auf einen hohen Anteil falsch formatierter Daten hingewiesen werden. 
  }{
- Die App soll dem Nutzer einen Hinweis anzeigen, wenn viele formal falsche Daten zur Berechnung verwendet werden mussten.
+ Die App soll dem Nutzer einen Hinweis anzeigen, wenn in den der Berechnung der Vorhersage zugrunde liegenden Daten so viele Datensätze falsch formatiert sind, dass die Qualität der Vorhersage nicht vergleichar mit der auf Basis eines vollständig korrekten Datensatzes ist.
  }{
  Treffen am 30.04.2018 
  }{
@@ -688,7 +691,7 @@ Treffen am 30.04.2018
 
  \section{Nicht-Anforderungen} \label{nicht-anforderungen}
 
-Die App soll lediglich ein einfaches Vorhersageverfahren beinhalten, und zusätzlich eine interne Schnittstelle zur Verfügung stellen, um die vom Kunden zur Verfügung gestellten Modelle/Algorthmen zu integrieren.
+Die App soll lediglich ein einfaches Vorhersageverfahren beinhalten, und zusätzlich eine interne Schnittstelle zur Verfügung stellen, um die vom Kunden zur Verfügung gestellten Modelle/Algorithmen zu integrieren.
 
 Es ist nicht Teil des Entwicklungsprozesses, ein komplexes Vorhersagemodell zu entwickeln.
 
@@ -770,7 +773,7 @@ In folgendem Diagramm sind die wesentlichen Anwendungsfälle der Applikation und
      	  \end{cptenumerate}  
     \end{cptenumerate}    
 
-\paragraph{Kartenvisualisierung ansehen} Der Nutzer betrachtet die Visualisierung des Ergebnisses der Vorhersage auf einer Kartenlandschaft.
+\paragraph{Kartenvisualisierung ansehen, Cesiumvisualisierung ansehen} Der Nutzer betrachtet die Visualisierung des Ergebnisses der Vorhersage auf einer Kartenlandschaft.
 \begin{cptenumerate}[a.]
  	 \item Falls im Normal-Modus: Darstellung in \textit{Cesium}.
  	 \item Falls im Outdoor-Modus: Darstellung in \textit{Mapbox}. 
@@ -779,7 +782,7 @@ In folgendem Diagramm sind die wesentlichen Anwendungsfälle der Applikation und
 
 \subsection{Abläufe}
 
-Im folgenden Diagramm wird exemplarisch der Informationsaustausch zwischen beteiligten Komponenten und dessen zeitlicher Ablauf in einer vollständige Sitzung des Nutzers illustriert. 
+Im folgenden Diagramm wird exemplarisch ein Informationsaustausch zwischen beteiligten Komponenten und dessen zeitlicher Ablauf in einer vollständigen Sitzung des Nutzers illustriert. 
 
 \includegraphics[width = 1\linewidth]{Sequenzdiagramm.png}
 
