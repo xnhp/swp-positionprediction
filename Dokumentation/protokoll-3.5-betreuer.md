@@ -11,6 +11,10 @@ MB ^= Moritz Bock
 * Designentscheidungen, Fragen, Absprachen, Annahmen; deren Auswirkungen in einem Dokument festhalten sodass nachvollziehbar. Außerdem weiterführende Ideen.
 * Protokollanten für das nächste Meeting festlegen
 
+Milestones: (muss man eh ganz umändern?!)
+* (KK) Es wird Cesium-Server von Uni bereitgestellt; wir übergeben dann Daten, "Einbindung" uns überlassen; entweder WebView oder externes öffnen in Browser
+
+
 ## SRS
 
 * Frage: Für Vogel in einer Study Vorhersage machen oder kann Vogel in mehreren Studys vorkommen, d.h. pro VogelID mit mehreren StudyIDs?
@@ -19,25 +23,22 @@ R5: ... Vogel (und Study??) ...
 * "(R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)"
 => Done, aber passt R5 so? => Welche Grenze wählen wir?
 
-
 * (KK) (R25) explizit reinschreiben, was wir uns davon eigentlich wünschen, Darstellung/response-time *verhältnismäßig* zu Rechenaufwand; MA "modulo Rechenzeit, ..." --- Performance der Hardware und Komplexität der Algorithmen sollte bei den Wartezeiten erwähnt werden
 
-
-* (KK) Es wird Cesium-Server von Uni bereitgestellt; wir übergeben dann Daten, "Einbindung" uns überlassen; entweder WebView oder externes öffnen in Browser
-
-
-
-* (BM) Bei Definitionen unterscheiden zwischen Cesium und (2D-)Kartenprovider
-
-* Punkt mit Cesium nicht in (MS1)
-
-* Zeitplan mit Wochentakt aufstellen (soll Testen beinhalten)
 
 
 
 
 
 ## Done Sebastian 4.5. 
+
+*Added*:
+
+\paragraph{Offline-Karten} Ist ein 2D-Karten-Provider der Kartendaten liefert, wenn keine Internetverbindung besteht.
+
+
+*Done*:
+
 * Szenario: Update-Funktion in Erzählung  integrieren, nicht davon ausgehen, dass Vogel tatsächlich angetroffen wird. (KK)
 * (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
 * (R5) Umformulieren, statt "gegeben Vogel" eher "gegeben StudyID & VogelID" (KK)
@@ -49,6 +50,10 @@ R5: ... Vogel (und Study??) ...
 * (O2) ändern; Beispiele hinzufügen: Wetter, Temperatur, ..., (O8, O7) (MA)
 * Testen zu MS3 hinzufügen
 * (MS1) Wort "Mapbox" ersetzen
+* (BM) Bei Definitionen unterscheiden zwischen Cesium und (2D-)Kartenprovider
+* Punkt mit Cesium nicht in (MS1)
+* Zeitplan mit Wochentakt aufstellen (soll Testen beinhalten)
+
 
 ## Erledigt
 
