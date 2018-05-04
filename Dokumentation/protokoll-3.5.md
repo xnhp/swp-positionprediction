@@ -16,16 +16,20 @@ MB ^= Moritz Bock
 ## SRS
 
 
-* "(R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)"
-=> Done, aber passt R5 so? => Welche Grenze wählen wir?
-
-* (KK) (R25) explizit reinschreiben, was wir uns davon eigentlich wünschen, Darstellung/response-time *verhältnismäßig* zu Rechenaufwand; MA "modulo Rechenzeit, ..." --- Performance der Hardware und Komplexität der Algorithmen sollte bei den Wartezeiten erwähnt werden
-=> Hab Modulo noch nie in einem deutschen Satz verwendet :D
 
 
 
 
 ## Done BM 4.5. (nach Seb)
+
+* (KK) (R25) explizit reinschreiben, was wir uns davon eigentlich wünschen, Darstellung/response-time *verhältnismäßig* zu Rechenaufwand; MA "modulo Rechenzeit, ..." --- Performance der Hardware und Komplexität der Algorithmen sollte bei den Wartezeiten erwähnt werden
+(Seb) Hab Modulo noch nie in einem deutschen Satz verwendet :D
+(BM) Hoffe, meine Formulierung ist treffend genug.
+
+
+* "(R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)"
+=> Done, aber passt R5 so? => Welche Grenze wählen wir?
+(BM) Passt für mich so.
 
 * (Seb) Frage: Für Vogel in einer Study Vorhersage machen oder kann Vogel in mehreren Studys vorkommen, d.h. pro VogelID mit mehreren StudyIDs?
 R5: ... Vogel (und Study??) ... (BM: Bisher wurde immer nur über Vogel innerhalb von Study gesprochen, deswgen würde ich das mal so übernehmen.)
