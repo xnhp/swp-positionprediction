@@ -19,7 +19,7 @@
 
 \usepackage[shortlabels]{enumitem}
                     
-\usepackage{xcolor}
+% \usepackage{xcolor}
 
 % text-marker-like highlighting of text
 % https://tex.stackexchange.com/questions/141569/highlight-textcolor-and-boldface-simultaneously#141572
@@ -42,6 +42,10 @@
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
+\usepackage{booktabs}
+
+\usepackage{makecell}
+% \renewcommand{\cellalign}{cr}
 
 % enumerate list with less spacing
 % usage:
@@ -53,6 +57,19 @@
 
 \newenvironment{cptitemize}[1][,]{\begin{itemize} \setlength\itemsep{0em}}{\end{itemize}}
 
+\usepackage{booktabs}% http://ctan.org/pkg/booktabs
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+
+
+\usepackage{graphicx}
+\usepackage[x11names,table]{xcolor}
+\usepackage{caption}
+\DeclareCaptionFont{blue}{\color{LightSteelBlue3}}
+
+\newcommand{\foo}{\color{LightSteelBlue3}\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
+
+\renewcommand\arraystretch{1.4}\arrayrulecolor{LightSteelBlue3}
+
 \usepackage{cleveref}
 
 \begin{document}
@@ -62,6 +79,17 @@
    \vtop\bgroup}
   {\par\xdef\tpd{\the\prevdepth}\egroup
    \prevdepth=\tpd}
+
+\newcommand{\timelineitem}[3]{%
+	\makecell[cr]{%
+		\textsf{#1} \\ {\footnotesize #2}
+	} 
+	& 
+	\makecell[lc]{%
+		#3
+	} \\
+}
+
 
 % https://tex.stackexchange.com/questions/128605/enumitem-referencing-items-in-enumerate
 % 1 -- shortname
@@ -700,10 +728,94 @@ Es werden keine Vorhersagen für lange Zeiträume (im Maßstab von mehreren Tage
 %================================================================================================================
 
 \newpage
-\section{Projektzeitplan} \label{zeitplan}
 
-\subsection*{Milestone 1}
-Fertigstellung am 15.5.
+\section{Projektplanung} \label{planung}
+
+\subsection{Zeitplan} \label{zeitplan}
+% TODO: Summary an Anfang von Dokument an hier geänderte Struktur anpassen.
+\def\arraystretch{2.55}%
+\begin{figure}[H]
+\begin{tabular}{@{\,}r <{\hskip 2pt} !{\foo} >{\raggedright\arraybackslash}p{1cm}}
+\timelineitem{Woche 1}{07.05. - 15.05.}{
+	\tabitem Grundgerüst der Applikation (siehe Spezifikation von \nameref{ms1} ) \\
+	\tabitem Daten von der \textit{Movebank}-API abfragen
+	\ref{DatenLadenAusMovebank} \\
+	\tabitem \textit{Software Design Document} verfassen \\
+	$\rightarrow$ \nameref{ms1} erreicht
+}
+\timelineitem{Woche 2}{15.15 - 22.05.}{
+	\tabitem Daten verarbeiten (Movebank, Robustheit berücksichtigen) 
+		\ref{SpeicherungMovebankNutzerdaten},
+		\ref{OfflineDatenSpeicherung} \\
+	\tabitem Darstellung einer 2D-Karte \\
+	\tabitem Vorhersagemethode und -Interface implementieren
+		\ref{EinheitlicheSchnittstelleFuerVorhersagealgorithmen},
+		\ref{VorhersageFuerBestimmtenZeitraum} \\
+}
+\timelineitem{Woche 3}{22.05. - 29.05.}{
+	\tabitem Dummy-Visualisierung auf 2D-Karte \\
+	\tabitem Ergebnis der Vorhersage wird visualisiert. \\
+	\tabitem Visualisierung von Daten aus der Vergangenheit
+		\ref{VisualisierungDerVorhandenenDaten},
+		\ref{VisualisierungInMapboxBeiOutdoorModus}
+}
+\timelineitem{Woche 4}{29.05. - 05.06.}{
+	\tabitem Cesium-Integration
+		\ref{VisualisierungInCesiumBeiNormalModus} \\
+	\tabitem Speicherung von Kartendaten
+		\ref{OfflineDatenSpeicherung}
+		\ref{VisualisierungAufOfflineKarten} \\
+	\tabitem Datenvis. in Cesium
+		\ref{VisualisierungInCesiumBeiNormalModus} \\
+	$\rightarrow$ \nameref{ms2} erreicht
+}
+\timelineitem{Woche 5}{05.06. - 12.06.}{
+	\tabitem Suche nach Vogel
+		\ref{SucheNachVogel} \\
+	\tabitem Akt. Position auf Karte
+		\ref{AktuellePosition} \\
+	\tabitem Speicherung von Mb-Nutzerdaten
+		\ref{SpeicherungMovebankNutzerdaten} \\
+} 
+\timelineitem{Woche 6}{12.06. - 19.06.}{
+	\tabitem Modi 
+		\ref{Modi}\textit{ff} \\
+	\tabitem Auswahl des Vorhersagezeitraums
+		\ref{WaehlbarerVorhersagezeitraum}\\
+	\tabitem Auswahl von Daten für die Vorhersage
+		\ref{WahlDerDatenFuerVorhersage}
+}
+~ & ~~~~~~~~~~~~ \vdots
+\end{tabular}
+\end{figure}
+
+\begin{figure}[H]
+\begin{tabular}{@{\,}r <{\hskip 2pt} !{\foo} >{\raggedright\arraybackslash}p{1cm}}
+\timelineitem{Woche 7}{19.06. - 26.06.}{
+	\tabitem Aktualisierung der Vorhersage
+		\ref{AktualisierungUeberMobileDaten} \\
+	\tabitem Kompass 
+		\ref{Kompass}\\
+}
+\timelineitem{Woche 8}{26.06. - 03.07.}{
+	\tabitem Automatisches und manuelles testen. \\
+	\tabitem Requirements gegentesten\\
+	\tabitem Korrekturen	\\
+} 
+\timelineitem{Woche 9}{03.07. - 10.07.}{
+	\tabitem Korrekturen\\
+	\tabitem Endpräsentation vorbereiten\\
+	$\rightarrow$ \nameref{ms3} erreicht
+}
+\end{tabular}
+\end{figure}
+
+
+
+\subsection{Milestones} \label{milestones}
+
+\subsubsection*{Milestone 1} \label{ms1}
+Fertigstellung am 15.05.
 \begin{itemize} 
 	\item Grundliegende Software-Architektur festgelegt
 	\item Grundliegendes Software-Design festgelegt
