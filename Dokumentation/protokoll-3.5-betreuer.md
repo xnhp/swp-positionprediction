@@ -13,15 +13,15 @@ MB ^= Moritz Bock
 
 ## SRS
 
+* Frage: Für Vogel in einer Study Vorhersage machen oder kann Vogel in mehreren Studys vorkommen, d.h. pro VogelID mit mehreren StudyIDs?
+R5: ... Vogel (und Study??) ...
+
+* "(R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)"
+=> Done, aber passt R5 so? => Welche Grenze wählen wir?
 
 
 
-* (R5) Umformulieren, statt "gegeben Vogel" eher "gegeben StudyID & VogelID" (KK)
-* (R5) Umformulieren, "jd Punkt in Umgebung" ist Festlegung auf Heatmap, billiges Vorhersagemodell könnte auch nur einen einzelnen Punkt zurückgeben -> Formulierung abschwächen (KK)
 
-* (MA) nur maximal kleine Mengen von Vergangenheits-Daten anzeigen
-
-* (MA) *WIR müssen uns überlegen*: Was ist vernünftige Einschränkung aus *unserer* Sicht? Harte Grenze muss von Betreuung abgeklärt werden, weiche Grenze kann von uns festgelegt werden und soll ins SRS geschrieben werden.
 
 * (MB) Lieber gmaps oder openstreetmap als Mapbox verwenden (cf osmdroid)
 
@@ -52,6 +52,8 @@ MB ^= Moritz Bock
 ## Done Sebastian 4.5. 
 * Szenario: Update-Funktion in Erzählung  integrieren, nicht davon ausgehen, dass Vogel tatsächlich angetroffen wird. (KK)
 * (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
+* (R5) Umformulieren, statt "gegeben Vogel" eher "gegeben StudyID & VogelID" (KK)
+* (MA) nur maximal kleine Mengen von Vergangenheits-Daten anzeigen
 
 
 
