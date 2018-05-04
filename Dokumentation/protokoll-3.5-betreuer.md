@@ -20,24 +20,12 @@ R5: ... Vogel (und Study??) ...
 => Done, aber passt R5 so? => Welche Grenze wählen wir?
 
 
-
-
-
-* (MB) Lieber gmaps oder openstreetmap als Mapbox verwenden (cf osmdroid)
-
-* (MA) In SRS nirgends auf Mapbox festlegen, allgemein formulieren ("Karten-Provider" oder so)
-
 * (KK) (R25) explizit reinschreiben, was wir uns davon eigentlich wünschen, Darstellung/response-time *verhältnismäßig* zu Rechenaufwand; MA "modulo Rechenzeit, ..." --- Performance der Hardware und Komplexität der Algorithmen sollte bei den Wartezeiten erwähnt werden
 
-* (R19) expliziter formulieren: IDs liefern Zugriff auf Daten
-
-* (O1) ändern: Virtual-Reality-"Umgebung" (MA)
-
-* (O2) ändern; Beispiele hinzufügen: Wetter, Temperatur, ..., (O8, O7) (MA)
 
 * (KK) Es wird Cesium-Server von Uni bereitgestellt; wir übergeben dann Daten, "Einbindung" uns überlassen; entweder WebView oder externes öffnen in Browser
 
-* (MS1) Wort "Mapbox" ersetzen
+
 
 * (BM) Bei Definitionen unterscheiden zwischen Cesium und (2D-)Kartenprovider
 
@@ -45,7 +33,7 @@ R5: ... Vogel (und Study??) ...
 
 * Zeitplan mit Wochentakt aufstellen (soll Testen beinhalten)
 
-* Testen zu MS3 hinzufügen
+
 
 
 
@@ -54,8 +42,13 @@ R5: ... Vogel (und Study??) ...
 * (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
 * (R5) Umformulieren, statt "gegeben Vogel" eher "gegeben StudyID & VogelID" (KK)
 * (MA) nur maximal kleine Mengen von Vergangenheits-Daten anzeigen
-
-
+* (MB) Lieber gmaps oder openstreetmap als Mapbox verwenden (cf osmdroid)
+* (MA) In SRS nirgends auf Mapbox festlegen, allgemein formulieren ("Karten-Provider" oder so)
+* U(R19) expliziter formulieren: IDs liefern Zugriff auf Daten
+* (O1) ändern: Virtual-Reality-"Umgebung" (MA)
+* (O2) ändern; Beispiele hinzufügen: Wetter, Temperatur, ..., (O8, O7) (MA)
+* Testen zu MS3 hinzufügen
+* (MS1) Wort "Mapbox" ersetzen
 
 ## Erledigt
 
