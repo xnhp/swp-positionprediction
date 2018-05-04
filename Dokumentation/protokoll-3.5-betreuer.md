@@ -13,6 +13,11 @@ MB ^= Moritz Bock
 
 ## SRS
 
+* R12: "bestimmten Zeitraum" konkretisieren (zu klären mit Anwendern)
+
+* (KK) Annahmen über Nutzerkenntnisse konkretisieren: Nutzer ist bewussst, dass Wartezeiten "in Abhängigkeit von Hardware und algorithmischer Komplexität" (MA) vorkommen können
+
+* (KK) Festhalten, dass optionale Funktionen eventuell komplexere Architektur benötigen (z.B. Server) [TJ: Könnten wir bei den Constraints reinschreiben]
 
 * (KK) "Sehr gutes technisches Wissen" nicht voraussetzbar, Formulierung runterschrauben; stattdessehen eher: keine Vereinfachungen nätig, können UI verstehen -> konkreter werden; nur voraussetzen, was auch wirklich von uns gebraucht/gefordert wird.
 
@@ -35,7 +40,7 @@ MB ^= Moritz Bock
 
 * (O1) ändern: Virtual-Reality-"Umgebung" (MA)
 
-* (O2) ändern; Beispiele hinzufügen: Wetter, Temperatur, ..., (O8, O7) (MA)
+* (O2) ändern; Beispiele hinzufügen: Wetter, Temperatur, Gattung, ..., siehe Google Doc (R8, R7) (MA)
 
 * (KK) Es wird Cesium-Server von Uni bereitgestellt; wir übergeben dann Daten, "Einbindung" uns überlassen; entweder WebView oder externes öffnen in Browser
 
