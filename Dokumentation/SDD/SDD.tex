@@ -1,0 +1,230 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simple Sectioned Essay Template
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing essay content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{tabularx}
+
+
+
+\usepackage{graphicx} % Required for including pictures
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage[shortlabels]{enumitem}
+                    
+\usepackage{xcolor}
+
+\linespread{1.2} % Line spacing
+
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+
+\begin{document}
+\setlist[enumerate, 1]{1\textsuperscript{o}}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\Large Position Prediction Based on Movement Data}\\[0.5cm] % Major heading such as course name
+\textsc{\large System Design Document}\\[0.5cm] % Minor heading such as course title
+
+\vfill
+
+\emph{Authors:}\\
+Timo Jockers, Oliver Mänder, Benjamin Moser, \\
+Manuel Prinz, Sebastian Strumbelj, Simon Suckut
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Include a table of contents
+
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+% Changelog
+\section{Änderungen}
+
+% \begin{tabular}{|c|c|p{10cm}|c|}
+% \hline
+% Version & Author & Description of changes & Date \\
+% \hline\hline
+% 1.0 & M,S,R & Inital release & 1.1.2018 \\\hline
+% 1.1 & M & Merged modules Order- and Animal-Reporting(*) & 5.1.2018 \\\hline
+% 1.2 & S & New module 'Controlling'(**) & 6.1.2018 \\\hline
+% 1.3 & M & Modified requirements (R8), (R2) after phone call with Zoo Director & 12.1.2018 \\\hline
+% \end{tabular}
+% \\\\
+% {\small
+% Legend: \\
+% S = Sebastian Strumbelj \\
+% M = Benjamin Moser \\
+% R = Simon Reufsteck \\
+% }
+
+%------------------------------------------------
+
+\section{Einleitung} % Major section
+
+%------------------------------------------------
+
+\subsection{Zweck}
+
+
+
+%------------------------------------------------
+
+\subsection{Design-Ziele}
+
+% This document fully specifies all traits relevant for the implementation of...
+
+% The system does...
+
+% The system does not...
+
+\subsection{Definitionen und Abkürzungen}
+
+% Hier relevante Punkte aus SRS übernehmen?
+
+\paragraph{SRS} Software Requirements Document
+
+
+
+\subsection{Referenzen}
+
+
+\subsection{Überblick}
+
+% If there is a system to be replaced.
+% Otherwise: comparable systems, competing systems.
+
+
+% -------------------------------------------------------------------
+
+
+\section{Aktuelle Architektur}
+
+% Wird wahrscheinlich wegfallen
+
+% If there is a system to be replaced.
+% Otherwise: comparable systems, competing systems
+
+% -------------------------------------------------------------------
+
+% Formulierung?
+\section{Vorgeschlagene Architektur}
+
+\subsection{Überblick}
+
+% Textbeschreibung, Component Diagram
+
+\subsection{Teilsysteme}
+
+% The sub-subsystems are as denoted in Figure \ref{fig:component-diagram}.
+% It follows a detailed description of the subsystems and their tasks.
+
+% \paragraph{Individual Databases, DBDriver} will be part of a
+% Database Management System such as MySQL.
+
+% etc
+
+% -------------------------------------------------------------------
+
+
+\subsection{Hardware-Software-Zuordnung}
+
+% \begin{figure}
+% 	\includegraphics[width=\textwidth]{pictures/deployment-diagram.png}
+% 	\caption{Deployment Diagram}
+% 	\label{fig:deployment-diagram}
+% \end{figure}
+
+% Textbeschreibung
+
+
+% -------------------------------------------------------------------
+
+% Formulierung
+\subsection{Management von persistenten Daten}
+
+
+% -------------------------------------------------------------------
+
+
+\subsection{Sicherheit}
+
+% Übersetzung?
+\subsection{Global Software Control}
+
+% • How will control signals be used?
+% • How do the subsystems communicate? --> interface descriptions?
+% • How do the subsystems synchronize? --> statechart diagram? Concurrency
+
+
+\subsubsection{Interfaces}
+\label{sec:interfaces}
+
+
+% ----
+
+% Übersetzung?
+\subsection{Boundary Conditions}
+
+% Sequenzdiagramm?
+% \includegraphics[width = 0.8\textwidth]{pictures/SeqDia.png}
+
+% Startup behaviour (What happens, when we start the system?)
+% • Shutdown behaviour (What happens, when we stop the system?)
+% • Failure behaviour (What happens, when the system
+% missbehaves? Which kind of failures can you imagine? What
+% does the system need to do then?)
+
+
+
+\section{Anhänge}
+
+\subsection{Geänderte Anforderungen}
+
+% List changed requirements in old and new form.
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
