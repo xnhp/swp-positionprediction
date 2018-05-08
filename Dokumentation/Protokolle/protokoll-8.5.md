@@ -24,6 +24,11 @@ Abzuklären:
 	Muss Cesium-Server, Movebank,... in Cesium-Diagramm?
 	(-> Sebastian, Oliver, Timo)
 
+Abzuklären:
+	Wechsel Normal / Outdoor - Modus
+		Relevant für Component Diagram?
+		Relevant für Software Design!
+
 Info: (Manuel) Finden von StudyID, VogelID gegeben Study-Name und Vogel-Name
 	wäre einfach zu bewerkstelligen.
 
