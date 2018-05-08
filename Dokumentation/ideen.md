@@ -1,4 +1,4 @@
-
+BM, 8.5.: Falls viele Positionsdaten angezeigt werden dann auf niedrigen Zoom-Stufen ein Clustering oder eine Vereinfachung der Visualisierung??
 
 (MA) Die suchende Person wird ebenfalls getrackt. Dann kann zB festgestellt werden, welcher Bereich der Vorhersage bereits abgesucht wurde.
 
