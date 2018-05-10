@@ -22,7 +22,7 @@
 \geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
 
 \usepackage{tabularx}
-
+\usepackage[utf8]{inputenc}
 
 
 \usepackage{graphicx} % Required for including pictures
@@ -83,22 +83,31 @@ Manuel Prinz, Sebastian Strumbelj, Simon Suckut
 % Changelog
 \section{Änderungen}
 
-% \begin{tabular}{|c|c|p{10cm}|c|}
-% \hline
-% Version & Author & Description of changes & Date \\
-% \hline\hline
-% 1.0 & M,S,R & Inital release & 1.1.2018 \\\hline
-% 1.1 & M & Merged modules Order- and Animal-Reporting(*) & 5.1.2018 \\\hline
-% 1.2 & S & New module 'Controlling'(**) & 6.1.2018 \\\hline
-% 1.3 & M & Modified requirements (R8), (R2) after phone call with Zoo Director & 12.1.2018 \\\hline
-% \end{tabular}
-% \\\\
-% {\small
-% Legend: \\
-% S = Sebastian Strumbelj \\
-% M = Benjamin Moser \\
-% R = Simon Reufsteck \\
-% }
+
+\begin{tabular}{|c|c|p{10cm}|c|}
+\hline
+Version & Author & Description of changes & Date \\ \hline\hline
+
+%changelog content 
+1.0 & SS & \color{red}{Aufbau der App in Android Studio} & x.5.2018 \\\hline
+	&	&	&	\\\hline
+
+\end{tabular}
+
+
+{\small
+
+\noindent
+\\\\Legend: \\
+SSJ = Sebastian Strumbelj \\
+BM = Benjamin Moser \\
+MP = Manuel Prinz \\
+OM = Oliver Mänder \\
+SS = Simon Suckut \\
+TJ = Timo Jockers \\
+ALL = SSJ, BM, MP, OM, SS, TJ \\
+}
+
 
 %------------------------------------------------
 
@@ -107,12 +116,27 @@ Manuel Prinz, Sebastian Strumbelj, Simon Suckut
 %------------------------------------------------
 
 \subsection{Zweck}
-
-
+Das Erstellen einer App, um einem Ornithologen das Finden eines Vogels zu erleichtern, indem sie dessen zukünftige Position mit einem Vorhersagemodell abschätzt. 
 
 %------------------------------------------------
 
 \subsection{Design-Ziele}
+
+Diese Dokumentation spezifiert alle Eigenschaften, die unsere App benötigt, um deren Zweck zu Erfüllen. Um eine Vorhersage für Vögel zu treffen und dem Ornithologen bei seiner Suche zu unterstützen, sollte die App folgende Funktionen beinhalteten: 
+\begin{itemize}
+	\item Aufbereiten und Speichern der vorhandenden und benötigten Daten
+	\item Vorhersageberechnung 
+	\item Visualisierung der Daten
+	\item Userinterface zur Interaktion 
+\end{itemize}
+Die App beinhaltet keine Funktionen die folgenden entsprechen:
+\begin{itemize}
+	\item Daten aus der Vergangenheit aufwendig visualisieren, um das vergangene Verhalten zu studieren
+	\item \color{red}{TODO}
+
+\end{itemize}
+
+
 
 % This document fully specifies all traits relevant for the implementation of...
 
@@ -122,20 +146,37 @@ Manuel Prinz, Sebastian Strumbelj, Simon Suckut
 
 \subsection{Definitionen und Abkürzungen}
 
-% Hier relevante Punkte aus SRS übernehmen?
+	\paragraph{App, Applikation} Soweit nicht anders angemerkt wird hiermit die zu entwickelnde Android-Applikation bezeichnet.
+	 \paragraph{Forscher} Personen, die wissenschaftlich das Verhalten von Vögeln untersuchen.
+	 \paragraph{Mobile Daten} Ein Smartphone kann sich entweder über ein WiFi-Netzwerk oder über ein mobiles Datennetzwerk (3G, LTE, ...) mit dem Internet verbinden. 
+	\paragraph{Vorhersage-Modell/Algorithmus} Die zur Berechnung einer Vorhersage verwendete Methodik. 
+	\paragraph{API} \textit{Application Programming Interface}, hier insbesondere Schnittstellen mit Providern wie \textit{Movebank} oder \textit{Cesium}. 
+	\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. Einer davon ist der sog. Outdoor-Modus.
+	\paragraph{Cesium} Ist eine Javascript-Bibliothek für die Arbeit mit dreidimensionalen Kartendaten.
+	\paragraph{Offline-Karten} Ist ein 2D-Karten-Provider der Kartendaten liefert, wenn keine Internetverbindung besteht.
 
-\paragraph{SRS} Software Requirements Document
+	\paragraph{SRS} Software Requirements Document
 
 
 
 \subsection{Referenzen}
+\begin{itemize}
+	\item SRS
+	\item Besprechungen mit den Betreuern
+	\item Besprechungen mit einem Forscher
+\end{itemize}
 
 
 \subsection{Überblick}
 
+Der erste Teil des Dokumentes beschäftigt sich mit vorhandenden 
+
+
 % If there is a system to be replaced.
 % Otherwise: comparable systems, competing systems.
 
+
+% The first part gives an overview of this document. The second part will give a description of the current architecture. In the third part will be a description of the architecture proposed by MKS-Software Solutions.
 
 % -------------------------------------------------------------------
 
