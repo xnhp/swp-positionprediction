@@ -229,6 +229,17 @@ Der erste Teil des Dokumentes beschäftigt sich mit vorhandenden
 % Formulierung
 \subsection{Management von persistenten Daten}
 
+Um Daten nach dem Schließen der Applikation zu behalten, die Menge des Datenvolumens für Anfragen an die Movebank zu reduzieren und um Daten leichter verwalten zu können verfügt die Applikation über eine Schnittstelle zum Parsen und Speichern von XML-Dateien und eine SQLite-Datenbank. Außerdem werden Karten für den Offline-Modus lokal gespeichert.
+
+\begin{itemize}
+	\item \textit{SQLite-Datenbank}: In dieser Datenbank werden Daten von der Movebank lokal zwischen gespeichert um die Menge an Anfragen an die Movebank so gering wie möglich zu halten, die Menge des verbrauchten Datenvolumens zu reduzieren und die Daten leichter verwalten zu können.
+	
+	\item \textit{XML-Parser}: In der Applikation getätigte Einstellungen werden persistent in einer XML-Datei gespeichert.
+	
+	\item \textit{Offline-Karten}: Karten-Daten werden in dem vom Kartenanbieter verwendeten Format lokal zwischengespeichert.
+	
+	
+\end{itemize}
 
 % -------------------------------------------------------------------
 
