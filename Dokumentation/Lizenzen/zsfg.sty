@@ -1,0 +1,118 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{zsfg}[2018/02/05 Zsfg]
+
+% \usepackage{enumitem}
+
+% or "RequirePackage"
+\usepackage{tabularx}
+
+\usepackage{listings}
+
+\usepackage{amsmath}
+
+\usepackage{graphicx} % Required for including pictures
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+
+\usepackage{amssymb}
+
+\usepackage{palatino}
+% \usepackage{gillius}
+
+
+\newcommand\textboxfull[1]{%
+  \parbox{\textwidth}{#1}%
+}
+
+\newcommand{\textwidthimage}[2]{%
+	\begin{figure}[H]
+		\center
+		\includegraphics[width=\textwidth]{#1}
+		\caption{#2}
+	\end{figure}
+}
+
+\newcommand{\source}[1]{\textboxfull{\hfill \it #1}}
+
+\usepackage{pifont}% http://ctan.org/pkg/pifont 
+% \cmark
+% \xmark
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\usepackage{xcolor}
+
+\usepackage[utf8]{inputenc}
+
+
+\usepackage[shortlabels]{enumitem}
+
+% % https://tex.stackexchange.com/questions/373500/itemize-inside-newenvironment
+% \newlist{myenumerate}{enumerate}{1}
+% \setlist[myenumerate,1]{label = \ding{52}}
+% % also customize item
+
+% or if we want the text also green, we just make an "advantagelist"
+\newcommand{\advantageit}{\item[\textcolor{teal}{ $\oplus$ }]}
+\newcommand{\disadvantageit}{\item[\textcolor{red}{ $\ominus$ }]}
+
+
+\newcommand{\attention}[1][Achtung: ]{\textbf{#1}}
+
+\newcommand{\note}[1]{\textit{\textcolor{teal}{#1}}}
+
+\newcommand{\inlinedef}[1]{\textit{\textcolor{purple}{#1}}}
+
+
+% formatting for facts to remember
+\newenvironment{fact}[1][(i)]{
+\paragraph{\textcolor{blue}{#1}} 
+}
+
+\usepackage{scrextend}
+% Formatting for definitions
+% usage:
+% \begin{definition}[Profound Term]
+% 	Lorem ipsum dolor sit amet. Begins the essay on a new page instead of on the same page as the table of contents 
+% \end{definition}
+\newenvironment{definition}[1][blargh]{
+% \begin{addmargin}{2cm}{}
+\paragraph{\textcolor{purple}{#1}}
+% \end{addmargin}
+}
+
+% \begin{cptenumerate}[label=\arabic*.] 
+%  	  	\item \xmark ref., \xmark mod.
+%  	  	\item \xmark ref., \cmark mod.
+%  	  	\item \cmark ref., \xmark mod.
+%  	  	\item \cmark ref., \cmark mod.
+%  	  \end{cptenumerate}
+
+
+% enumerate list with less spacing
+% usage:
+% \begin{cptenumerate}
+% 	\advantageit Is a very good one
+% 	\disadvantageit Is a very, very complex one.
+% \end{cptenumerate}
+\newenvironment{cptenumerate}[1][label=\arabic*.]{\begin{enumerate}[#1] \setlength\itemsep{0em}}{\end{enumerate}}
+
+\newenvironment{cptitemize}[1][,]{\begin{itemize} \setlength\itemsep{0em}}{\end{itemize}}
+
+
+
+
+% \newcommand{\definition}[2] {
+% 	\paragraph{
+% 		\textcolor{purple}{#1}
+% 	} #2  
+% }
+
+% \setlist[enumerate, 1]{1\textsuperscript{o}}
+
+% \section{Formatting Demo}
+
+\endinput
+
