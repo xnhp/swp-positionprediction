@@ -1,0 +1,201 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simple Sectioned Essay Template
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing essay content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage{geometry} % Required to change the page size to A4
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+
+% \linespread{1.2} % Line spacing
+
+% main styles and formatting
+\usepackage{zsfg}
+\usepackage{hyperref}
+\usepackage{soulutf8}
+
+\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+
+
+
+\begin{document}
+
+
+\tableofcontents
+
+\section{Darstellung von Karten}
+
+\subsection{Anforderungen}
+
+\paragraph{Speicherung von Kartendaten} möglich, wie gut? 
+
+\paragraph{Möglichkeit zur Darstellung von Visualisierung} Zeichnen von Punkten, Linien, Polygonen, ... auf Karte
+
+\paragraph{Integrierbarkeit} Einfache Integration in Applikation 
+
+\paragraph{Lizenz-Kompatibilität} mit Applikation
+
+\paragraph{Zugriffbeschränkungen} Zweckbindung von Download, API-Limits..?  
+
+\subsection{Google Maps}
+
+\paragraph{Zugriffbeschränkungen}
+\begin{cptitemize} 
+  	 \item \href{https://cloud.google.com/maps-platform/terms/}{TOS, 3.2.4a "No Scraping"}: \textit{"Customer will not:(i) pre-fetch, cache, index, or store Google Maps Content for more than 30 days; (ii) bulk download geocodes; or (iii) copy business names, addresses, or user reviews."}
+  	 \item \href{https://enterprise.google.com/maps/terms/us/maps_purchase_agreement.html}{Purchase Agreement, 4.4 "Cache Restrictions"}: \textit{"Customer may not pre-fetch, retrieve, cache, index, or store any Content, or portion of the Services with the exception being Customer may store limited amounts of Content solely to improve the performance of the Customer Implementation due to network latency"}
+  	 \item \href{}{Additional Terms of Service, 2c} \textit{You may not mass download or create bulk feeds of the Content}
+  	 \item Karsten Klein hat im Meeting vom 3.5. obengenanntes erwähnt und sich eher abgeneigt geäußert.
+  	 \item Nun könnte man womöglich offline zu sein auch als \textit{Network Latency} auslegen, halte ich aber für riskant. 
+ \end{cptitemize}  
+ 
+ \paragraph{Implementierung}
+ \begin{cptitemize} 
+ 	\item Integrierung von Karten-Anzeige sehr einfach
+   	 \item GeoJSON möglich 
+   	 \item \hl{Attribution} erfordert
+  \end{cptitemize}  
+
+  \paragraph{Zugriffbeschränkungen}
+  \begin{cptitemize} 
+    	 \item \href{https://cloud.google.com/maps-platform/pricing/}{FAQ:} \textit{Starting June 11, 2018, when you enable billing, you get \$200 free usage every month for Maps, Routes, or Places. Based on the millions of users using our APIs today, most of them can continue to use Google Maps Platform for free with this credit. } 
+   \end{cptitemize}  
+
+ \paragraph{Weitere Quellen}
+ \begin{cptitemize} 
+   	 \item \href{https://developers.google.com/maps/documentation/android-sdk/intro}{Dokumentation Google Maps SDK} for Android 
+  \end{cptitemize}  
+
+  Da die TOS eine dauerhafte Offline-Speicherung nicht erlauben scheidet dieser Anbieter aus.
+
+
+\subsection{OpenStreetMap allgemein}
+
+Im Folgenden geht es um die Kartendaten vom OpenStreetMap-Projekt. Hierin gibt es auch verschiedene Quellen von Map-\href{https://wiki.openstreetmap.org/wiki/Tiles}{Tiles}. Im Folgenden geht es um die Standard ("Mapnik") Tiles.
+
+Ein SDK wie Mapbox oder OSMdroid, die für die Integration von OpenStreetMap-Karten in eine Applikation zuständig sind, sind gesondert zu prüfen.
+
+\paragraph{Implementierung}
+\begin{cptitemize} 
+  	 \item \hl{Attribution} erfordert (\href{https://operations.osmfoundation.org/policies/tiles/}{1},  \href{https://operations.osmfoundation.org/policies/tiles/}{2}) 
+ \end{cptitemize}  
+
+ \paragraph{Lizenz:} 
+ \begin{cptitemize} 
+  	 \item Kartendaten unterliegen \href{https://opendatacommons.org/licenses/odbl/summary/}{ODbL-Lizenz} -- keine Einschränkungen für Nutzung.
+  	 \item  Bei Bezug von \lstinline$tile.openstreetmap.org$ gilt jedoch die \href{https://operations.osmfoundation.org/policies/tiles/}{Tile Usage Policy}. Wichtigster Punkt: Kein herunterladen von übertrieben großen Datenmengen. Unsere Bedürfnisse sollten aber kein Problem sein.
+ \end{cptitemize} 
+
+
+\subsection{OSMdroid}
+
+\paragraph{Speicherung von Kartendaten} Möglich, bietet integrierte Funktionalität dafür, Abhängig von \href{https://github.com/osmdroid/osmdroid/wiki/Modular-Tile-Provider-Architecture}{Provider} (Openstreetmap, Mapbox, ...)
+
+\paragraph{Visualisierung:} Sieht recht einfach aus. 
+\begin{cptitemize} 
+ 	 \item  \href{https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons}{Doc: Markers, Lines and Polygons}
+ 	 \item Doc: \href{https://github.com/osmdroid/osmdroid/wiki/Making-Custom-Overlays}{Custom Overlays}
+\end{cptitemize}  
+
+\paragraph{Lizenz:} \href{https://github.com/osmdroid/osmdroid/blob/master/LICENSE}{Apache 2.0} 
+
+\paragraph{Integrierbarkeit}: Sollte einfach sein, viele Tutorials und Beispiele
+
+\paragraph{Weitere Quellen} 
+\begin{cptitemize} 
+	\item https://github.com/osmdroid/osmdroid/wiki/Offline-Map-Tiles
+ 	 \item  https://github.com/osmdroid/osmdroid/wiki/Cache-Manager
+ 	 \item https://github.com/osmdroid/osmdroid/wiki/Important-notes-on-using-osmdroid-in-your-app
+ 	 \item https://github.com/MKergall/osmbonuspack
+\end{cptitemize} 
+
+
+\subsection{HERE Maps (kostenloser Tarif)}
+
+
+\paragraph{Visualisierung} Keine Möglichkeit, auf Karte zu zeichen.
+
+\paragraph{Zugriffs-Beschränkungen} Weniger als 15.000 Transaktionen pro Monat für kostenlos.
+
+
+\subsection{Mapbox}
+
+\paragraph{Speicherung von Offline-Daten}
+\begin{cptitemize} 
+		\item \href{https://www.mapbox.com/tos/#[YmtcYmns]}{Stelle in den TOS zu Offline-Speicherung} 
+       	 \item Umfang von gespeicherten Daten durch SDK beschränkt.
+       	 \item \textit{You may not scrape or download Map Assets for any purpose other than temporary offline caching} -- Formulierung erlaubt uns nicht dauerhafte Speicherung.
+\end{cptitemize}       
+
+\paragraph{Visualisierung} Marker, Polylines, Polygone siehe \href{https://www.mapbox.com/android-docs/map-sdk/overview/annotations/}{Dokumentation}
+
+\paragraph{Integrierbarkeit} Android-SDK verfügbar.
+
+\paragraph{Lizenz} 
+\begin{cptitemize} 
+   	 \item \href{https://github.com/mapbox/mapbox-gl-native/blob/master/LICENSE.md}{Link zu Lizenz}
+   	 \item In Mapbox sind sehr viele andere Projekte integriert, viele mit einer eigenen Lizenz (Apache 2.0, BSD-Like, MIT, ...)
+\end{cptitemize}   
+
+\paragraph{Zugriffsbeschränkungen}
+\begin{cptitemize} 
+  	 \item Rate-Limits auf Mapbox-API: Beschränkung auf 50k Anfragen pro Monat.
+ \end{cptitemize}  
+
+
+ \subsection{Zusammenfassung \& Entscheidung}
+ \begin{cptitemize} 
+  	 \item Google Maps scheidet aus aufgrund der TOS.
+  	 \item HERE Maps scheidet aus aufgrund von mangelnder Funktionalität.
+  	 \item Mapbox scheidet aus aufgrund der TOS.
+  	 \item[$\Rightarrow$] Wir werden im Projekt OpenStreetMap mit OSMDroid verwenden.
+ \end{cptitemize} 
+
+
+\section{Weitere Komponenten}
+
+
+\subsection{Movebank-Tracking-Daten}
+\begin{cptitemize} 
+\item Die Tracking-Daten unterliegen im Allgemeinen einer CC-0-Lizenz. Daher frei verwendbar für uns.
+\item Einzelne Studien könnten einer spezielleren Lizenz unterliegen. Dies ist aber vom Anwender zu klären (siehe Besprechungsprotokolle).
+\item \href{https://www.movebank.org/node/2220\#licenses}{Erläutering in FAQ}
+\item \href{https://creativecommons.org/publicdomain/zero/1.0/}{Zusammenfassung von CC-0}
+\end{cptitemize}
+
+\subsection{Cesium}
+
+(Eig. nur Server) Apache 2.0
+
+\subsection{Volley}
+
+\begin{cptitemize} 
+	\item \href{https://github.com/google/volley}{GitHub-Seite}
+ 	 \item Verwendet zur Vereinfachung von \lstinline$HTTP-Anfragen$ an APIs.
+	\item Unterliegt einer Apache 2.0-Lizenz (\href{https://github.com/google/volley/blob/master/LICENSE}{Quelle})
+\end{cptitemize} 	
+
+
+\section{Weitere nützliche Quellen}
+\begin{cptitemize} 
+ 	 \item \href{https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)}{TLDRLegal}
+ 	 \item \href{https://stackoverflow.com/questions/1978511/is-there-a-chart-of-which-oss-license-is-compatible-with-which#1978524}{StackOverflow: Is there a chart of which OSS license is compatible with which?}
+\end{cptitemize} 
+
+
+\end{document}
