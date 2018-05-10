@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">PositionPrediction</string>
-
-
     <string name="title_activity_cesium">Cesium</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_osm">OSM</string>
