@@ -1,12 +1,8 @@
 package project.software.uni.positionprediction.movebank;
 
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
-import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,8 +13,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-import project.software.uni.positionprediction.DummyActivity;
-import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.activities.BirdSelect;
 
 
 public class MovebankRequest {
@@ -33,7 +28,7 @@ public class MovebankRequest {
 
     public String requestData(String attributes){
         // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(DummyActivity.getAppContext());
+        RequestQueue queue = Volley.newRequestQueue(BirdSelect.getAppContext());
 
         String url = baseURL+attributes;
         // Request a string response from the provided URL.
