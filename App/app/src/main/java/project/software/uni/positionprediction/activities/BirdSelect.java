@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.widget.Button;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
+import project.software.uni.positionprediction.util.PermissionManager;
 
 public class BirdSelect extends AppCompatActivity {
 
@@ -35,6 +37,7 @@ public class BirdSelect extends AppCompatActivity {
 
         BirdSelect.context = getApplicationContext();
 
+        PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, birdSelect);
 
         MovebankConnector connector = MovebankConnector.getInstance();
         String result = connector.getBirdData(22390461, 102937685);
