@@ -14,19 +14,21 @@ public class BirdSelect extends AppCompatActivity {
 
     private static Context context;
 
-    private Button buttonSelect = findViewById(R.id.birdselect_button_select);
+    private Button buttonSelect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bird_select);
 
+        buttonSelect = findViewById(R.id.birdselect_button_select);
+
         final BirdSelect birdSelect = this;
 
         buttonSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent buttonIntent =  new Intent(birdSelect, Settings.class);
+                Intent buttonIntent =  new Intent(birdSelect, OSM.class);
                 startActivity(buttonIntent);
             }
         });

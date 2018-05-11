@@ -28,7 +28,33 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/birdselect_listentry_margin"
+                    android:textSize="@dimen/birdselect_listentry_textsize"
+                    android:text="Vogel 1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/birdselect_listentry_margin"
+                    android:textSize="@dimen/birdselect_listentry_textsize"
+                    android:text="Vogel 2" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/birdselect_listentry_margin"
+                    android:textSize="@dimen/birdselect_listentry_textsize"
+                    android:text="Vogel 3" />
+
+            </LinearLayout>
+
+
+
         </ScrollView>
 
         <Button
