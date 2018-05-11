@@ -18,7 +18,7 @@ import project.software.uni.positionprediction.activities.BirdSelect;
 
 public class MovebankRequest {
 
-    private static final String baseURL = "https://www.movebank.org/movebank/service/direct-read?";
+    private static final String BASE_URL = "https://www.movebank.org/movebank/service/direct-read?";
 
     private String username = "SP_1-2";
     private String password = "Xamhdg9adB";
@@ -30,7 +30,7 @@ public class MovebankRequest {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(BirdSelect.getAppContext());
 
-        String url = baseURL+attributes;
+        String url = BASE_URL+attributes;
         // Request a string response from the provided URL.
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -66,8 +66,31 @@ public class MovebankRequest {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
+        //TODO fix return
         return "";
     }
 
+
+    public String getUsername(){
+        return username;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+
+    public void setUserCreds(String username, String password){
+        this.username=username;
+        this.password=password;
+    }
+
+    public boolean isUserCredsValid(){
+
+        String typeAttr = "attributes";
+
+        String result = requestData(typeAttr);
+        //TODO check result
+        return result=="";
+    }
 
 }
