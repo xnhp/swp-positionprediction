@@ -67,4 +67,21 @@ public class MovebankConnector {
         return movebankRequest.requestData(attributes);
     }
 
+    public boolean changeUser(String username, String password){
+        //TODO attributes
+        String usernameOld = movebankRequest.getUsername();
+        String passwordOld = movebankRequest.getPassword();
+
+        movebankRequest.setUserCreds(username, password);
+
+        boolean isValid = movebankRequest.isUserCredsValid();
+
+        if(!isValid){
+            movebankRequest.setUserCreds(usernameOld, passwordOld);
+        }
+
+        return isValid;
+    }
+
+
 }
