@@ -14,18 +14,9 @@
         <include
             layout="@layout/navigation_bar"/>
 
-        <RelativeLayout
+        <WebView
+            android:id="@+id/cesium_webview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <Button
-                android:id="@+id/osm_button_predict"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="@string/osm_button_predict_text"/>
-        </RelativeLayout>
-
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
