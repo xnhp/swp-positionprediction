@@ -6,6 +6,9 @@
     <string name="title_activity_osm">OSM</string>
     <string name="title_activity_prediction">Prediction</string>
     <string name="title_activity_birdselect">BirdSelect</string>
+    <string name="dialog_permission_title">Permission</string>
+    <string name="dialog_permission_storage_text">Die App benötigt die Berechtigung auf den Speicher zuzugreifen um Kartendaten offline speichern zu können</string>
+
 
 
     // Navbar

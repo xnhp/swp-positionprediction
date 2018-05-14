@@ -7,7 +7,10 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import project.software.uni.positionprediction.R;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -17,6 +20,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import project.software.uni.positionprediction.activities.OSM;
+import project.software.uni.positionprediction.util.PermissionManager;
 
 
 /**
@@ -57,26 +61,8 @@ public class OSMDroidMap {
         setZoom(zoom);
         setCenter(center);
 
-        // TODO
-        // PermissionManager.ensurePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        // cf end of this section: https://developer.android.com/training/permissions/requesting
-        // TODO: Might be that
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            System.out.println("not granted");
-
-            // Permission is not granted
-
-            Activity actvt = (Activity) context;
-
-            ActivityCompat.requestPermissions(actvt,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    42);
-
-        } else {
-            System.out.println("granted");
-            // Permission has already been granted
-        }
+        // PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, OSMDroidMapConfiguration.dialogPermissionStorageText, context);
+        PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, (AppCompatActivity) context);
     }
 
 

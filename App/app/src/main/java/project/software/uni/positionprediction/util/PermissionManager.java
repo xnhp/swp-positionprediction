@@ -33,6 +33,9 @@ public class PermissionManager {
      * @param permission Permission to ask for
      * @param message The id of the String Resource to be displayed in the alert box
      * @param activity The activity that asks for the Permission
+     * TODO: What happens if permission cant be obtained?
+     * TODO: When executing a task that triggers this, does executing that task have to be tried
+     *       again after the permission was granted?
      */
     public static void requestPermission(final String permission, int message, final AppCompatActivity activity){
 
