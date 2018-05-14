@@ -25,4 +25,8 @@
 
     <string name="prediction_button_predict_text">Berechnen</string>
 
+    // OSM Activity
+
+    <string name="map_button_download_text">DL</string>
+
 </resources>

@@ -29,7 +29,7 @@ dependencies {
 
 
     //custom
-    compile group: 'com.android.volley', name: 'volley', version: '1.1.0'
-    compile 'org.osmdroid:osmdroid-android:6.0.1'
+    api group: 'com.android.volley', name: 'volley', version: '1.1.0'
+    api 'org.osmdroid:osmdroid-android:6.0.1'
     api group: 'com.android.volley', name: 'volley', version: '1.1.0'
 }
