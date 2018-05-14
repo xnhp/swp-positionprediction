@@ -16,5 +16,7 @@
     // BirdSelect Activity
 
     <dimen name="birdselect_edittext_search_margin">20dp</dimen>
+    <dimen name="birdselect_listentry_margin">10dp</dimen>
+    <dimen name="birdselect_listentry_textsize">20sp</dimen>
 
 </resources>

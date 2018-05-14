@@ -3,6 +3,11 @@
     package="project.software.uni.positionprediction">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- required for loading maps via osmdroid -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- required for saving offline maps via osmdroid -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.LOCATION_HARDWARE"/>
