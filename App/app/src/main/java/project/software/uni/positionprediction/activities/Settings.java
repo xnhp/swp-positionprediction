@@ -10,7 +10,7 @@ import project.software.uni.positionprediction.R;
 
 public class Settings extends AppCompatActivity {
 
-    private Button buttonSave;
+    private Button buttonSave = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

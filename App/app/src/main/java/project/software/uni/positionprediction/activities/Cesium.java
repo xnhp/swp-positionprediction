@@ -10,8 +10,8 @@ import project.software.uni.positionprediction.R;
 
 public class Cesium extends AppCompatActivity {
 
-    private Button buttonSettings;
-    private Button buttonPredict;
+    private Button buttonSettings = null;
+    private Button buttonPredict = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,7 +9,7 @@ import project.software.uni.positionprediction.R;
 
 public class Prediction extends AppCompatActivity {
 
-    private Button predictButton;
+    private Button predictButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

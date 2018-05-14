@@ -10,16 +10,14 @@ import project.software.uni.positionprediction.R;
 
 public class OSM extends AppCompatActivity {
 
-    private Button buttonSettings;
-    private Button buttonPredict;
+    private Button buttonSettings = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_osm);
+        setContentView(R.layout.activity_cesium);
 
         buttonSettings = findViewById(R.id.navigation_button_settings);
-        buttonPredict = findViewById(R.id.osm_button_predict);
 
         final OSM osm = this;
 
@@ -27,14 +25,6 @@ public class OSM extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent buttonIntent =  new Intent(osm, Settings.class);
-                startActivity(buttonIntent);
-            }
-        });
-
-        buttonPredict.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent buttonIntent =  new Intent(osm, Prediction.class);
                 startActivity(buttonIntent);
             }
         });
