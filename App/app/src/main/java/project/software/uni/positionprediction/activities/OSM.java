@@ -10,12 +10,14 @@ import project.software.uni.positionprediction.R;
 
 public class OSM extends AppCompatActivity {
 
-    private Button buttonSettings = findViewById(R.id.navigation_button_settings);
+    private Button buttonSettings = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cesium);
+
+        buttonSettings = findViewById(R.id.navigation_button_settings);
 
         final OSM osm = this;
 

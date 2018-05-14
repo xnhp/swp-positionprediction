@@ -10,12 +10,14 @@ import project.software.uni.positionprediction.R;
 
 public class Settings extends AppCompatActivity {
 
-    private Button buttonSave = findViewById(R.id.settings_button_save);
+    private Button buttonSave = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        buttonSave = findViewById(R.id.settings_button_save);
 
         final Settings settings = this;
 

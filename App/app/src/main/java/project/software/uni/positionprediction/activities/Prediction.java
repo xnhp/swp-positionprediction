@@ -9,12 +9,14 @@ import project.software.uni.positionprediction.R;
 
 public class Prediction extends AppCompatActivity {
 
-    private Button predictButton = findViewById(R.id.prediction_button_predict);
+    private Button predictButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prediction);
+
+        predictButton = findViewById(R.id.prediction_button_predict);
 
         final Prediction prediction = this;
 

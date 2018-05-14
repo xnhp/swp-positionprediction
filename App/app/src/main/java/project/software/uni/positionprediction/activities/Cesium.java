@@ -10,13 +10,16 @@ import project.software.uni.positionprediction.R;
 
 public class Cesium extends AppCompatActivity {
 
-    private Button buttonSettings = findViewById(R.id.navigation_button_settings);
-    private Button buttonPredict = findViewById(R.id.cesium_button_predict);
+    private Button buttonSettings = null;
+    private Button buttonPredict = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cesium);
+
+        buttonSettings = findViewById(R.id.navigation_button_settings);
+        buttonPredict = findViewById(R.id.cesium_button_predict);
 
         final Cesium cesium = this;
 
