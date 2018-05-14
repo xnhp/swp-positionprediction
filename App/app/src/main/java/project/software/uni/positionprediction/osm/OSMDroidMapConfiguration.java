@@ -8,5 +8,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
  */
 final class OSMDroidMapConfiguration {
     static OnlineTileSourceBase onlineTileSourceBase = TileSourceFactory.MAPNIK;
+    // TODO: Put this into a xml file
     public static String downloadCompleteText = "Download fertig!";
 }
