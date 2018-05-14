@@ -15,6 +15,8 @@ import org.osmdroid.views.MapView;
 /**
  * This class embodies a map that displays OpenStreetMap/Mapnik data via OSMDroid.
  * It exposes methods to programmatically navigate the map, as well as save and clear offline data.
+ * TODO: Check whether osmdroid would download the same area twice although cached
+ * TODO: Check when cached data is deleted
  */
 public class OSMDroidMap {
 
