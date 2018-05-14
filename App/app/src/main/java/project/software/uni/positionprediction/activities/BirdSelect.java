@@ -14,16 +14,20 @@ public class BirdSelect extends AppCompatActivity {
 
     private static Context context;
 
-    private Button buttonSelect = null;
+    //private Button buttonSelect = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bird_select);
 
-        buttonSelect = findViewById(R.id.birdselect_button_select);
+        Button buttonSelect = findViewById(R.id.birdselect_button_select);
+        Button buttonOpenMap = findViewById(R.id.birdselect_button_openmap);
 
         final BirdSelect birdSelect = this;
+
+        // QUESTION: Why is this here and not in other activities?
+        BirdSelect.context = getApplicationContext();
 
         buttonSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,7 +37,14 @@ public class BirdSelect extends AppCompatActivity {
             }
         });
 
-        BirdSelect.context = getApplicationContext();
+        buttonOpenMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mapIntent = new Intent(birdSelect, OSM.class);
+                startActivity(mapIntent);
+            }
+        });
+
 
 
         MovebankConnector connector = MovebankConnector.getInstance();

@@ -21,9 +21,7 @@
         <ScrollView
             android:id="@+id/birdselect_scrollview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/birdselect_edittext_search"
-            android:layout_above="@+id/birdselect_button_select">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,12 +29,27 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-        <Button
-            android:id="@+id/birdselect_button_select"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="Button" />
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/birdselect_button_select"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Settings" />
+
+            <Button
+                android:id="@+id/birdselect_button_openmap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Open Map" />
+        </LinearLayout>
+
+
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
