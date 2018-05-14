@@ -1,7 +1,12 @@
 package project.software.uni.positionprediction.osm;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
@@ -10,6 +15,8 @@ import org.osmdroid.tileprovider.cachemanager.CacheManager;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+
+import project.software.uni.positionprediction.activities.OSM;
 
 
 /**
@@ -52,6 +59,24 @@ public class OSMDroidMap {
 
         // TODO
         // PermissionManager.ensurePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        // cf end of this section: https://developer.android.com/training/permissions/requesting
+        // TODO: Might be that
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            System.out.println("not granted");
+
+            // Permission is not granted
+
+            Activity actvt = (Activity) context;
+
+            ActivityCompat.requestPermissions(actvt,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    42);
+
+        } else {
+            System.out.println("granted");
+            // Permission has already been granted
+        }
     }
 
 
@@ -65,6 +90,7 @@ public class OSMDroidMap {
     public void saveAreaToCache(BoundingBox bbox, int zoomMin, int zoomMax) {
         // TODO: What should the UI look like when downloading maps? should there be a progress bar?
         // TODO: osmdroid also provides other methods for downloading. which is best suited?
+        // TODO: move callbacks out of this module?
         cacheManager.downloadAreaAsync(context, bbox, 5, 7, new CacheManager.CacheManagerCallback() {
             @Override
             public void onTaskComplete() {

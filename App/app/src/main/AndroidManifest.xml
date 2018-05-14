@@ -9,7 +9,6 @@
     <!-- required for saving offline maps via osmdroid -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!--<uses-permission android:name="android.permission.LOCATION_HARDWARE"/>-->
 
     <application
@@ -30,7 +29,12 @@
         <activity
             android:name=".activities.OSM"
             android:label="@string/title_activity_osm"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.Prediction"
             android:label="@string/title_activity_prediction"
@@ -40,10 +44,7 @@
             android:label="@string/title_activity_birdselect"
             android:theme="@style/AppTheme.NoActionBar">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
     </application>
 

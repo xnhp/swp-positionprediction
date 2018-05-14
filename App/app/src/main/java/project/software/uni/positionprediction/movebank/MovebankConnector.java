@@ -2,6 +2,15 @@ package project.software.uni.positionprediction.movebank;
 
 import java.util.Date;
 
+/**
+ * Utility for interactions with the Movebank API.
+ *
+ * Example usage:
+ *     MovebankConnector connector = MovebankConnector.getInstance();
+ *     String result = connector.getBirdData(22390461, 102937685);
+ *
+ * TODO: Warnings?
+ */
 public class MovebankConnector {
 
     private static MovebankConnector instance;

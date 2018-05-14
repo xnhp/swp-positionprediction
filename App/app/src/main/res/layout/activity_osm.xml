@@ -14,9 +14,16 @@
         <include
             layout="@layout/navigation_bar"/>
 
-        <WebView
-            android:id="@+id/cesium_webview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        -<org.osmdroid.views.MapView android:id="@+id/map"
+                android:layout_width="fill_parent"
+                android:layout_height="400dp" />
+
+        <Button
+            android:id="@+id/map_download_button"
+            android:layout_width="@dimen/cesium_settings_button_width_hight"
+            android:layout_height="@dimen/cesium_settings_button_width_hight"
+            android:text="DL"
+            android:layout_alignParentEnd="true"/>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
