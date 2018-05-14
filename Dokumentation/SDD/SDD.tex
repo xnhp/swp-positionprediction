@@ -92,7 +92,7 @@ Manuel Prinz, Sebastian Strumbelj, Simon Suckut
 Version & Author & Description of changes & Date \\ \hline\hline
 
 %changelog content 
-1.0 & SS & \color{red}{Aufbau der App in Android Studio} & x.5.2018 \\\hline
+1.0 & ALL & Erstellen von SRS und SDD & 15.5.2018 \\\hline
 	&	&	&	\\\hline
 
 \end{tabular}
@@ -104,11 +104,10 @@ Version & Author & Description of changes & Date \\ \hline\hline
 \\\\Legend: \\
 SSJ = Sebastian Strumbelj \\
 BM = Benjamin Moser \\
-MP = Manuel Prinz \\
 OM = Oliver Mänder \\
 SS = Simon Suckut \\
 TJ = Timo Jockers \\
-ALL = SSJ, BM, MP, OM, SS, TJ \\
+ALL = SSJ, BM, OM, SS, TJ \\
 }
 
 
@@ -246,7 +245,12 @@ Geht der Forscher nun in das Feld, schaltet dieser in den Outdoor-Modus. Der Abl
 
 \subsubsection{Interfaces}
 \label{sec:interfaces}
-{\color{red}{Sebastian}}
+\begin{itemize}
+	\item Daten werden über ein Movebank-Inteface geladen und verarbeitet. 
+	\item Daten werden mittels einem Cesium-Interface im Indoor-Modus visualisiert.
+	\item Daten werden mittels einem Open-Street-Map-Interface im Outdoor-Modus visualisiert.
+
+\end{itemize}
 % ----
 
 % Übersetzung?
