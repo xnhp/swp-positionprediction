@@ -15,6 +15,12 @@ import org.osmdroid.views.MapView;
 /**
  * This class embodies a map that displays OpenStreetMap/Mapnik data via OSMDroid.
  * It exposes methods to programmatically navigate the map, as well as save and clear offline data.
+ *
+ * The corresponding layout component (given to the constructor of this class) would be sth like
+ *      <org.osmdroid.views.MapView android:id="@+id/map"
+ *        android:layout_width="fill_parent"
+ *        android:layout_height="fill_parent" />
+ *
  * TODO: Check whether osmdroid would download the same area twice although cached
  * TODO: Check when cached data is deleted
  */
@@ -81,12 +87,14 @@ public class OSMDroidMap {
             public void downloadStarted() {
                 // TODO
                 //NOOP since we are using the build in UI
+                System.out.println("download started");
             }
 
             @Override
             public void setPossibleTilesInArea(int total) {
                 // TODO
                 //NOOP since we are using the build in UI
+                System.out.println("set possible tiles");
             }
         });
     }
