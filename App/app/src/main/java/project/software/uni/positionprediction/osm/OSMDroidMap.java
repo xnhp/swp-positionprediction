@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.osm;
 
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +22,7 @@ import org.osmdroid.views.MapView;
 
 import project.software.uni.positionprediction.activities.OSM;
 import project.software.uni.positionprediction.util.PermissionManager;
+
 
 
 /**
@@ -63,6 +65,7 @@ public class OSMDroidMap {
 
         // PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, OSMDroidMapConfiguration.dialogPermissionStorageText, context);
         PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, (AppCompatActivity) context);
+
     }
 
 
@@ -76,7 +79,9 @@ public class OSMDroidMap {
     public void saveAreaToCache(BoundingBox bbox, int zoomMin, int zoomMax) {
         // TODO: What should the UI look like when downloading maps? should there be a progress bar?
         // TODO: osmdroid also provides other methods for downloading. which is best suited?
+
         // TODO: move callbacks out of this module?
+
         cacheManager.downloadAreaAsync(context, bbox, 5, 7, new CacheManager.CacheManagerCallback() {
             @Override
             public void onTaskComplete() {
@@ -147,4 +152,5 @@ public class OSMDroidMap {
     // TODO: nicely integrate the map into the layout
 
     // TODO: Expose methods for pan, etc
+
 }

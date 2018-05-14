@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import project.software.uni.positionprediction.R;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -23,6 +24,7 @@ public class OSM extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_osm);
 
         buttonSettings = findViewById(R.id.navigation_button_settings);
@@ -43,6 +45,7 @@ public class OSM extends AppCompatActivity {
                 startActivity(buttonIntent);
             }
         });
+
 
         buttonDownload.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -31,6 +31,7 @@
             android:label="@string/title_activity_osm"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
         <activity
             android:name=".activities.Prediction"
             android:label="@string/title_activity_prediction"
@@ -45,5 +46,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

@@ -23,6 +23,7 @@ public class BirdSelect extends AppCompatActivity {
         setContentView(R.layout.activity_bird_select);
 
         buttonSelect = findViewById(R.id.birdselect_button_select);
+
         buttonOpenMap = findViewById(R.id.birdselect_button_openmap);
 
         final BirdSelect birdSelect = this;
@@ -45,8 +46,6 @@ public class BirdSelect extends AppCompatActivity {
                 startActivity(mapIntent);
             }
         });
-
-
 
         MovebankConnector connector = MovebankConnector.getInstance();
         String result = connector.getBirdData(22390461, 102937685);
