@@ -23,7 +23,7 @@
 
 \usepackage{tabularx}
 \usepackage[utf8]{inputenc}
-
+\usepackage{csquotes}
 
 \usepackage{graphicx} % Required for including pictures
 
@@ -174,7 +174,7 @@ Der erste Teil legt grundlegende Ideen und Definitionen der App fest. Der zweite
 
 \section{Aktuelle Architektur}
 
-"Animal Tracker" ist bereits eine App, welche Vogeldaten visualisiert. Allerdings berechnet diese keine Vorhersagen für die Zukunft und fokussiert sich dementsprechened nur auf die Darstellung vergangener Daten. Interne Architekturen dieser App sind allerdings nur gering bekannt.
+\enquote{Animal Tracker} ist bereits eine App, welche Trackingdaten von Vögeln visualisiert. Allerdings berechnet diese keine Vorhersagen für die Zukunft und fokussiert sich dementsprechened nur auf die Darstellung vergangener Daten. Interne Architekturen dieser App sind allerdings nur gering bekannt.
 
 
 \section{Vorgeschlagene Architektur}
@@ -185,9 +185,11 @@ Der erste Teil legt grundlegende Ideen und Definitionen der App fest. Der zweite
 
 \includegraphics[width = \textwidth]{Diagramme/ComponentDiagram.png}
 
-Die SRS verlangt einen modulares Softwaresystem. Die Subsysteme sind dazu in einer dreischichtigen Architektur (State, Logic, Display) eingebettet. Die Benutzeroberfläche stellt verschiedene \textit{Activities} zur Verfügung, in der zum einen Nutzereingaben getätigt werden können (Nutzerdaten/-einstellugen, Auswahl des Vogels und Parametereinstellungen für den Vorhersagealgorithmus) und zum anderen die Ergebnisse der Berechnung visualisiert werden (als Kartenansicht und/oder Cesium-WebView).
+\vspace{1em}
 
-Abhängig von dem gewählten Vogel bezieht das System Daten von der Movebank, verarbeitet sie so dass sie für eine Vorhersage verwendet werden können und speichert sie in der lokalen Datenbank, falls sie dort noch nicht vorhanden sind. Ebenso werden benötigte Kartendaten von einem geeigneten Anbieter abgerufen und lokal gespeichert. Die gespeicherten Daten werden für die Vorhersage verwendet, deren Ergebnisse wiederum lokal gespeichert werden. Diese werden für die Visualisierung aufbereitet und auf der Karte bzw. in Cesium dargestellt.
+Die SRS verlangt ein modulares Softwaresystem. Die Subsysteme sind dazu in einer dreischichtigen Architektur (State, Logic, Display) eingebettet. Die Benutzeroberfläche stellt verschiedene \textit{Activities} zur Verfügung, in der zum einen Nutzereingaben getätigt werden können (Nutzerdaten/-einstellugen, Auswahl des Vogels und Parametereinstellungen für den Vorhersagealgorithmus) und zum anderen die Ergebnisse der Berechnung visualisiert werden (als Kartenansicht und/oder Cesium-WebView).
+
+Abhängig von dem gewählten Vogel bezieht das System Daten von der Movebank, verarbeitet sie so, dass sie für eine Vorhersage verwendet werden können und speichert sie in der lokalen Datenbank, falls sie dort noch nicht vorhanden sind. Ebenso werden benötigte Kartendaten von einem geeigneten Anbieter abgerufen und lokal gespeichert. Die gespeicherten Daten werden für die Vorhersage verwendet, deren Ergebnisse wiederum lokal gespeichert werden. Diese werden für die Visualisierung aufbereitet und auf der Karte bzw. in Cesium dargestellt.
 
 \subsection{Management von persistenten Daten}
 
