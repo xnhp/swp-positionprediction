@@ -216,14 +216,17 @@ Mit einem Benutzername und Passwort kann der Zugriff für die Movebank-Daten erw
 \subsection{Global Software Control}
 
 \includegraphics[width = \textwidth]{Diagramme/state_diagram.png}
-Das Global-Software-Control-Diagram beschreibt das allgemeine Verhalten der App. Es besteht aus dem allgemeinem Ablauf der App im Indoor- (obere Hälfte) und Outdoormodus (untere Hälfte). \\
-Zu Beginn befinden wir uns im Indoor-Modus und können nun mit der VogelID und StudyID nach einem Vogel suchen. Ist der Vogel nicht verfügbar, so haben wir keine Möglichkeit weiter zu machen und beginnen von vorne. Ist er vorhanden, so laden wir dessen Daten. Anschließend werden diese geprüft bzw. geparst. Im Fall, dass die Daten formal falsch sind (siehe SRS für die Definition von formal falsch), werden diese trotzdem zur Berechnung benutzt. Allerdings wird eine Warnung über die Qualität der Daten erscheinen. Nach dem Berechnen der Wahrscheinlichkeiten, werden die Kartendaten und weitere Daten für die Visualisierung heruntergeladen, um diese auch ohne Internetverbindung visualisieren zu können. Solange wir uns aber im Indoor-Modus befinden, können diese mit Cesium visualisiert werden. Sollen andere Vögel untersucht werden, so kann die Suche von vorne beginnen. \\
-Geht der Forscher nun in das Feld, schaltet dieser in den Outdoor-Modus. Der Ablauf ist nun ähnlich wie im Indoor-Modus. Es können zusätzliche oder neue Daten des Vogels über die mobilen Daten geladen werden. Sie fließen in die erneute Wahrscheinlichkeitsberechnung ein und aktualisieren die Visualisierung, die nun allerdings mit einem Offline-Karten-Provider dargestellt wird. \\
 
+\vspace{1em}
+
+Das Global-Software-Control-Diagram beschreibt das allgemeine Verhalten der App. Es besteht aus dem allgemeinem Ablauf der App im Indoor- (obere Hälfte) und Outdoormodus (untere Hälfte). 
+
+Zu Beginn befinden wir uns im Indoor-Modus und können nun mit der VogelID und StudyID nach einem Vogel suchen. Ist der Vogel nicht verfügbar, so haben wir keine Möglichkeit weiter zu machen und beginnen von vorne. Ist er vorhanden, so laden wir dessen Daten. Anschließend werden diese geprüft bzw. geparst. Im Fall, dass die Daten formal falsch sind (siehe SRS für die Definition von formal falsch), werden diese trotzdem zur Berechnung benutzt. Allerdings wird eine Warnung über die Qualität der Daten erscheinen. Nach dem Berechnen der Wahrscheinlichkeiten, werden die Kartendaten und weitere Daten für die Visualisierung heruntergeladen, um diese auch ohne Internetverbindung visualisieren zu können. Solange wir uns aber im Indoor-Modus befinden, können diese mit Cesium visualisiert werden. Sollen andere Vögel untersucht werden, so kann die Suche von vorne beginnen.
+
+Geht der Forscher nun in das Feld, schaltet er in den Outdoor-Modus. Der Ablauf ist nun ähnlich wie im Indoor-Modus. Es können zusätzliche oder neue Daten des Vogels über die mobile Datenverbindung geladen werden. Sie fließen in die erneute Wahrscheinlichkeitsberechnung ein und aktualisieren die Visualisierung, die nun allerdings mit einem Offline-Karten-Provider dargestellt wird. 
 % • How will control signals be used?
 % • How do the subsystems communicate? --> interface descriptions?
 % • How do the subsystems synchronize? --> statechart diagram? Concurrency
-
 
 \subsubsection{Interfaces}
 \label{sec:interfaces}
@@ -231,15 +234,30 @@ Geht der Forscher nun in das Feld, schaltet dieser in den Outdoor-Modus. Der Abl
 	\item Daten werden über ein Movebank-Inteface geladen und verarbeitet. 
 	\item Daten werden mittels einem Cesium-Interface im Indoor-Modus visualisiert.
 	\item Daten werden mittels einem Open-Street-Map-Interface im Outdoor-Modus visualisiert.
-
 \end{itemize}
 % ----
 
 % Übersetzung?
 \subsection{Boundary Conditions}
-{\color{red}{Oliver}}
-% Sequenzdiagramm?
-% \includegraphics[width = 0.8\textwidth]{pictures/SeqDia.png}
+\begin{figure}[H]
+	\hfill
+		\includegraphics[width =  0.95 \textwidth]{Diagramme/BounCond.png}
+	\hspace*{\fill}
+\end{figure}
+\pagebreak
+
+\begin{enumerate}[label={\arabic*.}]
+\item Der Nutzer startet die App.
+\item Der Nutzer wird dazu aufgefordert die IDs einzugeben, um die Daten für einen bestimmten Vogel abzufragen.
+\item Die App sendet eine Anfrage an die Movebank, um die Daten für den vom Nutzer gewollten Vogel zu erhalten.
+\item Wenn der Movebank Server nicht erreichbar ist, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
+\item Die App sendet die Accountdaten aus den Einstellungen zur Movebank.
+\item Wenn die Accountdaten für die Movebank nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
+\item Wenn die eingegebenen IDs nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
+\item Sind auch die IDs gültig, so werden die Daten aus der Movebank heruntergeladen.
+\item Wenn während dem Download die Interverbindung abbricht, wechselt die App in den Outdoor-Modus und setzt den Nutzer darüber in Kenntnis.
+\item Bleibt die Internetverbindung bestehen, werden die Daten vollständig aus dem Internet heruntergeladen und die App berechnet eine Vorhersage.
+\end{enumerate}
 
 % Startup behaviour (What happens, when we start the system?)
 % • Shutdown behaviour (What happens, when we stop the system?)
