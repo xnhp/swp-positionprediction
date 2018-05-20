@@ -18,14 +18,19 @@ import project.software.uni.positionprediction.activities.BirdSelect;
 
 public class MovebankRequest {
 
+    // TODO: put this in a configuration file
     private static final String BASE_URL = "https://www.movebank.org/movebank/service/direct-read?";
-
     private String username = "SP_1-2";
     private String password = "Xamhdg9adB";
 
 
-
-
+    /**
+     * Sends a request to the Movebank API for the specified attributes
+     * @param attributes URL-encoded string of attributes that are requested.
+     * @return TODO
+     *
+     * TODO: (BM) imo the onResponse and onError listeners should be given as arguments
+     */
     public String requestData(String attributes){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(BirdSelect.getAppContext());
@@ -90,6 +95,7 @@ public class MovebankRequest {
 
         String result = requestData(typeAttr);
         //TODO check result
+        // TODO: Can just check for HTTP Status Code here?
         return result=="";
     }
 
