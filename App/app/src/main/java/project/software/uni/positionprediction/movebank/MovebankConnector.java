@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.movebank;
 
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Utility for interactions with the Movebank API.
@@ -36,10 +37,10 @@ public class MovebankConnector {
     public String getBirdData(int studyID, int indivID){
 
         String typeAttr = "entity_type=event";
-        String studyAttr = String.format("study_id=%d", studyID);
-        String individualAttr = String.format("individual_id=%d", indivID);
+        String studyAttr = format("study_id=%d", studyID);
+        String individualAttr = format("individual_id=%d", indivID);
 
-        String attributes = String.format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
+        String attributes = format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
 
         return movebankRequest.requestData(attributes);
     }
@@ -47,13 +48,13 @@ public class MovebankConnector {
     public String getBirdData(int studyID, int indivID, Date start, Date end){
 
         String typeAttr = "entity_type=event";
-        String studyAttr = String.format("study_id=%d", studyID);
-        String indivAttr = String.format("individual_id=%d", indivID);
-        String startAttr = String.format("timestamp_start=%d%n", start.getTime());
-        String endAttr = String.format("timestamp_end=%d%n", end.getTime());
+        String studyAttr = format("study_id=%d", studyID);
+        String indivAttr = format("individual_id=%d", indivID);
+        String startAttr = format("timestamp_start=%d%n", start.getTime());
+        String endAttr = format("timestamp_end=%d%n", end.getTime());
 
 
-        String attributes = String.format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
+        String attributes = format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
 
         return movebankRequest.requestData(attributes);
     }
@@ -69,9 +70,9 @@ public class MovebankConnector {
 
     public String getBirds(int studyId){
         String typeAttr = "entity_type=individual";
-        String studyAttr = String.format("study_id=%d", 2911040);
+        String studyAttr = format("study_id=%d", 2911040);
 
-        String attributes = String.format("%s&%s", typeAttr, studyAttr);
+        String attributes = format("%s&%s", typeAttr, studyAttr);
 
         return movebankRequest.requestData(attributes);
     }
@@ -90,6 +91,17 @@ public class MovebankConnector {
         }
 
         return isValid;
+    }
+
+    /**
+     * Formats a string with explicit US locale.
+     * Not specifying the locale throws a warning.
+     * @param fmt Format string
+     * @param params Parameters for string formatting
+     * @return
+     */
+    private String format(String fmt, Object... params) {
+        return String.format(Locale.US, fmt, params);
     }
 
 
