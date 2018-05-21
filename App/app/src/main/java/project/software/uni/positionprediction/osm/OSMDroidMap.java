@@ -2,25 +2,20 @@ package project.software.uni.positionprediction.osm;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
-
-import project.software.uni.positionprediction.R;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import project.software.uni.positionprediction.activities.OSM;
+import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.util.PermissionManager;
 
 
@@ -55,7 +50,9 @@ public class OSMDroidMap {
         cacheManager = new CacheManager(map);
         context = ctx;
 
-        map.setTileSource(OSMDroidMapConfiguration.onlineTileSourceBase);
+        // use Mapnik by default
+        // TODO: other tile sources interesting?
+        map.setTileSource(TileSourceFactory.MAPNIK);
 
         // load OSMDroid configuration
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -63,7 +60,6 @@ public class OSMDroidMap {
         setZoom(zoom);
         setCenter(center);
 
-        // PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, OSMDroidMapConfiguration.dialogPermissionStorageText, context);
         PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, (AppCompatActivity) context);
 
     }
@@ -85,7 +81,7 @@ public class OSMDroidMap {
         cacheManager.downloadAreaAsync(context, bbox, 5, 7, new CacheManager.CacheManagerCallback() {
             @Override
             public void onTaskComplete() {
-                Toast.makeText(context, OSMDroidMapConfiguration.downloadCompleteText, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.dialog_map_download_complete, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -97,20 +93,20 @@ public class OSMDroidMap {
             @Override
             public void updateProgress(int progress, int currentZoomLevel, int zoomMin, int zoomMax) {
                 // TODO
-                //NOOP since we are using the build in UI
+                //NOOP since we are using the built in UI
             }
 
             @Override
             public void downloadStarted() {
                 // TODO
-                //NOOP since we are using the build in UI
+                //NOOP since we are using the built in UI
                 System.out.println("download started");
             }
 
             @Override
             public void setPossibleTilesInArea(int total) {
                 // TODO
-                //NOOP since we are using the build in UI
+                //NOOP since we are using the built in UI
                 System.out.println("set possible tiles");
             }
         });
@@ -148,8 +144,6 @@ public class OSMDroidMap {
     public void setCenter(GeoPoint center) {
         mapController.setCenter(center);
     }
-
-    // TODO: nicely integrate the map into the layout
 
     // TODO: Expose methods for pan, etc
 

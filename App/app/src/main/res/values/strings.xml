@@ -9,6 +9,8 @@
     <string name="dialog_permission_title">Permission</string>
     <string name="dialog_permission_storage_text">Die App benötigt die Berechtigung auf den Speicher zuzugreifen um Kartendaten offline speichern zu können</string>
 
+    <string name="dialog_map_download_complete">Download fertiggestellt</string>
+
     // Navbar
 
     <string name="navigation_button_settings_text">S</string>
