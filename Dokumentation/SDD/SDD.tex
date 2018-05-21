@@ -124,12 +124,12 @@ Das Erstellen einer App, um einem Ornithologen das Finden eines Vogels zu erleic
 
 \subsection{Design-Ziele}
 
-Diese Dokumentation spezifiert alle Eigenschaften, die unsere App benötigt, um deren Zweck zu Erfüllen. Um eine Vorhersage für Vögel zu treffen und dem Ornithologen bei seiner Suche zu unterstützen, sollte die App folgende Funktionen beinhalteten: 
+Diese Dokumentation spezifiert alle Eigenschaften, die unsere App benötigt, um deren Zweck zu erfüllen. Um eine Vorhersage für Vögel zu treffen und dem Ornithologen bei seiner Suche zu unterstützen, sollte die App folgende Funktionen beinhalteten: 
 \begin{itemize}
 	\item Aufbereiten und Speichern der vorhandenden und benötigten Daten
 	\item Vorhersageberechnung 
 	\item Visualisierung der Daten
-	\item Userinterface zur Interaktion 
+	\item User-Interface zur Interaktion 
 \end{itemize}
 
 
@@ -148,8 +148,8 @@ Diese Dokumentation spezifiert alle Eigenschaften, die unsere App benötigt, um 
 	\paragraph{Vorhersage-Modell/Algorithmus} Die zur Berechnung einer Vorhersage verwendete Methodik. 
 	\paragraph{API} \textit{Application Programming Interface}, hier insbesondere Schnittstellen mit Providern wie \textit{Movebank} oder \textit{Cesium}. 
 	\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. Einer davon ist der sog. Outdoor-Modus.
-	\paragraph{Cesium} Ist eine Javascript-Bibliothek für die Arbeit mit dreidimensionalen Kartendaten.
-	\paragraph{Offline-Karten} Ist ein 2D-Karten-Provider der Kartendaten liefert, wenn keine Internetverbindung besteht.
+	\paragraph{Cesium} ...ist eine Javascript-Bibliothek für die Arbeit mit dreidimensionalen Kartendaten.
+	\paragraph{Offline-Karten} ...ist ein 2D-Karten-Provider der Kartendaten liefert, wenn keine Internetverbindung besteht.
 	\paragraph{StudyID, VogelID} Eindeutige Identifikatoren einer Studie bzw. eines einzelnen Vogels in der \textit{Movebank}-Datenbank.  
 	\paragraph{SRS} Software Requirements Document
 
@@ -187,16 +187,16 @@ Der erste Teil legt grundlegende Ideen und Definitionen der App fest. Der zweite
 
 \vspace{1em}
 
-Die SRS verlangt ein modulares Softwaresystem. Die Subsysteme sind dazu in einer dreischichtigen Architektur (State, Logic, Display) eingebettet. Die Benutzeroberfläche stellt verschiedene \textit{Activities} zur Verfügung, in der zum einen Nutzereingaben getätigt werden können (Nutzerdaten/-einstellugen, Auswahl des Vogels und Parametereinstellungen für den Vorhersagealgorithmus) und zum anderen die Ergebnisse der Berechnung visualisiert werden (als Kartenansicht und/oder Cesium-WebView).
+Das SRS verlangt ein modulares Softwaresystem. Die Subsysteme sind dazu in einer dreischichtigen Architektur (State, Logic, Display) eingebettet. Die Benutzeroberfläche stellt verschiedene \textit{Activities} zur Verfügung, in der zum einen Nutzereingaben getätigt werden können (Nutzerdaten/-einstellugen, Auswahl des Vogels und Parametereinstellungen für den Vorhersagealgorithmus) und zum anderen die Ergebnisse der Berechnung visualisiert werden (als Kartenansicht und/oder Cesium-WebView).
 
-Abhängig von dem gewählten Vogel bezieht das System Daten von der Movebank, verarbeitet sie so, dass sie für eine Vorhersage verwendet werden können und speichert sie in der lokalen Datenbank, falls sie dort noch nicht vorhanden sind. Ebenso werden benötigte Kartendaten von einem geeigneten Anbieter abgerufen und lokal gespeichert. Die gespeicherten Daten werden für die Vorhersage verwendet, deren Ergebnisse wiederum lokal gespeichert werden. Diese werden für die Visualisierung aufbereitet und auf der Karte bzw. in Cesium dargestellt.
+Abhängig von dem gewählten Vogel bezieht das System Daten von der \textit{Movebank}-API, verarbeitet sie so, dass sie für eine Vorhersage verwendet werden können und speichert sie in der lokalen Datenbank, falls sie dort noch nicht vorhanden sind. Ebenso werden benötigte Kartendaten von einem geeigneten Anbieter abgerufen und lokal gespeichert. Die gespeicherten Daten werden für die Vorhersage verwendet, deren Ergebnisse wiederum lokal gespeichert werden. Diese werden für die Visualisierung aufbereitet und auf der Karte bzw. in Cesium dargestellt.
 
 \subsection{Management von persistenten Daten}
 
 Um Daten nach dem Schließen der Applikation zu behalten, die Menge des Datenvolumens für Anfragen an die Movebank zu reduzieren und um Daten leichter verwalten zu können verfügt die Applikation über eine Schnittstelle zum Parsen und Speichern von XML-Dateien und eine SQLite-Datenbank. Außerdem werden Karten für den Outdoor-Modus lokal gespeichert.
 
 \begin{itemize}
-	\item \textit{SQLite-Datenbank}: In dieser Datenbank werden Daten von der Movebank lokal zwischen gespeichert. Dadurch wird die Menge an Anfragen an die Movebank so gering wie möglich gehalten, die Menge des verbrauchten Datenvolumens reduziert und die Daten leichter zu verwalten gemacht.
+	\item \textit{SQLite-Datenbank}: In dieser Datenbank werden Daten von der Movebank lokal zwischen gespeichert. Dadurch wird die Menge an Anfragen an die Movebank so gering wie möglich gehalten, die Menge des verbrauchten Datenvolumens reduziert und die Daten werden leichter zu verwalten.
 	
 	\item \textit{XML-Parser}: In der Applikation getätigte Einstellungen werden persistent in einer XML-Datei gespeichert.
 	
@@ -209,7 +209,7 @@ Um Daten nach dem Schließen der Applikation zu behalten, die Menge des Datenvol
 
 
 \subsection{Sicherheit}
-Mit einem Benutzername und Passwort kann der Zugriff für die Movebank-Daten erweitert werden. Es gibt aber keinen erweiteren Zugriff (z.B. auf die Verwaltung) der App. 
+Mit einem Benutzernamen und einem Passwort kann der Zugriff für die Movebank-Daten erweitert werden. Es gibt aber keinen erweiteren Zugriff (z.B. auf die Verwaltung) der App. 
 
 
 % Übersetzung?
@@ -219,9 +219,9 @@ Mit einem Benutzername und Passwort kann der Zugriff für die Movebank-Daten erw
 
 \vspace{1em}
 
-Das Global-Software-Control-Diagram beschreibt das allgemeine Verhalten der App. Es besteht aus dem allgemeinem Ablauf der App im Indoor- (obere Hälfte) und Outdoormodus (untere Hälfte). 
+Das Global-Software-Control-Diagram beschreibt das allgemeine Verhalten der App. Es besteht aus dem allgemeinen Ablauf der App im Indoor- (obere Hälfte) und Outdoormodus (untere Hälfte). 
 
-Zu Beginn befinden wir uns im Indoor-Modus und können nun mit der VogelID und StudyID nach einem Vogel suchen. Ist der Vogel nicht verfügbar, so haben wir keine Möglichkeit weiter zu machen und beginnen von vorne. Ist er vorhanden, so laden wir dessen Daten. Anschließend werden diese geprüft bzw. geparst. Im Fall, dass die Daten formal falsch sind (siehe SRS für die Definition von formal falsch), werden diese trotzdem zur Berechnung benutzt. Allerdings wird eine Warnung über die Qualität der Daten erscheinen. Nach dem Berechnen der Wahrscheinlichkeiten, werden die Kartendaten und weitere Daten für die Visualisierung heruntergeladen, um diese auch ohne Internetverbindung visualisieren zu können. Solange wir uns aber im Indoor-Modus befinden, können diese mit Cesium visualisiert werden. Sollen andere Vögel untersucht werden, so kann die Suche von vorne beginnen.
+Zu Beginn befinden wir uns im Indoor-Modus und können nun mit der VogelID und StudyID nach einem Vogel suchen. Ist der Vogel nicht verfügbar, so haben wir keine Möglichkeit, weiter zu machen und beginnen von vorne. Ist er vorhanden, so laden wir dessen Daten. Anschließend werden diese geprüft bzw. geparst. Im Fall, dass die Daten formal falsch sind (siehe SRS für die Definition von formal falsch), werden diese trotzdem zur Berechnung benutzt. Allerdings wird eine Warnung über die Qualität der Daten erscheinen. Nach dem Berechnen der Wahrscheinlichkeiten, werden die Kartendaten und weitere Daten für die Visualisierung heruntergeladen, um diese auch ohne Internetverbindung visualisieren zu können. Solange wir uns aber im Indoor-Modus befinden, können diese mit Cesium visualisiert werden. Sollen andere Vögel untersucht werden, so kann die Suche von vorne beginnen.
 
 Geht der Forscher nun in das Feld, schaltet er in den Outdoor-Modus. Der Ablauf ist nun ähnlich wie im Indoor-Modus. Es können zusätzliche oder neue Daten des Vogels über die mobile Datenverbindung geladen werden. Sie fließen in die erneute Wahrscheinlichkeitsberechnung ein und aktualisieren die Visualisierung, die nun allerdings mit einem Offline-Karten-Provider dargestellt wird. 
 % • How will control signals be used?
@@ -267,11 +267,11 @@ Geht der Forscher nun in das Feld, schaltet er in den Outdoor-Modus. Der Ablauf 
 
 
 
-\section{Anhänge}
+% \section{Anhänge}
 
-\subsection{Geänderte Anforderungen}
+% \subsection{Geänderte Anforderungen}
 
-% List changed requirements in old and new form.
+% % List changed requirements in old and new form.
 
 %----------------------------------------------------------------------------------------
 
