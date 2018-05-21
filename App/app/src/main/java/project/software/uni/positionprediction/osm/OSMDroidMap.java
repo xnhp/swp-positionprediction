@@ -24,13 +24,13 @@ import project.software.uni.positionprediction.util.PermissionManager;
  * This class embodies a map that displays OpenStreetMap/Mapnik data via OSMDroid.
  * It exposes methods to programmatically navigate the map, as well as save and clear offline data.
  *
+ * Note that zooming and panning at the same time is not supported yet. Calling both methods at the
+ * same time will result in weird behaviour.
+ *
  * The corresponding layout component (given to the constructor of this class) would be sth like
  *      <org.osmdroid.views.MapView android:id="@+id/map"
  *        android:layout_width="fill_parent"
  *        android:layout_height="fill_parent" />
- *
- * TODO: Check whether osmdroid would download the same area twice although cached
- * TODO: Check when cached data is deleted
  */
 public class OSMDroidMap {
 
@@ -61,13 +61,16 @@ public class OSMDroidMap {
         setCenter(center);
 
         PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, (AppCompatActivity) context);
-
     }
 
 
 
     /**
      * Saves all zoom levels within range of parameters of a specified region to the cache.
+     * osmdroid checks if tiles are already downloaded and does not redownload in that case.
+     * (cf. CacheManager.loadTile())
+     * osmdroid checks if cached tiles exceed a hardcoded capacity, then removes tiles that are not
+     * in or close to the viewport (cf. MapTileCache.garbageCollection()).
      * @param bbox area to be saved
      * @param zoomMin minimal zoom level to be saved
      * @param zoomMax maximum zoom level to be saved
@@ -119,22 +122,56 @@ public class OSMDroidMap {
     }
 
     /**
-     * Set the zoom level of the map
-     * @param zoom sensible zoom levels for OSM: minimum 2, maximum 19
+     * Set the zoom level of the map, no animation
+     * @param zoom sensible zoom levels for OSM/Mapnik: minimum 2, maximum 19
      */
     public void setZoom(final double zoom) {
         mapController.setZoom(zoom);
     }
 
     /**
-     * Set the zoom level of the map
-     * @param zoom sensible zoom levels for OSM: minimum 2, maximum 19
+     * Set the zoom level of the map, no animation
+     * @param zoom sensible zoom levels for OSM/Mapnik: minimum 2, maximum 19
      */
-    public void setZoom(int zoom) {
+    public void setZoom(final int zoom) {
         // a more recent implementation of setZoom requires its argument to be of type float.
         // this is for consistency with other methods which take parameters related to zoom
         // (e.g. minZoom) but have them declared as `int`s.
         mapController.setZoom((float) zoom);
+    }
+
+    private double getZoomLevel() {
+        return map.getProjection().getZoomLevel();
+    }
+
+    /**
+     * Set the zoom level of the map, with animation
+     * The animation is always of the specified duration. Hence animating between big differences
+     * will show a "faster" animation of the contents.
+     * @param zoom target zoom level
+     * @param duration the *complete* duration of the animation, not an "animation speed" as
+     *                 as some of the osmdroid source code implies. If null, default value is used (500).
+     */
+    public void setZoomWithAnimation(final int zoom, final Long duration) {
+        // a more recent implementation of setZoom requires its argument to be of type float.
+        // this is for consistency with other methods which take parameters related to zoom
+        // (e.g. minZoom) but have them declared as `int`s.
+        mapController.zoomTo((float) zoom, duration);
+    }
+
+    /**
+     * Set the zoom level of the map, with animation
+     * The animation will longer or shorter, depending on how big the animation distance is.
+     * @param zoom target zoom level
+     * @param durationPerLevel animation length per zoom level
+     */
+    public void setZoomWithEvenAnimation(final int zoom, final Long durationPerLevel) {
+        final Long duration = Math.abs( (long) getZoomLevel() - zoom ) * durationPerLevel;
+        setZoomWithAnimation(zoom, duration);
+    }
+
+    public void setZoomWithEvenAnimation(final int zoom) {
+        setZoomWithEvenAnimation(zoom, (long) 500);
     }
 
     /**
@@ -145,6 +182,8 @@ public class OSMDroidMap {
         mapController.setCenter(center);
     }
 
-    // TODO: Expose methods for pan, etc
+    public void panWithAnimationTo(GeoPoint newCenter) {
+        mapController.animateTo(newCenter);
+    }
 
 }

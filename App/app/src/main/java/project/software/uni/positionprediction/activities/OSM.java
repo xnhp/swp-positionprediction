@@ -20,6 +20,7 @@ public class OSM extends AppCompatActivity {
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
+    private Button buttonPanTo    = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,8 @@ public class OSM extends AppCompatActivity {
 
         buttonSettings = findViewById(R.id.navigation_button_settings);
         buttonDownload = findViewById(R.id.map_download_button);
+        buttonPanTo    = findViewById(R.id.map_panto_button);
+
 
         final OSM osm = this;
 
@@ -54,6 +57,18 @@ public class OSM extends AppCompatActivity {
                 mymap.saveAreaToCache(subafrica, 5,7);
             }
         });
+
+
+        buttonPanTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mymap.panWithAnimationTo(new GeoPoint(24.168111, 15.909570));
+                //mymap.setZoom(10);
+                mymap.setZoomWithEvenAnimation(10);
+            }
+        });
+
+
 
     }
 }
