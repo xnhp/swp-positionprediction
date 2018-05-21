@@ -19,7 +19,7 @@ public class Prediction extends AppCompatActivity {
         predictButton = findViewById(R.id.prediction_button_predict);
 
         final Prediction prediction = this;
-
+        
         predictButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

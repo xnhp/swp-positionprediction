@@ -13,7 +13,6 @@ import project.software.uni.positionprediction.classes.LocProbTupel;
 public interface PredictionAlgorithm {
 
     /**
-     *
      * @param date_past
      * @param date_pred
      * @param bird_id
