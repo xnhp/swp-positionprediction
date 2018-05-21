@@ -89,11 +89,11 @@ Manuel Prinz, Sebastian Strumbelj, Simon Suckut
 
 \begin{tabular}{|c|c|p{10cm}|c|}
 \hline
-Version & Author & Description of changes & Date \\ \hline\hline
+Version & Autor & Beschreibung & Datum \\ \hline\hline
 
 %changelog content 
 1.0 & ALL & Erstellen von SRS und SDD & 15.5.2018 \\\hline
-	&	&	&	\\\hline
+	& BM  &	Klarstellung Begriff IDs  &	21.5.2018 \\\hline
 
 \end{tabular}
 
@@ -150,7 +150,7 @@ Diese Dokumentation spezifiert alle Eigenschaften, die unsere App benötigt, um 
 	\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. Einer davon ist der sog. Outdoor-Modus.
 	\paragraph{Cesium} Ist eine Javascript-Bibliothek für die Arbeit mit dreidimensionalen Kartendaten.
 	\paragraph{Offline-Karten} Ist ein 2D-Karten-Provider der Kartendaten liefert, wenn keine Internetverbindung besteht.
-
+	\paragraph{StudyID, VogelID} Eindeutige Identifikatoren einer Studie bzw. eines einzelnen Vogels in der \textit{Movebank}-Datenbank.  
 	\paragraph{SRS} Software Requirements Document
 
 
@@ -248,13 +248,13 @@ Geht der Forscher nun in das Feld, schaltet er in den Outdoor-Modus. Der Ablauf 
 
 \begin{enumerate}[label={\arabic*.}]
 \item Der Nutzer startet die App.
-\item Der Nutzer wird dazu aufgefordert die IDs einzugeben, um die Daten für einen bestimmten Vogel abzufragen.
+\item Der Nutzer wird dazu aufgefordert, VogelID und StudyID einzugeben, um die Daten für einen bestimmten Vogel abzufragen.
 \item Die App sendet eine Anfrage an die Movebank, um die Daten für den vom Nutzer gewollten Vogel zu erhalten.
 \item Wenn der Movebank Server nicht erreichbar ist, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
 \item Die App sendet die Accountdaten aus den Einstellungen zur Movebank.
 \item Wenn die Accountdaten für die Movebank nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
 \item Wenn die eingegebenen IDs nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
-\item Sind auch die IDs gültig, so werden die Daten aus der Movebank heruntergeladen.
+\item Sind die IDs gültig, so werden die Daten aus der Movebank heruntergeladen.
 \item Wenn während dem Download die Interverbindung abbricht, wechselt die App in den Outdoor-Modus und setzt den Nutzer darüber in Kenntnis.
 \item Bleibt die Internetverbindung bestehen, werden die Daten vollständig aus dem Internet heruntergeladen und die App berechnet eine Vorhersage.
 \end{enumerate}
