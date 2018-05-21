@@ -1,5 +1,8 @@
 package project.software.uni.positionprediction.movebank;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -17,6 +20,23 @@ public class MovebankConnector {
     private static MovebankConnector instance;
     private MovebankRequest movebankRequest;
 
+    /**
+     * Stock response listener.
+     * TODO: rethink this.
+     */
+    private Response.Listener<String> printResponse = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String response) {
+            System.out.println(response);
+        }
+    };
+    
+    private Response.ErrorListener printError = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println(error);
+        }
+    };
 
     private MovebankConnector(){
         movebankRequest = new MovebankRequest();
@@ -42,7 +62,7 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
 
-        return movebankRequest.requestData(attributes);
+        return movebankRequest.requestData(attributes, printResponse, printError);
     }
 
     public String getBirdData(int studyID, int indivID, Date start, Date end){
@@ -56,7 +76,7 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
 
-        return movebankRequest.requestData(attributes);
+        return movebankRequest.requestData(attributes, printResponse, printError);
     }
 
 
@@ -64,7 +84,7 @@ public class MovebankConnector {
 
         String attributes = "entity_type=study";
 
-        return movebankRequest.requestData(attributes);
+        return movebankRequest.requestData(attributes, printResponse, printError);
     }
 
 
@@ -74,9 +94,10 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s", typeAttr, studyAttr);
 
-        return movebankRequest.requestData(attributes);
+        return movebankRequest.requestData(attributes, printResponse, printError);
     }
 
+    /*
     public boolean changeUser(String username, String password){
         //TODO attributes
         String usernameOld = movebankRequest.getUsername();
@@ -91,7 +112,7 @@ public class MovebankConnector {
         }
 
         return isValid;
-    }
+    }*/
 
     /**
      * Formats a string with explicit US locale.

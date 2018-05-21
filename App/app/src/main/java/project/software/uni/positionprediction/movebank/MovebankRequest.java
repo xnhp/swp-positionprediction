@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.movebank;
 
 
+import android.content.Context;
 import android.util.Base64;
 
 import com.android.volley.Request;
@@ -23,6 +24,25 @@ public class MovebankRequest {
     private String username = "SP_1-2";
     private String password = "Xamhdg9adB";
 
+    private String baseUrl = null;
+    private Context context = null;
+
+    /**
+     * If passed a baseUrl, context use that. If not, use the hardcoded one.
+     * This is to enable sending requests to localhost, in order to mock a stub http host
+     * that sends "fake" replies for testing.
+     * @param baseUrl The base URL to send the API requests to.
+     */
+    public MovebankRequest(String baseUrl, Context context) {
+        this.baseUrl = baseUrl;
+        this.context = context;
+    }
+
+    public MovebankRequest() {
+        this.baseUrl = BASE_URL;
+        // TODO: (BM) I don't think there should be a link to the BirdSelect activity.
+        this.context = BirdSelect.getAppContext();
+    }
 
     /**
      * Sends a request to the Movebank API for the specified attributes
@@ -31,32 +51,21 @@ public class MovebankRequest {
      *
      * TODO: (BM) imo the onResponse and onError listeners should be given as arguments
      */
-    public String requestData(String attributes){
+    public String requestData(String attributes,
+                              com.android.volley.Response.Listener<String> responseListener,
+                              com.android.volley.Response.ErrorListener errorListener){
         // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(BirdSelect.getAppContext());
+        RequestQueue queue = Volley.newRequestQueue(this.context);
 
-        String url = BASE_URL+attributes;
+        String url = baseUrl+attributes;
         // Request a string response from the provided URL.
-
+        System.out.println("sending string request to " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener <String> () {
-                    @Override
-                    public void onResponse(String response)
-                    {
-                        //TODO: handle response
-                        System.out.println(response);
-                    }
-                },
+                responseListener,
+                errorListener
+                );
 
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // log and show error message with error code;
-                    }
-
-                })
-
-        {
+        /*{
             @Override
             public Map <String, String> getHeaders() {
                 HashMap< String, String > headers = new HashMap <> ();
@@ -66,7 +75,7 @@ public class MovebankRequest {
 
                 return headers;
             }
-        };
+        };*/
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
@@ -89,14 +98,16 @@ public class MovebankRequest {
         this.password=password;
     }
 
+    /*
+    // TODO: Can just check for HTTP Status Code here?
     public boolean isUserCredsValid(){
 
         String typeAttr = "attributes";
 
         String result = requestData(typeAttr);
         //TODO check result
-        // TODO: Can just check for HTTP Status Code here?
+
         return result=="";
-    }
+    }*/
 
 }
