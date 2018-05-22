@@ -35,7 +35,7 @@ KK: Abschnitt 4.5 konkreter. ZB anstatt "Falls ID ungültig"
 	(TODO)
 
 KK: Gibt es besondere Abläufe/Vorgänge bei App-Installation od. Erstausführung?
-	(TODO)
+	(DONE)
 
 KK: Formulierung "formal falsch" präzisieren (überall). (DONE)
 	Es geht eher um einen hohen Anteil von fehlenden oder unbrauchbaren
