@@ -23,6 +23,7 @@ KK: Diverse Rechtschreibfehler im Dokument, korrigieren (DONE)
 
 KK: Verhalten Outdoor-Modus, Datentransfer präzisieren (was passiert wann,
 	in welchem Zustand, wann habe ich welche Möglichkeiten?) (TODO)
+	(BM: finde das OK so, weiß nicht, was ich ändern sollte)
 
 KK: "IDs" definieren (DONE)
 	(bezieht sich auf Movebank - VogelID, StudyID)
