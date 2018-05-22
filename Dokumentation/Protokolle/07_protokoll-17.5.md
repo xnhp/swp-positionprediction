@@ -37,11 +37,11 @@ KK: Abschnitt 4.5 konkreter. ZB anstatt "Falls ID ungültig"
 KK: Gibt es besondere Abläufe/Vorgänge bei App-Installation od. Erstausführung?
 	(TODO)
 
-KK: Formulierung "formal falsch" präzisieren (überall). 
+KK: Formulierung "formal falsch" präzisieren (überall). (DONE)
 	Es geht eher um einen hohen Anteil von fehlenden oder unbrauchbaren
 	Datensätzen
 
-Allg.: Falsche \ref bei SRS/Zeitplan/Woche3
+Allg.: Falsche \ref bei SRS/Zeitplan/Woche3 (DONE)
 
 
 === Ideen ===
