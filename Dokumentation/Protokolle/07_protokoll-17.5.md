@@ -16,7 +16,7 @@ KK: Ja, es wird von Uni ein Cesium-Server zur Integration via WebView
 
 MA: Empfehlung: Cesium-Dummy einbinden, zB irgendeine online-demo holen
 
-KK: Abschnitt 2.2 unklar, anpassen (TODO)
+KK: Abschnitt 2.2 unklar, anpassen (DONE)
 	Sind die Daten teil des ergebnisses der Vorhersageberechung? Was sind die benötigten Daten? Formulierungen anpassen.
 
 KK: Diverse Rechtschreibfehler im Dokument, korrigieren (DONE)
