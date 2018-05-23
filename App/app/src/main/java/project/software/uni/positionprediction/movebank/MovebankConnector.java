@@ -1,9 +1,13 @@
 package project.software.uni.positionprediction.movebank;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -20,33 +24,14 @@ public class MovebankConnector {
     private static MovebankConnector instance;
     private MovebankRequest movebankRequest;
 
-    /**
-     * Stock response listener.
-     * TODO: rethink this.
-     */
-    private Response.Listener<String> printResponse = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            System.out.println(response);
-        }
-    };
-    
-    private Response.ErrorListener printError = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            System.out.println(error);
-        }
-    };
-
-    private MovebankConnector(){
-        movebankRequest = new MovebankRequest();
+    private MovebankConnector(Context context){
+        movebankRequest = new MovebankRequest(context);
     }
 
-
-    public static MovebankConnector getInstance() {
+    public static MovebankConnector getInstance(Context context) {
 
         if(instance == null){
-            instance = new MovebankConnector();
+            instance = new MovebankConnector(context);
         }
 
         return instance;
@@ -54,7 +39,7 @@ public class MovebankConnector {
 
 
 
-    public String getBirdData(int studyID, int indivID){
+    public void getBirdData(int studyID, int indivID, RequestHandler requestHandler){
 
         String typeAttr = "entity_type=event";
         String studyAttr = format("study_id=%d", studyID);
@@ -62,10 +47,11 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
 
-        return movebankRequest.requestData(attributes, printResponse, printError);
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+
     }
 
-    public String getBirdData(int studyID, int indivID, Date start, Date end){
+    public void getBirdData(int studyID, int indivID, Date start, Date end, RequestHandler requestHandler){
 
         String typeAttr = "entity_type=event";
         String studyAttr = format("study_id=%d", studyID);
@@ -76,30 +62,30 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
 
-        return movebankRequest.requestData(attributes, printResponse, printError);
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
     }
 
 
-    public String getStudies(){
+    public void getStudies(RequestHandler requestHandler){
 
         String attributes = "entity_type=study";
 
-        return movebankRequest.requestData(attributes, printResponse, printError);
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
     }
 
 
-    public String getBirds(int studyId){
+    public void getBirds(int studyId, RequestHandler requestHandler){
         String typeAttr = "entity_type=individual";
-        String studyAttr = format("study_id=%d", 2911040);
+        String studyAttr = format("study_id=%d", studyId);
 
         String attributes = format("%s&%s", typeAttr, studyAttr);
 
-        return movebankRequest.requestData(attributes, printResponse, printError);
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
     }
 
-    /*
-    public boolean changeUser(String username, String password){
-        //TODO attributes
+
+    /*public boolean changeUser(String username, String password){
+        //TODO attributes,
         String usernameOld = movebankRequest.getUsername();
         String passwordOld = movebankRequest.getPassword();
 
