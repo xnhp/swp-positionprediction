@@ -23,6 +23,7 @@ public class ExampleUnitTest {
      * Test for running the prediction algorithm to check results with System.out
      * @throws Exception
      */
+    @Test
     public void run_prediction_algorithm() throws Exception {
         PredictionAlgorithm alg = new PredictionImplementation();
         alg.predict(null, null, 0);
