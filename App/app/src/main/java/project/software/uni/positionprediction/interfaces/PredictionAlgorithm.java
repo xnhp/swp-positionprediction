@@ -15,6 +15,8 @@ public interface PredictionAlgorithm {
      * - date_past to use only data in a given time frame
      * - date_pred to predict the position in a given time frame in the future
      *
+     * Input can be specified by implementation of interface (Database scheme dependent)
+     *
      * Returns an 2D-Array with location and probability
      *
      * @param date_past
