@@ -2,7 +2,6 @@ package project.software.uni.positionprediction.classes;
 
 import java.util.Date;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
-import org.apache.commons.math;
 
 public class PredictionImplementation implements PredictionAlgorithm {
 
@@ -47,7 +46,7 @@ public class PredictionImplementation implements PredictionAlgorithm {
             // TODO Warning: "Vector lengths of step length and turning angles do not match."
         }
 
-        double bwx = 2* (quantile(turningAngle, 3/4) - quantile(turningAngle, 1/4)) / ( Math.pow( turningAngle.length, (1/3) ) );
+        //double bwx = 2* (quantile(turningAngle, 3/4) - quantile(turningAngle, 1/4)) / ( Math.pow( turningAngle.length, (1/3) ) );
 
         return null;
     }
