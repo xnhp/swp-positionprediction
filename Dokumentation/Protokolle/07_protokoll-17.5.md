@@ -33,7 +33,7 @@ KK: Abschnitt 4.5 konkreter. ZB anstatt "Falls ID ungültig"
  	IDs gültig =/=> Daten werden geladen (kann sonst noch was nicht stimmen)
 	Welche Probleme können bei Kommunikation mit API sonst noch auftreten?
 	Spezifizieren wie die Gültigkeit der IDs überprüft wird
-	(TODO)
+	(DONE)
 
 KK: Gibt es besondere Abläufe/Vorgänge bei App-Installation od. Erstausführung?
 	(DONE)

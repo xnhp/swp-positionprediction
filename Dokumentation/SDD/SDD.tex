@@ -24,12 +24,14 @@
 \usepackage{tabularx}
 \usepackage[utf8]{inputenc}
 \usepackage{csquotes}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily}
 
 \usepackage{graphicx} % Required for including pictures
 
 \usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
 \usepackage{wrapfig} % Allows in-line images such as the example fish picture
-
+\usepackage{soul}
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
 
 \usepackage{hyperref}
@@ -83,7 +85,7 @@ Manuel Prinz, Sebastian Strumbelj, Simon Suckut
 %	INTRODUCTION
 %----------------------------------------------------------------------------------------
 
-% Changelog
+% Changelog 
 \section{Änderungen}
 
 
@@ -94,8 +96,9 @@ Version & Autor & Beschreibung & Datum \\ \hline\hline
 %changelog content 
 1.0 & ALL & Erstellen von SRS und SDD & 15.5.2018 \\\hline
 	& BM  &	Klarstellung Begriff IDs  &	21.5.2018 \\\hline
-	& BM  &	Neu: Abschnitte Erstinstallation, Erstausführung  &	22.5.2018 \\\hline
-	& BM  &	Klarstellung Abschnitt 2.2  &	22.5.2018 \\\hline
+	& BM  &	Neu: Abschnitte Erstinstallation, Erstausführung  &	22.5.2018 \\\hline
+	& BM  &	Klarstellung Abschnitt 2.2  &	22.5.2018 \\\hline
+	& BM  & Erweiterung Abschnitt 4.5   &   23.5.2018 \\\hline
 
 \end{tabular}
 
@@ -103,7 +106,7 @@ Version & Autor & Beschreibung & Datum \\ \hline\hline
 {\small
 
 \noindent
-\\\\Legend: \\
+\\\\Legende: \\
 SSJ = Sebastian Strumbelj \\
 BM = Benjamin Moser \\
 OM = Oliver Mänder \\
@@ -129,7 +132,7 @@ Das Erstellen einer App, um einem Ornithologen das Finden eines Vogels zu erleic
 Diese Dokumentation spezifiert alle Eigenschaften, die unsere App benötigt, um deren Zweck zu erfüllen. Um eine Vorhersage für Vögel zu treffen und dem Ornithologen bei seiner Suche zu unterstützen, sollte die App folgende Funktionen beinhalteten: 
 \begin{itemize}
 	\item Aufbereiten und Speichern der vorhandenden und für die Berechnung einer Vorhersage benötigten Tracking-Daten von Vögeln
-	\item Berechnung einer Positionsvorhersage
+	\item Berechnung einer Positionsvorhersage
 	\item Visualisierung des Ergebnisses der Positionsvorhersage
 	\item User-Interface zur Interaktion 
 \end{itemize}
@@ -242,35 +245,58 @@ Geht der Forscher nun in das Feld, schaltet er in den Outdoor-Modus. Der Ablauf 
 
 % Übersetzung?
 \subsection{Boundary Conditions}
-\begin{figure}[H]
-	\hfill
-		\includegraphics[width =  0.95 \textwidth]{Diagramme/BounCond.png}
+In diesem Abschnitt werden Randfälle beschrieben, die in der Kommunikation mit Schnittstellen auftreten können sowie desweiteren wie diese behandelt werden.
+\subsubsection{Anfrage}
+In Diagramm \ref{seqDiagAnfrage} wird der Ablauf einer Datenanfrage von der \textit{Movebank}-API sowie darauffolgend vom Provider der 2D-Karten dargestellt.
+\begin{figure}[h]
+		% <left> <lower> <right> <upper>
+		\includegraphics[height=0.95\textheight,trim={0 1cm 5cm 2cm}]{Diagramme/SeqDiag-Abfrage.pdf}
+		\caption{Anfrage}
+		\label{seqDiagAnfrage}
 	\hspace*{\fill}
 \end{figure}
-\pagebreak
 
-\begin{enumerate}[label={\arabic*.}]
-\item Der Nutzer startet die App.
-\item Der Nutzer wird dazu aufgefordert, VogelID und StudyID einzugeben, um die Daten für einen bestimmten Vogel abzufragen.
-\item Die App sendet eine Anfrage an die Movebank, um die Daten für den vom Nutzer gewollten Vogel zu erhalten.
-\item Wenn der Movebank Server nicht erreichbar ist, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
-\item Die App sendet die Accountdaten aus den Einstellungen zur Movebank.
-\item Wenn die Accountdaten für die Movebank nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
-\item Wenn die eingegebenen IDs nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
-\item Sind die IDs gültig, so werden die Daten aus der Movebank heruntergeladen.
-\item Wenn während dem Download die Interverbindung abbricht, wechselt die App in den Outdoor-Modus und setzt den Nutzer darüber in Kenntnis.
-\item Bleibt die Internetverbindung bestehen, werden die Daten vollständig aus dem Internet heruntergeladen und die App berechnet eine Vorhersage.
-\end{enumerate}
+% \begin{enumerate}[label={\arabic*.}]
+% \item Der Nutzer startet die App.
+% \item Der Nutzer wird dazu aufgefordert, VogelID und StudyID einzugeben, um die Daten für einen bestimmten Vogel abzufragen.
+% \item Die App sendet eine Anfrage an die Movebank, um die Daten für den vom Nutzer gewollten Vogel zu erhalten.
+% \item Wenn der Movebank Server nicht erreichbar ist, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
+% \item Die App sendet die Accountdaten aus den Einstellungen zur Movebank.
+% \item Wenn die Accountdaten für die Movebank nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
+% \item Wenn die eingegebenen IDs nicht gültig sind, wird dem Nutzer eine Meldung darüber angezeigt und keine Vorhersage berechnet.
+% \item Sind die IDs gültig, so werden die Daten aus der Movebank heruntergeladen.
+% \item Wenn während dem Download die Interverbindung abbricht, wechselt die App in den Outdoor-Modus und setzt den Nutzer darüber in Kenntnis.
+% \item Bleibt die Internetverbindung bestehen, werden die Daten vollständig aus dem Internet heruntergeladen und die App berechnet eine Vorhersage.
+% \end{enumerate}
+
+\paragraph{Erläuterungen zu Segment "Server Error"} 
+
+\hl{\textbf{Annahme: CSV-API}}
+
+Hier können verschiedene Szenarien
+auftreten, die aber alle hinsichtlich des Informationsaustausches gleichförmig sind.
+\begin{itemize} 
+ 	 \item HTTP-Status ist \lstinline$500 Internal Server Error$ -- Der Nutzer wird informiert, dass der Server momentan nicht erreichbar ist.
+ 	 \item HTTP-Status ist \lstinline$401 Unauthorized$: Keine Zugangsdaten in Anfrage vorhanden. In diesem Fall wird dem Nutzer ein Hinweis angezeigt mit der Aufforderung, seine Zugangsdaten in den Einstellungen der App einzutragen. 
+ 	 \item HTTP-Status ist \lstinline$200 OK$
+ 	 \begin{itemize} 
+ 	   	 \item Response Body ist \lstinline$<p>No data are available for download.</p>$. -- Informiere Nutzer, dass keine Daten vorhanden sind.
+ 	   	 \item Response-Header ist \lstinline$accept-license: true$ -- In diesem Fall hat der Nutzer noch nicht die Nutzungsvereinbarung akzeptiert. Dies wird dem Nutzer über einen Hinweis mitgeteilt. Wie im SRS spezifiziert wird hier davon ausgegangen, dass dies durch den Nutzer gewährleistet wird.
+ 	   	 \item Response-Body beginnt mit \\ \lstinline$Specify one of the following entity types: deployment, event, ...$ In diesem Fall konnten die Anfrageparameter nicht von der API interpretiert werden. Zeige Hinweis an den Nutzer, dass die Anfrage nicht möglich war. 
+ 	  \end{itemize}  
+ 	  \item HTTP-Status ist irgendein anderer Fall der hier noch nicht aufgeführt wurde -- Dem Nutzer wird ein Hinweis angezeigt, dass die Anfrage nicht erfolgreich durchgeführt werden konnte.
+\end{itemize} 
+
+In jedem Fall wechselt die App nach Anzeigen des Hinweises in den Zustand vor der getätigten Anfrage.
 
 
 \subsubsection{Besondere Abläufe bei Einrichtung}
 
 \paragraph{Bei Erstinstallation}: Bei Erstinstallation der Applikation
-müssen keine besonderen Prozeduren ausgeführt werden.
+müssen keine besonderen Prozeduren ausgeführt werden. 
 
-\paragraph{Bei Erstausführung}: Bei Erstausführung müssen keine besonderen
-Prozeduren ausgeführt werden. Bei Erstausführung werden noch keine Movebank-
-Zugangsdaten in den App-Einstellungen eingetragen sein. Bei Anfrage von Daten,
+\paragraph{Bei Erstausführung}: \hl{\textbf{Zu klaeren}}  Bei Erstausführung müssen keine besonderen
+Prozeduren ausgeführt werden. Bei Erstausführung werden noch keine Movebank-Zugangsdaten in den App-Einstellungen eingetragen sein. Bei Anfrage von Daten,
 die Zugangsdaten erfordern verfährt das System wie im SRS im Abschnitt 7.1 (Anwendungsfälle) spezifiziert.
 
 % Startup behaviour (What happens, when we start the system?)
