@@ -1,8 +1,7 @@
 package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
-
-import project.software.uni.positionprediction.classes.LocProbTupel;
+import project.software.uni.positionprediction.classes.Tupel;
 
 /**
  * General Interface for using a prediction algorithm
@@ -17,13 +16,13 @@ public interface PredictionAlgorithm {
      *
      * Input can be specified by implementation of interface (Database scheme dependent)
      *
-     * Returns an 2D-Array with location and probability
-     *
      * @param date_past
      * @param date_pred
      * @param bird_id
      * @return
      */
-    //LocProbTupel[][] predict(Date date_past, Date date_pred, int bird_id);
-    double[][] predict(Date date_past, Date date_pred, int bird_id);
+    Tupel predict_density_distribution(Date date_past, Date date_pred, int bird_id);
 }
+
+
+
