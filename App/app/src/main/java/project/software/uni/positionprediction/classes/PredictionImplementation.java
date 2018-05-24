@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.classes;
 
+import java.util.Arrays;
 import java.util.Date;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 
@@ -29,6 +30,7 @@ public class PredictionImplementation implements PredictionAlgorithm {
 
         print(distance, "distance");
         print(turnAngle, "turnAngle");
+        percentile(distance, 0.01);
 
         return getDensity(distance, turnAngle);
 
@@ -36,6 +38,7 @@ public class PredictionImplementation implements PredictionAlgorithm {
 
 
     /**
+     * GET DENSITY
      * Function to get the probalities (see R code)
      * @param stepLength
      * @param turningAngle
@@ -52,10 +55,33 @@ public class PredictionImplementation implements PredictionAlgorithm {
     }
 
 
+    /**
+     * PERCENTILE
+     * Computes the p-th Percentile. Algorithm copied from Statistics I lecture (Brüggemann, Economics)
+     * @param array
+     * @param p
+     * @return
+     */
+    private double percentile(double[] array, double p) {
+        Arrays.sort(array);
+        int n = array.length;
+        double percentile;
+
+        // Computes p-th percentile as told in statistics I
+        if ( Math.floor(n*p) == n*p ) {
+            percentile = (1/2)*(array[(int) Math.ceil(n*p)] + array[(int) Math.ceil((n*p)+1)]);
+        } else {
+            percentile = array[(int) Math.ceil(n * p) + 1];
+        }
+
+        return percentile;
+    }
+
 
 
 
     /**
+     * PRINT ARRAY
      * Method for printing an array
      * @param array
      */
