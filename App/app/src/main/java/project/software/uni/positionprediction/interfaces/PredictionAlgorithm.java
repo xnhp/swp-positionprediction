@@ -24,6 +24,6 @@ public interface PredictionAlgorithm {
      * @param bird_id
      * @return
      */
-    LocProbTupel[][] predict(Date date_past, Date date_pred, int bird_id);
-
+    //LocProbTupel[][] predict(Date date_past, Date date_pred, int bird_id);
+    double[][] predict(Date date_past, Date date_pred, int bird_id);
 }

@@ -10,7 +10,7 @@ public class PredictionImplementation implements PredictionAlgorithm {
      * Hard-coded implementation of an prediction algorithm to use it for visualization
      */
     @Override
-    public LocProbTupel[][] predict(Date date_past, Date date_pred, int bird_id) {
+    public double[][] predict(Date date_past, Date date_pred, int bird_id) {
 
         Debug d = new Debug();
 
@@ -45,10 +45,11 @@ public class PredictionImplementation implements PredictionAlgorithm {
      * @param turningAngle
      * @return
      */
-    private LocProbTupel[][] getDensity(double[] stepLength, double[] turningAngle){
+    private double[][] getDensity(double[] stepLength, double[] turningAngle){
         if (stepLength.length != turningAngle.length ) {
             // TODO Warning: "Vector lengths of step length and turning angles do not match."
         }
+        // TODO
         //double bwx = 2* (quantile(turningAngle, 3/4) - quantile(turningAngle, 1/4)) / ( Math.pow( turningAngle.length, (1/3) ) );
 
         return null;
