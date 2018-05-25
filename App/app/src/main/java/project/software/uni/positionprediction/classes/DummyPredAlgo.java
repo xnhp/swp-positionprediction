@@ -5,7 +5,7 @@ import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 
 
 /**
- * Hardcoded dummy.
+ * Hardcoded dummy. Returns everthing you need to visualize the data.
  */
 
 public class DummyPredAlgo implements PredictionAlgorithm {

@@ -3,9 +3,12 @@ package project.software.uni.positionprediction.classes;
 import java.util.Arrays;
 import java.util.Date;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 
 public class PredictionImplementation implements PredictionAlgorithm {
 
+    // Methods
     /**
      * Hard-coded implementation of an prediction algorithm to use it for visualization
      */
@@ -35,6 +38,7 @@ public class PredictionImplementation implements PredictionAlgorithm {
 
         return getDensity(distance, turnAngle);
 
+
     }
 
 
@@ -50,7 +54,9 @@ public class PredictionImplementation implements PredictionAlgorithm {
             // TODO Warning: "Vector lengths of step length and turning angles do not match."
         }
         // TODO
-        //double bwx = 2* (quantile(turningAngle, 3/4) - quantile(turningAngle, 1/4)) / ( Math.pow( turningAngle.length, (1/3) ) );
+        
+
+        double bwx = 2* (stat.getPercentile(turningAngle, 3/4) - quantile(turningAngle, 1/4)) / ( Math.pow( turningAngle.length, (1/3) ) );
 
         return null;
     }
