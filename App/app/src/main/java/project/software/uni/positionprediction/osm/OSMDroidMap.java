@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.osmdroid.api.IMapController;
@@ -28,7 +29,6 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.util.PermissionManager;
-
 
 
 /**
@@ -61,15 +61,15 @@ import project.software.uni.positionprediction.util.PermissionManager;
  *        android:layout_width="fill_parent"
  *        android:layout_height="fill_parent" />
  */
-public class OSMDroidMap implements LocationListener {
+public class OSMDroidMap {
 
     public MapView mapView = null; // initalised by constructor
-        // exposed for calling mapView.onResume() and mapView.onPause() in the activity.
+    // exposed for calling mapView.onResume() and mapView.onPause() in the activity.
     private IMapController mapController = null;
     private CacheManager cacheManager = null;
     private Context context = null;
 
-    private Marker locationMarker;
+    private Marker marker;
     private LocationManager locationManager;
     private MyLocationNewOverlay locationOverlay = null;
     private CompassOverlay compassOverlay = null;
@@ -100,6 +100,7 @@ public class OSMDroidMap implements LocationListener {
 
         // use Mapnik by default
         // TODO: other tile sources interesting?
+        // such as https://wiki.openstreetmap.org/wiki/Hike_%26_Bike_Map
         mapView.setTileSource(TileSourceFactory.MAPNIK);
 
         // disable gray zoom buttons at bottom of map (enabled by default)
@@ -109,10 +110,22 @@ public class OSMDroidMap implements LocationListener {
         setZoom(zoom);
         setCenter(center);
 
-        //enableCompassOverlay();
-        //enableRotationGestures();
+        enableCompassOverlay(); // works
+        enableRotationGestures(); // works
 
-        //enableCustomLocationMarker();
+        //enableLocationOverlay(); // works
+
+
+
+        // enableFollowLocation(); // TODO
+
+        Marker myMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_home_black_24dp));
+        placeMarker(mapView, myMarker, center);
+        // Note that as of now, the marker has to have already been placed on the map with placeMarker()
+        // this means we have to supply it with an initial position (or else we would have to rethink
+        // what the placeMarker method is for).
+        // TODO: not do that, check dynamically whether marker is already placed or not.
+        enableCustomLocationMarker(myMarker);
     }
 
     /**
@@ -129,30 +142,110 @@ public class OSMDroidMap implements LocationListener {
         mapView.getOverlays().add(overlay);
     }
 
+
     /**
      * Shows current location using a built-in marker
-     * TODO: test this on an actual device, doesnt work in emulator?
      */
     private void enableLocationOverlay() {
-        MyLocationNewOverlay overlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mapView);
+        MyLocationNewOverlay overlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), mapView);
         overlay.enableMyLocation();
 
         mapView.getOverlays().add(overlay);
     }
 
 
-    private void enableCustomLocationMarker() {
-        // TODO: write method that enables displaying of custom location marker, move this there
-        locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
-        // cf onLocationChanged
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, this);
-        Drawable myDrawable = this.context.getDrawable(R.drawable.ic_dashboard_black_24dp);
-        locationMarker = new Marker(mapView);
-        locationMarker.setIcon(myDrawable);
-        locationMarker.setImage(myDrawable);
+    /**
+     * Create a marker for a map (but do not show it)
+     * @param view
+     * @param icon
+     * @return
+     */
+    private Marker createMarker(MapView view, Drawable icon) {
+        Marker myMarker = new Marker(mapView);
+        myMarker.setIcon(icon);
+        myMarker.setInfoWindow(null); // speech bubble on tap
+        myMarker.setPanToView(false); // If set to true, when clicking the marker, the map will be centered on the marker position.
+        return myMarker;
     }
 
-    private void enableRotationGestures(){
+
+    /**
+     * Place a new marker on the map.
+     *
+     * For more methods cf https://github.com/osmdroid/osmdroid/blob/987bdea49a899f14844674a8faa19f74c648cc57/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/data/SampleMarker.java
+     *  @param view The MapView
+     * @param location Location of the Marker
+     * @param marker Icon to be displayed for the marker
+     */
+    private void placeMarker(MapView view, Marker marker, GeoPoint location) {
+        marker.setPosition(location);
+        view.getOverlays().add(marker);
+    }
+
+
+    /**
+     * Binds a marker to the user's current position.
+     * When the device location changes, the marker location on the map also changes.
+     * Note that as of now, the marker has to have already been placed on the map with placeMarker()
+     * TODO: onResume(), does the location have to be explicitly updated?
+     */
+    private void enableCustomLocationMarker(final Marker marker) {
+        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, (AppCompatActivity) context);
+
+        // create a locationManager that handles obtaining the location if there is none yet
+        if (locationManager == null) locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
+
+        // we encapsulate the LocationListener here and not in a method of the class
+        // because the callback content is specific to that marker.
+        // TODO: At some point, we will most likely want to access the user's current location for
+        // other purposes as well (such as centering the map around it).
+        // Then we could either use Marker.getPosition() or make save the location in a field and
+        // rewrite this.
+        registerLocationUpdates(new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+                // cf https://developer.android.com/reference/android/location/LocationListener.html#onStatusChanged(java.lang.String,%20int,%20android.os.Bundle)
+                // TODO: Hide marker?
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+                // TODO: redisplay marker?
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+                // TODO: hide marker?
+            }
+        });
+    }
+
+    /**
+     * Update the device location and call the callback with the new location.
+     * @param listener
+     */
+    private void registerLocationUpdates(LocationListener listener) {
+        Log.d("Location", "call to update location");
+        // because receiving the first location might take a while,
+        // we call a first update immediately with the last known location
+        // cf https://developer.android.com/reference/android/location/LocationManager.html#requestLocationUpdates(java.lang.String,%20long,%20float,%20android.location.LocationListener)
+        listener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+        //  register the current activity to be updated periodically by the named provider
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, listener);
+    }
+
+
+
+    /*
+    ===== MAP CONTROL =====
+     */
+
+    private void enableRotationGestures() {
         RotationGestureOverlay overlay = new RotationGestureOverlay(context, mapView);
         overlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
@@ -163,6 +256,7 @@ public class OSMDroidMap implements LocationListener {
      * Map will always center on the user's location.
      * Manual panning is disabled.
      * For a nice implementation that additionally allows panning, see
+     * TODO: Error handling?
      * https://github.com/osmdroid/osmdroid/blob/db1d2e54b44bc10c6b47c49df2a08f19664ae6f5/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/location/SampleFollowMe.java
      */
     private void enableFollowLocation() {
@@ -180,9 +274,14 @@ public class OSMDroidMap implements LocationListener {
     public void onResume() {
         if (mapView != null) mapView.onResume();
         // resume location, compass updates
-        if (locationOverlay != null) locationOverlay.onResume();
+        if (locationOverlay != null) {
+            locationOverlay.onResume();
+
+        }
         if (compassOverlay != null) compassOverlay.onResume();
     }
+
+
 
     /**
      * Pass-through onPause handler of the mapView to be called by the implementing Activity.
@@ -317,23 +416,5 @@ public class OSMDroidMap implements LocationListener {
         mapController.animateTo(newCenter);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        locationMarker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
-    }
 
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
 }
