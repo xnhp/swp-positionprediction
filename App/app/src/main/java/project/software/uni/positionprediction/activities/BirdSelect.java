@@ -47,9 +47,6 @@ public class BirdSelect extends AppCompatActivity {
             }
         });
 
-        MovebankConnector connector = MovebankConnector.getInstance();
-        String result = connector.getBirdData(22390461, 102937685);
-
     }
 
     public static Context getAppContext() {

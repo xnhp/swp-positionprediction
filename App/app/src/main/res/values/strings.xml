@@ -6,7 +6,6 @@
     <string name="title_activity_osm">OSM</string>
     <string name="title_activity_prediction">Prediction</string>
     <string name="title_activity_birdselect">BirdSelect</string>
-
     <string name="dialog_permission_title">Permission</string>
     <string name="dialog_permission_storage_text">Die App benötigt die Berechtigung auf den Speicher zuzugreifen um Kartendaten offline speichern zu können</string>
     <string name="dialog_permission_finelocation_text">Gewähren Sie Zugriff auf Ihren Standort damit dieser auf der Karte angezeigt werden kann.</string>
@@ -29,5 +28,8 @@
 
     <string name="prediction_button_predict_text">Berechnen</string>
 
+    // OSM Activity
+
+    <string name="map_button_download_text">DL</string>
 
 </resources>
