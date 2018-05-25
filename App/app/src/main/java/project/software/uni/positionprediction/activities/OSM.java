@@ -16,7 +16,7 @@ import project.software.uni.positionprediction.osm.OSMDroidMap;
 
 public class OSM extends AppCompatActivity {
 
-    OSMDroidMap mymap = null;
+    OSMDroidMap mymap;
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
@@ -25,6 +25,11 @@ public class OSM extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final OSM osm = this;
+
+        // note: the actions in the OSMDroidMap constructor have to happen *before*
+        // setContentView is called.
+        mymap = new OSMDroidMap(this);
 
         setContentView(R.layout.activity_osm);
 
@@ -32,13 +37,9 @@ public class OSM extends AppCompatActivity {
         buttonDownload = findViewById(R.id.map_download_button);
         buttonPanTo    = findViewById(R.id.map_panto_button);
 
-
-        final OSM osm = this;
-
-
         MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
-        mymap = new OSMDroidMap(OSM.this, mapView, center, 6);
+        mymap.initMap(mapView, center, 6);
 
 
         buttonSettings.setOnClickListener(new View.OnClickListener() {
@@ -62,13 +63,27 @@ public class OSM extends AppCompatActivity {
         buttonPanTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: Executing animations subsequentially like this does not randomly execute
+                // one of them
                 mymap.panWithAnimationTo(new GeoPoint(24.168111, 15.909570));
                 //mymap.setZoom(10);
                 mymap.setZoomWithEvenAnimation(10);
             }
         });
 
+    }
 
+    public void onResume(){
+        super.onResume();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        if (mymap != null) mymap.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
 
+    public void onPause(){
+        super.onPause();
+        if (mymap != null) mymap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 }
