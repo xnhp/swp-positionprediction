@@ -56,23 +56,25 @@ import project.software.uni.positionprediction.util.PermissionManager;
  *
  * o Call mymap.onPause() and mymap.onResume() in the Activity's onPause() and onResume() methods.
  *
- * o The corresponding layout component (given to the constructor of this class) would be sth like
+ * o The corresponding layout component (given to initMap) would be sth like
  *      <org.osmdroid.views.MapView android:id="@+id/mapView"
  *        android:layout_width="fill_parent"
  *        android:layout_height="fill_parent" />
  */
 public class OSMDroidMap {
 
-    public MapView mapView = null; // initalised by constructor
+    public MapView mapView; // initalised by constructor
     // exposed for calling mapView.onResume() and mapView.onPause() in the activity.
-    private IMapController mapController = null;
-    private CacheManager cacheManager = null;
-    private Context context = null;
+    private IMapController mapController;
+    private CacheManager cacheManager;
+    private Context context;
 
-    private Marker marker;
     private LocationManager locationManager;
-    private MyLocationNewOverlay locationOverlay = null;
-    private CompassOverlay compassOverlay = null;
+
+    // used for built-in location overlay. when using a custom marker (icon), the locationOverlay
+    // isnt even used.
+    private MyLocationNewOverlay locationOverlay;
+    private CompassOverlay compassOverlay;
 
     // TODO: refresh tiles when switching from offline to inline
     // cf https://github.com/osmdroid/osmdroid/blob/ae026862fe4666ab6c8d037b9e2f8805233c8ebf/OpenStreetMapViewer/src/main/java/org/osmdroid/StarterMapActivity.java#L25
@@ -118,14 +120,6 @@ public class OSMDroidMap {
 
 
         // enableFollowLocation(); // TODO
-
-        Marker myMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_home_black_24dp));
-        placeMarker(mapView, myMarker, center);
-        // Note that as of now, the marker has to have already been placed on the map with placeMarker()
-        // this means we have to supply it with an initial position (or else we would have to rethink
-        // what the placeMarker method is for).
-        // TODO: not do that, check dynamically whether marker is already placed or not.
-        enableCustomLocationMarker(myMarker);
     }
 
     /**
@@ -172,6 +166,8 @@ public class OSMDroidMap {
     /**
      * Place a new marker on the map.
      *
+     * You cannot place a marker more than once.
+     *
      * For more methods cf https://github.com/osmdroid/osmdroid/blob/987bdea49a899f14844674a8faa19f74c648cc57/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/data/SampleMarker.java
      *  @param view The MapView
      * @param location Location of the Marker
@@ -189,7 +185,14 @@ public class OSMDroidMap {
      * Note that as of now, the marker has to have already been placed on the map with placeMarker()
      * TODO: onResume(), does the location have to be explicitly updated?
      */
-    private void enableCustomLocationMarker(final Marker marker) {
+    private Marker enableCustomLocationMarker() {
+        final Marker marker = createMarker(mapView, context.getDrawable(R.drawable.ic_home_black_24dp));
+        placeMarker(mapView, marker, (GeoPoint) mapView.getMapCenter());
+        // Note that as of now, the marker has to have already been placed on the map with placeMarker()
+        // this means we have to supply it with an initial position (or else we would have to rethink
+        // what the placeMarker method is for).
+        // TODO: not do that, check dynamically whether marker is already placed or not.
+
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, (AppCompatActivity) context);
 
         // create a locationManager that handles obtaining the location if there is none yet
@@ -223,6 +226,8 @@ public class OSMDroidMap {
                 // TODO: hide marker?
             }
         });
+
+        return marker;
     }
 
     /**
