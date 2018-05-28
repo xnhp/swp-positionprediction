@@ -1,11 +1,13 @@
 package project.software.uni.positionprediction.classes;
 
 import java.util.Date;
+
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 
 
 /**
- * Hardcoded dummy. Returns everthing you need to visualize the data.
+ * ++++ NOT UP TO DATE. Want to change output of interface. Class only there to have the R Code result
+ * Hardcoded dummy. Returns everything you need to visualize the data.
  */
 
 public class DummyPredAlgo implements PredictionAlgorithm {
@@ -24,7 +26,7 @@ public class DummyPredAlgo implements PredictionAlgorithm {
         double raster_x = 150;
         double raster_y = 150;
 
-        return new Location(1,2);
+        return new Location(1, 2);
 
     }
 }

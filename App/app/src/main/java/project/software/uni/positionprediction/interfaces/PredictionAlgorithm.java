@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
+
 import project.software.uni.positionprediction.classes.Location;
 
 /**
@@ -13,9 +14,9 @@ public interface PredictionAlgorithm {
      * - bird_id and can get data by searching for date in the database
      * - date_past to use only data in a given time frame
      * - date_pred to predict the position in a given time frame in the future
-     *
+     * <p>
      * Input can be specified by implementation of interface (Database scheme dependent)
-     *
+     * <p>
      * Returns only one predicted point
      *
      * @param date_past
@@ -25,7 +26,6 @@ public interface PredictionAlgorithm {
      */
     // Todo: Output
     Location predict_interpolation(Date date_past, Date date_pred, int bird_id);
-
 
 
 }
