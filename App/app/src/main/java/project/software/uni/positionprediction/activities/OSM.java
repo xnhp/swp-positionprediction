@@ -7,9 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import project.software.uni.positionprediction.R;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+
+import java.util.ArrayList;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
@@ -40,6 +43,18 @@ public class OSM extends AppCompatActivity {
         MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
         mymap.initMap(mapView, center, 6);
+
+
+
+        // pick me up:
+        // create a sequence of test positions, render them nicely on the map
+        ArrayList<IGeoPoint> testPos = new ArrayList<>();
+        testPos.add(new GeoPoint(47.680503, 9.177198));
+        testPos.add(new GeoPoint(47.679463, 9.179558));
+        testPos.add(new GeoPoint(47.678871, 9.181532));
+
+        mymap.showFastPoints(testPos);
+
 
 
         buttonSettings.setOnClickListener(new View.OnClickListener() {
