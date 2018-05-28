@@ -1,7 +1,7 @@
 package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
-import project.software.uni.positionprediction.classes.Tupel;
+import project.software.uni.positionprediction.classes.Location;
 
 /**
  * General Interface for using a prediction algorithm
@@ -16,13 +16,15 @@ public interface PredictionAlgorithm {
      *
      * Input can be specified by implementation of interface (Database scheme dependent)
      *
+     * Returns only one predicted point
+     *
      * @param date_past
      * @param date_pred
      * @param bird_id
      * @return
      */
     // Todo: Output
-    Tupel predict_interpolation(Date date_past, Date date_pred, int bird_id);
+    Location predict_interpolation(Date date_past, Date date_pred, int bird_id);
 
 
 
