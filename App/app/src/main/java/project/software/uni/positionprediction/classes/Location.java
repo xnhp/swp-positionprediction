@@ -46,4 +46,13 @@ public class Location {
         double res_lat  = this.getLoc_lat()  + loc_lat;
         return new Location(res_long, res_lat);
     }
+
+
+    /**
+     * Print method for Location
+     */
+    public void print(){
+        System.out.print("[" + this.getLoc_long() + ", " + this.getLoc_lat() + "]\n");
+
+    }
 }

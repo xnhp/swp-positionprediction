@@ -7,6 +7,8 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeF
 
 public class AlgorithmExtrapolation implements PredictionAlgorithm {
 
+    private final int weight_max = 100;
+
     /**
      * Main idea:
      * Compute the difference between two successive data points and take the average of them.
@@ -50,48 +52,83 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
         }
 
         // Compute prediction
-        Location prediction = next_Location(geo);
+        Location prediction = next_Location(geo, constant);
         return prediction;
     }
 
 
 
-    
+
     /**
      * Computes the average differences in long. and lat. and adds it to the last position
-     * @param geo
+     * [Average (last 2 Locations, Average last 3 Locations,...)]
+     * @param data
      * @return
      */
-    private Location next_Location(Location geo[]) {
-        int delta_size = geo.length-1;
-        Location delta[] = new Location[delta_size];
+    public Location next_Location(Location data[], int date) {
+        int n = data.length-1;
 
-        // Compute differences of the Location pairs i and i+1
-        for (int i = 0; i < delta_size; i++) {
-            double next_long = geo[i + 1].getLoc_long();
-            double next_lat = geo[i + 1].getLoc_lat();
-            double curr_long = geo[i].getLoc_long();
-            double curr_lat = geo[i].getLoc_lat();
-            double delta_long = next_long - curr_long;
-            double delta_lat = next_lat - curr_lat;
-            delta[i] = new Location(delta_long, delta_lat);
+        Location vector_collection[] = new Location[date-1];
+        for (int t = 1; t < date; t++) {
+            // Compute difference of pair n and n-t
+            double n_long     = data[n].getLoc_long();
+            double n_lat      = data[n].getLoc_lat();
+
+            double first_long = data[n - t].getLoc_long();
+            double first_lat  = data[n - t].getLoc_lat();
+
+            double delta_long = n_long - first_long;
+            double delta_lat  = n_lat - first_lat;
+
+            // Compute average
+            double avg_long = delta_long / ((double) data.length+1);
+            double avg_lat  = delta_lat  / ((double) data.length+1);
+
+            // Add vector to collection
+            Location vector = new Location(delta_long, delta_lat);
+            vector.print();
+            vector_collection[t-1] = vector;
         }
 
-        // Compute the average
+
+        Location avg = weighted_average(vector_collection);
+        Location curr_loc = data[data.length-1];
+
+        // Add avg vector to current Location
+        return curr_loc.add(avg);
+    }
+
+
+    /**
+     * Computes (weighted) average of Location vectors
+     * @param collection
+     * @return
+     */
+    public Location weighted_average(Location collection[]) {
         double sum_long = 0;
         double sum_lat  = 0;
-        for (int j = 0; j < delta.length; j++) {
-            sum_long += delta[j].getLoc_long();
-            sum_lat  += delta[j].getLoc_lat();
+
+        // Compute sum
+        for (int i = 0; i < collection.length; i++) {
+            sum_long += weight(i) * collection[i].getLoc_long();
+            sum_lat  += weight(i) * collection[i].getLoc_lat();
         }
 
-        double avg_long = sum_long / ((double) delta.length);
-        double avg_lat  = sum_lat  / ((double) delta.length);
+        // Compute average
+        double res_long = sum_long / collection.length;
+        double res_lat  = sum_lat  / collection.length;
 
-        Location avg  = new Location(avg_long, avg_lat);
-        Location last = geo[geo.length-1];
+        return new Location(res_long, res_lat);
+    }
 
-        return last.add(avg);
+
+    /**
+     * Todo: possible weight function
+     * @param a
+     * @return
+     */
+    private int weight(int a) {
+        return 1;
     }
 
 }

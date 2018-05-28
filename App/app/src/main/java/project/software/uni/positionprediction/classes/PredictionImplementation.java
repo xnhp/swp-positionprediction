@@ -19,7 +19,7 @@ public class PredictionImplementation implements PredictionAlgorithm {
      * STILL HARDCODED Implementation of an prediction algorithm to use it for visualization
      */
     @Override
-    public Tupel predict_interpolation(Date date_past, Date date_pred, int bird_id) {
+    public Location predict_interpolation(Date date_past, Date date_pred, int bird_id) {
 
         Debug d = new Debug();
 
@@ -53,7 +53,7 @@ public class PredictionImplementation implements PredictionAlgorithm {
      * @param turningAngle
      * @return
      */
-    private Tupel getDensity(double[] stepLength, double[] turningAngle){
+    private Location getDensity(double[] stepLength, double[] turningAngle){
         if (stepLength.length != turningAngle.length ) {
             // TODO Warning: "Vector lengths of step length and turning angles do not match."
 
