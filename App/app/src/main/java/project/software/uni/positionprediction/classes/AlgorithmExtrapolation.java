@@ -81,8 +81,8 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
             double delta_lat  = n_lat - first_lat;
 
             // Compute average
-            double avg_long = delta_long / ((double) data.length+1);
-            double avg_lat  = delta_lat  / ((double) data.length+1);
+            double avg_long = delta_long / t;
+            double avg_lat  = delta_lat  / t;
 
             // Add vector to collection
             Location vector = new Location(delta_long, delta_lat);
