@@ -42,7 +42,7 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
         for (int i = used_data ; i<size; i++){
 
 
-
+jjj
         // ^^^^^^^^^^HARDCODED^^^^^^^^^^
 
 
