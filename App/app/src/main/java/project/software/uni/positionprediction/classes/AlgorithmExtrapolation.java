@@ -7,12 +7,10 @@ import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeF
 
 public class AlgorithmExtrapolation implements PredictionAlgorithm {
 
+    Debug d = new Debug();
+
     @Override
     public Tupel predict_interpolation(Date date_past, Date date_pred, int bird_id) {
-
-        Debug d = new Debug();
-        //vvvvvvvvvvvHARDCODEDvvvvvvvvv
-
 
         String timestamps[] = {
                 // TODO Parse them to type Time:
@@ -37,25 +35,48 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
         }
 
         // Create Location Array
-        int used_data = size-10-1; // Use last 10 data points
-        double geo[][][] = new double[size][size][size];
-        for (int i = used_data ; i<size; i++){
+        int constant = 10; // Use last 10 data points
 
+        
+        Location geo[] = new Location[constant];
+        for (int i = 0 ; i<constant; i++) {
+            geo[i] = new Location(loc_long[size-1-constant+i], loc_lat[size-1-constant+i]);
+        }
 
-jjj
-        // ^^^^^^^^^^HARDCODED^^^^^^^^^^
-
-
-
-
-
-
-
-
-
-
-
+        Location delta = next_Location(geo);
 
         return null;
     }
+
+
+    private Location next_Location(Location geo[]) {
+        int delta_size = geo.length-1;
+        Location delta[] = new Location[delta_size];
+
+        // Compute differences of the Location pairs i and i+1
+        for (int i = 0; i < delta_size; i++) {
+            double next_long = geo[i + 1].getLoc_long();
+            double next_lat = geo[i + 1].getLoc_lat();
+            double curr_long = geo[i].getLoc_long();
+            double curr_lat = geo[i].getLoc_lat();
+            double delta_long = next_long - curr_long;
+            double delta_lat = next_lat - curr_lat;
+            delta[i] = new Location(delta_long, delta_lat);
+        }
+
+        // Compute the average
+        double sum_long = 0;
+        double sum_lat  = 0;
+        for (int j = 0; j < delta.length; j++) {
+            sum_long += delta[j].getLoc_long();
+            sum_lat  += delta[j].getLoc_lat();
+        }
+
+        double avg_long = sum_long / ((double) delta.length);
+        double avg_lat  = sum_lat  / ((double) delta.length);
+
+
+        return new Location(avg_long, avg_lat);
+    }
+
 }
