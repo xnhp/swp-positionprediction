@@ -14,7 +14,7 @@ public class Debug {
     // Methods
 
     /**
-     * PRINT ARRAY
+     * Print array
      * Method for printing an array
      *
      * Example:
@@ -33,7 +33,15 @@ public class Debug {
     }
 
 
-    // TODO 2D
+    /**
+     * Print numbers with text
+     * @param a
+     * @param name
+     */
+    public void print(Number a, String name){
+        System.out.println(name + ": " + a);
+    }
+
 
 
 

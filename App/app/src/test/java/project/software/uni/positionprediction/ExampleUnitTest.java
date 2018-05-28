@@ -2,6 +2,7 @@ package project.software.uni.positionprediction;
 
 import org.junit.Test;
 
+import project.software.uni.positionprediction.classes.AlgorithmExtrapolation;
 import project.software.uni.positionprediction.classes.PredictionImplementation;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 
@@ -25,8 +26,8 @@ public class ExampleUnitTest {
      */
     @Test
     public void run_prediction_algorithm() throws Exception {
-        PredictionImplementation alg = new PredictionImplementation();
-        alg.predict_density_distribution(null, null, 0);
+        AlgorithmExtrapolation alg = new AlgorithmExtrapolation();
+        alg.predict_interpolation(null, null, 0);
     }
 
 

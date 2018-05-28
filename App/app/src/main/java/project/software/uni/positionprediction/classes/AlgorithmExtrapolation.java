@@ -3,13 +3,16 @@ package project.software.uni.positionprediction.classes;
 import java.util.Date;
 
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionLagrangeForm;
 
 public class AlgorithmExtrapolation implements PredictionAlgorithm {
 
     @Override
     public Tupel predict_interpolation(Date date_past, Date date_pred, int bird_id) {
 
+        Debug d = new Debug();
         //vvvvvvvvvvvHARDCODEDvvvvvvvvv
+
 
         String timestamps[] = {
                 // TODO Parse them to type Time:
@@ -35,14 +38,12 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
 
         // Create Location Array
         int used_data = size-10-1; // Use last 10 data points
-        Location geo[] = new Location[size];
+        double geo[][][] = new double[size][size][size];
         for (int i = used_data ; i<size; i++){
-            geo[i] = new Location(loc_long[i], loc_lat[i]);
-        }
+
 
 
         // ^^^^^^^^^^HARDCODED^^^^^^^^^^
-
 
 
 
