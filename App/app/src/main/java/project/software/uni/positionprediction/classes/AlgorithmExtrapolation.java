@@ -37,7 +37,7 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
         // Create Location Array
         int constant = 10; // Use last 10 data points
 
-        
+
         Location geo[] = new Location[constant];
         for (int i = 0 ; i<constant; i++) {
             geo[i] = new Location(loc_long[size-1-constant+i], loc_lat[size-1-constant+i]);
@@ -49,6 +49,11 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
     }
 
 
+    /**
+     * Computes the average differences in long. and lat. and adds it to the last position
+     * @param geo
+     * @return
+     */
     private Location next_Location(Location geo[]) {
         int delta_size = geo.length-1;
         Location delta[] = new Location[delta_size];
@@ -75,8 +80,10 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
         double avg_long = sum_long / ((double) delta.length);
         double avg_lat  = sum_lat  / ((double) delta.length);
 
+        Location avg  = new Location(avg_long, avg_lat);
+        Location last = geo[geo.length-1];
 
-        return new Location(avg_long, avg_lat);
+        return last.add(avg);
     }
 
 }
