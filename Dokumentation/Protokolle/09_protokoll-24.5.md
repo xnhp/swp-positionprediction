@@ -25,14 +25,14 @@ Der Algorithmus liefert eine Menge von Punkten für jeden Zeitschritt. Diese Pun
 TODO
 ====
 Dokumentation:
-o In SRS allgemeine Beschreibung von Outdoor/Normal-Modus hinzufügen.
+* **DONE** In SRS allgemeine Beschreibung von Outdoor/Normal-Modus hinzufügen.
   (Kann man zB einfach bei "1.4 Definitionen" dazuschreiben).
-o In SRS konrete Anforderungen formulieren die dem Treffen vom 24.5. [1] entsprechen
+* In SRS konrete Anforderungen formulieren die dem Treffen vom 24.5. [1] entsprechen
 
 Woche 3:
-o Dummy-Visualisierung auf 2D-Karte
-o Ergebnis der Vorhersage wird visualisiert
-o Visualisierung von Daten aus der Vergangenheit
+* Dummy-Visualisierung auf 2D-Karte
+* Ergebnis der Vorhersage wird visualisiert
+* Visualisierung von Daten aus der Vergangenheit **(Benny, Simon)**
 
 
 
