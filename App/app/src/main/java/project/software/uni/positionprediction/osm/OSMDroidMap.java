@@ -2,7 +2,9 @@ package project.software.uni.positionprediction.osm;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
@@ -21,14 +24,22 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
+import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
+
+import java.util.List;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
+import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 
 /**
@@ -77,6 +88,7 @@ public class OSMDroidMap {
     // TODO: refresh tiles when switching from offline to inline
     // cf https://github.com/osmdroid/osmdroid/blob/ae026862fe4666ab6c8d037b9e2f8805233c8ebf/OpenStreetMapViewer/src/main/java/org/osmdroid/StarterMapActivity.java#L25
 
+
     public OSMDroidMap(Context ctx) {
 
         context = ctx;
@@ -114,8 +126,6 @@ public class OSMDroidMap {
         enableRotationGestures(); // works
 
         //enableLocationOverlay(); // works
-
-
 
         // enableFollowLocation(); // TODO
 
@@ -204,7 +214,11 @@ public class OSMDroidMap {
         registerLocationUpdates(new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                // TODO: error handling
+                if (location != null) {
+                    marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                }
+
             }
 
             @Override
@@ -229,6 +243,7 @@ public class OSMDroidMap {
      * Update the device location and call the callback with the new location.
      * @param listener
      */
+    @SuppressLint("MissingPermission") // TODO
     private void registerLocationUpdates(LocationListener listener) {
         Log.d("Location", "call to update location");
         // because receiving the first location might take a while,
@@ -240,12 +255,64 @@ public class OSMDroidMap {
     }
 
 
+    /**
+     * Draw a list of tracks (position records) as points connected by a line.
+     * @param tracks
+     */
+    // TODO: this might return a "folder" overlay with the points and the polyline overlay
+    public void drawTracks(List<IGeoPoint> tracks, String lineColor, String pointColor) {
+        // TODO: pass styling in here as parameter
+        drawPolyLine(tracks, lineColor);
+        drawFastPoints(tracks, pointColor);
+    }
+
+    private Polyline drawPolyLine(List<IGeoPoint> tracks, String lineColor) {
+        // TODO: draw coloured line
+        Polyline line = new Polyline(); // a polyline is a kind of overlay
+        line.setColor(Color.parseColor(lineColor));
+        List<GeoPoint> points = GeoDataUtils.castDownGeoPointList(tracks);
+        line.setPoints(points); // no method chaining here because setPoints doesnt return the object...
+        mapView.getOverlayManager().add(line);
+        return line;
+    }
+
+
+    /**
+     * Show a number of same-looking markers on the map in a fast way.
+     * @param poss Has to merely implement IGeoPoint (marked or unmarked, ...)
+     * @return The newly created overlay containing the points.
+     * TODO: move styling out of this method.
+     * cf https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons#fast-overlay
+     * require IGeoPoint here because SimplePointTheme requires so.
+     */
+    private SimpleFastPointOverlay drawFastPoints(List<IGeoPoint> poss, String pointColor) {
+        SimplePointTheme theme = new SimplePointTheme(poss, false);
+        SimpleFastPointOverlayOptions options = TrackingPointOverlayOptions
+                // we subclass SimplePointOverlayOptions to be able to change the color
+                // SimplePointOverlayOptions doesn't expose a setter for that.
+                .getDefaultStyle()
+                // has to be called first because the parent classes methods return the object in the
+                // more general type
+                .setPointColor(pointColor)
+                // --
+                .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
+                .setRadius(10) // radios of circles to be drawn
+                .setIsClickable(false) // true by default
+                .setCellSize(15) // cf internal doc
+                .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)
+                ;
+        final SimpleFastPointOverlay overlay = new SimpleFastPointOverlay(theme, options);
+        mapView.getOverlays().add(overlay);
+        return overlay;
+    }
+
 
     /*
     ===== MAP CONTROL =====
      */
 
     private void enableRotationGestures() {
+        // TODO: deprecation warning, what else to use?
         RotationGestureOverlay overlay = new RotationGestureOverlay(context, mapView);
         overlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
