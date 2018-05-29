@@ -2,6 +2,9 @@ package project.software.uni.positionprediction;
 
 import org.junit.Test;
 
+import project.software.uni.positionprediction.classes.AlgorithmExtrapolation;
+import project.software.uni.positionprediction.classes.Location;
+
 import static org.junit.Assert.*;
 
 /**
@@ -14,4 +17,39 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+
+    /**
+     * Test for the computation of the average
+     * @throws Exception
+     */
+    @Test
+    public void average_isCorrect() throws Exception {
+
+        Location d1 = new Location(0,0);
+        Location d2 = new Location(2,1);
+        Location data[] = {d1, d2};
+
+        AlgorithmExtrapolation a = new AlgorithmExtrapolation();
+        Location with_method = a.next_Location(data, 2);
+
+        Location comp = new Location(4,2);
+
+        assertEquals(comp.getLoc_lat(), with_method.getLoc_lat(), 0.001);
+        assertEquals(comp.getLoc_long(), with_method.getLoc_long(), 0.001);
+    }
+
+
+
+    /**
+     * Test for running the prediction algorithm to check results with System.out
+     * @throws Exception
+     */
+    @Test
+    public void run_prediction_algorithm() throws Exception {
+        AlgorithmExtrapolation alg = new AlgorithmExtrapolation();
+        alg.predict_interpolation(null, null, 0);
+    }
+
+
 }

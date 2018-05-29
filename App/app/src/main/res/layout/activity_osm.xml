@@ -35,5 +35,12 @@
 
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/map_panto_button"
+            android:layout_width="@dimen/cesium_settings_button_width_hight"
+            android:layout_height="@dimen/cesium_settings_button_width_hight"
+            android:text="DL"
+            android:layout_alignParentEnd="true"/>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
