@@ -221,7 +221,12 @@ Das Ergebnis der Vorhersage wird in einer zwei- oder dreidimensionalen Kartenlan
  \paragraph{Mobile Daten} Ein Smartphone kann sich entweder über ein WiFi-Netzwerk oder über ein mobiles Datennetzwerk (3G, LTE, ...) mit dem Internet verbinden. 
 \paragraph{Vorhersage-Modell/Algorithmus} Die zur Berechnung einer Vorhersage verwendete Methodik. 
 \paragraph{API} \textit{Application Programming Interface}, hier insbesondere Schnittstellen mit Providern wie \textit{Movebank} oder \textit{Cesium}. 
-\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. Einer davon ist der sog. Outdoor-Modus. (Siehe Anforderung \ref{Modi}.)
+\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. 
+\begin{itemize}
+ \item Normal: Dies beschreibt den Modus, der für die Verwendung der App im Burö gedacht ist. D.h. es gibt eine gute Internetverbindung (z.B. über Wlan), die es ermöglicht, schnell viele Daten herunterzuladen, um diese aufwendiger visualieren zu können. 
+ \item Outdoor: Dies beschreibt den Modus, der für die Verwendung der App im Feld gedacht ist. D.h. wir haben eher keine gute bzw. gar keine Internetverbindung. So werden hauptsächlich gespeicherte Daten mit einer weniger aufwendigen Visualisierung dargestellt. 
+
+\end{itemize}
 \paragraph{Cesium} Ist eine Javascript-Bibliothek für die Arbeit mit dreidimensionalen Kartendaten.
 \paragraph{Offline-Karten} Ist ein 2D-Karten-Provider der Kartendaten liefert, wenn keine Internetverbindung besteht.
 
@@ -443,7 +448,7 @@ Treffen am 30.04.2018
  }{
  Treffen am 02.04.2018 
  }{
- \ref{VisualisierungInCesiumBeiNormalModus}, \ref{VisualisierungInBeiOutdoorModus} 
+ \ref{VisualisierungInCesiumBeiNormalModus}, \ref{VisualisierungBeiOutdoorModus} 
 }
 \req{VisualisierungDerVorhandenenDaten}
 {
@@ -752,7 +757,7 @@ Es werden keine Vorhersagen für lange Zeiträume (im Maßstab von mehreren Tage
 	\tabitem Ergebnis der Vorhersage wird visualisiert. \\
 	\tabitem Visualisierung von Daten aus der Vergangenheit
 		\ref{VisualisierungDerVorhandenenDaten},
-		\ref{VisualisierungInMapboxBeiOutdoorModus}
+		\ref{VisualisierungBeiOutdoorModus}
 }
 \timelineitem{Woche 4}{29.05. - 05.06.}{
 	\tabitem Cesium-Integration
