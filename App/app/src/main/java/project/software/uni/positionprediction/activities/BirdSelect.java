@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.CSVParser;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
 import project.software.uni.positionprediction.movebank.RequestHandler;
@@ -21,10 +23,14 @@ public class BirdSelect extends AppCompatActivity {
     private Button buttonSelect = null;
     private Button buttonOpenMap = null;
 
+    private LinearLayout scrollViewLayout = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bird_select);
+
+        scrollViewLayout = findViewById(R.id.birdselect_scrollview);
 
         buttonSelect = findViewById(R.id.birdselect_button_select);
 
@@ -52,30 +58,30 @@ public class BirdSelect extends AppCompatActivity {
             }
         });
 
-        MovebankConnector.getInstance(this).getStudies(new RequestHandler() {
+
+        // request the studies that are already in the database
+        Study studies[] = SQLDatabase.getInstance(this).getStudies();
+        fillStudiesList(studies);
+
+
+        new Thread(new Runnable() {
             @Override
-            public void handleResponse(String response) {
-                if(response == null){
+            public void run() {
 
-                } else{
-                    String data[][] = CSVParser.parseColumnsRows(response);
-                    String table[][] = CSVParser.getColumns(data, new String[]{"name", "id", "i_am_owner", "timestamp_end", "timestamp_start"});
+                // update the studies in the database
+                SQLDatabase.getInstance(birdSelect).updateStudiesSync();
 
-                    for(int i = 1; i < table.length; i++){
-                        SQLDatabase.getInstance(birdSelect).queryWrite(
-                                "INSERT OR IGNORE INTO studies (name, id, i_am_owner, timestamp_end, timestamp_start) VALUES ('"
-                                        + table[0][i] + "', "
-                                        + table[1][i] + ", "
-                                        + (table[2][i].equals("false") ? "0" : "1") + ", "
-                                        + (table[3][i].equals("") ? "NULL" : table[3][i]) + ", "
-                                        + (table[4][i].equals("") ? "NULL" : table[4][i]) + ")");
-                    }
-
-                }
-
-
+                // update the study list
+                Study studies[] = SQLDatabase.getInstance(birdSelect).getStudies();
+                fillStudiesList(studies);
             }
-        });
+        }).start();
+
+    }
+
+    public void fillStudiesList(Study[] studies){
+
+
 
     }
 
