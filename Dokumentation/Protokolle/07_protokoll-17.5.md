@@ -16,15 +16,16 @@ KK: Ja, es wird von Uni ein Cesium-Server zur Integration via WebView
 
 MA: Empfehlung: Cesium-Dummy einbinden, zB irgendeine online-demo holen
 
-KK: Abschnitt 2.2 unklar, anpassen (TODO)
+KK: Abschnitt 2.2 unklar, anpassen (DONE)
 	Sind die Daten teil des ergebnisses der Vorhersageberechung? Was sind die benötigten Daten? Formulierungen anpassen.
 
-KK: Diverse Rechtschreibfehler im Dokument, korrigieren (TODO)
+KK: Diverse Rechtschreibfehler im Dokument, korrigieren (DONE)
 
 KK: Verhalten Outdoor-Modus, Datentransfer präzisieren (was passiert wann,
 	in welchem Zustand, wann habe ich welche Möglichkeiten?) (TODO)
+	(BM: finde das OK so, weiß nicht, was ich ändern sollte)
 
-KK: "IDs" definieren (TODO)
+KK: "IDs" definieren (DONE)
 	(bezieht sich auf Movebank - VogelID, StudyID)
 
 KK: Abschnitt 4.5 konkreter. ZB anstatt "Falls ID ungültig"
@@ -35,13 +36,13 @@ KK: Abschnitt 4.5 konkreter. ZB anstatt "Falls ID ungültig"
 	(TODO)
 
 KK: Gibt es besondere Abläufe/Vorgänge bei App-Installation od. Erstausführung?
-	(TODO)
+	(DONE)
 
-KK: Formulierung "formal falsch" präzisieren (überall). 
+KK: Formulierung "formal falsch" präzisieren (überall). (DONE)
 	Es geht eher um einen hohen Anteil von fehlenden oder unbrauchbaren
 	Datensätzen
 
-Allg.: Falsche \ref bei SRS/Zeitplan/Woche3
+Allg.: Falsche \ref bei SRS/Zeitplan/Woche3 (DONE)
 
 
 === Ideen ===
