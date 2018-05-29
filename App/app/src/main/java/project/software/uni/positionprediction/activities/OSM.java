@@ -13,9 +13,14 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.classes.Location;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
+import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
+import project.software.uni.positionprediction.util.GeoDataUtils;
+import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 public class OSM extends AppCompatActivity {
 
@@ -38,7 +43,7 @@ public class OSM extends AppCompatActivity {
 
         buttonSettings = findViewById(R.id.navigation_button_settings);
         buttonDownload = findViewById(R.id.map_download_button);
-        buttonPanTo    = findViewById(R.id.map_panto_button);
+        //buttonPanTo    = findViewById(R.id.map_panto_button);
 
         MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
@@ -46,15 +51,32 @@ public class OSM extends AppCompatActivity {
 
 
 
-        // pick me up:
-        // create a sequence of test positions, render them nicely on the map
-        ArrayList<IGeoPoint> testPos = new ArrayList<>();
-        testPos.add(new GeoPoint(47.680503, 9.177198));
-        testPos.add(new GeoPoint(47.679463, 9.179558));
-        testPos.add(new GeoPoint(47.678871, 9.181532));
+        ArrayList<IGeoPoint> testPosGp = new ArrayList<>();
+        testPosGp.add(new GeoPoint(47.680503, 9.177198));
+        testPosGp.add(new GeoPoint(47.679463, 9.179558));
+        testPosGp.add(new GeoPoint(47.678871, 9.181532));
 
-        mymap.drawTracks(testPos);
+        // mymap.drawTracks(testPosGp, "#ff0077", "#00ff88");
 
+
+
+        ArrayList<Location> testPosLoc = new ArrayList<>();
+        testPosLoc.add(new Location(47.680503, 9.177198));
+        testPosLoc.add(new Location(47.679463, 9.179558));
+        testPosLoc.add(new Location(47.678871, 9.181532));
+        // we would receive a visualisation object as output from a prediction algorithm
+        SingleTrajectoryVis myVis = new SingleTrajectoryVis();
+        myVis.traj = testPosGp;
+        myVis.pointColor = "#ff0077"; // pink
+        myVis.lineColor = "#00ff88";  // bright green
+
+
+        // obtain an adapter
+        OSMDroidVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter();
+        // set the map for the adapter
+        myVisAdap.linkMap(mymap);
+        // have it draw the visualisation
+        myVisAdap.visualiseSingleTraj(myVis);
 
 
         buttonSettings.setOnClickListener(new View.OnClickListener() {
@@ -75,16 +97,6 @@ public class OSM extends AppCompatActivity {
         });
 
 
-        buttonPanTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Executing animations subsequentially like this does not randomly execute
-                // one of them
-                mymap.panWithAnimationTo(new GeoPoint(24.168111, 15.909570));
-                //mymap.setZoom(10);
-                mymap.setZoomWithEvenAnimation(10);
-            }
-        });
 
     }
 

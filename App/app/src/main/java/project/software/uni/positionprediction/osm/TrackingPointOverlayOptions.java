@@ -11,7 +11,7 @@ public class TrackingPointOverlayOptions extends SimpleFastPointOverlayOptions {
     }
 
     public TrackingPointOverlayOptions setPointColor(String col) {
-        this.mPointStyle.setColor(Color.parseColor("#0088ff"));
+        this.mPointStyle.setColor(Color.parseColor(col));
         return this;
     }
 

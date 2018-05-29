@@ -4,6 +4,7 @@ package project.software.uni.positionprediction.osm;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,18 +30,16 @@ import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
 import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.util.GeoUtils;
+import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
+import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 
 /**
@@ -88,6 +87,7 @@ public class OSMDroidMap {
 
     // TODO: refresh tiles when switching from offline to inline
     // cf https://github.com/osmdroid/osmdroid/blob/ae026862fe4666ab6c8d037b9e2f8805233c8ebf/OpenStreetMapViewer/src/main/java/org/osmdroid/StarterMapActivity.java#L25
+
 
     public OSMDroidMap(Context ctx) {
 
@@ -214,7 +214,11 @@ public class OSMDroidMap {
         registerLocationUpdates(new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                // TODO: error handling
+                if (location != null) {
+                    marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                }
+
             }
 
             @Override
@@ -256,15 +260,17 @@ public class OSMDroidMap {
      * @param tracks
      */
     // TODO: this might return a "folder" overlay with the points and the polyline overlay
-    public void drawTracks(List<IGeoPoint> tracks) {
+    public void drawTracks(List<IGeoPoint> tracks, String lineColor, String pointColor) {
         // TODO: pass styling in here as parameter
-        drawPolyLine(tracks);
-        showFastPoints(tracks);
+        drawPolyLine(tracks, lineColor);
+        drawFastPoints(tracks, pointColor);
     }
 
-    private Polyline drawPolyLine(List<IGeoPoint> tracks) {
+    private Polyline drawPolyLine(List<IGeoPoint> tracks, String lineColor) {
+        // TODO: draw coloured line
         Polyline line = new Polyline(); // a polyline is a kind of overlay
-        List<GeoPoint> points = GeoUtils.castDownGeoPointList(tracks);
+        line.setColor(Color.parseColor(lineColor));
+        List<GeoPoint> points = GeoDataUtils.castDownGeoPointList(tracks);
         line.setPoints(points); // no method chaining here because setPoints doesnt return the object...
         mapView.getOverlayManager().add(line);
         return line;
@@ -279,7 +285,7 @@ public class OSMDroidMap {
      * cf https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons#fast-overlay
      * require IGeoPoint here because SimplePointTheme requires so.
      */
-    private SimpleFastPointOverlay showFastPoints(List<IGeoPoint> poss) {
+    private SimpleFastPointOverlay drawFastPoints(List<IGeoPoint> poss, String pointColor) {
         SimplePointTheme theme = new SimplePointTheme(poss, false);
         SimpleFastPointOverlayOptions options = TrackingPointOverlayOptions
                 // we subclass SimplePointOverlayOptions to be able to change the color
@@ -287,7 +293,7 @@ public class OSMDroidMap {
                 .getDefaultStyle()
                 // has to be called first because the parent classes methods return the object in the
                 // more general type
-                .setPointColor("0088ff")
+                .setPointColor(pointColor)
                 // --
                 .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
                 .setRadius(10) // radios of circles to be drawn
@@ -306,6 +312,7 @@ public class OSMDroidMap {
      */
 
     private void enableRotationGestures() {
+        // TODO: deprecation warning, what else to use?
         RotationGestureOverlay overlay = new RotationGestureOverlay(context, mapView);
         overlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
