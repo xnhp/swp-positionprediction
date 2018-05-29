@@ -258,8 +258,8 @@ public class OSMDroidMap {
     // TODO: this might return a "folder" overlay with the points and the polyline overlay
     public void drawTracks(List<IGeoPoint> tracks) {
         // TODO: pass styling in here as parameter
-        showFastPoints(tracks);
         drawPolyLine(tracks);
+        showFastPoints(tracks);
     }
 
     private Polyline drawPolyLine(List<IGeoPoint> tracks) {
