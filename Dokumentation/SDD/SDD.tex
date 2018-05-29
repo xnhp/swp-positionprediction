@@ -237,7 +237,14 @@ Geht der Forscher nun in das Feld, schaltet er in den Outdoor-Modus. Der Ablauf 
 \subsubsection{Interfaces}
 \label{sec:interfaces}
 \begin{itemize}
-	\item Daten werden über ein Movebank-Inteface geladen und verarbeitet. 
+	\item Tracking-Daten werden von der \textit{Movebank}-Datenbank bezogen. Hierfür stellt diese eine Web-API bereit. Es sind verschiedene Endpunkt verfügbar:
+	\begin{itemize} 
+	 	 \item  \lstinline$/movebank/service/direct-read$ 
+	 	 \item \lstinline$/movebank/service/public$
+	 	 \item \lstinline$/movebank/servie/json-auth$
+	\end{itemize} 
+	Es wird von der Applikation ausschließlich der Endpunkt \lstinline$direct-read$ verwendet.
+	% \item Daten werden über ein Movebank-Inteface geladen und verarbeitet. 
 	\item Daten werden mittels einem Cesium-Interface im Indoor-Modus visualisiert.
 	\item Daten werden mittels einem Open-Street-Map-Interface im Outdoor-Modus visualisiert.
 \end{itemize}
@@ -269,9 +276,8 @@ In Diagramm \ref{seqDiagAnfrage} wird der Ablauf einer Datenanfrage von der \tex
 % \item Bleibt die Internetverbindung bestehen, werden die Daten vollständig aus dem Internet heruntergeladen und die App berechnet eine Vorhersage.
 % \end{enumerate}
 
-\paragraph{Erläuterungen zu Segment "Server Error"} 
 
-\hl{\textbf{Annahme: CSV-API}}
+\paragraph{Erläuterungen zu Segment "Server Error"} 
 
 Hier können verschiedene Szenarien
 auftreten, die aber alle hinsichtlich des Informationsaustausches gleichförmig sind.
@@ -292,12 +298,12 @@ In jedem Fall wechselt die App nach Anzeigen des Hinweises in den Zustand vor de
 
 \subsubsection{Besondere Abläufe bei Einrichtung}
 
-\paragraph{Bei Erstinstallation}: Bei Erstinstallation der Applikation
+\paragraph{Bei Erstinstallation:} Bei Erstinstallation der Applikation
 müssen keine besonderen Prozeduren ausgeführt werden. 
 
-\paragraph{Bei Erstausführung}: \hl{\textbf{Zu klaeren}}  Bei Erstausführung müssen keine besonderen
+\paragraph{Bei Erstausführung:} Bei Erstausführung müssen keine besonderen
 Prozeduren ausgeführt werden. Bei Erstausführung werden noch keine Movebank-Zugangsdaten in den App-Einstellungen eingetragen sein. Bei Anfrage von Daten,
-die Zugangsdaten erfordern verfährt das System wie im SRS im Abschnitt 7.1 (Anwendungsfälle) spezifiziert.
+die Zugangsdaten erfordern verfährt das System wie im SRS im Abschnitt 7.1 (Anwendungsfälle) spezifiziert. 
 
 % Startup behaviour (What happens, when we start the system?)
 % • Shutdown behaviour (What happens, when we stop the system?)
