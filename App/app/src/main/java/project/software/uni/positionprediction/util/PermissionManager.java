@@ -25,6 +25,9 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  */
 public class PermissionManager implements ActivityCompat.OnRequestPermissionsResultCallback{
 
+    public final static int PERMISSION_STORAGE = 1;
+    public final static int PERMISSION_FINE_LOCATION = 2;
+
     private static final String loggingTag = "PermissionManager";
     private static final String loggingPrefix = loggingTag + ": ";
 
@@ -44,12 +47,13 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
      * This Method requests a specific Permission
      * @param permission Permission to ask for
      * @param message The id of the String Resource to be displayed in the alert box
+     * @param requestCode The Permission index
      * @param activity The activity that asks for the Permission
      * TODO: What happens if permission cant be obtained? (i.e. user declines)
      * TODO: When executing a task that triggers this, does executing that task have to be tried \
      *       again after the permission was granted?
      */
-    public static void requestPermission(final String permission, int message, final AppCompatActivity activity){
+    public static void requestPermission(final String permission, int message, final int requestCode, final AppCompatActivity activity){
 
         Log.d(loggingTag, "Permission for " + permission + " requested");
 
@@ -68,7 +72,7 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.d(loggingTag, "requesting permission after rationale");
                                 // request the needed Permission
-                                ActivityCompat.requestPermissions(activity, new String[]{permission}, 0);
+                                ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -80,7 +84,7 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
                 // We leave the parameter requestCode at 0 even for requests for different rights
                 // because as of now we have no need for being able to tell where permission
                 // requests come from.
-                ActivityCompat.requestPermissions(activity, new String[]{permission}, 0);
+                ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
             }
         } else {
             Log.d(loggingTag, "permission for " + permission + " already granted");

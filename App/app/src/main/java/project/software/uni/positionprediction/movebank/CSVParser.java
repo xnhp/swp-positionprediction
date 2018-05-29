@@ -33,18 +33,29 @@ public class CSVParser {
             {
 
                 case STATE_READ:
-                    if(c == ','){
-                        lineList.add(stringBuilder.toString());
-                        stringBuilder = new StringBuilder();
-                    } else if(c == '\n'){
-                        lineList.add(stringBuilder.toString());
-                        stringBuilder = new StringBuilder();
-                        resultList.add(lineList);
-                        lineList = new LinkedList<String>();
-                    } else if(c == '"') {
-                        state = ReadState.STATE_STRING;
-                    } else{
-                        stringBuilder.append(c);
+                    switch(c) {
+                        case ',':
+                            lineList.add(stringBuilder.toString());
+                            stringBuilder = new StringBuilder();
+                            break;
+
+                        case '\n':
+                            lineList.add(stringBuilder.toString());
+                            stringBuilder = new StringBuilder();
+                            resultList.add(lineList);
+                            lineList = new LinkedList<String>();
+                            break;
+
+                        case '\r':
+                            break;
+
+                        case '"':
+                            state = ReadState.STATE_STRING;
+                            break;
+
+                        default:
+                            stringBuilder.append(c);
+                            break;
                     }
                     break;
 

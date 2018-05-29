@@ -83,10 +83,6 @@ public class OSMDroidMap {
 
         // load OSMDroid configuration
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-
-        // TODO: What happens if obtaining permission fails?
-        PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, (AppCompatActivity) context);
-        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, (AppCompatActivity) context);
     }
 
     public void initMap(MapView view, GeoPoint center, final double zoom) {
@@ -190,7 +186,7 @@ public class OSMDroidMap {
      * TODO: onResume(), does the location have to be explicitly updated?
      */
     private void enableCustomLocationMarker(final Marker marker) {
-        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, (AppCompatActivity) context);
+        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
 
         // create a locationManager that handles obtaining the location if there is none yet
         if (locationManager == null) locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
