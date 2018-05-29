@@ -21,8 +21,13 @@ public interface PredictionAlgorithm {
      * @param bird_id
      * @return
      */
-    Tupel predict_density_distribution(Date date_past, Date date_pred, int bird_id);
+    // Todo: Output
+    Tupel predict_interpolation(Date date_past, Date date_pred, int bird_id);
+
+
+
 }
+
 
 
 

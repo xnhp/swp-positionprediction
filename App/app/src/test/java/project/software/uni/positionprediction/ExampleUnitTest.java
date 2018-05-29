@@ -25,8 +25,8 @@ public class ExampleUnitTest {
      */
     @Test
     public void run_prediction_algorithm() throws Exception {
-        PredictionAlgorithm alg = new PredictionImplementation();
-        alg.predict(null, null, 0);
+        PredictionImplementation alg = new PredictionImplementation();
+        alg.predict_density_distribution(null, null, 0);
     }
 
 
