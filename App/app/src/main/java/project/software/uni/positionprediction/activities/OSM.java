@@ -53,7 +53,7 @@ public class OSM extends AppCompatActivity {
         testPos.add(new GeoPoint(47.679463, 9.179558));
         testPos.add(new GeoPoint(47.678871, 9.181532));
 
-        mymap.showFastPoints(testPos);
+        mymap.drawTracks(testPos);
 
 
 

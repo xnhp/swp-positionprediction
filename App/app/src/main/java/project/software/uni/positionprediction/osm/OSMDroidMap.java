@@ -23,6 +23,7 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
@@ -35,8 +36,10 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.util.GeoUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
 
 
@@ -249,12 +252,34 @@ public class OSMDroidMap {
 
 
     /**
+     * Draw a list of tracks (position records) as points connected by a line.
+     * @param tracks
+     */
+    // TODO: this might return a "folder" overlay with the points and the polyline overlay
+    public void drawTracks(List<IGeoPoint> tracks) {
+        // TODO: pass styling in here as parameter
+        showFastPoints(tracks);
+        drawPolyLine(tracks);
+    }
+
+    private Polyline drawPolyLine(List<IGeoPoint> tracks) {
+        Polyline line = new Polyline(); // a polyline is a kind of overlay
+        List<GeoPoint> points = GeoUtils.castDownGeoPointList(tracks);
+        line.setPoints(points); // no method chaining here because setPoints doesnt return the object...
+        mapView.getOverlayManager().add(line);
+        return line;
+    }
+
+
+    /**
      * Show a number of same-looking markers on the map in a fast way.
      * @param poss Has to merely implement IGeoPoint (marked or unmarked, ...)
-     *
+     * @return The newly created overlay containing the points.
+     * TODO: move styling out of this method.
      * cf https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons#fast-overlay
+     * require IGeoPoint here because SimplePointTheme requires so.
      */
-    public void showFastPoints(List<IGeoPoint> poss) {
+    private SimpleFastPointOverlay showFastPoints(List<IGeoPoint> poss) {
         SimplePointTheme theme = new SimplePointTheme(poss, false);
         SimpleFastPointOverlayOptions options = TrackingPointOverlayOptions
                 // we subclass SimplePointOverlayOptions to be able to change the color
@@ -263,7 +288,7 @@ public class OSMDroidMap {
                 // has to be called first because the parent classes methods return the object in the
                 // more general type
                 .setPointColor("0088ff")
-
+                // --
                 .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
                 .setRadius(10) // radios of circles to be drawn
                 .setIsClickable(false) // true by default
@@ -272,6 +297,7 @@ public class OSMDroidMap {
                 ;
         final SimpleFastPointOverlay overlay = new SimpleFastPointOverlay(theme, options);
         mapView.getOverlays().add(overlay);
+        return overlay;
     }
 
 
