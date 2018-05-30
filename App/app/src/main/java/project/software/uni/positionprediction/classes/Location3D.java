@@ -59,7 +59,7 @@ public class Location3D {
      * Print method for Location3D
      */
     public void print() {
-        System.out.print("[" + this.getLoc_long() + ", " + this.getLoc_lat() + ", " + this.getLoc_lat("]\n");
+        System.out.print("[" + this.getLoc_long() + ", " + this.getLoc_lat() + ", " + this.getLoc_height() + "]\n");
 
     }
 }
