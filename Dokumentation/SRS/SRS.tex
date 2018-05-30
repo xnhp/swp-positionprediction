@@ -221,12 +221,7 @@ Das Ergebnis der Vorhersage wird in einer zwei- oder dreidimensionalen Kartenlan
  \paragraph{Mobile Daten} Ein Smartphone kann sich entweder über ein WiFi-Netzwerk oder über ein mobiles Datennetzwerk (3G, LTE, ...) mit dem Internet verbinden. 
 \paragraph{Vorhersage-Modell/Algorithmus} Die zur Berechnung einer Vorhersage verwendete Methodik. 
 \paragraph{API} \textit{Application Programming Interface}, hier insbesondere Schnittstellen mit Providern wie \textit{Movebank} oder \textit{Cesium}. 
-\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. 
-\begin{itemize}
- \item Normal: Dies beschreibt den Modus, der für die Verwendung der App im Burö gedacht ist. D.h. es gibt eine gute Internetverbindung (z.B. über Wlan), die es ermöglicht, schnell viele Daten herunterzuladen, um diese aufwendiger visualieren zu können. 
- \item Outdoor: Dies beschreibt den Modus, der für die Verwendung der App im Feld gedacht ist. D.h. wir haben eher keine gute bzw. gar keine Internetverbindung. So werden hauptsächlich gespeicherte Daten mit einer weniger aufwendigen Visualisierung dargestellt. 
-
-\end{itemize}
+\paragraph{Outdoor-Modus, Normal-Modus} Die Applikation verfügt über zwei verschiedene Funktionsmodi. Einer davon ist der sog. Outdoor-Modus. (Siehe Anforderung \ref{Modi}.)
 \paragraph{Cesium} Ist eine Javascript-Bibliothek für die Arbeit mit dreidimensionalen Kartendaten.
 \paragraph{Offline-Karten} Ist ein 2D-Karten-Provider der Kartendaten liefert, wenn keine Internetverbindung besteht.
 
@@ -297,7 +292,7 @@ Die aktuelle Position von Herr Storch wird mittels des GPS-Sensors seines Smartp
  	 \item Die verwendeten Schnittstellen (\textit{Movebank}, \textit{Cesium}, ...) sind zu jedem Zeitpunkt verfügbar.
  	 \item Eine für die Abfrage der Daten aus \textit{Movebank} ausreichende Identifikation des gesuchten Vogels ist vorhanden.
  	 \item Werden für die Datenabfrage aus \textit{Movebank} weitere Schritte oder Informationen benötigt (Zugangsdaten, vorherige Anfrage bei Provider der Daten, ...) so werden diese vom Nutzer erledigt bzw. bereitgestellt.
- 	 \item Es wird bis zu Milestone 2 ein rudimentäres Vorhersagemodell auf Basis von Positionsdaten aus der Vergangenheit implementiert. Im Laufe der Entwicklung wird in Absprache mit Betreuuern und Kunde ermittelt, welche weiteren Daten und welche weiteren Vorhersagemodelle sinnvoll einbezogen werden können.
+ 	 \item Als Grundfunktionalität wird ein rudimentäres Vorhersagemodell auf Basis von Positionsdaten aus der Vergangenheit durch einfache Methoden (z.B. Interpolation, Regression) implementiert. Im Laufe der Entwicklung wird in Absprache mit Betreuuern und Kunde ermittelt, welche weiteren Daten und welche weiteren Vorhersagemodelle sinnvoll einbezogen werden können. Für diese Vorhersagearten wird eine Java-Schnittstelle implementiert, da davon ausgegangen werden kann, dass der Nutzer seine Algorithmen in einer dazu kompatiblen Art bereitstellt.
 \end{itemize} 
 
 % Any other things, that have to be mentioned (e.g. external
@@ -424,9 +419,10 @@ Treffen am 30.04.2018
 {
  Die Vorhersagen sollen visuell dargestellt werden. 
  }{
- Die Berechnungen zur Vorhersage der wahrscheinlichen Vogelposition sollen in der App angezeigt werden. 
+ Die Berechnungen zur Vorhersage der wahrscheinlichen Vogelposition sollen in der App angezeigt werden. Es sollen verschiede Arten von Visualisierungsmöglichkeiten für verschiedene Arten von Daten (je nach Ausgabe des verwendeten Vorhersagealgorithmus) bereitgestellt werden.
+ 1. Eine Trajektorie: Die einfachste Art von Daten besteht aus genau einer Trajektorie. Diese enthät Koordinaten der vorhergesagten Aufenthaltsorte des Vogels für einen oder mehrere Zeitschritte. Außerdem kann die Trajektorie mit einem Wert für die Ungenauigkeit der Vorhersage an jedem Zeitsschritt versehen sein. Sind diese Werte vorhanden, so werden die Daten als "Schlauch" visualisiert, andernfalls als einfache Polylinie. 2. Mehrere Trajektorien: Der Algorithmus liefert eine Menge von Trajektorien mit einer Wahrscheinlichkeit. Disjunkte Cluster dieser Trajektorien werden für verschiedene Wahrscheinlichkeitsniveaus als Polygon visualisiert. Die Zeitschritte, die dafür berücksichtigt werden können vom Nutzer spezifiziert werden. Die obere Grenze ist gegeben durch die artspezifische Geschwindigleit des Vogels. 3. Punktewolken: Der Algorithmus liefert eine Menge von Punkten für jeden Zeitschritt. Diese Punkte selbst oder ihre konvexe Hülle werden als Polygon visualisiert.
  }{
- Treffen am 26.04.2018 
+ Treffen am 26.04.2018, 24.05.2018
  }{
  \ref{DatenLadenAusMovebank} 
 }
