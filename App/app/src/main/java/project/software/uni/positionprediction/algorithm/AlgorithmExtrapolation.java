@@ -51,7 +51,9 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
         // Use only needed data
         Location3D geo[] = new Location3D[constant];
         for (int i = 0; i < constant; i++) {
-            geo[i] = new Location3D(loc_long[size - 1 - constant + i], loc_lat[size - 1 - constant + i], loc_height[size - 1 - constant]);
+            geo[i] = new Location3D(loc_long    [size - 1 - constant + i],
+                                    loc_lat     [size - 1 - constant + i],
+                                    loc_height  [size - 1 - constant + i]);
         }
 
         // Compute prediction
@@ -70,28 +72,36 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
     public Location3D next_Location(Location3D data[], int date) {
         int n = data.length - 1;
         Location3D vector_collection[] = new Location3D[date - 1];
+        // Fill collection
         for (int t = 1; t < date; t++) {
             // Compute difference of pair n and n-t
+            // Get n-th point
             double n_long = data[n].getLoc_long();
             double n_lat = data[n].getLoc_lat();
+            double n_height = data[n].getLoc_height();
 
+            // Get n-t point
             double first_long = data[n - t].getLoc_long();
             double first_lat = data[n - t].getLoc_lat();
+            double first_height = data[n - t].getLoc_height();
 
+            // Compute vector between them
             double delta_long = n_long - first_long;
             double delta_lat = n_lat - first_lat;
+            double delta_height = n_height - first_height;
 
             // Compute average
             double avg_long = delta_long / t;
             double avg_lat = delta_lat / t;
+            double avg_height = delta_height / t;
 
             // Add vector to collection
-            Location3D vector = new Location3D(delta_long, delta_lat);
+            Location3D vector = new Location3D(delta_long, delta_lat, delta_height);
             vector.print();
             vector_collection[t - 1] = vector;
         }
 
-
+        // Compute average of all computed vectors in collection
         Location3D avg = weighted_average(vector_collection);
         Location3D curr_loc = data[data.length - 1];
 
@@ -109,18 +119,22 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
     public Location3D weighted_average(Location3D collection[]) {
         double sum_long = 0;
         double sum_lat = 0;
+        double sum_height = 0;
 
         // Compute sum
         for (int i = 0; i < collection.length; i++) {
             sum_long += weight(i) * collection[i].getLoc_long();
             sum_lat += weight(i) * collection[i].getLoc_lat();
+            sum_height += weight(i) * collection[i].getLoc_height();
         }
 
         // Compute average
-        double res_long = sum_long / collection.length;
-        double res_lat = sum_lat / collection.length;
+        double length = (double) collection.length;
+        double res_long = sum_long / length;
+        double res_lat = sum_lat / length;
+        double res_height = sum_height / length;
 
-        return new Location3D(res_long, res_lat);
+        return new Location3D(res_long, res_lat, res_height);
     }
 
 
