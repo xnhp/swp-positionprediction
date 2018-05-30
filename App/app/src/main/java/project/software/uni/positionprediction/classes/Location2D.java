@@ -1,14 +1,16 @@
 package project.software.uni.positionprediction.classes;
 
-public class Location {
+
+public class Location2D {
 
     // Class variables
     private double loc_long;
     private double loc_lat;
+    private double loc_height;
 
 
     // Constructor
-    public Location(double loc_long, double loc_lat) {
+    public Location2D(double loc_long, double loc_lat) {
         this.loc_long = loc_long;
         this.loc_lat = loc_lat;
     }
@@ -40,17 +42,17 @@ public class Location {
      * @param location
      * @return
      */
-    public Location add(Location location) {
+    public Location2D add(Location2D location) {
         double loc_long = location.getLoc_long();
         double loc_lat = location.getLoc_lat();
         double res_long = this.getLoc_long() + loc_long;
         double res_lat = this.getLoc_lat() + loc_lat;
-        return new Location(res_long, res_lat);
+        return new Location2D(res_long, res_lat);
     }
 
 
     /**
-     * Print method for Location
+     * Print method for Location2D
      */
     public void print() {
         System.out.print("[" + this.getLoc_long() + ", " + this.getLoc_lat() + "]\n");

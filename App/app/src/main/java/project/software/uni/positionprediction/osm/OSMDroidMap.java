@@ -184,7 +184,7 @@ public class OSMDroidMap {
      *
      * For more methods cf https://github.com/osmdroid/osmdroid/blob/987bdea49a899f14844674a8faa19f74c648cc57/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/data/SampleMarker.java
      *  @param view The MapView
-     * @param location Location of the Marker
+     * @param location Location3D of the Marker
      * @param marker Icon to be displayed for the marker
      */
     private void placeMarker(MapView view, Marker marker, GeoPoint location) {
@@ -245,7 +245,7 @@ public class OSMDroidMap {
      */
     @SuppressLint("MissingPermission") // TODO
     private void registerLocationUpdates(LocationListener listener) {
-        Log.d("Location", "call to update location");
+        Log.d("Location3D", "call to update location");
         // because receiving the first location might take a while,
         // we call a first update immediately with the last known location
         // cf https://developer.android.com/reference/android/location/LocationManager.html#requestLocationUpdates(java.lang.String,%20long,%20float,%20android.location.LocationListener)
