@@ -15,14 +15,6 @@ public class Location3D {
     }
 
 
-    //TODO: remove this constructor and fix code using it
-    public Location3D(double loc_long, double loc_lat){
-        this.loc_long = loc_long;
-        this.loc_lat = loc_lat;
-        this.loc_height = 0;
-    }
-
-
     // Getter and Setter
     public double getLoc_long() {
         return loc_long;

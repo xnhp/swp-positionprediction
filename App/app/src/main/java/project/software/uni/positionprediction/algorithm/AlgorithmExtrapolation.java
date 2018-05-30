@@ -32,25 +32,26 @@ public class AlgorithmExtrapolation implements PredictionAlgorithm {
         };
 
 
-        // Check data
-        int size;
-        if (loc_long.length != loc_lat.length) {
-            System.out.println("#Long != #Lat");
-            // Todo message: bad format
-            return null;
-        } else {
-            size = loc_long.length;
+        double loc_height[] = new double[10];
+        for (int i = 0; i<loc_height.length; i++) {
+            loc_height[i] = 0;
         }
 
-        // Create Location3D Array
-        // Hardcoded
         int constant = 10; // Use last 10 data points
+        int size = loc_long.length;
+
+
+
+        // Todo: Check data
+        //==========================
+
+
 
 
         // Use only needed data
         Location3D geo[] = new Location3D[constant];
         for (int i = 0; i < constant; i++) {
-            geo[i] = new Location3D(loc_long[size - 1 - constant + i], loc_lat[size - 1 - constant + i]);
+            geo[i] = new Location3D(loc_long[size - 1 - constant + i], loc_lat[size - 1 - constant + i], loc_height[size - 1 - constant]);
         }
 
         // Compute prediction
