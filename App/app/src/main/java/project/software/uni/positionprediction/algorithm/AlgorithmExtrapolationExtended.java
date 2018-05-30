@@ -5,7 +5,7 @@ import java.util.Date;
 import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 
-public class AlgorithmExtrapolation implements PredictionAlgorithm {
+public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
 
     private final int weight_max = 100;
 
