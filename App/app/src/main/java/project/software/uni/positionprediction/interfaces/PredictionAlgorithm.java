@@ -2,7 +2,7 @@ package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.classes.Location3D;
+import project.software.uni.positionprediction.datatype.Location3D;
 
 /**
  * General Interface for using a prediction algorithm

@@ -1,4 +1,4 @@
-package project.software.uni.positionprediction.classes;
+package project.software.uni.positionprediction.datatype;
 
 public class Location3D {
 

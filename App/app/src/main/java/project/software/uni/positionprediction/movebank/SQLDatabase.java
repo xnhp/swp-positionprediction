@@ -8,7 +8,7 @@ import android.util.Log;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.classes.Location3D;
+import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.datatype.TrackingPoint;

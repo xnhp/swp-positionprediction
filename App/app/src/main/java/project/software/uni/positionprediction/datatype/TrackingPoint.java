@@ -2,8 +2,6 @@ package project.software.uni.positionprediction.datatype;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.classes.Location3D;
-
 /**
  * Created by simon on 29.05.18.
  */

@@ -1,4 +1,4 @@
-package project.software.uni.positionprediction.classes;
+package project.software.uni.positionprediction.datatype;
 
 /**
  * Contains methods to debug the code

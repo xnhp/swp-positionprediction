@@ -6,7 +6,7 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.software.uni.positionprediction.classes.Location3D;
+import project.software.uni.positionprediction.datatype.Location3D;
 
 /**
  * Utility methods for manipulating geographical data (types).

@@ -14,7 +14,7 @@ import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 
-import project.software.uni.positionprediction.classes.Location3D;
+import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;

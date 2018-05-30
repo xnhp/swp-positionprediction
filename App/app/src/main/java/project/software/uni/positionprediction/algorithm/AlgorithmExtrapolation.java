@@ -1,7 +1,8 @@
-package project.software.uni.positionprediction.classes;
+package project.software.uni.positionprediction.algorithm;
 
 import java.util.Date;
 
+import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 
 public class AlgorithmExtrapolation implements PredictionAlgorithm {
