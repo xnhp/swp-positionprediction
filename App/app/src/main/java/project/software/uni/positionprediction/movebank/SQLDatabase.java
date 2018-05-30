@@ -186,7 +186,7 @@ public class SQLDatabase {
         if (table.length > 0) {
             for (int i = 1; i < table[0].length; i++) {
                 if (!table[1][i].equals("") && !table[2][i].equals("")) {
-                    db.execSQL("INSERT OR IGNORE INTO birds (timestamp, location_long, location_lat, tag_id, individual_id, study_id) VALUES ("
+                    db.execSQL("INSERT OR IGNORE INTO trackpoints (timestamp, location_long, location_lat, tag_id, individual_id, study_id) VALUES ("
                             + (table[0][i].equals("") ? "NULL" : "'" + table[0][i] + "'") + ", "
                             + table[1][i] + ", "
                             + table[2][i] + ", "
@@ -200,6 +200,59 @@ public class SQLDatabase {
     }
 
 
+    public void updateBirdsSync(int studyId){
+
+        String response = MovebankConnector.getInstance(context).getBirdsSync(studyId);
+
+        if(response == null){
+            Log.e("SQLDatabase", "couldn't birds for study: " + studyId);
+        } else {
+
+            insertBirds(studyId, response);
+
+        }
+    }
+
+    public void updateBirds(final int studyId){
+        MovebankConnector.getInstance(context).getBirds(studyId, new RequestHandler() {
+            @Override
+            public void handleResponse(String response) {
+                if(response == null){
+                    Log.e("SQLDatabase", "couldn't birds for study: " + studyId);
+                } else {
+                    insertBirds(studyId, response);
+                }
+            }
+        });
+    }
+
+    private void insertBirds(int studyId, String response){
+
+        String data[][] = CSVParser.parseColumnsRows(response);
+        String table[][] = CSVParser.getColumns(data, new String[]{"timestamp", "location_long", "location_lat", "individual_id", "tag_id"});
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        for(int i = 0; i < data.length; i++){
+            Log.e("column", data[i][0]);
+        }
+
+        /*if (table.length > 0) {
+            for (int i = 1; i < table[0].length; i++) {
+                if (!table[1][i].equals("") && !table[2][i].equals("")) {
+                    db.execSQL("INSERT OR IGNORE INTO birds (timestamp, location_long, location_lat, tag_id, individual_id, study_id) VALUES ("
+                            + (table[0][i].equals("") ? "NULL" : "'" + table[0][i] + "'") + ", "
+                            + table[1][i] + ", "
+                            + table[2][i] + ", "
+                            + (table[3][i].equals("") ? "NULL" : table[3][i]) + ", "
+                            + table[4][i] + ", "
+                            + studyId + ")");
+                }
+            }
+
+        }*/
+    }
+
     /**
      * This method gives all studies in the database
      * @return the Array of studies
@@ -208,7 +261,31 @@ public class SQLDatabase {
 
         SQLiteDatabase db = helper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT id, name FROM studies", new String[]{});
+        Cursor cursor = db.rawQuery("SELECT id, name FROM studies ORDER BY name ASC", new String[]{});
+
+        Study result[] = new Study[cursor.getCount()];
+
+        int rowIndex = 0;
+        while(cursor.moveToNext()) {
+            result[rowIndex] = new Study();
+            result[rowIndex].id = cursor.getInt(0);
+            result[rowIndex].name = cursor.getString(1);
+            rowIndex++;
+        }
+
+        cursor.close();
+
+        return result;
+
+    }
+
+    public Study[] searchStudie(String searchString){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT id, name FROM studies WHERE name LIKE '%"
+                + searchString +"%' OR id LIKE '%" + searchString + "%' ORDER BY name ASC",
+                new String[]{});
 
         Study result[] = new Study[cursor.getCount()];
 
@@ -232,7 +309,7 @@ public class SQLDatabase {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT timestamp, location_long, location_lat, tag_id, " +
-                "individual_id, study_id FROM birds WHERE study_id = " + studyId +
+                "individual_id, study_id FROM trackpoints WHERE study_id = " + studyId +
                 " AND individual_id = " + indivId + " ORDER BY timestamp DESC", new String[]{});
 
         TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
@@ -264,8 +341,8 @@ class SQLDatabaseHelper extends SQLiteOpenHelper {
                             "timestamp_end TIMESTAMP, " +
                             "timestamp_start TIMESTAMP," +
                             "PRIMARY KEY(id) ); ";
-    private static final String SQL_CREATE_BIRDS =
-                    "CREATE TABLE birds (" +
+    private static final String SQL_CREATE_TRACKPOINTS =
+                    "CREATE TABLE trackpoints (" +
                             "timestamp TIMESTAMP," +
                             "location_long DOUBLE," +
                             "location_lat DOUBLE," +
@@ -273,13 +350,17 @@ class SQLDatabaseHelper extends SQLiteOpenHelper {
                             "tag_id INTEGER," +
                             "study_id INTEGER, " +
                             "PRIMARY KEY(timestamp, individual_id, study_id) );";
+    private static final String SQL_CREATE_BIRDS =
+                    "CREATE TABLE birds (" +
+                            "id INTEGER," +
+                            "PRIMARY KEY(id) );";
 
     private static final String SQL_DELETE_STUDIES = "DROP TABLE studies";
-
+    private static final String SQL_DELETE_TRACKPOINTS = "DROP TABLE trackpoints";
     private static final String SQL_DELETE_BIRDS = "DROP TABLE birds;";
 
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Movebank.db";
 
     public SQLDatabaseHelper(Context context) {
@@ -288,10 +369,12 @@ class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_STUDIES);
+        db.execSQL(SQL_CREATE_TRACKPOINTS);
         db.execSQL(SQL_CREATE_BIRDS);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(SQL_DELETE_STUDIES);
+        db.execSQL(SQL_DELETE_TRACKPOINTS);
         db.execSQL(SQL_DELETE_BIRDS);
 
         onCreate(db);

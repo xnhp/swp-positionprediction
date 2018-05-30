@@ -8,8 +8,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,6 +29,8 @@ public class BirdSelect extends AppCompatActivity {
     private Button buttonSelect = null;
     private Button buttonOpenMap = null;
 
+    private EditText editTextSearch = null;
+
     private LinearLayout scrollViewLayout = null;
 
     @Override
@@ -34,6 +39,8 @@ public class BirdSelect extends AppCompatActivity {
         setContentView(R.layout.activity_bird_select);
 
         scrollViewLayout = findViewById(R.id.birdselect_scrollview);
+
+        editTextSearch = findViewById(R.id.birdselect_edittext_search);
 
         buttonSelect = findViewById(R.id.birdselect_button_select);
 
@@ -77,6 +84,24 @@ public class BirdSelect extends AppCompatActivity {
                     }
                 }
 
+            }
+        });
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                fillStudiesList(SQLDatabase.getInstance(birdSelect).searchStudie(
+                        editTextSearch.getText().toString()));
             }
         });
 
@@ -151,14 +176,31 @@ public class BirdSelect extends AppCompatActivity {
         }
     }
 
-    public void fillStudiesList(Study[] studies){
+    public void fillStudiesList(final Study[] studies){
+
+        scrollViewLayout.removeAllViews();
 
         for(int i = 0; i < studies.length; i++){
             TextView textView = new TextView(this);
+            textView.setPadding(50, 50, 50, 50);
             textView.setText(studies[i].name);
+
+            final int index = i;
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    studySelected(studies[index]);
+                }
+            });
+
             scrollViewLayout.addView(textView);
         }
 
+    }
+
+    public void studySelected(final Study study){
+        //SQLDatabase.getInstance(this).updateBirds(study.id);
     }
 
     public static Context getAppContext() {
