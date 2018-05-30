@@ -2,7 +2,7 @@ package project.software.uni.positionprediction.datatype;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.classes.Location;
+import project.software.uni.positionprediction.classes.Location3D;
 
 /**
  * Created by simon on 29.05.18.
@@ -10,12 +10,12 @@ import project.software.uni.positionprediction.classes.Location;
 
 public class TrackingPoint {
 
-    private Location location;
+    private Location3D location;
 
     private Date date;
 
 
-    public TrackingPoint(Location location, Date date){
+    public TrackingPoint(Location3D location, Date date){
         this.location = location;
         this.date = date;
     }
@@ -24,7 +24,7 @@ public class TrackingPoint {
         return date;
     }
 
-    public Location getLocation(){
+    public Location3D getLocation(){
         return location;
     }
 
