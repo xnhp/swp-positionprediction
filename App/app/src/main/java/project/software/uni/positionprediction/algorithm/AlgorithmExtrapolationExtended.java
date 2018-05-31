@@ -1,5 +1,7 @@
 package project.software.uni.positionprediction.algorithm;
 
+import android.location.Location;
+
 import java.util.Date;
 
 import project.software.uni.positionprediction.datatype.Location3D;
@@ -76,29 +78,27 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         for (int t = 1; t < date; t++) {
             // Compute difference of pair n and n-t
             // Get n-th point
-            double n_long = data[n].getLoc_long();
-            double n_lat = data[n].getLoc_lat();
-            double n_height = data[n].getLoc_height();
+            Location3D vec_n = new Location3D(
+                    data[n].getLoc_long(),
+                    data[n].getLoc_lat(),
+                    data[n].getLoc_height()
+            );
 
             // Get n-t point
-            double first_long = data[n - t].getLoc_long();
-            double first_lat = data[n - t].getLoc_lat();
-            double first_height = data[n - t].getLoc_height();
+            Location3D vec_old = new Location3D(
+                    data[n - t].getLoc_long(),
+                    data[n - t].getLoc_lat(),
+                    data[n - t].getLoc_height()
+            );
 
             // Compute vector between them
-            double delta_long = n_long - first_long;
-            double delta_lat = n_lat - first_lat;
-            double delta_height = n_height - first_height;
+            Location3D vec_delta = vec_n.subtract(vec_old);
 
             // Compute average
-            double avg_long = delta_long / t;
-            double avg_lat = delta_lat / t;
-            double avg_height = delta_height / t;
+            Location3D vec_avg = vec_delta.multiply( (double) (1/t) );
 
             // Add vector to collection
-            Location3D vector = new Location3D(delta_long, delta_lat, delta_height);
-            vector.print();
-            vector_collection[t - 1] = vector;
+            vector_collection[t - 1] = vec_avg;
         }
 
         // Compute average of all computed vectors in collection

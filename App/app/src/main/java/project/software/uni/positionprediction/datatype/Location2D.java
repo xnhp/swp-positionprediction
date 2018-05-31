@@ -38,16 +38,38 @@ public class Location2D {
 
     /**
      * Adds two locations
-     *
      * @param location
      * @return
      */
     public Location2D add(Location2D location) {
-        double loc_long = location.getLoc_long();
-        double loc_lat = location.getLoc_lat();
-        double res_long = this.getLoc_long() + loc_long;
-        double res_lat = this.getLoc_lat() + loc_lat;
-        return new Location2D(res_long, res_lat);
+        return new Location2D(
+                this.getLoc_long() + location.getLoc_long(),
+                this.getLoc_lat() + location.getLoc_lat(),
+        );
+
+    }
+
+
+    /**
+     * Multiplies vector with scalar
+     * @param scalar
+     * @return
+     */
+    public Location2D multiply(double scalar){
+        return new Location2D(
+                this.getLoc_long() * scalar,
+                this.getLoc_lat() * scalar,
+        );
+    }
+
+
+    /**
+     * Subtracts vector with second vector
+     * @param location
+     * @return
+     */
+    public Location2D subtract(Location2D location) {
+        return this.add( location.multiply(-1) );
     }
 
 

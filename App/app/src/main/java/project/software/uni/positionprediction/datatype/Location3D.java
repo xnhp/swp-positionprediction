@@ -40,20 +40,45 @@ public class Location3D {
 
     /**
      * Adds two locations
-     *
      * @param location
      * @return
      */
     public Location3D add(Location3D location) {
-        double loc_long = location.getLoc_long();
-        double loc_lat = location.getLoc_lat();
-        double loc_height = location.getLoc_height();
-        double res_long = this.getLoc_long() + loc_long;
-        double res_lat = this.getLoc_lat() + loc_lat;
-        double res_h = this.getLoc_height() + loc_height;
-        return new Location3D(res_long, res_lat, res_h);
+        return new Location3D(
+                this.getLoc_long() + location.getLoc_long(),
+                this.getLoc_lat() + location.getLoc_lat(),
+                this.getLoc_height() + location.getLoc_height()
+        );
 
     }
+
+
+    /**
+     * Multiplies vector with scalar
+     * @param scalar
+     * @return
+     */
+    public Location3D multiply(double scalar){
+        return new Location3D(
+                this.getLoc_long() * scalar,
+                this.getLoc_lat() * scalar,
+                this.getLoc_height() * scalar
+        );
+    }
+
+
+    /**
+     * Subtracts vector with second vector
+     * @param location
+     * @return
+     */
+    public Location3D subtract(Location3D location) {
+        return this.add( location.multiply(-1) );
+    }
+
+
+
+
 
     /**
      * Print method for Location3D
