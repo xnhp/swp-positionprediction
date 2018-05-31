@@ -28,6 +28,7 @@ public class BirdSelect extends AppCompatActivity {
 
     private Button buttonSelect = null;
     private Button buttonOpenMap = null;
+    private Button buttonOpenCesium = null;
 
     private EditText editTextSearch = null;
 
@@ -45,6 +46,8 @@ public class BirdSelect extends AppCompatActivity {
         buttonSelect = findViewById(R.id.birdselect_button_select);
 
         buttonOpenMap = findViewById(R.id.birdselect_button_openmap);
+
+        buttonOpenCesium = findViewById(R.id.birdselect_button_opencesium);
 
         final BirdSelect birdSelect = this;
 
@@ -84,6 +87,14 @@ public class BirdSelect extends AppCompatActivity {
                     }
                 }
 
+            }
+        });
+
+        buttonOpenCesium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cesiumIntent =  new Intent(birdSelect, Cesium.class);
+                startActivity(cesiumIntent);
             }
         });
 

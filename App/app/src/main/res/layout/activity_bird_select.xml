@@ -56,6 +56,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Open Map" />
+
+            <Button
+                android:id="@+id/birdselect_button_opencesium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Open Cesium" />
         </LinearLayout>
 
 
