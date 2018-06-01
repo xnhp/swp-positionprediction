@@ -44,7 +44,7 @@ public class Location2D {
     public Location2D add(Location2D location) {
         return new Location2D(
                 this.getLoc_long() + location.getLoc_long(),
-                this.getLoc_lat() + location.getLoc_lat(),
+                this.getLoc_lat() + location.getLoc_lat()
         );
 
     }
@@ -58,7 +58,7 @@ public class Location2D {
     public Location2D multiply(double scalar){
         return new Location2D(
                 this.getLoc_long() * scalar,
-                this.getLoc_lat() * scalar,
+                this.getLoc_lat() * scalar
         );
     }
 
