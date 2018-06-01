@@ -73,6 +73,23 @@ public class Location2D {
     }
 
 
+
+    /**
+     * Divides vector by number
+     * @param number
+     * @return
+     */
+    public Location2D divide(double number) {
+        if (number == 0) {
+            // Todo Message
+            return null;
+        }
+        return this.multiply( (double) (1/number));
+    }
+
+
+
+
     /**
      * Print method for Location2D
      */
