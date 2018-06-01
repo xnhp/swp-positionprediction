@@ -2,7 +2,7 @@ package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.classes.Location;
+import project.software.uni.positionprediction.datatype.Location3D;
 
 /**
  * General Interface for using a prediction algorithm
@@ -25,7 +25,7 @@ public interface PredictionAlgorithm {
      * @return
      */
     // Todo: Output
-    Location predict_interpolation(Date date_past, Date date_pred, int bird_id);
+    Location3D predict_interpolation(Date date_past, Date date_pred, int bird_id);
 
 
 }

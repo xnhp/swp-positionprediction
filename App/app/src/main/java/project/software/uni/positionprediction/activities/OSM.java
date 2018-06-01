@@ -13,13 +13,10 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.classes.Location;
+import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
-import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 public class OSM extends AppCompatActivity {
@@ -60,10 +57,10 @@ public class OSM extends AppCompatActivity {
 
 
 
-        ArrayList<Location> testPosLoc = new ArrayList<>();
-        testPosLoc.add(new Location(47.680503, 9.177198));
-        testPosLoc.add(new Location(47.679463, 9.179558));
-        testPosLoc.add(new Location(47.678871, 9.181532));
+        ArrayList<Location3D> testPosLoc = new ArrayList<>();
+        testPosLoc.add(new Location3D(47.680503, 9.177198));
+        testPosLoc.add(new Location3D(47.679463, 9.179558));
+        testPosLoc.add(new Location3D(47.678871, 9.181532));
         // we would receive a visualisation object as output from a prediction algorithm
         SingleTrajectoryVis myVis = new SingleTrajectoryVis();
         myVis.traj = testPosGp;

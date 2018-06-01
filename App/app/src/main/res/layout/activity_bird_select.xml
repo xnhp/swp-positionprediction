@@ -15,21 +15,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_above="@id/birdselect_footer"
+            android:layout_alignParentTop="true">
 
             <EditText
                 android:id="@+id/birdselect_edittext_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_margin="@dimen/birdselect_edittext_search_margin" />
 
             <ScrollView
-                android:id="@+id/birdselect_scrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/birdselect_scrollview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
@@ -37,6 +38,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/birdselect_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -54,6 +56,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Open Map" />
+
+            <Button
+                android:id="@+id/birdselect_button_opencesium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Open Cesium" />
         </LinearLayout>
 
 

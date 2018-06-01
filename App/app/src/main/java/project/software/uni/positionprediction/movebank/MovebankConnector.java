@@ -1,6 +1,9 @@
 package project.software.uni.positionprediction.movebank;
 
+import android.content.Context;
+
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Utility for interactions with the Movebank API.
@@ -16,68 +19,154 @@ public class MovebankConnector {
     private static MovebankConnector instance;
     private MovebankRequest movebankRequest;
 
-
-    private MovebankConnector(){
-        movebankRequest = new MovebankRequest();
+    private MovebankConnector(Context context){
+        movebankRequest = new MovebankRequest(context);
     }
 
-
-    public static MovebankConnector getInstance() {
+    public static MovebankConnector getInstance(Context context) {
 
         if(instance == null){
-            instance = new MovebankConnector();
+            instance = new MovebankConnector(context);
         }
 
         return instance;
     }
 
 
-
-    public String getBirdData(int studyID, int indivID){
-
-        String typeAttr = "entity_type=event";
-        String studyAttr = String.format("study_id=%d", studyID);
-        String individualAttr = String.format("individual_id=%d", indivID);
-
-        String attributes = String.format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
-
-        return movebankRequest.requestData(attributes);
-    }
-
-    public String getBirdData(int studyID, int indivID, Date start, Date end){
+    /**
+     * This Method requests the data of the bird with the given study and individual id
+     * @param studyID the study id of the bird
+     * @param indivID the individual id of the bird
+     * @param requestHandler the callback handler for the request
+     */
+    public void getBirdData(int studyID, int indivID, RequestHandler requestHandler){
 
         String typeAttr = "entity_type=event";
-        String studyAttr = String.format("study_id=%d", studyID);
-        String indivAttr = String.format("individual_id=%d", indivID);
-        String startAttr = String.format("timestamp_start=%d%n", start.getTime());
-        String endAttr = String.format("timestamp_end=%d%n", end.getTime());
+        String studyAttr = format("study_id=%d", studyID);
+        String individualAttr = format("individual_id=%d", indivID);
+
+        String attributes = format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
+
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+
+    }
+
+    /**
+     * This Method requests the data of the bird with the given study and individual id
+     * @param studyID the study id of the bird
+     * @param indivID the individual id of the bird
+     * @return the returned CSV File as String
+     */
+    public String getBirdDataSync(int studyID, int indivID){
+
+        String typeAttr = "entity_type=event";
+        String studyAttr = format("study_id=%d", studyID);
+        String individualAttr = format("individual_id=%d", indivID);
+
+        String attributes = format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
+
+        return movebankRequest.requestDataSync(attributes);
+
+    }
+
+    /**
+     * This Method requests the data of the bird with the given study and individual id in the given time period
+     * @param studyID the study id of the bird
+     * @param indivID the individual id of the bird
+     * @param start the start date
+     * @param end the end date
+     * @param requestHandler the callback handler for the request
+     */
+    public void getBirdData(int studyID, int indivID, Date start, Date end, RequestHandler requestHandler){
+
+        String typeAttr = "entity_type=event";
+        String studyAttr = format("study_id=%d", studyID);
+        String indivAttr = format("individual_id=%d", indivID);
+        String startAttr = format("timestamp_start=%d%n", start.getTime());
+        String endAttr = format("timestamp_end=%d%n", end.getTime());
 
 
-        String attributes = String.format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
+        String attributes = format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
 
-        return movebankRequest.requestData(attributes);
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+    }
+
+    /**
+     * This Method requests the data of the bird with the given study and individual id in the given time period
+     * @param studyID the study id of the bird
+     * @param indivID the individual id of the bird
+     * @param start the start date
+     * @param end the end date
+     * @return the returned CSV File as String
+     */
+    public String getBirdDataSync(int studyID, int indivID, Date start, Date end){
+
+        String typeAttr = "entity_type=event";
+        String studyAttr = format("study_id=%d", studyID);
+        String indivAttr = format("individual_id=%d", indivID);
+        String startAttr = format("timestamp_start=%d%n", start.getTime());
+        String endAttr = format("timestamp_end=%d%n", end.getTime());
+
+
+        String attributes = format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
+
+        return movebankRequest.requestDataSync(attributes);
     }
 
 
-    public String getStudies(){
 
+    /**
+     * This Method requests a list of all the the current user available studies
+     * @param requestHandler The callback handler for the request
+     */
+    public void getStudies(RequestHandler requestHandler){
         String attributes = "entity_type=study";
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+    }
 
-        return movebankRequest.requestData(attributes);
+    /**
+     * This Method requests a list of all the the current user available studies.
+     * Don't call this Method from the main Thread!
+     *
+     * @return the returned CSV File as String
+     */
+    public String getStudiesSync(){
+        String attributes = "entity_type=study";
+        return movebankRequest.requestDataSync(attributes);
     }
 
 
-    public String getBirds(int studyId){
+    /**
+     * This Method requests the birds for a given study
+     * @param studyId the study id to get the birds for
+     * @param requestHandler The callback handler for the request
+     */
+    public void getBirds(int studyId, RequestHandler requestHandler){
         String typeAttr = "entity_type=individual";
-        String studyAttr = String.format("study_id=%d", 2911040);
+        String studyAttr = format("study_id=%d", studyId);
 
-        String attributes = String.format("%s&%s", typeAttr, studyAttr);
+        String attributes = format("%s&%s", typeAttr, studyAttr);
 
-        return movebankRequest.requestData(attributes);
+        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
     }
 
-    public boolean changeUser(String username, String password){
-        //TODO attributes
+    /**
+     * This Method requests the birds for a given study
+     * @param studyId the study id to get the birds for
+     * @return the returned CSV File as String
+     */
+    public String getBirdsSync(int studyId){
+        String typeAttr = "entity_type=individual";
+        String studyAttr = format("study_id=%d", studyId);
+
+        String attributes = format("%s&%s", typeAttr, studyAttr);
+
+        return movebankRequest.requestDataSync(attributes);
+    }
+
+
+    /*public boolean changeUser(String username, String password){
+        //TODO attributes,
         String usernameOld = movebankRequest.getUsername();
         String passwordOld = movebankRequest.getPassword();
 
@@ -90,6 +179,17 @@ public class MovebankConnector {
         }
 
         return isValid;
+    }*/
+
+    /**
+     * Formats a string with explicit US locale.
+     * Not specifying the locale throws a warning.
+     * @param fmt Format string
+     * @param params Parameters for string formatting
+     * @return
+     */
+    private String format(String fmt, Object... params) {
+        return String.format(Locale.US, fmt, params);
     }
 
 

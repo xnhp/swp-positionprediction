@@ -95,10 +95,6 @@ public class OSMDroidMap {
 
         // load OSMDroid configuration
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-
-        // TODO: What happens if obtaining permission fails?
-        PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, (AppCompatActivity) context);
-        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, (AppCompatActivity) context);
     }
 
     public void initMap(MapView view, GeoPoint center, final double zoom) {
@@ -184,7 +180,7 @@ public class OSMDroidMap {
      *
      * For more methods cf https://github.com/osmdroid/osmdroid/blob/987bdea49a899f14844674a8faa19f74c648cc57/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/data/SampleMarker.java
      *  @param view The MapView
-     * @param location Location of the Marker
+     * @param location Location3D of the Marker
      * @param marker Icon to be displayed for the marker
      */
     private void placeMarker(MapView view, Marker marker, GeoPoint location) {
@@ -200,7 +196,7 @@ public class OSMDroidMap {
      * TODO: onResume(), does the location have to be explicitly updated?
      */
     private void enableCustomLocationMarker(final Marker marker) {
-        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, (AppCompatActivity) context);
+        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
 
         // create a locationManager that handles obtaining the location if there is none yet
         if (locationManager == null) locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
@@ -245,7 +241,7 @@ public class OSMDroidMap {
      */
     @SuppressLint("MissingPermission") // TODO
     private void registerLocationUpdates(LocationListener listener) {
-        Log.d("Location", "call to update location");
+        Log.d("Location3D", "call to update location");
         // because receiving the first location might take a while,
         // we call a first update immediately with the last known location
         // cf https://developer.android.com/reference/android/location/LocationManager.html#requestLocationUpdates(java.lang.String,%20long,%20float,%20android.location.LocationListener)
