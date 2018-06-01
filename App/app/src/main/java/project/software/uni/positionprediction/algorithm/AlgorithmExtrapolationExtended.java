@@ -78,24 +78,16 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         for (int t = 1; t < date; t++) {
             // Compute difference of pair n and n-t
             // Get n-th point
-            Location3D vec_n = new Location3D(
-                    data[n].getLoc_long(),
-                    data[n].getLoc_lat(),
-                    data[n].getLoc_height()
-            );
+            Location3D vec_n = data[n];
 
             // Get n-t point
-            Location3D vec_old = new Location3D(
-                    data[n - t].getLoc_long(),
-                    data[n - t].getLoc_lat(),
-                    data[n - t].getLoc_height()
-            );
+            Location3D vec_old = data[n-t];
 
             // Compute vector between them
             Location3D vec_delta = vec_n.subtract(vec_old);
 
             // Compute average
-            Location3D vec_avg = vec_delta.multiply( (double) (1/t) );
+            Location3D vec_avg = vec_delta.divide(t);
 
             // Add vector to collection
             vector_collection[t - 1] = vec_avg;

@@ -77,6 +77,18 @@ public class Location3D {
     }
 
 
+    /**
+     * Divides vector by number
+     * @param number
+     * @return
+     */
+    public Location3D divide(double number) {
+        if (number == 0) {
+            // Todo Message
+            return null;
+        }
+        return this.multiply( (double) (1/number));
+    }
 
 
 
