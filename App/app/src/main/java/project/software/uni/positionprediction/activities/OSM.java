@@ -60,23 +60,7 @@ public class OSM extends AppCompatActivity {
 
 
 
-        ArrayList<Location> testPosLoc = new ArrayList<>();
-        testPosLoc.add(new Location(47.680503, 9.177198));
-        testPosLoc.add(new Location(47.679463, 9.179558));
-        testPosLoc.add(new Location(47.678871, 9.181532));
-        // we would receive a visualisation object as output from a prediction algorithm
-        SingleTrajectoryVis myVis = new SingleTrajectoryVis();
-        myVis.traj = testPosGp;
-        myVis.pointColor = "#ff0077"; // pink
-        myVis.lineColor = "#00ff88";  // bright green
 
-
-        // obtain an adapter
-        OSMDroidVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter();
-        // set the map for the adapter
-        myVisAdap.linkMap(mymap);
-        // have it draw the visualisation
-        myVisAdap.visualiseSingleTraj(myVis);
 
 
         buttonSettings.setOnClickListener(new View.OnClickListener() {
