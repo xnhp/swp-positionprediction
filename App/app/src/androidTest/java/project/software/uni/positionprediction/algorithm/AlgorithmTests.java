@@ -36,6 +36,9 @@ public class AlgorithmTests {
         assertEquals(method_add.getLoc_lat(), own_add.getLoc_lat(), delta);
         assertEquals(method_add.getLoc_height(), own_add.getLoc_height(), delta);
 
+
+
+
         // Todo divide, multiply, subtract
 
 
