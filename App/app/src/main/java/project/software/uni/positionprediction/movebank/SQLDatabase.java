@@ -8,7 +8,6 @@ import android.util.Log;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.datatype.Location2D;
 import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.Study;
@@ -318,7 +317,7 @@ public class SQLDatabase {
         int rowIndex = 0;
         while(cursor.moveToNext()) {
             points[rowIndex] = new TrackingPoint(
-                    new Location2D(cursor.getDouble(1), cursor.getDouble(2)),
+                    new Location3D(cursor.getDouble(1), cursor.getDouble(2)),
                     new Date(cursor.getLong(0)*1000));
             rowIndex++;
         }

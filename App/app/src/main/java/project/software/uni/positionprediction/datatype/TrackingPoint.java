@@ -8,12 +8,12 @@ import java.util.Date;
 
 public class TrackingPoint {
 
-    private Location2D location;
+    private Location3D location;
 
     private Date date;
 
 
-    public TrackingPoint(Location2D location, Date date){
+    public TrackingPoint(Location3D location, Date date){
         this.location = location;
         this.date = date;
     }
@@ -22,7 +22,7 @@ public class TrackingPoint {
         return date;
     }
 
-    public Location2D getLocation(){
+    public Location3D getLocation(){
         return location;
     }
 
