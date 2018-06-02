@@ -14,7 +14,7 @@ import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Location2D;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
@@ -57,10 +57,10 @@ public class OSM extends AppCompatActivity {
 
 
 
-        ArrayList<Location3D> testPosLoc = new ArrayList<>();
-        testPosLoc.add(new Location3D(47.680503, 9.177198));
-        testPosLoc.add(new Location3D(47.679463, 9.179558));
-        testPosLoc.add(new Location3D(47.678871, 9.181532));
+        ArrayList<Location2D> testPosLoc = new ArrayList<>();
+        testPosLoc.add(new Location2D(47.680503, 9.177198));
+        testPosLoc.add(new Location2D(47.679463, 9.179558));
+        testPosLoc.add(new Location2D(47.678871, 9.181532));
         // we would receive a visualisation object as output from a prediction algorithm
         SingleTrajectoryVis myVis = new SingleTrajectoryVis();
         myVis.traj = testPosGp;
