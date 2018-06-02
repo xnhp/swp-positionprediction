@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.Date;
 import java.util.Locale;
 
+import project.software.uni.positionprediction.datatype.Request;
+
 /**
  * Utility for interactions with the Movebank API.
  *
@@ -47,7 +49,7 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s&%s", typeAttr, studyAttr, individualAttr);
 
-        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+        movebankRequest.requestDataAsync(attributes, requestHandler);
 
     }
 
@@ -57,7 +59,7 @@ public class MovebankConnector {
      * @param indivID the individual id of the bird
      * @return the returned CSV File as String
      */
-    public String getBirdDataSync(int studyID, int indivID){
+    public Request getBirdDataSync(int studyID, int indivID){
 
         String typeAttr = "entity_type=event";
         String studyAttr = format("study_id=%d", studyID);
@@ -88,7 +90,7 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s&%s&%s&%s", typeAttr, studyAttr, indivAttr, startAttr, endAttr);
 
-        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+        movebankRequest.requestDataAsync(attributes, requestHandler);
     }
 
     /**
@@ -99,7 +101,7 @@ public class MovebankConnector {
      * @param end the end date
      * @return the returned CSV File as String
      */
-    public String getBirdDataSync(int studyID, int indivID, Date start, Date end){
+    public Request getBirdDataSync(int studyID, int indivID, Date start, Date end){
 
         String typeAttr = "entity_type=event";
         String studyAttr = format("study_id=%d", studyID);
@@ -121,7 +123,7 @@ public class MovebankConnector {
      */
     public void getStudies(RequestHandler requestHandler){
         String attributes = "entity_type=study";
-        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+        movebankRequest.requestDataAsync(attributes, requestHandler);
     }
 
     /**
@@ -130,7 +132,7 @@ public class MovebankConnector {
      *
      * @return the returned CSV File as String
      */
-    public String getStudiesSync(){
+    public Request getStudiesSync(){
         String attributes = "entity_type=study";
         return movebankRequest.requestDataSync(attributes);
     }
@@ -147,7 +149,7 @@ public class MovebankConnector {
 
         String attributes = format("%s&%s", typeAttr, studyAttr);
 
-        movebankRequest.requestDataAsync(attributes, requestHandler, requestHandler);
+        movebankRequest.requestDataAsync(attributes, requestHandler);
     }
 
     /**
@@ -155,7 +157,7 @@ public class MovebankConnector {
      * @param studyId the study id to get the birds for
      * @return the returned CSV File as String
      */
-    public String getBirdsSync(int studyId){
+    public Request getBirdsSync(int studyId){
         String typeAttr = "entity_type=individual";
         String studyAttr = format("study_id=%d", studyId);
 

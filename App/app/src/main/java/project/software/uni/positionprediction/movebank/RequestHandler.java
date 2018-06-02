@@ -5,17 +5,28 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import project.software.uni.positionprediction.datatype.Request;
+
 /**
  * Created by simon on 23.05.18.
  */
 
 public abstract class RequestHandler implements Response.Listener<String>, Response.ErrorListener {
 
-    public abstract void handleResponse(String response);
+
+    private Request request;
+
+    public void setRequest(Request request){
+        this.request = request;
+    }
+
+    public abstract void handleResponse(Request request);
 
     @Override
     public void onResponse(String response) {
-        handleResponse(response);
+        request.setResponseStatus(MovebankRequest.getStatusForRequest(request));
+        request.setResponse(response);
+        handleResponse(request);
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.PermissionManager;
@@ -34,6 +36,12 @@ public class BirdSelect extends AppCompatActivity {
 
     private LinearLayout scrollViewLayout = null;
 
+    private final static int BIRD_SELECT = 1;
+    private final static  int STUDY_SELECT = 2;
+
+    private int state;
+    private int selectedStudy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +56,8 @@ public class BirdSelect extends AppCompatActivity {
         buttonOpenMap = findViewById(R.id.birdselect_button_openmap);
 
         buttonOpenCesium = findViewById(R.id.birdselect_button_opencesium);
+
+        state = STUDY_SELECT;
 
         final BirdSelect birdSelect = this;
 
@@ -111,8 +121,14 @@ public class BirdSelect extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                fillStudiesList(SQLDatabase.getInstance(birdSelect).searchStudie(
-                        editTextSearch.getText().toString()));
+                if(state == STUDY_SELECT)
+                    fillStudiesList(SQLDatabase.getInstance(birdSelect).searchStudie(
+                            editTextSearch.getText().toString()));
+                else if(state == BIRD_SELECT)
+                    fillBirdsList(SQLDatabase.getInstance(birdSelect).searchBird(
+                            selectedStudy,
+                            editTextSearch.getText().toString()
+                    ));
             }
         });
 
@@ -141,7 +157,7 @@ public class BirdSelect extends AppCompatActivity {
                     }
                 });
 
-                Bird bird = SQLDatabase.getInstance(birdSelect).getBirdData(2911040, 2911059);
+                BirdData birdData = SQLDatabase.getInstance(birdSelect).getBirdData(2911040, 2911059);
 
             }
         }).start();
@@ -202,20 +218,93 @@ public class BirdSelect extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     studySelected(studies[index]);
+                    state = BIRD_SELECT;
+                    selectedStudy = studies[index].id;
+                    editTextSearch.setText("");
                 }
             });
 
             scrollViewLayout.addView(textView);
         }
 
+        scrollViewLayout.invalidate();
+
     }
 
     public void studySelected(final Study study){
-        //SQLDatabase.getInstance(this).updateBirds(study.id);
+        Bird birds[] = SQLDatabase.getInstance(this).getBirds(study.id);
+        if(birds.length > 0) fillBirdsList(birds);
+
+        final BirdSelect birdSelect = this;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                SQLDatabase.getInstance(birdSelect).updateBirds(study.id);
+                final Bird birds[] = SQLDatabase.getInstance(birdSelect).getBirds(study.id);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(birds.length > 0) fillBirdsList(birds);
+                        else {
+                            // TODO: dispaly warning (no accessable birds for study)
+                        }
+                    }
+                });
+            }
+        }).run();
+    }
+
+    public void fillBirdsList(Bird birds[]){
+
+        scrollViewLayout.removeAllViews();
+
+        for(int i = 0; i < birds.length; i++){
+            TextView textView = new TextView(this);
+            textView.setPadding(50, 50, 50, 50);
+            if(birds[i].getNickName() == null){
+                textView.setText(birds[i].getId() + "");
+            }
+            else {
+                textView.setText(birds[i].getNickName() + " (" + birds[i].getId() + ")");
+            }
+
+            final int index = i;
+
+            // TODO: add click listener that opens the map for the selected bird
+
+            scrollViewLayout.addView(textView);
+        }
+
+        scrollViewLayout.invalidate();
     }
 
     public static Context getAppContext() {
         return BirdSelect.context;
+    }
+
+    @Override
+    public void onBackPressed() {
+        switch(state){
+            case STUDY_SELECT:
+                this.finish();
+                break;
+            case BIRD_SELECT:
+                final BirdSelect birdSelect = this;
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        fillStudiesList(SQLDatabase.getInstance(birdSelect).getStudies());
+                    }
+                });
+                editTextSearch.setText("");
+                state = STUDY_SELECT;
+                break;
+            default:
+                super.onBackPressed();
+        }
     }
 
 }

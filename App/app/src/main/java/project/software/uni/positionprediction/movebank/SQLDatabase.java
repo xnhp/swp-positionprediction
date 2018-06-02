@@ -8,9 +8,11 @@ import android.util.Log;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.datatype.Location2D;
-import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.datatype.BirdData;
+import project.software.uni.positionprediction.datatype.HttpStatusCode;
+import project.software.uni.positionprediction.datatype.Location2D;
+import project.software.uni.positionprediction.datatype.Request;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 
@@ -78,11 +80,9 @@ public class SQLDatabase {
     public void updateStudies(){
         MovebankConnector.getInstance(context).getStudies(new RequestHandler() {
             @Override
-            public void handleResponse(String response) {
-                if(response == null){
-
-                } else{
-                    insertStudyData(response);
+            public void handleResponse(Request response) {
+                if(response.getResponseStatus() == HttpStatusCode.OK) {
+                    insertStudyData(response.getResponse());
                 }
 
 
@@ -97,12 +97,12 @@ public class SQLDatabase {
      */
     public void updateStudiesSync(){
 
-        String response = MovebankConnector.getInstance(context).getStudiesSync();
+        Request request = MovebankConnector.getInstance(context).getStudiesSync();
 
-        if(response == null){
+        if(request.getResponseStatus() == HttpStatusCode.OK) {
+            insertStudyData(request.getResponse());
+        } else {
             Log.e("SQLDatabase", "couldn't fetch studies from Database");
-        } else{
-            insertStudyData(response);
         }
     }
 
@@ -140,14 +140,12 @@ public class SQLDatabase {
      */
     public void updateBirdDataSync(int studyId, int indivId){
 
-        String response = MovebankConnector.getInstance(context).getBirdDataSync(studyId, indivId);
+        Request request = MovebankConnector.getInstance(context).getBirdDataSync(studyId, indivId);
 
-        if(response == null){
-            Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
+        if(request.getResponseStatus() == HttpStatusCode.OK) {
+            insertBirdData(studyId, indivId, request.getResponse());
         } else {
-
-            insertBirdData(studyId, indivId, response);
-
+            Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
         }
 
     }
@@ -163,11 +161,11 @@ public class SQLDatabase {
 
         MovebankConnector.getInstance(context).getBirdData(studyId, indivId, new RequestHandler() {
             @Override
-            public void handleResponse(String response) {
-                if(response == null){
-                    Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
+            public void handleResponse(Request response) {
+                if(response.getResponseStatus() == HttpStatusCode.OK){
+                    insertBirdData(studyId, indivId, response.getResponse());
                 } else {
-                    insertBirdData(studyId, indivId, response);
+                    Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
                 }
             }
         });
@@ -203,25 +201,23 @@ public class SQLDatabase {
 
     public void updateBirdsSync(int studyId){
 
-        String response = MovebankConnector.getInstance(context).getBirdsSync(studyId);
+        Request request = MovebankConnector.getInstance(context).getBirdsSync(studyId);
 
-        if(response == null){
-            Log.e("SQLDatabase", "couldn't birds for study: " + studyId);
+        if(request.getResponseStatus() == HttpStatusCode.OK) {
+                insertBirds(studyId, request.getResponse());
         } else {
-
-            insertBirds(studyId, response);
-
+            Log.e("SQLDatabase", "couldn't get birds for study: " + studyId);
         }
     }
 
     public void updateBirds(final int studyId){
         MovebankConnector.getInstance(context).getBirds(studyId, new RequestHandler() {
             @Override
-            public void handleResponse(String response) {
-                if(response == null){
-                    Log.e("SQLDatabase", "couldn't birds for study: " + studyId);
+            public void handleResponse(Request response) {
+                if(response.getResponseStatus() == HttpStatusCode.OK){
+                    insertBirds(studyId, response.getResponse());
                 } else {
-                    insertBirds(studyId, response);
+                    Log.e("SQLDatabase", "couldn't birds for study: " + studyId);
                 }
             }
         });
@@ -229,29 +225,27 @@ public class SQLDatabase {
 
     private void insertBirds(int studyId, String response){
 
+        Log.e("response", response);
+
+        if(response.contains("The requested download may contain copyrighted material.")
+                || response.contains("No data are available for download")) return;
+
         String data[][] = CSVParser.parseColumnsRows(response);
-        String table[][] = CSVParser.getColumns(data, new String[]{"timestamp", "location_long", "location_lat", "individual_id", "tag_id"});
+        String table[][] = CSVParser.getColumns(data, new String[]{"comments", "death_comments", "id", "nick_name"});
 
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        for(int i = 0; i < data.length; i++){
-            Log.e("column", data[i][0]);
-        }
-
-        /*if (table.length > 0) {
+        if (table.length > 0) {
             for (int i = 1; i < table[0].length; i++) {
-                if (!table[1][i].equals("") && !table[2][i].equals("")) {
-                    db.execSQL("INSERT OR IGNORE INTO birds (timestamp, location_long, location_lat, tag_id, individual_id, study_id) VALUES ("
-                            + (table[0][i].equals("") ? "NULL" : "'" + table[0][i] + "'") + ", "
-                            + table[1][i] + ", "
-                            + table[2][i] + ", "
-                            + (table[3][i].equals("") ? "NULL" : table[3][i]) + ", "
-                            + table[4][i] + ", "
-                            + studyId + ")");
-                }
+                db.execSQL("INSERT OR IGNORE INTO birds (comments, death_comments, id, study_id, nick_name) VALUES ("
+                        + (table[0][i].equals("") ? "NULL" : "'" + table[0][i] + "'") + ", "
+                        + (table[1][i].equals("") ? "NULL" : "'" + table[1][i] + "'") + ", "
+                        + table[2][i] + ", "
+                        + studyId + ", "
+                        + (table[3][i].equals("") ? "NULL" : "'" + table[3][i] + "'") + ")");
             }
 
-        }*/
+        }
     }
 
     /**
@@ -305,7 +299,7 @@ public class SQLDatabase {
     }
 
 
-    public Bird getBirdData(int studyId, int indivId){
+    public BirdData getBirdData(int studyId, int indivId){
 
         SQLiteDatabase db = helper.getReadableDatabase();
 
@@ -326,7 +320,54 @@ public class SQLDatabase {
         cursor.close();
 
 
-        return new Bird(studyId, indivId, points);
+        return new BirdData(studyId, indivId, points);
+
+    }
+
+    public Bird[] getBirds(int studyId){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT id, nick_name FROM birds WHERE study_id = " +
+                        studyId + " ORDER BY nick_name ASC", new String[]{});
+
+        Bird birds[] = new Bird[cursor.getCount()];
+
+        int rowIndex = 0;
+        while(cursor.moveToNext()) {
+            birds[rowIndex] = new Bird(cursor.getInt(0), studyId, cursor.getString(1));
+            rowIndex++;
+        }
+
+        cursor.close();
+
+
+        return birds;
+
+    }
+
+    public Bird[] searchBird(int studyId, String searchString){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT id, nick_name FROM birds WHERE study_id = " +
+                        studyId + " AND (nick_name LIKE '%" + searchString + "%' OR id LIKE '%"
+                        + searchString + "%') ORDER BY nick_name ASC", new String[]{});
+
+        Bird birds[] = new Bird[cursor.getCount()];
+
+        int rowIndex = 0;
+        while(cursor.moveToNext()) {
+            birds[rowIndex] = new Bird(cursor.getInt(0), studyId, cursor.getString(1));
+            rowIndex++;
+        }
+
+        cursor.close();
+
+
+        return birds;
 
     }
 
@@ -353,7 +394,11 @@ class SQLDatabaseHelper extends SQLiteOpenHelper {
                             "PRIMARY KEY(timestamp, individual_id, study_id) );";
     private static final String SQL_CREATE_BIRDS =
                     "CREATE TABLE birds (" +
-                            "id INTEGER," +
+                            "comments VARCHAR, " +
+                            "death_comments VARCHAR, " +
+                            "id INTEGER, " +
+                            "study_id INTEGER, " +
+                            "nick_name VARCHAR, " +
                             "PRIMARY KEY(id) );";
 
     private static final String SQL_DELETE_STUDIES = "DROP TABLE studies";

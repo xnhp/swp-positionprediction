@@ -1,33 +1,31 @@
 package project.software.uni.positionprediction.datatype;
 
 /**
- * Created by simon on 29.05.18.
+ * Created by simon on 02.06.18.
  */
 
 public class Bird {
 
-    private int individualId;
+    private int id;
+    private String nickName;
     private int studyId;
 
-    private TrackingPoint[] trackingPoints;
-
-
-    public Bird(int studyId, int individualId, TrackingPoint[] trackingPoints){
+    public Bird(int id, int studyId, String nickName){
+        this.id = id;
         this.studyId = studyId;
-        this.individualId = individualId;
-        this.trackingPoints = trackingPoints;
+        this.nickName = nickName;
     }
 
-    public TrackingPoint[] getTrackingPoints(){
-        return trackingPoints;
-    }
-
-    public int getIndividualId(){
-        return individualId;
+    public int getId(){
+        return id;
     }
 
     public int getStudyId(){
         return studyId;
+    }
+
+    public String getNickName(){
+        return nickName;
     }
 
 }
