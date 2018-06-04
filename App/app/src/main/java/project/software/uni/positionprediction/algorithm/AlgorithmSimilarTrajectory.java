@@ -36,6 +36,8 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
 
         // Length of trajectory
         int traj_length = 5;
+        int pred_traj_length = 5;
+        double treshhold_direction = 0.5;
 
 
 
@@ -45,6 +47,7 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
         int size = data.length;
 
         double eps = 1E-5;
+        double gamma = 0.3;
 
         // Get the trajectory (list of angles) you want to compare other trajectories
         List<Number> angles = new LinkedList<Number>();
@@ -94,8 +97,64 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
 
         }
 
-        Debug d = new Debug();
-        d.print(possible_indices, "Indices");
+        // In der Nähe, größere Anzahl
+
+        // Zähle Vorkommen von Richtungen
+        int count_left = 0;
+        int count_right = 0;
+        int count_straight = 0;
+
+        for (int i = 0; i < possible_indices.size(); i++) {
+            // Get last two vectors of trajectories
+            int index_curr = (int) possible_indices.get(i);
+            int index_next = (int) possible_indices.get(i) - 1;
+            Location3D curr_loc = data[ index_curr ].getLocation().to3D();
+            Location3D pre_loc  = data[ index_next ].getLocation().to3D();
+
+            // Compute angle
+            double alpha = curr_loc.getAngle(pre_loc);
+
+            // Run through data point in every trajectory
+            for (int j = 0; j < pred_traj_length; j++) {
+                int index_curr_fut = index_curr + j;
+                int index_next_fut = index_curr + j + 1;
+                Location3D curr_loc_fut = data[ index_curr_fut ].getLocation().to3D();
+                Location3D next_loc_fut = data[ index_next_fut ].getLocation().to3D();
+                double beta = curr_loc_fut.getAngle(next_loc_fut);
+
+
+                //If beta in [a+gamma, a+Pi] then angle is left,
+                //if beta in [a-gamma, a-Pi] then angle is right,
+                //if beta in [a-gamma, a+gamma] then angle is straight
+                if ( beta > alpha + gamma && beta < alpha + Math.PI ) {
+                    count_left++;
+                } else if ( beta < alpha - gamma && beta > alpha - Math.PI) {
+                    count_right++;
+                } else if (beta <= alpha + gamma && beta >= alpha - gamma) {
+                    count_straight++;
+                }
+            }
+        }
+
+        int count_all = count_left + count_right + count_straight;
+        boolean more_computations_needed = true;
+        if (count_left / count_all >= treshhold_direction
+                || count_right / count_all >= treshhold_direction
+                || count_straight / count_all >= treshhold_direction) {
+            more_computations_needed = false;
+        }
+
+
+        if (more_computations_needed) {
+
+            
+
+
+
+
+        }
+
+
 
 
         // TODO What happens with the vectors
