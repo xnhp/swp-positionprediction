@@ -4,10 +4,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,9 +21,7 @@ import java.util.LinkedList;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.TestConnectionSQLAlgo;
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
@@ -147,7 +145,7 @@ public class BirdSelect extends AppCompatActivity {
             @Override
             public void run() {
 
-                // update the studies in the database2911059
+                // update the studies in the database
                 SQLDatabase.getInstance(birdSelect).updateStudiesSync();
 
                 SQLDatabase.getInstance(birdSelect).updateBirdDataSync(2911040, 2911059);
@@ -280,7 +278,7 @@ public class BirdSelect extends AppCompatActivity {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    birdSelected(birds[index]);
+                    onBirdSelected(birds[index]);
                 }
             });
 
@@ -290,7 +288,7 @@ public class BirdSelect extends AppCompatActivity {
         scrollViewLayout.invalidate();
     }
 
-    private void birdSelected(final Bird bird){
+    private void onBirdSelected(final Bird bird){
 
         final BirdSelect birdSelect = this;
 
