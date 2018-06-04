@@ -1,11 +1,10 @@
 package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import project.software.uni.positionprediction.R;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -14,6 +13,7 @@ import org.osmdroid.views.MapView;
 import java.util.Calendar;
 import java.util.Date;
 
+import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
@@ -21,7 +21,6 @@ import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
-import project.software.uni.positionprediction.util.InsufficientTrackingDataException;
 
 public class OSM extends AppCompatActivity {
 

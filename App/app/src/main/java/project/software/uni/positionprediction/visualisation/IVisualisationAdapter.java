@@ -1,5 +1,7 @@
 package project.software.uni.positionprediction.visualisation;
 
+import project.software.uni.positionprediction.osm.InvalidMapViewException;
+
 /**
  * Specifies the methods than need to be implemented in order to draw a visualisation.
  * This is implemented e.g. by OSMDroidVisualisationAdapter

@@ -14,7 +14,6 @@ import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
-import project.software.uni.positionprediction.util.InsufficientTrackingDataException;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
