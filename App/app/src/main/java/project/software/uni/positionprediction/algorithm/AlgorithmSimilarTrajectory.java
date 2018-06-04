@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import project.software.uni.positionprediction.datatype.AngleSteplength;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Debug;
 import project.software.uni.positionprediction.datatype.Location3D;
@@ -97,67 +98,38 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
 
         }
 
-        // In der Nähe, größere Anzahl
-
-        // Zähle Vorkommen von Richtungen
-        int count_left = 0;
-        int count_right = 0;
-        int count_straight = 0;
-
+        LinkedList<LinkedList<AngleSteplength>> trajectories = new LinkedList<>();
         for (int i = 0; i < possible_indices.size(); i++) {
             // Get last two vectors of trajectories
-            int index_curr = (int) possible_indices.get(i);
-            int index_next = (int) possible_indices.get(i) - 1;
-            Location3D curr_loc = data[ index_curr ].getLocation().to3D();
-            Location3D pre_loc  = data[ index_next ].getLocation().to3D();
+            int index_last_known = (int) possible_indices.get(i);
+            Location3D curr_known = data[ index_last_known ].getLocation().to3D();
 
-            // Compute angle
-            double alpha = curr_loc.getAngle(pre_loc);
+            LinkedList<AngleSteplength> possible_trajectory = new LinkedList<>();
 
-            // Run through data point in every trajectory
+            // Run through data point after every trajectory
             for (int j = 0; j < pred_traj_length; j++) {
-                int index_curr_fut = index_curr + j;
-                int index_next_fut = index_curr + j + 1;
-                Location3D curr_loc_fut = data[ index_curr_fut ].getLocation().to3D();
-                Location3D next_loc_fut = data[ index_next_fut ].getLocation().to3D();
-                double beta = curr_loc_fut.getAngle(next_loc_fut);
 
+                // Get two locations
+                int index_curr = index_last_known + j;
+                int index_next = index_last_known + j + 1;
+                Location3D curr = data[ index_curr ].getLocation().to3D();
+                Location3D next = data[ index_next ].getLocation().to3D();
 
-                //If beta in [a+gamma, a+Pi] then angle is left,
-                //if beta in [a-gamma, a-Pi] then angle is right,
-                //if beta in [a-gamma, a+gamma] then angle is straight
-                if ( beta > alpha + gamma && beta < alpha + Math.PI ) {
-                    count_left++;
-                } else if ( beta < alpha - gamma && beta > alpha - Math.PI) {
-                    count_right++;
-                } else if (beta <= alpha + gamma && beta >= alpha - gamma) {
-                    count_straight++;
-                }
+                // Get angle and steplength and put them into list
+                double angle = curr.getAngle(next);
+                double steplength = next.subtract(curr).abs();
+                AngleSteplength elem = new AngleSteplength(angle, steplength);
+                possible_trajectory.add(elem);
+
             }
-        }
 
-        int count_all = count_left + count_right + count_straight;
-        boolean more_computations_needed = true;
-        if (count_left / count_all >= treshhold_direction
-                || count_right / count_all >= treshhold_direction
-                || count_straight / count_all >= treshhold_direction) {
-            more_computations_needed = false;
+            trajectories.add(possible_trajectory);
         }
 
 
-        if (more_computations_needed) {
-
-            
+        
 
 
-
-
-        }
-
-
-
-
-        // TODO What happens with the vectors
 
         return null;
     }

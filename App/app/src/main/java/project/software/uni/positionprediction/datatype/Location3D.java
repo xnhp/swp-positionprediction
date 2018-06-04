@@ -151,6 +151,7 @@ public class Location3D {
         return Math.sqrt(a1+a2+a3);
     }
 
+
     /**
      * Print method for Location3D
      */
