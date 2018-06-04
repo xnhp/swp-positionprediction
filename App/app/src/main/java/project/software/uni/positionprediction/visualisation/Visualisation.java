@@ -10,5 +10,6 @@ package project.software.uni.positionprediction.visualisation;
 public class Visualisation {
 
     // for identifying the subtype of visualisation when drawing
-    public VisualisationKinds kind;
+    // todo: necessary?
+    // public VisualisationKinds kind;
 }

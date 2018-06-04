@@ -1,10 +1,17 @@
 package project.software.uni.positionprediction.datatype;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
- * Created by simon on 02.06.18.
+ * Only contains superficial information for working with Birds in the program.
+ * Actual tracking data is stored in the database
  */
 
-public class Bird {
+// TODO "Parcelable" might be better?
+// cf http://sohailaziz05.blogspot.com/2012/04/passing-custom-objects-between-android.html
+public class Bird implements Serializable {
 
     private int id;
     private String nickName;

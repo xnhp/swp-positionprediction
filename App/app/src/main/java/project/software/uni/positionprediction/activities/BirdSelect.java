@@ -292,22 +292,26 @@ public class BirdSelect extends AppCompatActivity {
 
         final BirdSelect birdSelect = this;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        Intent showOn2DMap = new Intent(this, OSM.class);
+        showOn2DMap.putExtra("bird", bird);
+        startActivity(showOn2DMap);
 
-                SQLDatabase.getInstance(birdSelect).updateBirdData(bird.getStudyId(), bird.getId());
-
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlgorithmExtrapolationExtended algo = new AlgorithmExtrapolationExtended(birdSelect);
-                        LinkedList<Location3D> list = algo.predict(null, null, bird.getStudyId(), bird.getId());
-                        Log.e("Result", ""+ list.get(0).getLoc_long() );
-                    }
-                });
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                SQLDatabase.getInstance(birdSelect).updateBirdData(bird.getStudyId(), bird.getId());
+//
+//                new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                        AlgorithmExtrapolationExtended algo = new AlgorithmExtrapolationExtended(birdSelect);
+////                        LinkedList<Location3D> list = algo.predict(null, null, bird.getStudyId(), bird.getId());
+////                        Log.e("Result", ""+ list.get(0).getLoc_long() );
+//                    }
+//                });
+//            }
+//        }).start();
 
     }
 

@@ -1,24 +1,20 @@
 package project.software.uni.positionprediction.algorithm;
 
-import android.content.Context;
-import android.util.Log;
-
-import java.util.Date;
 import java.util.LinkedList;
 
-import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location3D;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
-import project.software.uni.positionprediction.movebank.SQLDatabase;
 
 public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgorithm {
 
     private final int weight_max = 100;
-    private Context context;
 
-    public AlgorithmExtrapolationExtended ( Context context ) {
-        this.context = context;
+    // Algorithm objects are singletons because you cannot declare static methods in an interface.
+    // TODO: maybe abstract classes would be better after all?
+    private static AlgorithmExtrapolationExtended instance;
+    public static SingleTrajPredictionAlgorithm getInstance() {
+        if (instance == null) instance = new AlgorithmExtrapolationExtended();
+        return instance;
     }
 
 
@@ -27,41 +23,14 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
      * Compute the difference between two successive data points and take the average of them.
      * By adding the average to the last data point we get a very simple prediction algorithm
      *
-     * @param date_past
-     * @param date_pred
-     * @param study_id
-     * @param bird_id
-     * @return
+     * TODO javadoc
      */
     @Override
-    public LinkedList<Location3D> predict(Date date_past, Date date_pred, int study_id, int bird_id) {
-
-        // Still hardcoded
-        int pastDataPoints = 10; // Use last 10 data points
-
-
-
-
-        // Fetch data from database
-        SQLDatabase db = SQLDatabase.getInstance(context);
-        BirdData birddata = db.getBirdData(study_id, bird_id);
-        TrackingPoint data[] = birddata.getTrackingPoints();
-
-        // Check data
-        if (data.length == 0) {
-            Log.e("Error", "Size of data is 0");
-            return null;
-        }
-
-        // Use only needed data
-        Location3D loc_data[] = new Location3D[pastDataPoints];
-        int size = data.length;
-        for (int i = 0; i < pastDataPoints; i++) {
-            loc_data[i] = data[size - 1 - pastDataPoints + i].getLocation().to3D();
-        }
-
+    public LinkedList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data) {
+        // TODO determine pastDataPoints from params.past_date
+        int pastDataPoints = 10;
         // Compute prediction
-        LinkedList<Location3D> prediction = next_Location(loc_data, pastDataPoints);
+        LinkedList<Location3D> prediction = next_Location(data.pastTracks, pastDataPoints);
         return prediction;
     }
 
@@ -133,4 +102,5 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
 
         return new Location3D(res_long, res_lat, res_height);
     }
+
 }

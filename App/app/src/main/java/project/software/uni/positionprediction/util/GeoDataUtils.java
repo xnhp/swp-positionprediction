@@ -40,7 +40,7 @@ public abstract class GeoDataUtils {
      * @param points
      * @return
      */
-    public static List<GeoPoint> ListLocationToGeoPoint(ArrayList<Location3D> points) {
+    public static List<GeoPoint> ListLocationToGeoPoint(List<Location3D> points) {
         List<GeoPoint> newPoints = new ArrayList<>();
         for (Location3D loc : points) {
             newPoints.add(new GeoPoint(loc.getLoc_lat(), loc.getLoc_long()));
