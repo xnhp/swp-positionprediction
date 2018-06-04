@@ -12,9 +12,21 @@
 
     <string name="dialog_map_download_complete">Download fertiggestellt</string>
 
+
+    <string name="alert_ok">OK</string>
+
     // Navbar
 
     <string name="navigation_button_settings_text">S</string>
+
+    // Login Activity
+    <string name="login_button_login_text">Login</string>
+    <string name="login_lable_username_text">Username:</string>
+    <string name="login_lable_password_text">Password:</string>
+
+    <string name="login_failed_text">Error. Try again later</string>
+    <string name="login_field_missing">Insert Username and Password</string>
+    <string name="login_wrong_creds_warning">Error: wrong Username or Password</string>
 
     // Cesium Activity
 
@@ -31,5 +43,7 @@
     // OSM Activity
 
     <string name="map_button_download_text">DL</string>
+
+
 
 </resources>

@@ -9,6 +9,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -44,8 +45,6 @@ public class MovebankRequest {
         this.context = context;
 
         this.baseUrl = baseUrl;
-        this.password = context.getResources().getString(R.string.movebank_password);
-        this.username = context.getResources().getString(R.string.movebank_user);
 
         this.statusMap = new HashMap<Integer, Integer>();
     }
@@ -56,8 +55,6 @@ public class MovebankRequest {
 
 
         this.baseUrl = context.getResources().getString(R.string.movebank_base_url);
-        this.password = context.getResources().getString(R.string.movebank_password);
-        this.username = context.getResources().getString(R.string.movebank_user);
 
         this.statusMap = new HashMap<Integer, Integer>();
 
@@ -118,7 +115,16 @@ public class MovebankRequest {
 
         } catch (InterruptedException | TimeoutException | ExecutionException e) {
             System.out.println(e.toString());
-            request.setResponseStatus(-1);
+
+            if(e.getCause() instanceof VolleyError) {
+
+                VolleyError err = (VolleyError) e.getCause();
+                request.setResponseStatus(err.networkResponse.statusCode);
+
+            } else {
+                request.setResponseStatus(-1);
+            }
+
             return request;
         }
     }
@@ -135,19 +141,6 @@ public class MovebankRequest {
     public void setUserCreds(String username, String password){
         this.username=username;
         this.password=password;
-    }
-
-
-    // TODO: Can just check for HTTP Status Code here?
-    public boolean isUserCredsValid(){
-
-        String typeAttr = "attributes";
-
-        String result = requestDataSync(typeAttr).getResponse();
-
-        //TODO check result
-
-        return result=="";
     }
 
     /**

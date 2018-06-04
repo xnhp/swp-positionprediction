@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.Date;
 import java.util.Locale;
 
+import project.software.uni.positionprediction.datatype.HttpStatusCode;
 import project.software.uni.positionprediction.datatype.Request;
 
 /**
@@ -167,21 +168,24 @@ public class MovebankConnector {
     }
 
 
-    /*public boolean changeUser(String username, String password){
-        //TODO attributes,
+    public Request checkUser(String username, String password){
+
         String usernameOld = movebankRequest.getUsername();
         String passwordOld = movebankRequest.getPassword();
 
         movebankRequest.setUserCreds(username, password);
 
-        boolean isValid = movebankRequest.isUserCredsValid();
+        boolean isValid = false;
 
-        if(!isValid){
-            movebankRequest.setUserCreds(usernameOld, passwordOld);
+        Request request = getStudiesSync();
+        if(request.getResponseStatus() == HttpStatusCode.OK){
+            isValid = true;
         }
 
-        return isValid;
-    }*/
+        movebankRequest.setUserCreds(usernameOld, passwordOld);
+
+        return request;
+    }
 
     /**
      * Formats a string with explicit US locale.
@@ -192,6 +196,10 @@ public class MovebankConnector {
      */
     private String format(String fmt, Object... params) {
         return String.format(Locale.US, fmt, params);
+    }
+
+    public void setLogin(String username, String password){
+        movebankRequest.setUserCreds(username, password);
     }
 
 

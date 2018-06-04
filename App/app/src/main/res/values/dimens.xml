@@ -5,6 +5,12 @@
 
     <dimen name="cesium_settings_button_width_hight">50dp</dimen>
 
+    // Login Activity
+
+    <dimen name="login_button_login_margin">10dp</dimen>
+    <dimen name="login_margin_side">30dp</dimen>
+    <dimen name="login_distance_user_password">10dp</dimen>
+
 
     // Settings Activity
     <dimen name="settings_settings_margin">20dp</dimen>
