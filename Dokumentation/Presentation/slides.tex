@@ -1,0 +1,44 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc} 
+
+\usepackage{textcomp}
+
+\usepackage{caption}
+
+\usepackage{anyfontsize}
+
+\usepackage[font=itshape]{quoting}
+\quotingsetup{vskip=4pt} % vertical spacing of quotes
+
+
+
+\usecolortheme{beaver} % red/gray colour theme, cf https://www.hartwork.org/beamer-theme-matrix/
+
+\title[] {J. S. Bachs "Musikalisches Opfer"}
+\date{} % no date
+
+% empty to have to numbering of split-up frames from allowframebreaks
+% cf http://tex.stackexchange.com/questions/193308/how-can-we-change-allowframebreaks-numbering-in-the-title#212292
+\setbeamertemplate{frametitle continuation}{}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+	\frametitle{Zur Person}
+    % the "c" option specifies center vertical alignment, T is top vertical align
+    \begin{columns}[T] 
+	    % column designated by a command
+	    \column{.5\textwidth}
+	    \column{.5\textwidth}
+	    \vspace{2cm}
+	    \textbf{Johann Sebastian Bach} \\
+	    \textborn \hspace{0.3em} 31. März 1685 in Eisenach \\
+	    \textdagger \hspace{0.3em} 28. Juli 1750 in Leipzig
+    \end{columns}
+\end{frame}
+
+
+\end{document}
