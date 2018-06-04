@@ -1,73 +1,124 @@
 package project.software.uni.positionprediction.movebank;
 
+import project.software.uni.positionprediction.R;
 
+import android.content.Context;
 import android.util.Base64;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import project.software.uni.positionprediction.activities.BirdSelect;
 
 
 public class MovebankRequest {
 
-    private static final String BASE_URL = "https://www.movebank.org/movebank/service/direct-read?";
+    // TODO: put this in a configuration file
+    private String username = null;
+    private String password = null;
 
-    private String username = "SP_1-2";
-    private String password = "Xamhdg9adB";
+    private String baseUrl = null;
+    private Context context = null;
+
+    private RequestQueue queue = null;
+
+    private static Map<Integer, Integer> statusMap;
+    private int currentRequestCode;
+
+    /**
+     * If passed a baseUrl, context use that. If not, use the hardcoded one.
+     * This is to enable sending requests to localhost, in order to mock a stub http host
+     * that sends "fake" replies for testing.
+     * @param baseUrl The base URL to send the API requests to.
+     */
+    public MovebankRequest(String baseUrl, Context context) {
+
+        this.context = context;
+        this.queue = Volley.newRequestQueue(this.context);
+
+        this.baseUrl = baseUrl;
+        this.password = context.getResources().getString(R.string.movebank_password);
+        this.username = context.getResources().getString(R.string.movebank_user);
+
+        this.statusMap = new HashMap<Integer, Integer>();
+    }
+
+    public MovebankRequest(Context context) {
+
+        this.context = context;
+        this.queue = Volley.newRequestQueue(this.context);
 
 
+        this.baseUrl = context.getResources().getString(R.string.movebank_base_url);
+        this.password = context.getResources().getString(R.string.movebank_password);
+        this.username = context.getResources().getString(R.string.movebank_user);
 
+        this.statusMap = new HashMap<Integer, Integer>();
 
-    public String requestData(String attributes){
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(BirdSelect.getAppContext());
+    }
 
-        String url = BASE_URL+attributes;
+    /**
+     * Sends a request to the Movebank API for the specified attributes
+     * @param attributes URL-encoded string of attributes that are requested.
+     */
+    public void requestDataAsync( String attributes,
+                                  RequestHandler requestHandler){
+
+        String url = baseUrl+attributes;
         // Request a string response from the provided URL.
+        System.out.println("sending string request to " + url);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener <String> () {
-                    @Override
-                    public void onResponse(String response)
-                    {
-                        //TODO: handle response
-                        System.out.println(response);
-                    }
-                },
+        project.software.uni.positionprediction.datatype.Request request =
+                new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
 
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // log and show error message with error code;
-                    }
+        requestHandler.setRequest(request);
 
-                })
-
-        {
-            @Override
-            public Map <String, String> getHeaders() {
-                HashMap< String, String > headers = new HashMap <> ();
-                String creds = String.format("%s:%s",username,password);
-                String encodedCredentials = Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-                headers.put("Authorization", "Basic " + encodedCredentials);
-
-                return headers;
-            }
-        };
-
+        StringRequest stringRequest = createStringRequest(request, url, requestHandler, requestHandler);
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
 
-        //TODO fix return
-        return "";
+    /**
+     * Sends a request to the Movebank API and waits for the response
+     * This Method must never be called from the main thread.
+     * @param attributes URL-encoded string of attributes that are requested.
+     */
+    public project.software.uni.positionprediction.datatype.Request requestDataSync(String attributes){
+
+        RequestFuture<String> requestFuture = RequestFuture.newFuture();
+
+        String url = baseUrl+attributes;
+
+        // Request a string response from the provided URL.
+        System.out.println("sending string request to " + url);
+
+        project.software.uni.positionprediction.datatype.Request request =
+                new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
+
+        StringRequest stringRequest = createStringRequest(request, url, requestFuture, requestFuture);
+
+        // Add the request to the RequestQueue.
+        requestFuture.setRequest(queue.add(stringRequest));
+
+        try{
+            String response = requestFuture.get(10, TimeUnit.SECONDS);
+            request.setResponseStatus(statusMap.remove(new Integer(request.getId())));
+            request.setResponse(response);
+            return request;
+
+        } catch (InterruptedException | TimeoutException | ExecutionException e) {
+            return null;
+        }
     }
 
 
@@ -84,13 +135,75 @@ public class MovebankRequest {
         this.password=password;
     }
 
+
+    // TODO: Can just check for HTTP Status Code here?
     public boolean isUserCredsValid(){
 
         String typeAttr = "attributes";
 
-        String result = requestData(typeAttr);
+        String result = requestDataSync(typeAttr).getResponse();
+
         //TODO check result
+
         return result=="";
+    }
+
+    /**
+     * This Method return the status Code for the given Request
+     * @param request the Request to return the HttpStatusCode for
+     * @return the HttpStatusCode as int
+     */
+    public static int getStatusForRequest(project.software.uni.positionprediction.datatype.Request request){
+        return statusMap.remove(request.getId());
+    }
+
+
+    /**
+     * This Method returns Thread-Save a unique Code for the next Request
+     * @return Code for the Request
+     */
+    private synchronized int getNextRequestCode(){
+        return currentRequestCode++;
+    }
+
+
+    /**
+     * This Method creates a StringRequest with the required headers
+     * @param request a Request object
+     * @param url the url to send the Request to
+     * @param responseListener the responseListener
+     * @param errorListener the errorListener
+     * @return a StringRequest
+     */
+    private StringRequest createStringRequest(final project.software.uni.positionprediction.datatype.Request request,
+                                              String url,
+                                              Response.Listener<String> responseListener,
+                                              Response.ErrorListener errorListener){
+
+        return new StringRequest(Request.Method.GET, url,
+                responseListener,
+                errorListener
+        )
+
+        {
+            @Override
+            public Map <String, String> getHeaders() {
+                HashMap< String, String > headers = new HashMap <> ();
+                String creds = String.format("%s:%s",username,password);
+                String encodedCredentials = Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                headers.put("Authorization", "Basic " + encodedCredentials);
+
+                return headers;
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                statusMap.put(new Integer(request.getId()), new Integer(response.statusCode));
+
+                return super.parseNetworkResponse(response);
+            }
+        };
+
     }
 
 }

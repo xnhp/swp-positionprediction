@@ -1,0 +1,3 @@
+[submodule "App/webserver"]
+	path = App/webserver
+	url = git@git.uni-konstanz.de:moritz-bock/androidWebServer.git

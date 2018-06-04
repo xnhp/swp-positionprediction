@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="movebank_base_url">https://www.movebank.org/movebank/service/direct-read?</string>
+    <string name="movebank_user">SP_1-2</string>
+    <string name="movebank_password">Xamhdg9adB</string>
+
+</resources>
