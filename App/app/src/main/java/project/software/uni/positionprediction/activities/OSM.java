@@ -7,17 +7,19 @@ import android.view.View;
 import android.widget.Button;
 import project.software.uni.positionprediction.R;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import java.util.ArrayList;
+import java.util.Date;
 
-import project.software.uni.positionprediction.datatype.Location2D;
+import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithm.PredictionParameters;
+import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
+import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 public class OSM extends AppCompatActivity {
 
@@ -32,15 +34,14 @@ public class OSM extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final OSM osm = this;
 
+        // TODO: put this in own method
         // note: the actions in the OSMDroidMap constructor have to happen *before*
         // setContentView is called.
         mymap = new OSMDroidMap(this);
 
         setContentView(R.layout.activity_osm);
 
-        buttonSettings = findViewById(R.id.navigation_button_settings);
-        buttonDownload = findViewById(R.id.map_download_button);
-        //buttonPanTo    = findViewById(R.id.map_panto_button);
+
 
         MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
@@ -48,34 +49,54 @@ public class OSM extends AppCompatActivity {
 
 
 
-        ArrayList<IGeoPoint> testPosGp = new ArrayList<>();
+       /* ArrayList<IGeoPoint> testPosGp = new ArrayList<>();
         testPosGp.add(new GeoPoint(47.680503, 9.177198));
         testPosGp.add(new GeoPoint(47.679463, 9.179558));
         testPosGp.add(new GeoPoint(47.678871, 9.181532));
-
+*/
         // mymap.drawTracks(testPosGp, "#ff0077", "#00ff88");
 
 
-
-        ArrayList<Location2D> testPosLoc = new ArrayList<>();
-        testPosLoc.add(new Location2D(47.680503, 9.177198));
-        testPosLoc.add(new Location2D(47.679463, 9.179558));
-        testPosLoc.add(new Location2D(47.678871, 9.181532));
-        // we would receive a visualisation object as output from a prediction algorithm
-        SingleTrajectoryVis myVis = new SingleTrajectoryVis();
-        myVis.traj = testPosGp;
-        myVis.pointColor = "#ff0077"; // pink
-        myVis.lineColor = "#00ff88";  // bright green
+        Bird myBird = new Bird(42,17, "Zwitschi"); // TODO tmp
+        showVis(myBird); // TODO tmp
 
 
+        buttonSettings = findViewById(R.id.navigation_button_settings);
+        buttonDownload = findViewById(R.id.map_download_button);
+        //buttonPanTo    = findViewById(R.id.map_panto_button);
+        registerEventHandlers(osm);
+    }
+
+
+
+    private void showVis(Bird bird) {
         // obtain an adapter
         OSMDroidVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter();
         // set the map for the adapter
         myVisAdap.linkMap(mymap);
+
         // have it draw the visualisation
-        myVisAdap.visualiseSingleTraj(myVis);
+        // TODO: the info that it is a single traj will come in dynamically, not
+        // via the method name, because:
+        // the kind of prediction algorithm used also is flexible and will be determined in
+        // the Activity (or above)
+        // (I am making the assumption that an algorithm only has one specific fitting Visualisation)
+        SingleTrajPredictionAlgorithm algorithm = AlgorithmExtrapolationExtended.getInstance();
+        PredictionWorkflowController.doSingleTrajPrediction(
+                myVisAdap,
+                algorithm,
+                new PredictionParameters(
+                        new Date("today"),
+                        new Date("another time"),
+                        bird
+                )
+        );
+    }
 
 
+
+
+    private void registerEventHandlers(final OSM osm) {
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,9 +113,6 @@ public class OSM extends AppCompatActivity {
                 mymap.saveAreaToCache(subafrica, 5,7);
             }
         });
-
-
-
     }
 
     public void onResume(){

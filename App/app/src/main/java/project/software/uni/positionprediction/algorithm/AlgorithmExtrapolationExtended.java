@@ -1,15 +1,23 @@
 package project.software.uni.positionprediction.algorithm;
 
-import android.location.Location;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import project.software.uni.positionprediction.datatype.Location3D;
-import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
+import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 
-public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
+public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgorithm {
 
+    private static AlgorithmExtrapolationExtended instance;
     private final int weight_max = 100;
+
+    public static SingleTrajPredictionAlgorithm getInstance() {
+        if (instance == null) {
+            instance = new AlgorithmExtrapolationExtended();
+        }
+        return instance;
+    }
 
     /**
      * Main idea:
@@ -22,7 +30,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
      * @return
      */
     @Override
-    public Location3D predict(Date date_past, Date date_pred, int bird_id) {
+    public List<Location3D> predict(Date date_past, Date date_pred, int bird_id) {
 
         // Hardcoded
         double loc_long[] = {
@@ -59,7 +67,10 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         }
 
         // Compute prediction
-        Location3D prediction = next_Location(geo, constant);
+        Location3D predictionPoint = next_Location(geo, constant);
+
+        List<Location3D> prediction = new ArrayList<>();
+        prediction.add(predictionPoint);
         return prediction;
     }
 
