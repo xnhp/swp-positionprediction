@@ -21,9 +21,7 @@ import java.util.LinkedList;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.TestConnectionSQLAlgo;
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
