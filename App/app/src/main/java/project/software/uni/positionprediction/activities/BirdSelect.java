@@ -17,10 +17,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.LinkedList;
+
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithm.TestConnectionSQLAlgo;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.BirdData;
+import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.PermissionManager;
@@ -299,8 +303,9 @@ public class BirdSelect extends AppCompatActivity {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        TestConnectionSQLAlgo algo = new TestConnectionSQLAlgo(birdSelect);
-                        algo.predict(null, null, bird.getStudyId(), bird.getId());
+                        AlgorithmExtrapolationExtended algo = new AlgorithmExtrapolationExtended(birdSelect);
+                        LinkedList<Location3D> list = algo.predict(null, null, bird.getStudyId(), bird.getId());
+                        Log.e("Result", ""+ list.get(0).getLoc_long() );
                     }
                 });
             }
