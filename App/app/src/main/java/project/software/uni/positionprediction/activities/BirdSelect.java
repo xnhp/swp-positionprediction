@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithm.TestConnectionSQLAlgo;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Study;
@@ -157,8 +158,6 @@ public class BirdSelect extends AppCompatActivity {
                     }
                 });
 
-                BirdData birdData = SQLDatabase.getInstance(birdSelect).getBirdData(2911040, 2911059);
-
             }
         }).start();
 
@@ -241,7 +240,7 @@ public class BirdSelect extends AppCompatActivity {
             @Override
             public void run() {
 
-                SQLDatabase.getInstance(birdSelect).updateBirds(study.id);
+                SQLDatabase.getInstance(birdSelect).updateBirdsSync(study.id);
                 final Bird birds[] = SQLDatabase.getInstance(birdSelect).getBirds(study.id);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -254,10 +253,10 @@ public class BirdSelect extends AppCompatActivity {
                     }
                 });
             }
-        }).run();
+        }).start();
     }
 
-    public void fillBirdsList(Bird birds[]){
+    public void fillBirdsList(final Bird birds[]){
 
         scrollViewLayout.removeAllViews();
 
@@ -273,12 +272,40 @@ public class BirdSelect extends AppCompatActivity {
 
             final int index = i;
 
-            // TODO: add click listener that opens the map for the selected bird
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    birdSelected(birds[index]);
+                }
+            });
 
             scrollViewLayout.addView(textView);
         }
 
         scrollViewLayout.invalidate();
+    }
+
+    private void birdSelected(final Bird bird){
+
+        final BirdSelect birdSelect = this;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                SQLDatabase.getInstance(birdSelect).updateBirdData(bird.getStudyId(), bird.getId());
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        TestConnectionSQLAlgo algo = new TestConnectionSQLAlgo(birdSelect);
+                        algo.predict(null, null, bird.getStudyId(), bird.getId());
+                    }
+                });
+            }
+        }).start();
+
     }
 
     public static Context getAppContext() {

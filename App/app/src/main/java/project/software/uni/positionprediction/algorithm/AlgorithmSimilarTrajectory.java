@@ -13,7 +13,7 @@ import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
 
     @Override
-    public Location3D predict(Date date_past, Date date_pred, int bird_id) {
+    public Location3D predict(Date date_past, Date date_pred, int study_id, int bird_id) {
 
 
         // Hardcoded
