@@ -1,12 +1,12 @@
 package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedList;
 
 import project.software.uni.positionprediction.datatype.Location3D;
 
 /**
- * Interface for an algorithm that predicts a single trajectory.
+ * General Interface for using a prediction algorithm
  */
 public interface SingleTrajPredictionAlgorithm {
 
@@ -26,7 +26,7 @@ public interface SingleTrajPredictionAlgorithm {
      * @return
      */
     // Todo: Output
-    List<Location3D> predict(Date date_past, Date date_pred, int bird_id);
+    LinkedList<Location3D> predict(Date date_past, Date date_pred, int study_id, int bird_id);
 
 
 }

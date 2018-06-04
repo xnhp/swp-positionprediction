@@ -15,6 +15,14 @@ public class Debug {
 
     // Methods
 
+    public void print(TrackingPoint data[]) {
+        for (int i = 0; i<data.length; i++) {
+            data[i].getLocation().print();
+        }
+    }
+
+
+
 
     public void print(List<Number> list, String name) {
         int s  = list.size();

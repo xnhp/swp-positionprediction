@@ -30,8 +30,6 @@ public class MovebankRequest {
     private String baseUrl = null;
     private Context context = null;
 
-    private RequestQueue queue = null;
-
     private static Map<Integer, Integer> statusMap;
     private int currentRequestCode;
 
@@ -44,7 +42,6 @@ public class MovebankRequest {
     public MovebankRequest(String baseUrl, Context context) {
 
         this.context = context;
-        this.queue = Volley.newRequestQueue(this.context);
 
         this.baseUrl = baseUrl;
         this.password = context.getResources().getString(R.string.movebank_password);
@@ -56,7 +53,6 @@ public class MovebankRequest {
     public MovebankRequest(Context context) {
 
         this.context = context;
-        this.queue = Volley.newRequestQueue(this.context);
 
 
         this.baseUrl = context.getResources().getString(R.string.movebank_base_url);
@@ -73,6 +69,8 @@ public class MovebankRequest {
      */
     public void requestDataAsync( String attributes,
                                   RequestHandler requestHandler){
+
+        RequestQueue queue = Volley.newRequestQueue(context);
 
         String url = baseUrl+attributes;
         // Request a string response from the provided URL.
@@ -94,6 +92,8 @@ public class MovebankRequest {
      * @param attributes URL-encoded string of attributes that are requested.
      */
     public project.software.uni.positionprediction.datatype.Request requestDataSync(String attributes){
+
+        RequestQueue queue = Volley.newRequestQueue(context);
 
         RequestFuture<String> requestFuture = RequestFuture.newFuture();
 
@@ -117,7 +117,9 @@ public class MovebankRequest {
             return request;
 
         } catch (InterruptedException | TimeoutException | ExecutionException e) {
-            return null;
+            System.out.println(e.toString());
+            request.setResponseStatus(-1);
+            return request;
         }
     }
 

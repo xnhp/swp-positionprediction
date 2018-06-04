@@ -177,6 +177,8 @@ public class SQLDatabase {
      */
     private void insertBirdData(int studyId, int indivId, String response) {
 
+        if(response.contains("no data available")) return;
+
         String data[][] = CSVParser.parseColumnsRows(response);
         String table[][] = CSVParser.getColumns(data, new String[]{"timestamp", "location_long", "location_lat", "individual_id", "tag_id"});
 
@@ -189,8 +191,8 @@ public class SQLDatabase {
                             + (table[0][i].equals("") ? "NULL" : "'" + table[0][i] + "'") + ", "
                             + table[1][i] + ", "
                             + table[2][i] + ", "
-                            + (table[3][i].equals("") ? "NULL" : table[3][i]) + ", "
-                            + table[4][i] + ", "
+                            + (table[4][i].equals("") ? "NULL" : table[4][i]) + ", "
+                            + table[3][i] + ", "
                             + studyId + ")");
                 }
             }
@@ -224,8 +226,6 @@ public class SQLDatabase {
     }
 
     private void insertBirds(int studyId, String response){
-
-        Log.e("response", response);
 
         if(response.contains("The requested download may contain copyrighted material.")
                 || response.contains("No data are available for download")) return;
@@ -304,13 +304,15 @@ public class SQLDatabase {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT timestamp, location_long, location_lat, tag_id, " +
-                "individual_id, study_id FROM trackpoints WHERE study_id = " + studyId +
-                " AND individual_id = " + indivId + " ORDER BY timestamp DESC", new String[]{});
+                "individual_id, study_id FROM trackpoints " +
+                "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
+                " ORDER BY timestamp DESC", new String[]{});
 
         TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
+            Log.e("SQL", ""+cursor.getInt(4));
             points[rowIndex] = new TrackingPoint(
                     new Location2D(cursor.getDouble(1), cursor.getDouble(2)),
                     new Date(cursor.getLong(0)*1000));

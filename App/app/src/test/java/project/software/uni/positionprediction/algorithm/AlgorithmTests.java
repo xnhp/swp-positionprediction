@@ -14,10 +14,11 @@ public class AlgorithmTests {
 
     private double delta = 0.000001;
 
+
     @Test
     public void run() throws Exception {
         AlgorithmSimilarTrajectory alg = new AlgorithmSimilarTrajectory();
-        alg.predict(null, null, 0);
+        alg.predict(null, null, 0, 0);
         assertEquals(0,0);
     }
 
