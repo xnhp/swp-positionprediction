@@ -7,7 +7,6 @@ import java.util.List;
 
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation.InvalidMapViewException;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 /**
