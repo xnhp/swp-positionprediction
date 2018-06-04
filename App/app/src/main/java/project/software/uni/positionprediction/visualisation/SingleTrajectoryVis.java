@@ -1,16 +1,24 @@
 package project.software.uni.positionprediction.visualisation;
 
-import project.software.uni.positionprediction.datatype.Locations2D;
 
-/* a single trajectory merely consists of a series of points */
+
+import org.osmdroid.api.IGeoPoint;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import project.software.uni.positionprediction.datatype.Location3D;
+
 public class SingleTrajectoryVis extends Visualisation {
+    /* a single trajectory merely consists of a series of points */
+    public List<Location3D> traj;
 
-        // Graphic attributes
-        public String lineColor = "red";
-        public String pointColor = "red";
-        public int pointRadius = 15;
+    public String pointColor;
+    public String lineColor;
 
-        // Constructor
-        public SingleTrajectoryVis(Locations2D locations) {super(locations);}
-
+    public SingleTrajectoryVis() {
+        // TODO: is this necessary?
+        // instanceof?
+        // this.kind = VisualisationKinds.SINGLE_TRAJ;
+    }
 }

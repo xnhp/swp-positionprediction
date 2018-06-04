@@ -1,8 +1,5 @@
 package project.software.uni.positionprediction.visualisation;
 
-
-import project.software.uni.positionprediction.datatype.Locations2D;
-
 /**
  * This class represents an abstract "visualisation" of a prediction result.
  * Image it saying "a point here"/"a box there".
@@ -12,12 +9,7 @@ import project.software.uni.positionprediction.datatype.Locations2D;
  */
 public class Visualisation {
 
-    // Data
-    public Locations2D locations;
-
-    // Constructor
-    public Visualisation(Locations2D locations){
-        this.locations = locations;
-    }
-
+    // for identifying the subtype of visualisation when drawing
+    // todo: necessary?
+    // public VisualisationKinds kind;
 }
