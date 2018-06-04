@@ -25,7 +25,7 @@ public interface PredictionAlgorithm {
      * @return
      */
     // Todo: Output
-    Location3D predict_interpolation(Date date_past, Date date_pred, int bird_id);
+    Location3D predict(Date date_past, Date date_pred, int bird_id);
 
 
 }

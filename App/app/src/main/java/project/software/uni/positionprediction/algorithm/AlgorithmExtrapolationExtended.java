@@ -22,7 +22,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
      * @return
      */
     @Override
-    public Location3D predict_interpolation(Date date_past, Date date_pred, int bird_id) {
+    public Location3D predict(Date date_past, Date date_pred, int bird_id) {
 
         // Hardcoded
         double loc_long[] = {

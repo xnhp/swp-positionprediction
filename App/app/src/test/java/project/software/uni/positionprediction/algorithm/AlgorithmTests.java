@@ -1,14 +1,6 @@
 package project.software.uni.positionprediction.algorithm;
 
-import android.content.Context;
-import android.location.Location;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-
 import project.software.uni.positionprediction.datatype.Location3D;
 
 import static org.junit.Assert.assertEquals;
@@ -18,10 +10,17 @@ import static org.junit.Assert.assertEquals;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-@RunWith(AndroidJUnit4.class)
 public class AlgorithmTests {
 
     private double delta = 0.000001;
+
+    @Test
+    public void run() throws Exception {
+        AlgorithmSimilarTrajectory alg = new AlgorithmSimilarTrajectory();
+        alg.predict(null, null, 0);
+        assertEquals(0,0);
+    }
+
 
     @Test
     public void arithmetic3D() throws Exception {
@@ -49,7 +48,7 @@ public class AlgorithmTests {
         Location3D method_mult = a.multiply(number);
         Location3D own_mult = new Location3D(14.1505, -34.21, -3.11);
 
-        assertEquals(method_add.getLoc_long(), own_add.getLoc_long(), delta;
+        assertEquals(method_add.getLoc_long(), own_add.getLoc_long(), delta);
         assertEquals(method_add.getLoc_lat(), own_add.getLoc_lat(), delta);
         assertEquals(method_add.getLoc_height(), own_add.getLoc_height(), delta);
 
