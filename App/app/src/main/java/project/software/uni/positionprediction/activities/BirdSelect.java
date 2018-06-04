@@ -4,10 +4,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,12 +17,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.LinkedList;
-
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.PermissionManager;
@@ -145,7 +142,7 @@ public class BirdSelect extends AppCompatActivity {
             @Override
             public void run() {
 
-                // update the studies in the database
+                // update the studies in the database2911059
                 SQLDatabase.getInstance(birdSelect).updateStudiesSync();
 
                 SQLDatabase.getInstance(birdSelect).updateBirdDataSync(2911040, 2911059);
@@ -159,6 +156,8 @@ public class BirdSelect extends AppCompatActivity {
                         fillStudiesList(studies);
                     }
                 });
+
+                BirdData birdData = SQLDatabase.getInstance(birdSelect).getBirdData(2911040, 2911059);
 
             }
         }).start();
@@ -242,7 +241,7 @@ public class BirdSelect extends AppCompatActivity {
             @Override
             public void run() {
 
-                SQLDatabase.getInstance(birdSelect).updateBirdsSync(study.id);
+                SQLDatabase.getInstance(birdSelect).updateBirds(study.id);
                 final Bird birds[] = SQLDatabase.getInstance(birdSelect).getBirds(study.id);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -255,10 +254,10 @@ public class BirdSelect extends AppCompatActivity {
                     }
                 });
             }
-        }).start();
+        }).run();
     }
 
-    public void fillBirdsList(final Bird birds[]){
+    public void fillBirdsList(Bird birds[]){
 
         scrollViewLayout.removeAllViews();
 
@@ -274,45 +273,12 @@ public class BirdSelect extends AppCompatActivity {
 
             final int index = i;
 
-
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBirdSelected(birds[index]);
-                }
-            });
+            // TODO: add click listener that opens the map for the selected bird
 
             scrollViewLayout.addView(textView);
         }
 
         scrollViewLayout.invalidate();
-    }
-
-    private void onBirdSelected(final Bird bird){
-
-        final BirdSelect birdSelect = this;
-
-        Intent showOn2DMap = new Intent(this, OSM.class);
-        showOn2DMap.putExtra("bird", bird);
-        startActivity(showOn2DMap);
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                SQLDatabase.getInstance(birdSelect).updateBirdData(bird.getStudyId(), bird.getId());
-//
-//                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                    @Override
-//                    public void run() {
-////                        AlgorithmExtrapolationExtended algo = new AlgorithmExtrapolationExtended(birdSelect);
-////                        LinkedList<Location3D> list = algo.predict(null, null, bird.getStudyId(), bird.getId());
-////                        Log.e("Result", ""+ list.get(0).getLoc_long() );
-//                    }
-//                });
-//            }
-//        }).start();
-
     }
 
     public static Context getAppContext() {

@@ -11,17 +11,11 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
-import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
-import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
+import project.software.uni.positionprediction.datatype.Locations2D;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
-import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
-import project.software.uni.positionprediction.util.InsufficientTrackingDataException;
+import project.software.uni.positionprediction.osm.OSMDroidAdapter;
+import project.software.uni.positionprediction.visualisation.PolygonVis;
+import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 public class OSM extends AppCompatActivity {
 
@@ -36,74 +30,74 @@ public class OSM extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         final OSM osm = this;
 
-        // TODO: put this in own method
         // note: the actions in the OSMDroidMap constructor have to happen *before*
         // setContentView is called.
         mymap = new OSMDroidMap(this);
 
         setContentView(R.layout.activity_osm);
 
-        MapView mapView = findViewById(R.id.map);
-        GeoPoint center = new GeoPoint(48.856359, 2.290849);
-        mymap.initMap(mapView, center, 6);
-
-
-        //Bird myBird = new Bird(2911040, 2911059, "Zwitschi");
-
-        Intent i = getIntent();
-        Bird selectedBird = (Bird) i.getSerializableExtra("bird");
-        if (selectedBird != null) {
-            // todo download maps and show note to user when done
-            showPrediction(selectedBird); // TODO tmp
-        }
-
+        // =======
+        // BUTTONS
+        // =======
 
         buttonSettings = findViewById(R.id.navigation_button_settings);
         buttonDownload = findViewById(R.id.map_download_button);
         //buttonPanTo    = findViewById(R.id.map_panto_button);
-        registerEventHandlers(osm);
-
-
-    }
 
 
 
-    private void showPrediction(Bird bird) {
-        // obtain an adapter
-        OSMDroidVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter();
-        // set the map for the adapter
-        myVisAdap.linkMap(mymap);
+        // =========
+        // MAP INIT.
+        // =========
 
-        // have it draw the visualisation
-        // (I am making the assumption that an algorithm only has one specific fitting Visualisation)
-        // todo: make it possible to use a different kind of algorithm
-        SingleTrajPredictionAlgorithm algorithm = AlgorithmExtrapolationExtended.getInstance();
-        PredictionWorkflowController controller = new PredictionWorkflowController(this);
+        MapView mapView = (MapView) findViewById(R.id.map);
+        GeoPoint center = new GeoPoint(47.680503, 9.177198);
+        mymap.initMap(mapView, center, 14);
 
-        // todo: get these from user / from settings
-        Date date_past = new Date(2017, 5, 1, 0, 0);
-        // for what point in the future we want the prediction
-        int hoursInFuture = 5;
-        Calendar cl = Calendar.getInstance();
-        cl.setTime(new Date());
-        cl.add(Calendar.HOUR, hoursInFuture);
-        Date date_pred = cl.getTime();
 
-        controller.doSingleTrajPrediction(
-                myVisAdap,
-                algorithm,
-                new PredictionUserParameters(
-                        date_past,
-                        date_pred,
-                        bird
-                )
+
+        // ==========================
+        // HARD-CODED TEST ("MAINAU")
+        // ==========================
+
+        // The prediction would output an Object of type Locations2D or Locations3D
+
+        Locations2D mainau = new Locations2D(
+                "47.701975, 9.190788;"
+                        + "47.704131, 9.189782;"
+                        + "47.705888, 9.190251;"
+                        + "47.707683, 9.192522;"
+                        + "47.707973, 9.196295;"
+                        + "47.707445, 9.198616;"
+                        + "47.704690, 9.201016;"
+                        + "47.703535, 9.202132;"
+                        + "47.702446, 9.200501;"
+                        + "47.702618, 9.194439"
         );
-    }
+
+        Locations2D uniMainau = new Locations2D(
+                "47.691057, 9.186505;"
+                        + "47.693811, 9.189909;"
+                        + "47.698893, 9.189131;"
+                        + "47.701975, 9.190788"
+        );
+
+
+        // Depending on the semantics of the prediction output, the suitable Visualization subclass
+        // has to be chosen
+
+        PolygonVis mainauVis = new PolygonVis(mainau);
+        SingleTrajectoryVis uniMainauVis = new SingleTrajectoryVis(uniMainau);
 
 
 
+        // obtain an adapter to the OSMdroid map and draw
 
-    private void registerEventHandlers(final OSM osm) {
+        OSMDroidAdapter osmDroid = new OSMDroidAdapter(mymap);
+        osmDroid.visualise(mainauVis);
+        osmDroid.visualise(uniMainauVis);
+
+
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,9 +114,16 @@ public class OSM extends AppCompatActivity {
                 mymap.saveAreaToCache(subafrica, 5,7);
             }
         });
+
+
+
     }
 
 
+
+    // ============
+    // MAP BEHAVIOR
+    // ============
 
     public void onResume(){
         super.onResume();

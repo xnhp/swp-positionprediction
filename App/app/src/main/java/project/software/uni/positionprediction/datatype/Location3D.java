@@ -1,7 +1,5 @@
 package project.software.uni.positionprediction.datatype;
 
-import android.location.Location;
-
 public class Location3D {
 
     // Class variables
@@ -39,12 +37,6 @@ public class Location3D {
     public void setLoc_height(double loc_height) { this.loc_height = loc_height; }
 
     // Own methods
-
-    public Location3D to3D(){
-        return this;
-    }
-
-
 
     /**
      * Adds two locations
@@ -99,57 +91,6 @@ public class Location3D {
     }
 
 
-    /**
-     * Computes angle between current and given vector
-     * @param loc_pre
-     * @return
-     */
-    public double getAngle(Location3D loc_pre) {
-        Location3D vec_horizontal = new Location3D(0,1,0);
-        Location3D vec = this.getVectorFrom(loc_pre);
-
-        return Math.acos( vec_horizontal.scalarproduct(vec) / (vec_horizontal.abs() * vec.abs()));
-    }
-
-
-    /**
-     * Gets vector from given location to current location
-     * @param loc
-     * @return
-     */
-    public Location3D getVectorFrom(Location3D loc){
-        double loc_long = this.getLoc_long() - loc.getLoc_long();
-        double loc_lat = this.getLoc_lat() - loc.getLoc_long();
-        double loc_height = this.getLoc_height() - loc.getLoc_height();
-        return new Location3D(loc_long, loc_lat, loc_height);
-    }
-
-
-    /**
-     * Computes scalarproduct of vectors
-     * @param vec
-     * @return
-     */
-    public double scalarproduct(Location3D vec) {
-        double a1 = this.getLoc_long();
-        double a2 = this.getLoc_lat();
-        double a3 = this.getLoc_height();
-        double b1 = vec.getLoc_long();
-        double b2 = vec.getLoc_lat();
-        double b3 = vec.getLoc_height();
-        return (a1*b1 + a2*b2 + a3*b3);
-    }
-
-    /**
-     * Computes the length of a vector
-     * @return
-     */
-    public double abs() {
-        double a1 = Math.pow(this.getLoc_long(), 2);
-        double a2 = Math.pow(this.getLoc_lat(), 2);
-        double a3 = Math.pow(this.getLoc_height(), 2);
-        return Math.sqrt(a1+a2+a3);
-    }
 
     /**
      * Print method for Location3D

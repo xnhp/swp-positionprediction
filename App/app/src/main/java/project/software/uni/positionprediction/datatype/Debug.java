@@ -1,7 +1,5 @@
 package project.software.uni.positionprediction.datatype;
 
-import java.util.List;
-
 /**
  * Contains methods to debug the code
  */
@@ -15,28 +13,9 @@ public class Debug {
 
     // Methods
 
-    public void print(TrackingPoint data[]) {
-        for (int i = 0; i<data.length; i++) {
-            data[i].getLocation().print();
-        }
-    }
-
-
-
-
-    public void print(List<Number> list, String name) {
-        int s  = list.size();
-        System.out.print("" +  name + ":  (");
-        for (int i = 0; i < s - 1; i++) {
-            System.out.print("" + list.get(i) + " -> ");
-        }
-        System.out.print("" + list.get(s-1) + ")\n");
-    }
-
-
-
-
     /**
+     * TJ: Tip: Java has an Arrays.toString() Method.
+     *
      * Print array
      * Method for printing an array
      * <p>

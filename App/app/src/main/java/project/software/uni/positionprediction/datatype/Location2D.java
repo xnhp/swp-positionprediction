@@ -1,8 +1,6 @@
 package project.software.uni.positionprediction.datatype;
 
 
-import android.location.Location;
-
 public class Location2D {
 
     // Class variables
@@ -37,15 +35,6 @@ public class Location2D {
 
 
     // Own methods
-
-    /**
-     * Transforms 2D locations without height-value to 3D with default height value 0
-     * @return
-     */
-    public Location3D to3D (){
-        return new Location3D(this.loc_long, this.loc_lat, 0);
-    }
-
 
     /**
      * Adds two locations
