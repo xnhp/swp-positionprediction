@@ -24,6 +24,7 @@ public class OSM extends AppCompatActivity {
     OSMDroidMap mymap;
 
     private Button buttonSettings = null;
+    private Button buttonBack = null;
     private Button buttonDownload = null;
     private Button buttonPanTo    = null;
 
@@ -38,7 +39,8 @@ public class OSM extends AppCompatActivity {
 
         setContentView(R.layout.activity_osm);
 
-        buttonSettings = findViewById(R.id.navigation_button_settings);
+        buttonSettings = findViewById(R.id.navbar_button_settings);
+        buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
         //buttonPanTo    = findViewById(R.id.map_panto_button);
 
@@ -81,6 +83,13 @@ public class OSM extends AppCompatActivity {
             public void onClick(View view) {
                 Intent buttonIntent =  new Intent(osm, Settings.class);
                 startActivity(buttonIntent);
+            }
+        });
+
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 

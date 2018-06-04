@@ -70,8 +70,8 @@ public class MovebankRequest {
         RequestQueue queue = Volley.newRequestQueue(context);
 
         String url = baseUrl+attributes;
+
         // Request a string response from the provided URL.
-        System.out.println("sending string request to " + url);
 
         project.software.uni.positionprediction.datatype.Request request =
                 new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
@@ -119,7 +119,8 @@ public class MovebankRequest {
             if(e.getCause() instanceof VolleyError) {
 
                 VolleyError err = (VolleyError) e.getCause();
-                request.setResponseStatus(err.networkResponse.statusCode);
+                if(err.networkResponse != null) request.setResponseStatus(err.networkResponse.statusCode);
+                else request.setResponseStatus(-1);
 
             } else {
                 request.setResponseStatus(-1);

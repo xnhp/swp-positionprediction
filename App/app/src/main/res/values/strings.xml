@@ -44,6 +44,11 @@
 
     <string name="map_button_download_text">DL</string>
 
+    // Bird Select Activity
+
+    <string name="bird_select_study_select">Study</string>
+    <string name="bird_select_bird_select">Bird</string>
+
 
 
 </resources>

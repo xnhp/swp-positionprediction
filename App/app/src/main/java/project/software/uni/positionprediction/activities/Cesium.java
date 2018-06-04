@@ -12,6 +12,7 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ import project.software.uni.positionprediction.R;
 
 public class Cesium extends AppCompatActivity {
 
+    private Button buttonSettings = null;
+    private Button buttonBack = null;
+
     private WebServer webServer;
     private static String CESIUM_URI = "http://localhost:8080/";
     private WebView webView;
@@ -36,6 +40,27 @@ public class Cesium extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cesium);
+
+
+        this.buttonSettings = (Button) findViewById(R.id.navbar_button_settings);
+        this.buttonBack = (Button) findViewById(R.id.navbar_button_back);
+
+        final Cesium cesium = this;
+
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent buttonIntent =  new Intent(cesium, Settings.class);
+                startActivity(buttonIntent);
+            }
+        });
 
         // Load the webserver.
         this.webServer = new WebServer(getAssets());
