@@ -2,8 +2,10 @@ package project.software.uni.positionprediction.algorithm;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location3D;
@@ -21,7 +23,6 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
     }
 
 
-
     /**
      * Main idea:
      * Compute the difference between two successive data points and take the average of them.
@@ -29,17 +30,18 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
      *
      * @param date_past
      * @param date_pred
+     * @param study_id
      * @param bird_id
      * @return
      */
     @Override
-    public Location3D predict(Date date_past, Date date_pred, int study_id, int bird_id) {
+    public LinkedList<Location3D> predict(Date date_past, Date date_pred, int study_id, int bird_id) {
 
         // Still hardcoded
         int constant = 10; // Use last 10 data points
 
 
-        // Algorithm
+
 
         // Fetch data from database
         SQLDatabase db = SQLDatabase.getInstance(context);
@@ -48,22 +50,19 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
 
         // Check data
         if (data.length == 0) {
-
+            Log.e("Error", "Size of data is 0");
+            return null;
         }
 
-
-
-
         // Use only needed data
-        Location3D geo[] = new Location3D[constant];
+        Location3D loc_data[] = new Location3D[constant];
+        int size = data.length;
         for (int i = 0; i < constant; i++) {
-            geo[i] = new Location3D(loc_long    [size - 1 - constant + i],
-                                    loc_lat     [size - 1 - constant + i],
-                                    loc_height  [size - 1 - constant + i]);
+            loc_data[i] = data[size - 1 - constant + i].getLocation().to3D();
         }
 
         // Compute prediction
-        Location3D prediction = next_Location(geo, constant);
+        LinkedList<Location3D> prediction = next_Location(loc_data, constant);
         return prediction;
     }
 
@@ -75,7 +74,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
      * @param data
      * @return
      */
-    public Location3D next_Location(Location3D data[], int date) {
+    public LinkedList<Location3D> next_Location(Location3D data[], int date) {
         int n = data.length - 1;
         Location3D vector_collection[] = new Location3D[date - 1];
         // Fill collection
@@ -102,7 +101,10 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         Location3D curr_loc = data[data.length - 1];
 
         // Add avg vector to current Location3D
-        return curr_loc.add(avg);
+        LinkedList<Location3D> result_list = new LinkedList<>();
+        Location3D result_vector = curr_loc.add(avg);
+        result_list.add(result_vector);
+        return result_list;
     }
 
 
@@ -119,9 +121,9 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
 
         // Compute sum
         for (int i = 0; i < collection.length; i++) {
-            sum_long += weight(i) * collection[i].getLoc_long();
-            sum_lat += weight(i) * collection[i].getLoc_lat();
-            sum_height += weight(i) * collection[i].getLoc_height();
+            sum_long += collection[i].getLoc_long();
+            sum_lat += collection[i].getLoc_lat();
+            sum_height += collection[i].getLoc_height();
         }
 
         // Compute average
@@ -132,16 +134,4 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
 
         return new Location3D(res_long, res_lat, res_height);
     }
-
-
-    /**
-     * Todo: possible weight function
-     *
-     * @param a
-     * @return
-     */
-    private int weight(int a) {
-        return 1;
-    }
-
 }

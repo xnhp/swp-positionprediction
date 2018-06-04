@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Debug;
@@ -23,7 +24,7 @@ public class TestConnectionSQLAlgo implements PredictionAlgorithm{
 
 
     @Override
-    public Location3D predict(Date date_past, Date date_pred, int study_id, int bird_id) {
+    public LinkedList<Location3D> predict(Date date_past, Date date_pred, int study_id, int bird_id) {
 
 
         SQLDatabase db = SQLDatabase.getInstance(context);

@@ -40,6 +40,12 @@ public class Location3D {
 
     // Own methods
 
+    public Location3D to3D(){
+        return this;
+    }
+
+
+
     /**
      * Adds two locations
      * @param location
