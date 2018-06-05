@@ -1,7 +1,9 @@
 package project.software.uni.positionprediction.algorithm;
 
 import android.content.Context;
-import android.location.Location;
+import android.renderscript.Matrix3f;
+
+import org.apache.commons.math3.linear.MatrixUtils;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -9,9 +11,7 @@ import java.util.List;
 
 import project.software.uni.positionprediction.datatype.AngleSteplength;
 import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.Debug;
 import project.software.uni.positionprediction.datatype.Location3D;
-import project.software.uni.positionprediction.datatype.Location2D;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
@@ -34,6 +34,7 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
         SQLDatabase db = SQLDatabase.getInstance(context);
         BirdData birddata = db.getBirdData(study_id, bird_id);
         TrackingPoint data[] = birddata.getTrackingPoints();
+
 
         // Length of trajectory
         int traj_length = 5;
@@ -127,7 +128,8 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
         }
 
 
-        
+
+
 
 
 

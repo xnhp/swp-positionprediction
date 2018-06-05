@@ -3,6 +3,7 @@ package project.software.uni.positionprediction.interfaces;
 import java.util.Date;
 import java.util.LinkedList;
 
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
 
 /**
@@ -26,7 +27,7 @@ public interface PredictionAlgorithm {
      * @return
      */
     // Todo: Output
-    LinkedList<Location3D> predict(Date date_past, Date date_pred, int study_id, int bird_id);
+    Location predict(Date date_past, Date date_pred, int study_id, int bird_id);
 
 
 }
