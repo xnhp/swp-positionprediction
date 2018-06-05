@@ -209,7 +209,7 @@ public class Location {
      * @param angle
      * @return
      */
-    public Location rotateBy(double angle) {
+    public Location rotate(double angle) {
         if (!has_altitude) {
             this.setAlt(0);
         }
@@ -217,6 +217,22 @@ public class Location {
         double v1 = this.getLon();
         double v2 = this.getLat();
         double v3 = this.getAlt();
+
+        double r11 = Math.cos(angle);
+        double r12 = - Math.sin(angle);
+        double r13 = 0;
+        double r21 = Math.sin(angle);
+        double r22 = Math.cos(angle);
+        double r23 = 0;
+        double r31 = 0;
+        double r32 = 0;
+        double r33 = 0;
+
+        double res1 = r11*v1 + r12*v2 + r13*v3;
+        double res2 = r21*v1 + r22*v2 + r23*v3;
+        double res3 = r31*v1 + r32*v2 + r33*v3;
+
+        return new Location(res1, res2, res3);
 
     }
 

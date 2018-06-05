@@ -11,12 +11,17 @@ import java.util.List;
 
 import project.software.uni.positionprediction.datatype.AngleSteplength;
 import project.software.uni.positionprediction.datatype.BirdData;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.MultipleTrajectories;
+import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 
-public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
+
+
+public class AlgorithmSimilarTrajectory implements PredictionAlgorithm_MultipleTrajectories {
 
     private Context context;
 
@@ -26,7 +31,7 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
 
 
     @Override
-    public LinkedList<Location3D> predict(Date date_past, Date date_pred, int study_id, int bird_id) {
+    public MultipleTrajectories predict(Date date_past, Date date_pred, int study_id, int bird_id) {
 
 
 
@@ -49,15 +54,22 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
         int size = data.length;
 
         double eps = 1E-5;
-        double gamma = 0.3;
 
         // Get the trajectory (list of angles) you want to compare other trajectories
-        List<Number> angles = new LinkedList<Number>();
-        for (int j = 1; j <= traj_length; j++) {
-            Location3D curr_loc = data[size-j].getLocation().to3D();
-            Location3D pre_loc  = data[size-j-1].getLocation().to3D();
-            double alpha = curr_loc.getAngle(pre_loc);
-            angles.add(alpha);
+        List<Number> delta_angles = new LinkedList<Number>();
+
+        // Compute main angle. All other angles (delta_angles) are computed relative to this one.
+        Location n0 = data[size-1].getLocation().to3D();
+        Location n1 = data[size-2].getLocation().to3D();
+        Location nth_vector = n0.subtract(n1);
+
+        // Compare all other angles with main vector to get relative angles (rotation of n_th vector doesn't matter)
+        for (int j = 2; j <= traj_length; j++) {
+            Location loc1 = data[size-j].getLocation().to3D();
+            Location loc2  = data[size-j-1].getLocation().to3D();
+            Location vector = loc1.subtract(loc2);
+            double alpha = vector.getAngle( nth_vector );
+            delta_angles.add(alpha);
         }
 
         // Find possible other trajectories and add the index of the last point to list
@@ -70,16 +82,21 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
             // Check if angle is approx. the same
             boolean is_similar = false;
 
+            Location m0 = data[i-1].getLocation().to3D();
+            Location m1 = data[i-2].getLocation().to3D();
+            Location mth_vector = m0.subtract(m1);
+
             // Run backwards through every trajectory
-            for (int k = 1; k < traj_length; k++) {
+            for (int k = 2; k < traj_length; k++) {
                 is_similar = false;
                 System.out.println("traj: " + k);
                 // Get angle of two locations
-                Location3D curr_loc = data[i-k].getLocation().to3D();
-                Location3D pre_loc  = data[i-k-1].getLocation().to3D();
-                double alpha = curr_loc.getAngle(pre_loc);
+                Location loc1 = data[i-k].getLocation().to3D();
+                Location loc2  = data[i-k-1].getLocation().to3D();
+                Location vector = loc1.subtract(loc2);
+                double beta = vector.getAngle( mth_vector );
 
-                if ( Math.abs( alpha - (double) angles.get(k-1) ) < eps ) {
+                if ( Math.abs( beta - (double) delta_angles.get(k-1) ) < eps ) {
                     is_similar = true;
                     System.out.println("Similar");
                 }
@@ -93,38 +110,33 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm {
             if (is_similar) {
                 possible_indices.add(i);
             }
-
-
-
-
         }
 
-        LinkedList<LinkedList<AngleSteplength>> trajectories = new LinkedList<>();
-        for (int i = 0; i < possible_indices.size(); i++) {
-            // Get last two vectors of trajectories
-            int index_last_known = (int) possible_indices.get(i);
-            Location3D curr_known = data[ index_last_known ].getLocation().to3D();
 
-            LinkedList<AngleSteplength> possible_trajectory = new LinkedList<>();
+        MultipleTrajectories trajectories = new MultipleTrajectories();
 
-            // Run through data point after every trajectory
-            for (int j = 0; j < pred_traj_length; j++) {
+        for (int l = 0; l < possible_indices.size(); l++) {
 
-                // Get two locations
-                int index_curr = index_last_known + j;
-                int index_next = index_last_known + j + 1;
-                Location3D curr = data[ index_curr ].getLocation().to3D();
-                Location3D next = data[ index_next ].getLocation().to3D();
+            SingleTrajectory trajectory = new SingleTrajectory();
+            Location new_loc = n0;
+            Location new_vector = nth_vector;
 
-                // Get angle and steplength and put them into list
-                double angle = curr.getAngle(next);
-                double steplength = next.subtract(curr).abs();
-                AngleSteplength elem = new AngleSteplength(angle, steplength);
-                possible_trajectory.add(elem);
+            for (int m = 0; m < pred_traj_length; m++) {
+                Location pos1 = data[(int) possible_indices.get(l) + m - 1 ].getLocation();
+                Location pos2 = data[(int) possible_indices.get(l) + m     ].getLocation();
+                Location vector = pos2.subtract(pos1);
+                Location next1 = data[(int) possible_indices.get(l) + m + 1].getLocation();
+                Location next2 = data[(int) possible_indices.get(l) + m + 2].getLocation();
+                Location iter_vector = next2.subtract(next1);
+                double gamma = iter_vector.scalarproduct(vector);
+                new_vector = new_vector.rotate( gamma );
+
+                new_loc = new_loc.add(new_vector);
+
+
 
             }
 
-            trajectories.add(possible_trajectory);
         }
 
 

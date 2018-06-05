@@ -61,8 +61,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         }
 
         // Compute prediction
-        LinkedList<Location> prediction = next_Location(loc_data, constant);
-        return prediction;
+        return next_Location(loc_data, constant);
     }
 
 
@@ -73,7 +72,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
      * @param data
      * @return
      */
-    public LinkedList<Location> next_Location(Location data[], int date) {
+    public Location next_Location(Location data[], int date) {
         int n = data.length - 1;
         Location vector_collection[] = new Location[date - 1];
         // Fill collection
@@ -100,10 +99,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         Location curr_loc = data[data.length - 1];
 
         // Add avg vector to current Location
-        LinkedList<Location> result_list = new LinkedList<>();
-        Location result_vector = curr_loc.add(avg);
-        result_list.add(result_vector);
-        return result_list;
+        return curr_loc.add(avg);
     }
 
 
@@ -120,9 +116,9 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
 
         // Compute sum
         for (int i = 0; i < collection.length; i++) {
-            sum_long += collection[i].getLoc_long();
-            sum_lat += collection[i].getLoc_lat();
-            sum_height += collection[i].getLoc_height();
+            sum_long += collection[i].getLon();
+            sum_lat += collection[i].getLat();
+            sum_height += collection[i].getAlt();
         }
 
         // Compute average
