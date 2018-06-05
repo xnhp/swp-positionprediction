@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.algorithm;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import project.software.uni.positionprediction.datatype.Location3D;
@@ -26,11 +27,11 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
      * TODO javadoc
      */
     @Override
-    public LinkedList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data) {
+    public ArrayList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data) {
         // TODO determine pastDataPoints from params.past_date
         int pastDataPoints = 10;
         // Compute prediction
-        LinkedList<Location3D> prediction = next_Location(data.pastTracks, pastDataPoints);
+        ArrayList<Location3D> prediction = next_Location(data.pastTracks, pastDataPoints);
         return prediction;
     }
 
@@ -42,7 +43,7 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
      * @param data
      * @return
      */
-    public LinkedList<Location3D> next_Location(Location3D data[], int date) {
+    public ArrayList<Location3D> next_Location(Location3D data[], int date) {
         int n = data.length - 1;
         Location3D vector_collection[] = new Location3D[date - 1];
         // Fill collection
@@ -69,7 +70,7 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
         Location3D curr_loc = data[data.length - 1];
 
         // Add avg vector to current Location3D
-        LinkedList<Location3D> result_list = new LinkedList<>();
+        ArrayList<Location3D> result_list = new ArrayList<>();
         Location3D result_vector = curr_loc.add(avg);
         result_list.add(result_vector);
         return result_list;
@@ -89,9 +90,9 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
 
         // Compute sum
         for (int i = 0; i < collection.length; i++) {
-            sum_long += collection[i].getLoc_long();
-            sum_lat += collection[i].getLoc_lat();
-            sum_height += collection[i].getLoc_height();
+            sum_long += weight(i) * collection[i].getLoc_long();
+            sum_lat += weight(i) * collection[i].getLoc_lat();
+            sum_height += weight(i) * collection[i].getLoc_height();
         }
 
         // Compute average
@@ -101,6 +102,17 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
         double res_height = sum_height / length;
 
         return new Location3D(res_long, res_lat, res_height);
+    }
+
+
+    /**
+     * Todo: possible weight function
+     *
+     * @param a
+     * @return
+     */
+    private int weight(int a) {
+        return 1;
     }
 
 }

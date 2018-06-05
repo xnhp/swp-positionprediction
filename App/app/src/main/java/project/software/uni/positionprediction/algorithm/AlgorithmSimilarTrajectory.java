@@ -2,6 +2,7 @@ package project.software.uni.positionprediction.algorithm;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAl
 public class AlgorithmSimilarTrajectory implements SingleTrajPredictionAlgorithm {
 
     @Override
-    public LinkedList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data) {
+    public ArrayList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data) {
         // Length of trajectory
         int traj_length = 5;
 

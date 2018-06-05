@@ -37,6 +37,8 @@ public class Debug {
 
 
     /**
+     * TJ: Tip: Java has an Arrays.toString() Method.
+     *
      * Print array
      * Method for printing an array
      * <p>

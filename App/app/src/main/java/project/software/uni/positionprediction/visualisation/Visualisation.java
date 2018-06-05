@@ -1,5 +1,10 @@
 package project.software.uni.positionprediction.visualisation;
 
+
+import java.util.ArrayList;
+
+import project.software.uni.positionprediction.datatype.Location3D;
+
 /**
  * This class represents an abstract "visualisation" of a prediction result.
  * Image it saying "a point here"/"a box there".
@@ -9,7 +14,12 @@ package project.software.uni.positionprediction.visualisation;
  */
 public class Visualisation {
 
-    // for identifying the subtype of visualisation when drawing
-    // todo: necessary?
-    // public VisualisationKinds kind;
+    // Data
+    public ArrayList<Location3D> locations;
+
+    // Constructor
+    public Visualisation(ArrayList<Location3D> locations){
+        this.locations = locations;
+    }
+
 }

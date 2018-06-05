@@ -28,10 +28,8 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
 
     @Override
     public void visualiseSingleTraj(SingleTrajectoryVis vis) {
-        List<GeoPoint> points = GeoDataUtils.ListLocationToGeoPoint(vis.traj);
-        List<IGeoPoint> points2 = GeoDataUtils.ListGeoPointToIGeoPoint(points);
-
-        map.drawTracks(points2, vis.lineColor, vis.pointColor);
+        List<GeoPoint> points = GeoDataUtils.ListLocationToGeoPoint(vis.locations);
+        map.drawTracks(points, vis.lineColor, vis.pointColor);
     }
 
 }

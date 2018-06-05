@@ -97,6 +97,13 @@ public class OSM extends AppCompatActivity {
                         bird
                 )
         );
+
+        // TODO from timo
+        // Depending on the semantics of the prediction output, the suitable Visualization subclass
+        // has to be chosen
+
+        // PolygonVis mainauVis = new PolygonVis(mainau);
+        // SingleTrajectoryVis uniMainauVis = new SingleTrajectoryVis(uniMainau);
     }
 
 

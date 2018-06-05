@@ -5,12 +5,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import project.software.uni.positionprediction.algorithm.PredictionBaseData;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Locations2D;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
@@ -116,11 +118,11 @@ public class PredictionWorkflowController {
         // and save that in PredictionBaseDate to be used for a position prediction
 
         // run prediction
-        List<Location3D> prediction = algorithm.predict(algParams, data);
+        ArrayList<Location3D> prediction = algorithm.predict(algParams, data);
 
         // think about how to visualise it
-        SingleTrajectoryVis myVis = new SingleTrajectoryVis();
-        myVis.traj = prediction;
+        SingleTrajectoryVis myVis = new SingleTrajectoryVis(prediction);
+        // myVis.traj = prediction;
         myVis.pointColor = "#ff0077"; // pink
         myVis.lineColor = "#00ff88";  // bright green
 

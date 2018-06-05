@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.interfaces;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import project.software.uni.positionprediction.algorithm.PredictionBaseData;
@@ -21,7 +22,7 @@ public interface SingleTrajPredictionAlgorithm {
      * @return
      */
     // Todo: Output
-    LinkedList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data);
+    ArrayList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data);
 
 
 }

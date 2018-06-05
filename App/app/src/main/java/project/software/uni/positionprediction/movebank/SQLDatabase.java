@@ -304,15 +304,13 @@ public class SQLDatabase {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT timestamp, location_long, location_lat, tag_id, " +
-                "individual_id, study_id FROM trackpoints " +
-                "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
-                " ORDER BY timestamp DESC", new String[]{});
+                "individual_id, study_id FROM trackpoints WHERE study_id = " + studyId +
+                " AND individual_id = " + indivId + " ORDER BY timestamp DESC", new String[]{});
 
         TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
-            Log.e("SQL", ""+cursor.getInt(4));
             points[rowIndex] = new TrackingPoint(
                     new Location2D(cursor.getDouble(1), cursor.getDouble(2)),
                     new Date(cursor.getLong(0)*1000));

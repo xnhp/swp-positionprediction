@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,6 +25,7 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
@@ -40,6 +42,11 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
+
+import static android.graphics.Color.argb;
+import static android.graphics.Color.blue;
+import static android.graphics.Color.green;
+import static android.graphics.Color.red;
 
 
 /**
@@ -256,43 +263,31 @@ public class OSMDroidMap {
      * @param tracks
      */
     // TODO: this might return a "folder" overlay with the points and the polyline overlay
-    public void drawTracks(List<IGeoPoint> tracks, String lineColor, String pointColor) {
+    public void drawTracks(List<GeoPoint> tracks, String lineColor, String pointColor) {
         // TODO: pass styling in here as parameter
         drawPolyLine(tracks, lineColor);
-        drawFastPoints(tracks, pointColor);
-    }
-
-    private Polyline drawPolyLine(List<IGeoPoint> tracks, String lineColor) {
-        // TODO: draw coloured line
-        Polyline line = new Polyline(); // a polyline is a kind of overlay
-        line.setColor(Color.parseColor(lineColor));
-        List<GeoPoint> points = GeoDataUtils.castDownGeoPointList(tracks);
-        line.setPoints(points); // no method chaining here because setPoints doesnt return the object...
-        mapView.getOverlayManager().add(line);
-        return line;
+        drawPoints(tracks, pointColor,10);
     }
 
 
     /**
      * Show a number of same-looking markers on the map in a fast way.
-     * @param poss Has to merely implement IGeoPoint (marked or unmarked, ...)
      * @return The newly created overlay containing the points.
      * TODO: move styling out of this method.
      * cf https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons#fast-overlay
      * require IGeoPoint here because SimplePointTheme requires so.
      */
-    private SimpleFastPointOverlay drawFastPoints(List<IGeoPoint> poss, String pointColor) {
-        SimplePointTheme theme = new SimplePointTheme(poss, false);
-        SimpleFastPointOverlayOptions options = TrackingPointOverlayOptions
-                // we subclass SimplePointOverlayOptions to be able to change the color
-                // SimplePointOverlayOptions doesn't expose a setter for that.
+
+    public SimpleFastPointOverlay drawPoints(List<GeoPoint> GeoPoints, String pointColor, int pointRadius) {
+        List<IGeoPoint> iGeoPoints = GeoDataUtils.GeoPointsToIGeoPoints(GeoPoints);
+        SimplePointTheme theme = new SimplePointTheme(iGeoPoints, false);
+        SimpleFastPointOverlayOptions options = PointsOptions
                 .getDefaultStyle()
                 // has to be called first because the parent classes methods return the object in the
                 // more general type
                 .setPointColor(pointColor)
-                // --
                 .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
-                .setRadius(10) // radios of circles to be drawn
+                .setRadius(pointRadius) // radios of circles to be drawn
                 .setIsClickable(false) // true by default
                 .setCellSize(15) // cf internal doc
                 .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)
@@ -301,6 +296,36 @@ public class OSMDroidMap {
         mapView.getOverlays().add(overlay);
         return overlay;
     }
+
+    public Polyline drawPolyLine(List<GeoPoint> geoPoints, String lineColor) {
+        Polyline polyline = new Polyline(); // a polyline is a kind of overlay
+        polyline.setColor(Color.parseColor(lineColor));
+        //List<GeoPoint> points = geoPoints;
+        polyline.setPoints(geoPoints); // no method chaining here because setPoints doesnt return the object...
+        mapView.getOverlayManager().add(polyline);
+        return polyline;
+    }
+
+
+    public Polygon drawPolygon(List<GeoPoint> geoPoints, String lineColor, String fillColor, float opacity) {
+        int fc = Color.parseColor(fillColor);
+        int alpha = (int)(opacity * 255);
+        int _fillColor = argb(alpha, red(fc), green(fc), blue(fc));
+        Polygon polygon = new Polygon();
+        polygon.setFillColor(_fillColor);
+        polygon.setStrokeColor(Color.parseColor(lineColor));
+        polygon.setPoints(geoPoints);
+
+        //polygons supports holes too, points should be in a counter-clockwise order
+        //List<List<GeoPoint>> holes = new ArrayList<>();
+        //holes.add(geoPoints);
+        //polygon.setHoles(holes);
+
+        mapView.getOverlayManager().add(polygon);
+        return polygon;
+    }
+
+
 
 
     /*
