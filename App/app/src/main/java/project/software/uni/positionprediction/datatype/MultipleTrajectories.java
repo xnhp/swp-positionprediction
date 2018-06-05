@@ -9,6 +9,10 @@ public class MultipleTrajectories {
     // (e.g.) by importance
     public ArrayList<SingleTrajectory> trajectories;
 
+    public MultipleTrajectories() {
+
+    }
+
     public MultipleTrajectories(ArrayList<SingleTrajectory> trajectories) {
         this.trajectories = trajectories;
     }

@@ -29,8 +29,9 @@ import java.util.zip.Inflater;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.PermissionManager;
@@ -281,9 +282,8 @@ public class BirdSelect extends AppCompatActivity {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        AlgorithmExtrapolationExtended algo = new AlgorithmExtrapolationExtended(birdSelect);
-                        LinkedList<Location3D> list = algo.predict(null, null, bird.getStudyId(), bird.getId());
-                        if(list != null && list.size() > 0) Log.e("Result", ""+ list.get(0).getLoc_long() );
+                        AlgorithmSimilarTrajectory algo = new AlgorithmSimilarTrajectory(birdSelect);
+                        Location loc = algo.predict(null, null, bird.getStudyId(), bird.getId());
                     }
                 });
             }
