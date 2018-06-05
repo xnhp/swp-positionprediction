@@ -3,6 +3,7 @@ package project.software.uni.positionprediction.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -53,8 +54,15 @@ public class OSM extends AppCompatActivity {
         Bird selectedBird = (Bird) i.getSerializableExtra("bird");
         if (selectedBird != null) {
             // todo download maps and show note to user when done
+
+            Log.i("VisBird", "Trying to show prediction for " + selectedBird.toString());
+
             showPrediction(selectedBird); // TODO tmp
         }
+
+        // TODO: this is for testing
+        Bird myTestBird = new Bird(2911059,2911040, "albatros");
+        showPrediction(myTestBird);
 
 
         buttonSettings = findViewById(R.id.navigation_button_settings);
@@ -87,6 +95,7 @@ public class OSM extends AppCompatActivity {
         cl.setTime(new Date());
         cl.add(Calendar.HOUR, hoursInFuture);
         Date date_pred = cl.getTime();
+
 
         controller.doSingleTrajPrediction(
                 myVisAdap,

@@ -6,13 +6,12 @@ import android.os.Looper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import project.software.uni.positionprediction.algorithm.PredictionBaseData;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location3D;
-import project.software.uni.positionprediction.datatype.Locations2D;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
@@ -88,7 +87,8 @@ public class PredictionWorkflowController {
 
     private void onDataUpdate(final IVisualisationAdapter visAdapter,
                               SingleTrajPredictionAlgorithm algorithm,
-                              final PredictionUserParameters algParams) throws InsufficientTrackingDataException {
+                              final PredictionUserParameters algParams)
+            throws InsufficientTrackingDataException {
 
         // TODO: do this based on date
         int pastDataPoints = 10; // Use last 10 data points
@@ -120,17 +120,33 @@ public class PredictionWorkflowController {
         // run prediction
         ArrayList<Location3D> prediction = algorithm.predict(algParams, data);
 
-        // think about how to visualise it
-        SingleTrajectoryVis myVis = new SingleTrajectoryVis(prediction);
-        // myVis.traj = prediction;
-        myVis.pointColor = "#ff0077"; // pink
-        myVis.lineColor = "#00ff88";  // bright green
+        // think about how to visualise prediction
+        // todo: data type for colors
+        String predPointCol = "#ff0077"; // pink
+        String predLineCol = "#e28a16";  // orange
+        int predPointRadius = 20;
+        SingleTrajectoryVis predVis = new SingleTrajectoryVis(prediction, predPointCol, predLineCol, predPointRadius);
 
         // do visualise it
-        visAdapter.visualiseSingleTraj(myVis);
+        //visAdapter.visualiseSingleTraj(predVis);
+
+        // visualise past data
+        ArrayList<Location3D> pastTracks = new ArrayList<>(Arrays.asList(data.pastTracks));
+        String pastPointCol = "#9116e2"; // purple
+        String pastLineCol = "#1668e2"; // blue
+        int pastPointRadius = 15;
+        SingleTrajectoryVis pastVis = new SingleTrajectoryVis(pastTracks, pastPointCol, pastLineCol, pastPointRadius);
+
+        //visAdapter.visualiseSingleTraj(pastVis);
+
+        // combine the two visualisations
+        String connectingLineColor = "#f7f300"; // yellow
+        SingleTrajectoryVis combinedVis = SingleTrajectoryVis.concat(pastVis, predVis, connectingLineColor);
+
+        visAdapter.visualiseSingleTraj(combinedVis);
+
         // adapter is obtained outside of here. (see class comments)
         // thanks to the interface, we can write it this generally here, no matter if osm or cesium
-
     }
 
 

@@ -48,4 +48,8 @@ public abstract class GeoDataUtils {
         }
         return newPoints;
     }
+
+    public static GeoPoint Location3DToGeoPoint(Location3D loc) {
+        return new GeoPoint(loc.getLoc_lat(), loc.getLoc_long());
+    }
 }

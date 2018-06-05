@@ -35,4 +35,8 @@ public class Bird implements Serializable {
         return nickName;
     }
 
+    public String toString() {
+        return "(Bird: " + this.nickName + " | indivID " + this.id + " | studyID " + this.studyId + " )";
+    }
+
 }

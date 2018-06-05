@@ -5,7 +5,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -41,7 +40,6 @@ import java.util.List;
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 import static android.graphics.Color.argb;
 import static android.graphics.Color.blue;
@@ -263,22 +261,21 @@ public class OSMDroidMap {
      * @param tracks
      */
     // TODO: this might return a "folder" overlay with the points and the polyline overlay
-    public void drawTracks(List<GeoPoint> tracks, String lineColor, String pointColor) {
+    public void drawTracksUniform(List<GeoPoint> tracks, String lineColor, String pointColor) {
         // TODO: pass styling in here as parameter
         drawPolyLine(tracks, lineColor);
-        drawPoints(tracks, pointColor,10);
+        drawPointsUniform(tracks, pointColor,10);
     }
 
 
     /**
      * Show a number of same-looking markers on the map in a fast way.
      * @return The newly created overlay containing the points.
-     * TODO: move styling out of this method.
      * cf https://github.com/osmdroid/osmdroid/wiki/Markers,-Lines-and-Polygons#fast-overlay
      * require IGeoPoint here because SimplePointTheme requires so.
      */
 
-    public SimpleFastPointOverlay drawPoints(List<GeoPoint> GeoPoints, String pointColor, int pointRadius) {
+    public SimpleFastPointOverlay drawPointsUniform(List<GeoPoint> GeoPoints, String pointColor, int pointRadius) {
         List<IGeoPoint> iGeoPoints = GeoDataUtils.GeoPointsToIGeoPoints(GeoPoints);
         SimplePointTheme theme = new SimplePointTheme(iGeoPoints, false);
         SimpleFastPointOverlayOptions options = PointsOptions

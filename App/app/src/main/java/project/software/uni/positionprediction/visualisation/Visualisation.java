@@ -15,6 +15,7 @@ import project.software.uni.positionprediction.datatype.Location3D;
 public class Visualisation {
 
     // Data
+    // todo: remove, only use styledPoints
     public ArrayList<Location3D> locations;
 
     // Constructor

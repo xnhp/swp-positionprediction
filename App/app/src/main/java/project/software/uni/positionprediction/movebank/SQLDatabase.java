@@ -164,7 +164,11 @@ public class SQLDatabase {
             public void handleResponse(Request response) {
                 if(response.getResponseStatus() == HttpStatusCode.OK){
                     insertBirdData(studyId, indivId, response.getResponse());
+                    Log.i("VisBird", "received bird data");
+                    Log.i("VisBird", response.getResponse());
                 } else {
+                    // TODO: error handling
+                    Log.i("VisBird", "couldnt fetch data for bird: " + indivId + " from study: " + studyId);
                     Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
                 }
             }
