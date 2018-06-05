@@ -122,29 +122,32 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm_MultipleT
             Location new_vector = nth_vector;
 
             for (int m = 0; m < pred_traj_length; m++) {
+                // Last locations of similar trajectory
                 Location pos1 = data[(int) possible_indices.get(l) + m - 1 ].getLocation();
                 Location pos2 = data[(int) possible_indices.get(l) + m     ].getLocation();
+                // Last vector of known trajectory
                 Location vector = pos2.subtract(pos1);
+
+                // First locations after similar trajectory
                 Location next1 = data[(int) possible_indices.get(l) + m + 1].getLocation();
                 Location next2 = data[(int) possible_indices.get(l) + m + 2].getLocation();
+                // First vector after similiar trajectory (want to get this angle)
                 Location iter_vector = next2.subtract(next1);
-                double gamma = iter_vector.scalarproduct(vector);
-                new_vector = new_vector.rotate( gamma );
 
+                // Relative angle to vector from similiar trajectoy
+                double gamma = iter_vector.scalarproduct(vector);
+                // Rotate old vector with relative angle as known from similar trajectories
+                new_vector = new_vector.rotate(gamma);
+                // Add vector to current location
                 new_loc = new_loc.add(new_vector);
 
-
-
+                // Add new locations to current trajectory
+                trajectory.add(new_loc);
             }
-
+            // Add trajectory to List
+            trajectories.add(trajectory);
         }
 
-
-
-
-
-
-
-        return null;
+        return trajectories;
     }
 }
