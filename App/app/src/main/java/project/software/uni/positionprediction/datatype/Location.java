@@ -75,6 +75,9 @@ public class Location {
      * @return
      */
     public Location add(Location location) {
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
         return new Location(
                 this.getLon() + location.getLon(),
                 this.getLat() + location.getLat(),
@@ -90,6 +93,9 @@ public class Location {
      * @return
      */
     public Location multiply(double scalar){
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
         return new Location(
                 this.getLon() * scalar,
                 this.getLat() * scalar,
@@ -128,6 +134,12 @@ public class Location {
      * @return
      */
     public double getAngle(Location loc_pre) {
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
+        if (!loc_pre.has_altitude) {
+            loc_pre.setAlt(0);
+        }
         Location vec_horizontal = new Location(0,1,0);
         Location vec = this.getVectorFrom(loc_pre);
 
@@ -141,6 +153,12 @@ public class Location {
      * @return
      */
     public Location getVectorFrom(Location loc){
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
+        if (!loc.has_altitude) {
+            loc.setAlt(0);
+        }
         double Lon = this.getLon() - loc.getLon();
         double loc_lat = this.getLat() - loc.getLon();
         double loc_height = this.getAlt() - loc.getAlt();
@@ -154,6 +172,12 @@ public class Location {
      * @return
      */
     public double scalarproduct(Location vec) {
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
+        if (!vec.has_altitude) {
+            vec.setAlt(0);
+        }
         double a1 = this.getLon();
         double a2 = this.getLat();
         double a3 = this.getAlt();
@@ -168,6 +192,9 @@ public class Location {
      * @return
      */
     public double abs() {
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
         double a1 = Math.pow(this.getLon(), 2);
         double a2 = Math.pow(this.getLat(), 2);
         double a3 = Math.pow(this.getAlt(), 2);
@@ -176,9 +203,32 @@ public class Location {
 
 
     /**
+     * Rotation about the z-axis (height). We don't need any other rotation, because the
+     * angle doesn't change with the third dimension (on the plane). We get the 3D movement
+     * with the addition of the vectors, not the angle.
+     * @param angle
+     * @return
+     */
+    public Location rotateBy(double angle) {
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
+
+        double v1 = this.getLon();
+        double v2 = this.getLat();
+        double v3 = this.getAlt();
+
+    }
+
+
+
+    /**
      * Print method for Location
      */
     public void print() {
+        if (!has_altitude) {
+            this.setAlt(0);
+        }
         System.out.print("[" + this.getLon() + ", " + this.getLat() + ", " + this.getAlt() + "]\n");
 
     }
