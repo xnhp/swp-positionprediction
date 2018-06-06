@@ -1,12 +1,10 @@
 package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
-import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 
 public interface PredictionAlgorithmReturnsTrajectories {
-
 
     /**
      * Description: Interface for an algorithm, which returns multiple (one or more) trajectories.
