@@ -62,8 +62,8 @@ public class OSM extends AppCompatActivity {
         }
 
         // TODO: this is for testing
-        Bird myTestBird = new Bird(2911059,2911040, "albatros");
-        showPrediction(myTestBird);
+        //Bird myTestBird = new Bird(2911059,2911040, "albatros");
+        //showPrediction(myTestBird);
 
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);

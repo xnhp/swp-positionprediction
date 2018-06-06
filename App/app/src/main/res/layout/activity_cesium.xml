@@ -14,7 +14,7 @@
         <include
             layout="@layout/navigation_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,8 +22,8 @@
 
             <WebView
                 android:id="@+id/cesium_webview"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_above="@id/cesium_button_predict">
             </WebView>
 
