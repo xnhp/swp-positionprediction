@@ -32,7 +32,9 @@ public abstract class RequestHandler implements Response.Listener<String>, Respo
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e("RequestError", error.toString());
-        handleResponse(null);
+        Request request = new Request(-1);
+        request.setResponseStatus(-1);
+        handleResponse(request);
     }
 
 }

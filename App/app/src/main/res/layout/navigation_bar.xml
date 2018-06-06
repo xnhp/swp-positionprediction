@@ -2,14 +2,37 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/navbar_background"
+    android:gravity="center_horizontal">
 
     <Button
-        android:id="@+id/navigation_button_settings"
-        android:layout_width="@dimen/cesium_settings_button_width_hight"
-        android:layout_height="@dimen/cesium_settings_button_width_hight"
-        android:text="@string/navigation_button_settings_text"
+        android:id="@+id/navbar_button_back"
+        android:layout_width="@dimen/navbar_button_size"
+        android:layout_height="@dimen/navbar_button_size"
+        android:layout_margin="@dimen/navbar_button_margin"
+        android:background="@drawable/arrow_left"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/navbar_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/navbar_text_size"/>
+
+    <Button
+        android:id="@+id/navbar_button_settings"
+        android:layout_width="@dimen/navbar_button_size"
+        android:layout_height="@dimen/navbar_button_size"
+        android:layout_margin="@dimen/navbar_button_margin"
+        android:background="@drawable/gear"
         android:layout_alignParentEnd="true"/>
+
+
 </RelativeLayout>

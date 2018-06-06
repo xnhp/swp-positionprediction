@@ -1,12 +1,15 @@
 package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import project.software.uni.positionprediction.R;
 
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -22,6 +25,7 @@ import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 public class OSM extends AppCompatActivity {
 
@@ -66,6 +70,8 @@ public class OSM extends AppCompatActivity {
 
 
         buttonSettings = findViewById(R.id.navigation_button_settings);
+        buttonSettings = findViewById(R.id.navbar_button_settings);
+        buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
         //buttonPanTo    = findViewById(R.id.map_panto_button);
         registerEventHandlers(osm);
@@ -127,6 +133,13 @@ public class OSM extends AppCompatActivity {
             }
         });
 
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         buttonDownload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +151,7 @@ public class OSM extends AppCompatActivity {
     }
 
 
+    }
 
     public void onResume(){
         super.onResume();

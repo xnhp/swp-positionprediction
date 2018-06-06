@@ -9,6 +9,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -30,8 +31,6 @@ public class MovebankRequest {
     private String baseUrl = null;
     private Context context = null;
 
-    private RequestQueue queue = null;
-
     private static Map<Integer, Integer> statusMap;
     private int currentRequestCode;
 
@@ -44,7 +43,6 @@ public class MovebankRequest {
     public MovebankRequest(String baseUrl, Context context) {
 
         this.context = context;
-        this.queue = Volley.newRequestQueue(this.context);
 
         this.baseUrl = baseUrl;
         this.password = context.getResources().getString(R.string.movebank_password);
@@ -56,7 +54,6 @@ public class MovebankRequest {
     public MovebankRequest(Context context) {
 
         this.context = context;
-        this.queue = Volley.newRequestQueue(this.context);
 
 
         this.baseUrl = context.getResources().getString(R.string.movebank_base_url);
@@ -121,7 +118,19 @@ public class MovebankRequest {
             return request;
 
         } catch (InterruptedException | TimeoutException | ExecutionException e) {
-            return null;
+            System.out.println(e.toString());
+
+            if(e.getCause() instanceof VolleyError) {
+
+                VolleyError err = (VolleyError) e.getCause();
+                if(err.networkResponse != null) request.setResponseStatus(err.networkResponse.statusCode);
+                else request.setResponseStatus(-1);
+
+            } else {
+                request.setResponseStatus(-1);
+            }
+
+            return request;
         }
     }
 
@@ -137,19 +146,6 @@ public class MovebankRequest {
     public void setUserCreds(String username, String password){
         this.username=username;
         this.password=password;
-    }
-
-
-    // TODO: Can just check for HTTP Status Code here?
-    public boolean isUserCredsValid(){
-
-        String typeAttr = "attributes";
-
-        String result = requestDataSync(typeAttr).getResponse();
-
-        //TODO check result
-
-        return result=="";
     }
 
     /**

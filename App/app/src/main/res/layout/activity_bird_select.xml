@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="project.software.uni.positionprediction.activities.BirdSelect">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/stork">
 
-        <LinearLayout
+        <include layout="@layout/navigation_bar"
+            android:id="@+id/birdselect_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top"
+            android:layout_alignParentTop="true" />
+
+        <LinearLayout
+            android:id="@+id/birdselect_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_above="@id/birdselect_footer"
-            android:layout_alignParentTop="true">
+            android:layout_below="@id/birdselect_header"
+            android:layout_above="@id/birdselect_footer">
 
             <EditText
                 android:id="@+id/birdselect_edittext_search"
@@ -33,7 +38,10 @@
                     android:id="@+id/birdselect_scrollview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
             </ScrollView>
         </LinearLayout>
 
@@ -44,12 +52,6 @@
             android:layout_alignParentBottom="true"
             android:gravity="bottom"
             android:orientation="vertical">
-
-            <Button
-                android:id="@+id/birdselect_button_select"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Settings" />
 
             <Button
                 android:id="@+id/birdselect_button_openmap"
