@@ -4,6 +4,7 @@ import project.software.uni.positionprediction.R;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -75,7 +76,7 @@ public class MovebankRequest {
 
         String url = baseUrl+attributes;
         // Request a string response from the provided URL.
-        System.out.println("sending string request to " + url);
+        Log.i("MovebankRequest", "sending string request to " + url);
 
         project.software.uni.positionprediction.datatype.Request request =
                 new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
@@ -101,7 +102,7 @@ public class MovebankRequest {
         String url = baseUrl+attributes;
 
         // Request a string response from the provided URL.
-        System.out.println("sending string request to " + url);
+        Log.i("MovebankRequest", "sending string request to " + url);
 
         project.software.uni.positionprediction.datatype.Request request =
                 new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());

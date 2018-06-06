@@ -34,7 +34,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
     @Override
     public Locations predict(PredictionUserParameters params, PredictionBaseData data) {
         // TODO determine pastDataPoints from params.past_date
-        int pastDataPoints = 10;
+        int pastDataPoints = 50;
 
         // Compute prediction
         Locations prediction = next_Location(data.pastTracks, pastDataPoints);
@@ -78,6 +78,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
 
         // Add avg vector to current Location
         Locations result_list = new SingleTrajectory();
+        // todo: returns locations with hasAltitude = true. not good.
         Location result_vector = curr_loc.to3D().add(avg);
         result_list.add(result_vector);
         return result_list;
@@ -97,6 +98,13 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
 
         // Compute sum
         for (int i = 0; i < collection.size(); i++) {
+
+            if (collection.get(i).has_altitude) {
+                Log.i("algorithm", "a location has altitude set!");
+            } else {
+                Log.i("algorithm", "a location doesnt have alt set!");
+            }
+
             sum_long += collection.get(i).getLon();
             sum_lat += collection.get(i).getLat();
             sum_height += collection.get(i).getAlt();
