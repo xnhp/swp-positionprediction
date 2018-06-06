@@ -8,7 +8,7 @@ public class Location {
     public double lon; // Latitude
     public double lat; // Longitude
     public double alt; // Altitude
-    boolean has_altitude;
+    public boolean has_altitude;
 
     public Location(double lon, double lat, double alt) {
         this.lon = lon;
@@ -64,14 +64,14 @@ public class Location {
     public Location add(Location loc)  {
         if (loc.has_altitude && this.has_altitude) {
             return new Location(
-                    this.lat + loc.lat,
                     this.lon + loc.lon,
+                    this.lat + loc.lat,
                     this.alt + loc.alt
             );
         } else if (!loc.has_altitude && !this.has_altitude) {
             return new Location(
-                    this.lat + loc.lat,
-                    this.lon + loc.lon
+                    this.lon + loc.lon,
+                    this.lat + loc.lat
             );
         } else {
             IncompatibleLocationException e = new IncompatibleLocationException();
@@ -90,9 +90,9 @@ public class Location {
         double newLon = this.lon * scalar;
         if (this.has_altitude) {
             double newAlt = this.alt * scalar;
-            return new Location(newLat, newLon, newAlt);
+            return new Location(newLon, newLat, newAlt);
         } else {
-            return new Location(newLon, newLon);
+            return new Location(newLon, newLat);
         }
     }
 
