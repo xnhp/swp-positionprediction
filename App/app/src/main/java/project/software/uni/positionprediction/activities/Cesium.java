@@ -42,8 +42,8 @@ public class Cesium extends AppCompatActivity {
         setContentView(R.layout.activity_cesium);
 
 
-        this.buttonSettings = (Button) findViewById(R.id.navbar_button_settings);
-        this.buttonBack = (Button) findViewById(R.id.navbar_button_back);
+        this.buttonSettings = findViewById(R.id.navbar_button_settings);
+        this.buttonBack = findViewById(R.id.navbar_button_back);
 
         final Cesium cesium = this;
 
@@ -83,6 +83,8 @@ public class Cesium extends AppCompatActivity {
         // Dynamically add a String as a file after the server has started.
         // Web Location: http://localhost:8080/test.html
         webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
+
+        launchWebView(webView);
     }
 
     public void launchBrowser(View view) {
@@ -96,8 +98,8 @@ public class Cesium extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void launchWebView(View view) {
 
-        // Copied from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
-        this.webView = new WebView(this);
+        // Copied and modified from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
+        this.webView = findViewById(R.id.cesium_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         final Activity activity = this;
 
@@ -114,9 +116,8 @@ public class Cesium extends AppCompatActivity {
             }
         });
 
-        // Load the URL and set the view.
+        // Load the URL
         webView.loadUrl(CESIUM_URI);
-        setContentView(webView);
     }
 
     @Override
