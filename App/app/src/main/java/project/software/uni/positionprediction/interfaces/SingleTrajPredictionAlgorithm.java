@@ -1,9 +1,14 @@
 package project.software.uni.positionprediction.interfaces;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
+import project.software.uni.positionprediction.algorithm.PredictionBaseData;
+import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Locations;
 
 /**
  * General Interface for using a prediction algorithm
@@ -20,15 +25,10 @@ public interface SingleTrajPredictionAlgorithm {
      * <p>
      * Returns only one predicted point
      *
-     * @param date_past
-     * @param date_pred
-     * @param bird_id
-     * @return
      */
     // Todo: Output
-    Location predict(Date date_past, Date date_pred, int study_id, int bird_id);
 
-
+    Locations predict(PredictionUserParameters algParams, PredictionBaseData data);
 }
 
 

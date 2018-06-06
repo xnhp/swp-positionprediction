@@ -3,9 +3,10 @@ package project.software.uni.positionprediction.visualisation;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.Locations;
 
-    /* a single trajectory merely consists of a series of points */
+/* a single trajectory merely consists of a series of points */
 public class SingleTrajectoryVis extends Visualisation {
 
 
@@ -23,11 +24,11 @@ public class SingleTrajectoryVis extends Visualisation {
         //          2) to visualise which data is more recent in past tracks (see benny's screenshot)
 
 
-        public SingleTrajectoryVis(ArrayList<Location3D> locations) {
+        public SingleTrajectoryVis(Locations locations) {
             super(locations);
         }
 
-        public SingleTrajectoryVis(ArrayList<Location3D> pts, String pointColor, String lineColor, int pointRadius) {
+        public SingleTrajectoryVis(Locations pts, String pointColor, String lineColor, int pointRadius) {
             super(pts);
             makeStyledObjects(pointColor, lineColor, pointRadius);
         }
@@ -35,10 +36,10 @@ public class SingleTrajectoryVis extends Visualisation {
 
         // todo: rewrite
         private void makeStyledObjects(String pointColor, String lineColor, int pointRadius) {
-            Iterator<Location3D> it = locations.iterator();
-            Location3D prev = locations.get(0);
+            Iterator<Location> it = locations.iterator();
+            Location prev = locations.get(0);
             while(it.hasNext()) {
-                Location3D next = it.next();
+                Location next = it.next();
                 this.styledPoints.add(new StyledPoint(next, pointColor, pointRadius));
                 if (prev != next) {
                     this.styledLineSegments.add(new StyledLineSegment(prev, next, lineColor));

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -30,10 +29,9 @@ import java.util.zip.Inflater;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.TestConnectionSQLAlgo;
+import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.PermissionManager;
@@ -42,13 +40,16 @@ public class BirdSelect extends AppCompatActivity {
 
     private static Context context;
 
-    private Button buttonSelect = null;
+    private Button buttonSettings = null;
+    private Button buttonBack = null;
     private Button buttonOpenMap = null;
     private Button buttonOpenCesium = null;
 
     private EditText editTextSearch = null;
+    private TextView editTextNavbar = null;
 
     private LinearLayout scrollViewLayout = null;
+    private RelativeLayout loadingIndicator = null;
 
     private final static int BIRD_SELECT = 1;
     private final static  int STUDY_SELECT = 2;
@@ -69,13 +70,11 @@ public class BirdSelect extends AppCompatActivity {
         buttonOpenMap = (Button) findViewById(R.id.birdselect_button_openmap);
         buttonOpenCesium = (Button) findViewById(R.id.birdselect_button_opencesium);
 
-        buttonSelect = findViewById(R.id.birdselect_button_select);
-
-        buttonOpenMap = findViewById(R.id.birdselect_button_openmap);
-
-        buttonOpenCesium = findViewById(R.id.birdselect_button_opencesium);
+        LayoutInflater inflater = getLayoutInflater();
+        loadingIndicator = (RelativeLayout) inflater.inflate(R.layout.loading_screen, null);
 
         state = STUDY_SELECT;
+
 
         final BirdSelect birdSelect = this;
 
@@ -125,8 +124,6 @@ public class BirdSelect extends AppCompatActivity {
 
                 // update the studies in the database2911059
                 SQLDatabase.getInstance(birdSelect).updateStudiesSync();
-
-                SQLDatabase.getInstance(birdSelect).updateBirdDataSync(2911040, 2911059);
 
                 // update the study list
                 final Study studies[] = SQLDatabase.getInstance(birdSelect).getStudies();
@@ -276,22 +273,9 @@ public class BirdSelect extends AppCompatActivity {
 
         final BirdSelect birdSelect = this;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                SQLDatabase.getInstance(birdSelect).updateBirdData(bird.getStudyId(), bird.getId());
-
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlgorithmExtrapolationExtended algo = new AlgorithmExtrapolationExtended(birdSelect);
-                        LinkedList<Location3D> list = algo.predict(null, null, bird.getStudyId(), bird.getId());
-                        if(list != null && list.size() > 0) Log.e("Result", ""+ list.get(0).getLoc_long() );
-                    }
-                });
-            }
-        }).start();
+        Intent showOn2DMap = new Intent(this, OSM.class);
+        showOn2DMap.putExtra("bird", bird);
+        startActivity(showOn2DMap);
 
     }
 

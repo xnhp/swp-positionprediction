@@ -11,7 +11,10 @@ import java.util.Arrays;
 import project.software.uni.positionprediction.algorithm.PredictionBaseData;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatype.BirdData;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Locations;
+import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
@@ -106,19 +109,21 @@ public class PredictionWorkflowController {
 
         // Use only needed data
         // todo: do this via SQL request?
-        Location3D loc_data[] = new Location3D[pastDataPoints];
+        //Location loc_data[] = new Location[pastDataPoints];
+        Locations pastTracks = new SingleTrajectory();
         int size = tracks.length;
         for (int i = 0; i < pastDataPoints; i++) {
-            loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
+            //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
+            pastTracks.add( tracks[tracks.length-1 - pastDataPoints + i].getLocation() );
         }
 
         PredictionBaseData data = new PredictionBaseData();
-        data.pastTracks = loc_data;
+        data.pastTracks = pastTracks;
         // in the future, might access different sources of information here (e.g. current weather)
         // and save that in PredictionBaseDate to be used for a position prediction
 
         // run prediction
-        ArrayList<Location3D> prediction = algorithm.predict(algParams, data);
+        Locations prediction = algorithm.predict(algParams, data);
 
         // think about how to visualise prediction
         // todo: data type for colors
@@ -131,7 +136,6 @@ public class PredictionWorkflowController {
         //visAdapter.visualiseSingleTraj(predVis);
 
         // visualise past data
-        ArrayList<Location3D> pastTracks = new ArrayList<>(Arrays.asList(data.pastTracks));
         String pastPointCol = "#9116e2"; // purple
         String pastLineCol = "#1668e2"; // blue
         int pastPointRadius = 15;

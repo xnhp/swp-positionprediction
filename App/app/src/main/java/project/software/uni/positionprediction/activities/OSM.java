@@ -1,15 +1,12 @@
 package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import project.software.uni.positionprediction.R;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -25,7 +22,6 @@ import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 public class OSM extends AppCompatActivity {
 
@@ -34,6 +30,7 @@ public class OSM extends AppCompatActivity {
     private Button buttonSettings = null;
     private Button buttonDownload = null;
     private Button buttonPanTo    = null;
+    private Button buttonBack     = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +44,7 @@ public class OSM extends AppCompatActivity {
 
         setContentView(R.layout.activity_osm);
 
-        MapView mapView = findViewById(R.id.map);
+        MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
         mymap.initMap(mapView, center, 6);
 
@@ -68,8 +65,6 @@ public class OSM extends AppCompatActivity {
         Bird myTestBird = new Bird(2911059,2911040, "albatros");
         showPrediction(myTestBird);
 
-
-        buttonSettings = findViewById(R.id.navigation_button_settings);
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
@@ -150,8 +145,6 @@ public class OSM extends AppCompatActivity {
         });
     }
 
-
-    }
 
     public void onResume(){
         super.onResume();

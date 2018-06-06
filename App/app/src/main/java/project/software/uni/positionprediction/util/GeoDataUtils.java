@@ -6,6 +6,7 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
 
 /**
@@ -51,5 +52,9 @@ public abstract class GeoDataUtils {
 
     public static GeoPoint Location3DToGeoPoint(Location3D loc) {
         return new GeoPoint(loc.getLoc_lat(), loc.getLoc_long());
+    }
+
+    public static GeoPoint LocationToGeoPoint(Location loc) {
+        return new GeoPoint(loc.getLat(), loc.getLon());
     }
 }

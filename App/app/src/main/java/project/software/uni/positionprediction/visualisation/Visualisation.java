@@ -2,8 +2,11 @@ package project.software.uni.positionprediction.visualisation;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Locations;
 
 /**
  * This class represents an abstract "visualisation" of a prediction result.
@@ -16,11 +19,15 @@ public class Visualisation {
 
     // Data
     // todo: remove, only use styledPoints
-    public ArrayList<Location3D> locations;
+    public Locations locations;
 
     // Constructor
-    public Visualisation(ArrayList<Location3D> locations){
+    public Visualisation(Locations locations){
         this.locations = locations;
+    }
+
+    public Iterator<Location> iterator() {
+        return locations.iterator();
     }
 
 }

@@ -49,8 +49,8 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
             // todo: note: this will create an "osmdroid overlay" for each segment.
             // this is potentially bad for performance
             List<GeoPoint> locs = new ArrayList<>();
-            locs.add(GeoDataUtils.Location3DToGeoPoint(seg.start));
-            locs.add(GeoDataUtils.Location3DToGeoPoint(seg.end));
+            locs.add(GeoDataUtils.LocationToGeoPoint(seg.start));
+            locs.add(GeoDataUtils.LocationToGeoPoint(seg.end));
             map.drawPolyLine(locs, seg.lineColor);
         }
 
@@ -64,8 +64,8 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
             pointStyle.setColor(Color.parseColor(styledPoint.pointColor));
             osmStyledPoints.pts.add(
                     new StyledLabelledGeoPoint(
-                            styledPoint.location.getLoc_lat(),
-                            styledPoint.location.getLoc_long(),
+                            styledPoint.location.getLat(),
+                            styledPoint.location.getLon(),
                             null,
                             pointStyle,
                             new Paint() // dont care about textStyle?
