@@ -12,7 +12,9 @@
         android:orientation="vertical">
 
         <include
-            layout="@layout/navigation_bar"/>
+            layout="@layout/navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
         <org.osmdroid.views.MapView android:id="@+id/map"
