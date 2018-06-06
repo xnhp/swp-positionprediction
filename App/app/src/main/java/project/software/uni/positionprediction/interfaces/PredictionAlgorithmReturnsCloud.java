@@ -1,7 +1,8 @@
 package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
-import project.software.uni.positionprediction.datatype.Location;
+
+import project.software.uni.positionprediction.datatype.Cloud;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 
 public interface PredictionAlgorithmReturnsCloud {
@@ -23,6 +24,6 @@ public interface PredictionAlgorithmReturnsCloud {
      * @param bird_id
      * @return
      */
-    Location predict(TrackingPoint[] data, Date date_past, Date date_pred, int study_id, int bird_id);
+    Cloud predict(TrackingPoint data[], Date date_past, Date date_pred, int study_id, int bird_id);
 
 }

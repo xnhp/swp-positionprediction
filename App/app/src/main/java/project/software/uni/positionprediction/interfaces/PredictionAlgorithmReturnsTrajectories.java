@@ -2,6 +2,7 @@ package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
 import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 
 public interface PredictionAlgorithmReturnsTrajectories {
@@ -23,6 +24,6 @@ public interface PredictionAlgorithmReturnsTrajectories {
      * @param bird_id
      * @return
      */
-    Location predict(TrackingPoint[] data, Date date_past, Date date_pred, int study_id, int bird_id);
+    MultipleTrajectories predict(TrackingPoint data[], Date date_past, Date date_pred, int study_id, int bird_id);
 
 }

@@ -11,11 +11,12 @@ import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectories;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 
 
 
-public class AlgorithmSimilarTrajectory implements PredictionAlgorithm_MultipleTrajectories {
+public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTrajectories {
 
     private Context context;
 
@@ -25,7 +26,7 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm_MultipleT
 
 
     @Override
-    public MultipleTrajectories predict(Date date_past, Date date_pred, int study_id, int bird_id) {
+    public MultipleTrajectories predict(TrackingPoint data[] ,Date date_past, Date date_pred, int study_id, int bird_id) {
 
 
 

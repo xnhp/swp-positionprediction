@@ -24,7 +24,7 @@ public interface PredictionAlgorithmReturnsTrajectory {
      * @param bird_id
      * @return
      */
-    Location predict(TrackingPoint[] data, Date date_past, Date date_pred, int study_id, int bird_id);
+    Location predict(TrackingPoint data[], Date date_past, Date date_pred, int study_id, int bird_id);
 
 
 }
