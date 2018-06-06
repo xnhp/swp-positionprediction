@@ -6,10 +6,12 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
 
 /**
  * Utility methods for manipulating geographical data (types).
+ * TJ: Not needed at the moment.
  */
 public abstract class GeoDataUtils {
 
@@ -18,7 +20,7 @@ public abstract class GeoDataUtils {
      * @param points
      * @return an ArrayList of GeoPoints
      */
-    public static List<GeoPoint> castDownGeoPointList(List<IGeoPoint> points) {
+    public static List<GeoPoint> IGeoPointsToGeoPoints(List<IGeoPoint> points) {
         List<GeoPoint> newPoints = new ArrayList<>();
         for (IGeoPoint pt : points) {
             newPoints.add((GeoPoint) pt);
@@ -26,8 +28,8 @@ public abstract class GeoDataUtils {
         return newPoints;
     }
 
-    // TODO: redundant
-    public static List<IGeoPoint> ListGeoPointToIGeoPoint(List<GeoPoint> points) {
+    // TODO: redundant. TJ: Why?
+    public static List<IGeoPoint> GeoPointsToIGeoPoints(List<GeoPoint> points) {
         List<IGeoPoint> newPoints = new ArrayList<>();
         for (GeoPoint pt : points) {
             newPoints.add((IGeoPoint) pt);
@@ -46,5 +48,13 @@ public abstract class GeoDataUtils {
             newPoints.add(new GeoPoint(loc.getLoc_lat(), loc.getLoc_long()));
         }
         return newPoints;
+    }
+
+    public static GeoPoint Location3DToGeoPoint(Location3D loc) {
+        return new GeoPoint(loc.getLoc_lat(), loc.getLoc_long());
+    }
+
+    public static GeoPoint LocationToGeoPoint(Location loc) {
+        return new GeoPoint(loc.getLat(), loc.getLon());
     }
 }

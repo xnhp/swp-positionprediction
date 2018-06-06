@@ -8,7 +8,7 @@ public class Location {
     public double lon; // Latitude
     public double lat; // Longitude
     public double alt; // Altitude
-    boolean has_altitude;
+    public boolean has_altitude;
 
     public Location(double lon, double lat, double alt) {
         this.lon = lon;
@@ -57,128 +57,141 @@ public class Location {
     }
 
     /**
-     * Transforms 2D locations without height-value to 3D with default height value 0
+     * Add the values of the given location to this location and return a *new* location object.
+     * @param loc
      * @return
      */
-    public Location to3D () {
-        if (has_altitude) {
-            return new Location(this.lon, this.lat, this.alt);
+    public Location add(Location loc)  {
+        if (loc.has_altitude && this.has_altitude) {
+            return new Location(
+                    this.lon + loc.lon,
+                    this.lat + loc.lat,
+                    this.alt + loc.alt
+            );
+        } else if (!loc.has_altitude && !this.has_altitude) {
+            return new Location(
+                    this.lon + loc.lon,
+                    this.lat + loc.lat
+            );
         } else {
-            return new Location(this.lon, this.lat, 0);
+            IncompatibleLocationException e = new IncompatibleLocationException();
+            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
-
     /**
-     * Adds two locations
-     * @param location
-     * @return
-     */
-    public Location add(Location location) {
-        if (!has_altitude) {
-            this.setAlt(0);
-        }
-        return new Location(
-                this.getLon() + location.getLon(),
-                this.getLat() + location.getLat(),
-                this.getAlt() + location.getAlt()
-        );
-
-    }
-
-
-    /**
-     * Multiplies vector with scalar
+     * multiply values of a location vector by a scalar
      * @param scalar
-     * @return
+     * @return a new location object
      */
-    public Location multiply(double scalar){
-        if (!has_altitude) {
-            this.setAlt(0);
+    public Location multiply(double scalar) {
+        double newLat = this.lat * scalar;
+        double newLon = this.lon * scalar;
+        if (this.has_altitude) {
+            double newAlt = this.alt * scalar;
+            return new Location(newLon, newLat, newAlt);
+        } else {
+            return new Location(newLon, newLat);
         }
-        return new Location(
-                this.getLon() * scalar,
-                this.getLat() * scalar,
-                this.getAlt() * scalar
-        );
     }
 
-
     /**
-     * Subtracts vector with second vector
-     * @param location
-     * @return
+     * Subtract one location from the other
+     * @param loc
+     * @return a new location object
      */
-    public Location subtract(Location location) {
-        return this.add( location.multiply(-1) );
+    public Location subtract(Location loc)  {
+        return this.add( loc.multiply(-1) );
     }
 
-
     /**
-     * Divides vector by number
+     * Divide values of a location vector by a given number
      * @param number
-     * @return
+     * @return a new location object
      */
     public Location divide(double number) {
         if (number == 0) {
-            // Todo Message
-            return null;
+            IllegalArgumentException e = new IllegalArgumentException("division by zero");
+            e.printStackTrace();
+            throw new RuntimeException();
         }
         return this.multiply( (double) (1/number));
     }
 
 
     /**
-     * Computes angle between current and given vector
-     * @param vector
-     * @return
+     * Gets vector from given location to current location
+     * @param loc
+     * @return a new location object
      */
-    public double getAngle(Location vector) {
-        if (!has_altitude) {
-            this.setAlt(0);
+    public Location getVectorFrom(Location loc){
+        double loc_long = this.lon - loc.lon;
+        double loc_lat = this.lat - loc.lon;
+        if (!this.has_altitude && !loc.has_altitude) {
+            return new Location(loc_long, loc_lat);
+        } else if (this.has_altitude && loc.has_altitude){
+            double loc_height = this.alt - loc.alt;
+            return new Location(loc_long, loc_lat, loc_height);
+        } else {
+            IncompatibleLocationException e = new IncompatibleLocationException();
+            e.printStackTrace();
+            throw new RuntimeException();
         }
-        if (!vector.has_altitude) {
-            vector.setAlt(0);
-        }
-        return Math.acos( this.scalarproduct(vector) / (this.abs() * vector.abs()));
     }
 
+    /**
+     * Computes angle between current and given vector
+     * @param loc_pre
+     * @return
+     */
+    public double getAngle(Location loc_pre) {
+        Location vec_horizontal = new Location(0,1,0);
+        Location vec = this.getVectorFrom(loc_pre);
+        return Math.acos( vec_horizontal.dotProduct(vec) / (vec_horizontal.abs() * vec.abs()));
+    }
 
     /**
-     * Computes scalarproduct of vectors
+     * Computes dot product of vectors
      * @param vec
      * @return
      */
-    public double scalarproduct(Location vec) {
-        if (!has_altitude) {
-            this.setAlt(0);
+    public double dotProduct(Location vec) {
+        double a1 = this.lon;
+        double a2 = this.lat;
+        double b1 = vec.lon;
+        double b2 = vec.lat;
+        if (vec.has_altitude && this.has_altitude) {
+            double a3 = this.alt;
+            double b3 = vec.alt;
+            return (a1*b1 + a2*b2 + a3*b3);
+        } else if (!vec.has_altitude && !this.has_altitude) {
+            return (a1*b1 + a2*b2);
+        } else {
+            IncompatibleLocationException e = new IncompatibleLocationException();
+            e.printStackTrace();
+            throw new RuntimeException();
         }
-        if (!vec.has_altitude) {
-            vec.setAlt(0);
-        }
-        double a1 = this.getLon();
-        double a2 = this.getLat();
-        double a3 = this.getAlt();
-        double b1 = vec.getLon();
-        double b2 = vec.getLat();
-        double b3 = vec.getAlt();
-        return (a1*b1 + a2*b2 + a3*b3);
+
     }
+
 
     /**
      * Computes the length of a vector
      * @return
      */
     public double abs() {
-        if (!has_altitude) {
-            this.setAlt(0);
+        double a1 = Math.pow(this.lon, 2);
+        double a2 = Math.pow(this.lat, 2);
+        if (!this.has_altitude) {
+            double a3 = Math.pow(this.alt, 2);
+            return Math.sqrt(a1+a2+a3);
+        } else {
+            return Math.sqrt(a1+a2);
         }
-        double a1 = Math.pow(this.getLon(), 2);
-        double a2 = Math.pow(this.getLat(), 2);
-        double a3 = Math.pow(this.getAlt(), 2);
-        return Math.sqrt(a1+a2+a3);
-    }
 
+
+    }
 
     /**
      * Rotation about the z-axis (height). We don't need any other rotation, because the
@@ -188,6 +201,8 @@ public class Location {
      * @return
      */
     public Location rotate(double angle) {
+        // TODO: not set alt=0 here
+        // work with 2D vector instead
         if (!has_altitude) {
             this.setAlt(0);
         }
@@ -211,23 +226,24 @@ public class Location {
         double res3 = r31*v1 + r32*v2 + r33*v3;
 
         return new Location(res1, res2, res3);
+
     }
+
 
 
     /**
-     * Print method for Location
+     * Print method for Location3D
      */
     public void print() {
-        if (!has_altitude) {
-            this.setAlt(0);
-        }
-        System.out.print("[" + this.getLon() + ", " + this.getLat() + ", " + this.getAlt() + "]\n");
+        System.out.print("[" + this.lon + ", " + this.lat + ", " + this.alt + "]\n");
 
     }
 
-
-
-
-
-
+    public Location to3D() {
+        if (!this.has_altitude) {
+            return new Location(this.lon, this.lat, 0);
+        } else {
+            return new Location(this.lon, this.lat, this.alt);
+        }
+    }
 }

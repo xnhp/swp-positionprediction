@@ -12,6 +12,8 @@ import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.HttpStatusCode;
 import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.Location2D;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Request;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.datatype.TrackingPoint;

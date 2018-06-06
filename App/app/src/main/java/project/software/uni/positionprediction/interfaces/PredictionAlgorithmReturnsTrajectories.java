@@ -1,6 +1,9 @@
 package project.software.uni.positionprediction.interfaces;
 
 import java.util.Date;
+
+import project.software.uni.positionprediction.algorithm.PredictionBaseData;
+import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 
@@ -15,13 +18,7 @@ public interface PredictionAlgorithmReturnsTrajectories {
      *                       The order of the trajectories is not important.
      *      - Cloud:         List of Locations. The order is not necessary
      *
-     * @param data
-     * @param date_past
-     * @param date_pred
-     * @param study_id
-     * @param bird_id
-     * @return
      */
-    MultipleTrajectories predict(TrackingPoint data[], Date date_past, Date date_pred, int study_id, int bird_id);
+    MultipleTrajectories predict(PredictionUserParameters algParams, PredictionBaseData data);
 
 }

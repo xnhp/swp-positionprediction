@@ -1,5 +1,13 @@
 package project.software.uni.positionprediction.visualisation;
 
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Locations;
+
 /**
  * This class represents an abstract "visualisation" of a prediction result.
  * Image it saying "a point here"/"a box there".
@@ -9,6 +17,17 @@ package project.software.uni.positionprediction.visualisation;
  */
 public class Visualisation {
 
-    // for identifying the subtype of visualisation when drawing
-    public VisualisationKinds kind;
+    // Data
+    // todo: remove, only use styledPoints
+    public Locations locations;
+
+    // Constructor
+    public Visualisation(Locations locations){
+        this.locations = locations;
+    }
+
+    public Iterator<Location> iterator() {
+        return locations.iterator();
+    }
+
 }

@@ -1,83 +1,124 @@
 package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import project.software.uni.positionprediction.R;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import project.software.uni.positionprediction.datatype.Location2D;
+import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
+import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
+import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 
 public class OSM extends AppCompatActivity {
 
     OSMDroidMap mymap;
 
     private Button buttonSettings = null;
-    private Button buttonBack = null;
     private Button buttonDownload = null;
     private Button buttonPanTo    = null;
+    private Button buttonBack     = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final OSM osm = this;
 
+        // TODO: put this in own method
         // note: the actions in the OSMDroidMap constructor have to happen *before*
         // setContentView is called.
         mymap = new OSMDroidMap(this);
 
         setContentView(R.layout.activity_osm);
 
-        buttonSettings = findViewById(R.id.navbar_button_settings);
-        buttonBack = findViewById(R.id.navbar_button_back);
-        buttonDownload = findViewById(R.id.map_download_button);
-        //buttonPanTo    = findViewById(R.id.map_panto_button);
-
         MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
         mymap.initMap(mapView, center, 6);
 
 
+        //Bird myBird = new Bird(2911040, 2911059, "Zwitschi");
 
-        ArrayList<IGeoPoint> testPosGp = new ArrayList<>();
-        testPosGp.add(new GeoPoint(47.680503, 9.177198));
-        testPosGp.add(new GeoPoint(47.679463, 9.179558));
-        testPosGp.add(new GeoPoint(47.678871, 9.181532));
+        Intent i = getIntent();
+        Bird selectedBird = (Bird) i.getSerializableExtra("bird");
+        if (selectedBird != null) {
+            // todo download maps and show note to user when done
 
-        // mymap.drawTracks(testPosGp, "#ff0077", "#00ff88");
+            Log.i("VisBird", "Trying to show prediction for " + selectedBird.toString());
+
+            showPrediction(selectedBird); // TODO tmp
+        }
+
+        // TODO: this is for testing
+        Bird myTestBird = new Bird(2911059,2911040, "albatros");
+        showPrediction(myTestBird);
+
+        buttonSettings = findViewById(R.id.navbar_button_settings);
+        buttonBack = findViewById(R.id.navbar_button_back);
+        buttonDownload = findViewById(R.id.map_download_button);
+        //buttonPanTo    = findViewById(R.id.map_panto_button);
+        registerEventHandlers(osm);
+
+
+    }
 
 
 
-        ArrayList<Location2D> testPosLoc = new ArrayList<>();
-        testPosLoc.add(new Location2D(47.680503, 9.177198));
-        testPosLoc.add(new Location2D(47.679463, 9.179558));
-        testPosLoc.add(new Location2D(47.678871, 9.181532));
-        // we would receive a visualisation object as output from a prediction algorithm
-        SingleTrajectoryVis myVis = new SingleTrajectoryVis();
-        myVis.traj = testPosGp;
-        myVis.pointColor = "#ff0077"; // pink
-        myVis.lineColor = "#00ff88";  // bright green
-
-
+    private void showPrediction(Bird bird) {
         // obtain an adapter
         OSMDroidVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter();
         // set the map for the adapter
         myVisAdap.linkMap(mymap);
+
         // have it draw the visualisation
-        myVisAdap.visualiseSingleTraj(myVis);
+        // (I am making the assumption that an algorithm only has one specific fitting Visualisation)
+        PredictionAlgorithmReturnsTrajectory algorithm = new AlgorithmExtrapolationExtended();
+        PredictionWorkflowController controller = new PredictionWorkflowController(this);
+
+        // todo: get these from user / from settings
+        Date date_past = new Date(2017, 5, 1, 0, 0);
+        // for what point in the future we want the prediction
+        int hoursInFuture = 5;
+        Calendar cl = Calendar.getInstance();
+        cl.setTime(new Date());
+        cl.add(Calendar.HOUR, hoursInFuture);
+        Date date_pred = cl.getTime();
 
 
+        controller.doSingleTrajPrediction(
+                myVisAdap,
+                algorithm,
+                new PredictionUserParameters(
+                        date_past,
+                        date_pred,
+                        bird
+                )
+        );
+
+        // TODO from timo
+        // Depending on the semantics of the prediction output, the suitable Visualization subclass
+        // has to be chosen
+
+        // PolygonVis mainauVis = new PolygonVis(mainau);
+        // SingleTrajectoryVis uniMainauVis = new SingleTrajectoryVis(uniMainau);
+    }
+
+
+
+
+    private void registerEventHandlers(final OSM osm) {
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,10 +142,8 @@ public class OSM extends AppCompatActivity {
                 mymap.saveAreaToCache(subafrica, 5,7);
             }
         });
-
-
-
     }
+
 
     public void onResume(){
         super.onResume();

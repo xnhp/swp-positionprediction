@@ -5,11 +5,7 @@ import project.software.uni.positionprediction.datatype.Location;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
+
 public class AlgorithmTests {
 
     private double delta = 0.000001;
@@ -68,7 +64,7 @@ public class AlgorithmTests {
         // scalarproduct
         Location v11 = new Location(1,0,0);
         Location v12 = new Location( 0, 1);
-        double computed_sp = v11.scalarproduct(v12);
+        double computed_sp = v11.dotProduct(v12);
         double expected_sp = 0;
         assertEquals(expected_sp, computed_sp, delta);
 
