@@ -13,7 +13,6 @@ import project.software.uni.positionprediction.movebank.SQLDatabase;
 
 public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
 
-    private final int weight_max = 100;
     private Context context;
 
     public AlgorithmExtrapolationExtended ( Context context ) {
@@ -23,9 +22,15 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
 
     /**
      * Main idea:
-     * Compute the difference between two successive data points and take the average of them.
-     * By adding the average to the last data point we get a very simple prediction algorithm
      *
+     * ... ---> ---> ---> ---> X - - - >
+     * vn   v3   v2   v1   v0      p1
+     *
+     * Name v1,...,vn the known vectors, where v1 is the last known vector. Compute the average
+     * of the vectors (v1), (v1+v2), ..., (v1+..+vn). This gives a weighted average vector.
+     * Add this vector to X and get p1.
+     *
+     * @param d
      * @param date_past
      * @param date_pred
      * @param study_id
@@ -33,7 +38,29 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      * @return
      */
     @Override
-    public Location predict(Date date_past, Date date_pred, int study_id, int bird_id) {
+    public Location predict(TrackingPoint d[], Date date_past, Date date_pred, int study_id, int bird_id) {
+
+        // Size error
+        if (d.length == 0) {
+            Log.e("Error", "Data has length 0");
+        }
+
+        // Date error
+        Date now = new Date();
+        if (now.before(date_past)) {
+            Log.e("Error", "Past date is in the future");
+        }
+
+        // ID error
+        if (study_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+        if (bird_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+
+
+
 
         // Still hardcoded
         int constant = 10; // Use last 10 data points
