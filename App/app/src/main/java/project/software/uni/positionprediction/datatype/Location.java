@@ -23,52 +23,6 @@ public class Location {
         this.has_altitude = false;
     }
 
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
-
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
-    public double getAlt() {
-        return alt;
-    }
-
-    public void setAlt(double alt) {
-        this.alt = alt;
-    }
-
-    public boolean isHas_altitude() {
-        return has_altitude;
-    }
-
-    public void setHas_altitude(boolean has_altitude) {
-        this.has_altitude = has_altitude;
-    }
-
-
-    /**
-     * Transforms 2D locations without height-value to 3D with default height value 0
-     * @return
-     */
-    public Location to3D () {
-        if (has_altitude) {
-            return new Location(this.lon, this.lat, this.alt);
-        } else {
-            return new Location(this.lon, this.lat, 0);
-        }
-    }
-
-
     /**
      * Add the values of the given location to this location and return a *new* location object.
      * @param loc
@@ -245,14 +199,10 @@ public class Location {
 
 
     /**
-     * Print method for Location
+     * Print method for Location3D
      */
     public void print() {
-        if (!has_altitude) {
-            this.setAlt(0);
-        }
-        System.out.print("[" + this.getLon() + ", " + this.getLat() + ", " + this.getAlt() + "]\n");
+        System.out.print("[" + this.lon + ", " + this.lat + ", " + this.alt + "]\n");
 
     }
-
 }

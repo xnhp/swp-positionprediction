@@ -13,6 +13,7 @@ import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.HttpStatusCode;
 import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location2D;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Request;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
@@ -165,11 +166,7 @@ public class SQLDatabase {
             public void handleResponse(Request response) {
                 if(response.getResponseStatus() == HttpStatusCode.OK){
                     insertBirdData(studyId, indivId, response.getResponse());
-                    Log.i("VisBird", "received bird data");
-                    Log.i("VisBird", response.getResponse());
                 } else {
-                    // TODO: error handling
-                    Log.i("VisBird", "couldnt fetch data for bird: " + indivId + " from study: " + studyId);
                     Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
                 }
             }
@@ -309,13 +306,15 @@ public class SQLDatabase {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT timestamp, location_long, location_lat, tag_id, " +
-                "individual_id, study_id FROM trackpoints WHERE study_id = " + studyId +
-                " AND individual_id = " + indivId + " ORDER BY timestamp DESC", new String[]{});
+                "individual_id, study_id FROM trackpoints " +
+                "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
+                " ORDER BY timestamp DESC", new String[]{});
 
         TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
+            Log.e("SQL", ""+cursor.getInt(4));
             points[rowIndex] = new TrackingPoint(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
                     new Date(cursor.getLong(0)*1000));

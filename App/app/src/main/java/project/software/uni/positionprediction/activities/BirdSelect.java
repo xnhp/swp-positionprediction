@@ -32,6 +32,8 @@ import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationE
 import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.PermissionManager;

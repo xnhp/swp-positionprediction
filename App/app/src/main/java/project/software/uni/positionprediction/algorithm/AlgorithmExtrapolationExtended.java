@@ -1,39 +1,69 @@
 package project.software.uni.positionprediction.algorithm;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Locations;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
-import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
+import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
+import project.software.uni.positionprediction.movebank.SQLDatabase;
 
-public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgorithm {
+public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
 
-    private final int weight_max = 100;
     private Context context;
 
-    // Algorithm objects are singletons because you cannot declare static methods in an interface.
-    // TODO: maybe abstract classes would be better after all?
-    private static AlgorithmExtrapolationExtended instance;
-    public static SingleTrajPredictionAlgorithm getInstance() {
-        if (instance == null) instance = new AlgorithmExtrapolationExtended();
-        return instance;
+    public AlgorithmExtrapolationExtended ( Context context ) {
+        this.context = context;
     }
 
 
     /**
      * Main idea:
-     * Compute the difference between two successive data points and take the average of them.
-     * By adding the average to the last data point we get a very simple prediction algorithm
-
+     *
+     * ... ---> ---> ---> ---> X - - - >
+     * vn   v3   v2   v1   v0      p1
+     *
+     * Name v1,...,vn the known vectors, where v1 is the last known vector. Compute the average
+     * of the vectors (v1), (v1+v2), ..., (v1+..+vn). This gives a weighted average vector.
+     * Add this vector to X and get p1.
+     *
+     * @param d
+     * @param date_past
+     * @param date_pred
+     * @param study_id
+     * @param bird_id
      * @return
      */
     @Override
     public Locations predict(PredictionUserParameters params, PredictionBaseData data) {
         // TODO determine pastDataPoints from params.past_date
         int pastDataPoints = 10;
+
+        // Size error
+        if (d.length == 0) {
+            Log.e("Error", "Data has length 0");
+        }
+
+        // Date error
+        Date now = new Date();
+        if (now.before(date_past)) {
+            Log.e("Error", "Past date is in the future");
+        }
+
+        // ID error
+        if (study_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+        if (bird_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+
         // Compute prediction
         Locations prediction = next_Location(data.pastTracks, pastDataPoints);
         return prediction;
@@ -83,7 +113,7 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
 
 
     /**
-     * Computes (weighted) average of Location3D vectors
+     * Computes (weighted) average of Location vectors
      *
      * @param collection
      * @return

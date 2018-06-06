@@ -15,6 +15,8 @@ public abstract class Locations {
 
     public Locations() { }
 
+    public Locations() { }
+
     public Locations(ArrayList<Location> locs) {
         this.locs = locs;
     }

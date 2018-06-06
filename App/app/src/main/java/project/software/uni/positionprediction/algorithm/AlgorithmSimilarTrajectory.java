@@ -1,9 +1,7 @@
 package project.software.uni.positionprediction.algorithm;
 
 import android.content.Context;
-import android.renderscript.Matrix3f;
-
-import org.apache.commons.math3.linear.MatrixUtils;
+import android.util.Log;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -12,16 +10,20 @@ import java.util.List;
 import project.software.uni.positionprediction.datatype.AngleSteplength;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.MultipleTrajectories;
+import project.software.uni.positionprediction.datatype.SingleTrajectory;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectories;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm_MultipleTrajectories;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 
 
 
-public class AlgorithmSimilarTrajectory implements PredictionAlgorithm_MultipleTrajectories {
+public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTrajectories {
 
     private Context context;
 
@@ -30,17 +32,51 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm_MultipleT
     }
 
 
+    /**
+     * Main idea:
+     *
+     * Get a list of angles of the last few vectors relative to the last known vector. Then iterate
+     * through the whole data and compute the list of angles for every data point. Mostly the
+     * computation of the list in every point can be stopped after a few (mostly 0 or 1) computations
+     * and comparisons, because it is very unlikely that three successive vectors have exactly the
+     * same angles as our last known trajectory.
+     * If we found the indexes, where similar trajectories end, we have to compute the relative angle
+     * of the next vectors (which helps us to predict the behaviour of the bird). Then add the
+     * last known vector of the whole data and turn it by the relative angle of the given trajectory.
+     *
+     * @param d
+     * @param date_past
+     * @param date_pred
+     * @param study_id
+     * @param bird_id
+     * @return
+     */
     @Override
     public MultipleTrajectories predict(PredictionUserParameters algParams, PredictionBaseData data) {
 
 
+        // Size error
+        if (d.length == 0) {
+            Log.e("Error", "Data has length 0");
+        }
+
+        // Date error
+        Date now = new Date();
+        if (now.before(date_past)) {
+            Log.e("Error", "Past date is in the future");
+        }
+
+        // ID error
+        if (study_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+        if (bird_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+
         // Length of trajectory
         int traj_length = 5;
         int pred_traj_length = 5;
-        double treshhold_direction = 0.5;
-
-
-
 
 
         // Algorithm
@@ -103,7 +139,6 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithm_MultipleT
             if (is_similar) {
                 possible_indices.add(i);
             }
-        }
 
 
         MultipleTrajectories trajectories = new MultipleTrajectories();
