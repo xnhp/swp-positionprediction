@@ -19,7 +19,7 @@ import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationE
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 
@@ -84,8 +84,7 @@ public class OSM extends AppCompatActivity {
 
         // have it draw the visualisation
         // (I am making the assumption that an algorithm only has one specific fitting Visualisation)
-        // todo: make it possible to use a different kind of algorithm
-        SingleTrajPredictionAlgorithm algorithm = AlgorithmExtrapolationExtended.getInstance();
+        PredictionAlgorithmReturnsTrajectory algorithm = new AlgorithmExtrapolationExtended();
         PredictionWorkflowController controller = new PredictionWorkflowController(this);
 
         // todo: get these from user / from settings

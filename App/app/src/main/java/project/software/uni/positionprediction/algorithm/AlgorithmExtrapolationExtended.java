@@ -16,10 +16,8 @@ import project.software.uni.positionprediction.movebank.SQLDatabase;
 
 public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
 
-    private Context context;
 
-    public AlgorithmExtrapolationExtended ( Context context ) {
-        this.context = context;
+    public AlgorithmExtrapolationExtended() {
     }
 
 
@@ -32,37 +30,11 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      * Name v1,...,vn the known vectors, where v1 is the last known vector. Compute the average
      * of the vectors (v1), (v1+v2), ..., (v1+..+vn). This gives a weighted average vector.
      * Add this vector to X and get p1.
-     *
-     * @param d
-     * @param date_past
-     * @param date_pred
-     * @param study_id
-     * @param bird_id
-     * @return
      */
     @Override
     public Locations predict(PredictionUserParameters params, PredictionBaseData data) {
         // TODO determine pastDataPoints from params.past_date
         int pastDataPoints = 10;
-
-        // Size error
-        if (d.length == 0) {
-            Log.e("Error", "Data has length 0");
-        }
-
-        // Date error
-        Date now = new Date();
-        if (now.before(date_past)) {
-            Log.e("Error", "Past date is in the future");
-        }
-
-        // ID error
-        if (study_id <= 0) {
-            Log.e("Error", "ID not valid");
-        }
-        if (bird_id <= 0) {
-            Log.e("Error", "ID not valid");
-        }
 
         // Compute prediction
         Locations prediction = next_Location(data.pastTracks, pastDataPoints);

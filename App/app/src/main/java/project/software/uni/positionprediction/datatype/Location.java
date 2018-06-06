@@ -23,6 +23,39 @@ public class Location {
         this.has_altitude = false;
     }
 
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getAlt() {
+        return alt;
+    }
+
+    public void setAlt(double alt) {
+        this.alt = alt;
+    }
+
+    public boolean isHas_altitude() {
+        return has_altitude;
+    }
+
+    public void setHas_altitude(boolean has_altitude) {
+        this.has_altitude = has_altitude;
+    }
+
     /**
      * Add the values of the given location to this location and return a *new* location object.
      * @param loc
@@ -204,5 +237,13 @@ public class Location {
     public void print() {
         System.out.print("[" + this.lon + ", " + this.lat + ", " + this.alt + "]\n");
 
+    }
+
+    public Location to3D() {
+        if (!this.has_altitude) {
+            return new Location(this.lon, this.lat, 0);
+        } else {
+            return new Location(this.lon, this.lat, this.alt);
+        }
     }
 }

@@ -5,18 +5,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import project.software.uni.positionprediction.algorithm.PredictionBaseData;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.Locations;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
-import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
@@ -44,7 +39,7 @@ public class PredictionWorkflowController {
      */
     public void doSingleTrajPrediction(
             final IVisualisationAdapter visAdapter,
-            final SingleTrajPredictionAlgorithm algorithm,
+            final PredictionAlgorithmReturnsTrajectory algorithm,
             final PredictionUserParameters algParams
     )
         // todo: have this throw exceptions that are handled on ui level
@@ -89,7 +84,7 @@ public class PredictionWorkflowController {
     }
 
     private void onDataUpdate(final IVisualisationAdapter visAdapter,
-                              SingleTrajPredictionAlgorithm algorithm,
+                              PredictionAlgorithmReturnsTrajectory algorithm,
                               final PredictionUserParameters algParams)
             throws InsufficientTrackingDataException {
 
@@ -106,6 +101,27 @@ public class PredictionWorkflowController {
             Log.e("Error", "Size of data is 0");
             throw new InsufficientTrackingDataException("Size of data is 0");
         }
+
+        /*
+        // Size error
+        if (d.length == 0) {
+            Log.e("Error", "Data has length 0");
+        }
+
+        // Date error
+        Date now = new Date();
+        if (now.before(date_past)) {
+            Log.e("Error", "Past date is in the future");
+        }
+
+        // ID error
+        if (study_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+        if (bird_id <= 0) {
+            Log.e("Error", "ID not valid");
+        }
+         */
 
         // Use only needed data
         // todo: do this via SQL request?
