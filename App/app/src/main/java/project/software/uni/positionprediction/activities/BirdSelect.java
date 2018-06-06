@@ -32,6 +32,7 @@ import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationE
 import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
@@ -274,21 +275,9 @@ public class BirdSelect extends AppCompatActivity {
 
         final BirdSelect birdSelect = this;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                SQLDatabase.getInstance(birdSelect).updateBirdData(bird.getStudyId(), bird.getId());
-
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlgorithmSimilarTrajectory algo = new AlgorithmSimilarTrajectory(birdSelect);
-                        MultipleTrajectories loc = algo.predict(null,null, null, bird.getStudyId(), bird.getId());
-                    }
-                });
-            }
-        }).start();
+        Intent showOn2DMap = new Intent(this, OSM.class);
+        showOn2DMap.putExtra("bird", bird);
+        startActivity(showOn2DMap);
 
     }
 

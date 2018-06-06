@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.datatype;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Elementary class for holding a number of locations.
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 public abstract class Locations {
 
-    public ArrayList<Location> locs;
+    public ArrayList<Location> locs = new ArrayList<>();
 
     public Locations() { }
 
@@ -27,8 +28,16 @@ public abstract class Locations {
         return this.locs.get(i);
     }
 
-    public Locations addAll(ArrayList<Location> locs) {
-        this.locs.addAll(locs);
+    public Locations addAll(Locations locs) {
+        this.locs.addAll(locs.locs);
         return this;
+    }
+
+    public Iterator<Location> iterator() {
+        return this.locs.iterator();
+    }
+
+    public int getLength() {
+        return this.locs.size();
     }
 }

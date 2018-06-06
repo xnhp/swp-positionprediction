@@ -4,6 +4,7 @@ import project.software.uni.positionprediction.R;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -45,6 +46,8 @@ public class MovebankRequest {
         this.context = context;
 
         this.baseUrl = baseUrl;
+        this.password = context.getResources().getString(R.string.movebank_password);
+        this.username = context.getResources().getString(R.string.movebank_user);
 
         this.statusMap = new HashMap<Integer, Integer>();
     }
@@ -55,6 +58,8 @@ public class MovebankRequest {
 
 
         this.baseUrl = context.getResources().getString(R.string.movebank_base_url);
+        this.password = context.getResources().getString(R.string.movebank_password);
+        this.username = context.getResources().getString(R.string.movebank_user);
 
         this.statusMap = new HashMap<Integer, Integer>();
 
@@ -70,8 +75,8 @@ public class MovebankRequest {
         RequestQueue queue = Volley.newRequestQueue(context);
 
         String url = baseUrl+attributes;
-
         // Request a string response from the provided URL.
+        Log.i("MovebankRequest", "sending string request to " + url);
 
         project.software.uni.positionprediction.datatype.Request request =
                 new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
@@ -97,7 +102,7 @@ public class MovebankRequest {
         String url = baseUrl+attributes;
 
         // Request a string response from the provided URL.
-        System.out.println("sending string request to " + url);
+        Log.i("MovebankRequest", "sending string request to " + url);
 
         project.software.uni.positionprediction.datatype.Request request =
                 new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
