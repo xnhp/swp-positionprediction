@@ -6,6 +6,27 @@
 \usepackage{textcomp}
 
 \usepackage{caption}
+\usepackage{listings}
+\makeatletter
+\lstdefinestyle{smallstyle}{
+  basicstyle=%
+    \ttfamily
+    \color{blue}%
+    \scriptsize
+}
+\makeatother
+
+\usepackage{caption}
+\usepackage{listings}
+\makeatletter
+\lstdefinestyle{normalstyle}{
+  basicstyle=%
+    \ttfamily
+    \color{blue}%
+}
+\makeatother
+
+\lstset{style=smallstyle}
 
 \usepackage{anyfontsize}
 
@@ -15,7 +36,7 @@
 
 \usecolortheme{seahorse} %colour theme, cf https://www.hartwork.org/beamer-theme-matrix/
 
-\title[] {Group 1.2 - Predicition App}
+\title[] {Group 1.2 - Position Prediction}
 \date{} % no date
 
 % empty to have to numbering of split-up frames from allowframebreaks
@@ -28,8 +49,8 @@
 \frame{\titlepage}
 
 \begin{frame}
-	\frametitle{Workflow}
-	\includegraphics[width=\textwidth]{tasks.png}
+	\frametitle{Workflow so far}
+	\includegraphics[width=\textwidth]{diagrams/Tasks.pdf}
 \end{frame}
 
 \begin{frame}
@@ -57,6 +78,87 @@
 		\item \color{Green}Der Aufbau des User-Interfaces ist festgelegt (nicht-funktionale Mockups).
 	\end{itemize}
 \end{frame}
+
+
+\begin{frame}
+	\frametitle{What we have achieved so far - Software Architecture}
+	\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{diagrams/controller-flow.pdf}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\fontsize{9pt}{9}\selectfont
+		Benefits:
+		\begin{itemize} 
+		 	 \item Easier to write: Controller doesn't care about Algo or Map implementation
+		 	 \item Easier to integrate (call from anywhere)
+		 	 \item Highly extensible (could subclass controllers?)
+		 	 \item Same code for visualisation of past and predicted locations {\tiny(assumption: never want to see data without a prediction $\rightarrow$ AnimalTracker)}
+		\end{itemize} 
+ 	\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{What we have achieved so far - Software Architecture}
+	\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{diagrams/controller-flow.pdf}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\fontsize{9pt}{7.2}\selectfont
+		Challenges: 
+		\begin{itemize} 
+			\item Separation of Concerns, D.R.Y.
+		 	 \item How to model data in a general but still meaningful, usable, maintainable way?
+		 	 \begin{itemize}
+		 	 	\item e.g. Types \lstinline$Locations > SingleTrajectory$, \lstinline$SingleTrajectoryVis$, \lstinline$AlgParams$
+		 	 \end{itemize}
+		\end{itemize} 
+ 	\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{What we have achieved so far - Software Architecture}
+	\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{diagrams/controller-flow.pdf}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\fontsize{9pt}{7.2}\selectfont
+		\begin{itemize} 
+		 	 \item \lstinline$OSMDroidAdapter$: Convert data to OSM-specific Types and call the right drawing methods.
+		 	 \item \lstinline$OSMDroidMap$: Library specific code %
+		 	 \begin{itemize} 
+		 	  	 \item enable features
+		 	  	 \item draw stuff
+		 	  	 \item handle events 
+		 	  	 \item make undocumented library functions usable
+		 	 \end{itemize} 
+		\end{itemize} 
+ 	\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Next steps - Software Architecture}
+	How to integrate...
+	\begin{itemize}
+		\item ... error handling? (throw where, catch where?)
+		\item ... user communication? (error messages, progress bars...)
+	\end{itemize}
+	\lstset{style=normalstyle}
+	\begin{itemize}
+		\item Achieve higher generality in \lstinline$WorkflowController$
+	\end{itemize}
+	\begin{itemize} 
+	 	 \item ... see project timeline. 
+	\end{itemize} 
+\end{frame}
+
 
 
 
@@ -145,9 +247,26 @@
 		\item \color{Green}Es existiert eine funktionale Visualisierung des Vorhersage-Ergebnisses.
 		\item \color{LightGray}Es existiert eine Möglichkeit, eine Cesium Ansicht von der Applikation aus aufzurufen.
 		\item \color{LightGray}Der Aufbau des User-Interfaces ist festgelegt (nicht-funktionale Mockups).
-	\end{itemize} 
-	\includegraphics{VisualizationFunctional.png}
+	\end{itemize}
 \end{frame}
+
+
+
+\begin{frame}
+	\frametitle{What we have achieved so far - Visualization (OSM) I}
+	\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{VisualizationFunctional.png}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{screenshots/vis-functional-2.jpg}
+	\end{column}
+	\end{columns}
+\end{frame}
+
+
+
+
 
 
 \begin{frame}
@@ -155,8 +274,31 @@
 	%
 	\begin{itemize} 
 		\item Design suitable visualizations for different types of\\ prediction output (trajectories, clouds, ...)
-		\item Display current location
+		\item Improve visualisation readability
+		\begin{itemize} 
+		 	\item On low zoom levels: cluster points without losing information \textit{(cf Example)}
+		 	\item (Idea) Visualise time (e.g. map to point opacity)
+		 	\item (Idea) Visualise speed (e.g. map to line segment colour)
+		 	\item ...
+		\end{itemize} 
+		% \item Display current location % bm: hab ich schon
+		\item Speed improvements
 	\end{itemize} 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Next Steps - Visualisation Readability (Example)}
+	Low zoom levels leave out information:
+	\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\includegraphics[width=1\textwidth]{screenshots/vis-readability-1.jpg}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\begin{center}
+		\includegraphics[width=1\textwidth]{screenshots/vis-readability-2.jpg}
+		\end{center}
+	\end{column}
+	\end{columns}
 \end{frame}
 
 
