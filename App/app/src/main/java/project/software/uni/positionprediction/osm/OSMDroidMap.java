@@ -100,6 +100,11 @@ public class OSMDroidMap {
 
         // load OSMDroid configuration
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+
+        // TODO: What happens if obtaining permission fails?
+        // todo: need this here?
+        PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, 0,(AppCompatActivity) context);
+        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, 0,(AppCompatActivity) context);
     }
 
     public void initMap(MapView view, GeoPoint center, final double zoom) {
