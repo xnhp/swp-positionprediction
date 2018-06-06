@@ -21,11 +21,6 @@ public class ExampleUnitTest {
     }
 
 
-    @Test
-    public void run_prediction_algorithm() throws Exception {
-        AlgorithmExtrapolationExtended alg = new AlgorithmExtrapolationExtended();
-        alg.predict(null, null, 0);
-    }
 
 
 }

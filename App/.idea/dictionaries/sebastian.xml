@@ -2,6 +2,7 @@
   <dictionary name="sebastian">
     <words>
       <w>pred</w>
+      <w>scalarproduct</w>
       <w>traj</w>
     </words>
   </dictionary>

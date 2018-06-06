@@ -130,39 +130,17 @@ public class Location {
 
     /**
      * Computes angle between current and given vector
-     * @param loc_pre
+     * @param vector
      * @return
      */
-    public double getAngle(Location loc_pre) {
+    public double getAngle(Location vector) {
         if (!has_altitude) {
             this.setAlt(0);
         }
-        if (!loc_pre.has_altitude) {
-            loc_pre.setAlt(0);
+        if (!vector.has_altitude) {
+            vector.setAlt(0);
         }
-        Location vec_horizontal = new Location(0,1,0);
-        Location vec = this.getVectorFrom(loc_pre);
-
-        return Math.acos( vec_horizontal.scalarproduct(vec) / (vec_horizontal.abs() * vec.abs()));
-    }
-
-
-    /**
-     * Gets vector from given location to current location
-     * @param loc
-     * @return
-     */
-    public Location getVectorFrom(Location loc){
-        if (!has_altitude) {
-            this.setAlt(0);
-        }
-        if (!loc.has_altitude) {
-            loc.setAlt(0);
-        }
-        double Lon = this.getLon() - loc.getLon();
-        double loc_lat = this.getLat() - loc.getLon();
-        double loc_height = this.getAlt() - loc.getAlt();
-        return new Location(Lon, loc_lat, loc_height);
+        return Math.acos( this.scalarproduct(vector) / (this.abs() * vector.abs()));
     }
 
 

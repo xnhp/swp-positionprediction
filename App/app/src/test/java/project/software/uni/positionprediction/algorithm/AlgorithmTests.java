@@ -57,12 +57,35 @@ public class AlgorithmTests {
 
     @Test
     public void vector() throws Exception {
-        Location v1 = new Location(1,0,0);
-        Location v2 = new Location( 0, 1, 0);
-        double computed_angle = v1.getAngle(v2);
-        double expected_angle = Math.PI / 2;
 
+        // getangle
+        Location v01 = new Location(1,0,0);
+        Location v02 = new Location( 0, 1);
+        double computed_angle = v01.getAngle(v02);
+        double expected_angle = Math.PI / 2;
         assertEquals(expected_angle, computed_angle, delta);
+
+        // scalarproduct
+        Location v11 = new Location(1,0,0);
+        Location v12 = new Location( 0, 1);
+        double computed_sp = v11.scalarproduct(v12);
+        double expected_sp = 0;
+        assertEquals(expected_sp, computed_sp, delta);
+
+        // abs
+        Location v21 = new Location(1,0);
+        double computed_abs = v21.abs();
+        double expected_abs = 1;
+        assertEquals(expected_sp, computed_sp, delta);
+
+        // rotate
+        Location v31 = new Location(1,1);
+        double alpha = Math.PI;
+        Location computed_loc = v31.rotate(alpha);
+        Location expected_loc = new Location(-1,-1,0);
+        assertEquals(computed_loc.getLon(), expected_loc.getLon(), delta);
+        assertEquals(computed_loc.getLat(), expected_loc.getLat(), delta);
+        assertEquals(computed_loc.getAlt(), expected_loc.getAlt(), delta);
 
     }
 
