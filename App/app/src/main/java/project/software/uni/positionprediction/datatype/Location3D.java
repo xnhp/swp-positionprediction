@@ -1,7 +1,5 @@
 package project.software.uni.positionprediction.datatype;
 
-import android.location.Location;
-
 public class Location3D {
 
     // Class variables
@@ -108,7 +106,7 @@ public class Location3D {
         Location3D vec_horizontal = new Location3D(0,1,0);
         Location3D vec = this.getVectorFrom(loc_pre);
 
-        return Math.acos( vec_horizontal.scalarproduct(vec) / (vec_horizontal.abs() * vec.abs()));
+        return Math.acos( vec_horizontal.dotProduct(vec) / (vec_horizontal.abs() * vec.abs()));
     }
 
 
@@ -126,11 +124,11 @@ public class Location3D {
 
 
     /**
-     * Computes scalarproduct of vectors
+     * Computes dot product of vectors
      * @param vec
      * @return
      */
-    public double scalarproduct(Location3D vec) {
+    public double dotProduct(Location3D vec) {
         double a1 = this.getLoc_long();
         double a2 = this.getLoc_lat();
         double a3 = this.getLoc_height();
