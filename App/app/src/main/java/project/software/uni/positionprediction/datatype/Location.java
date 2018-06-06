@@ -233,9 +233,7 @@ public class Location {
         double res3 = r31*v1 + r32*v2 + r33*v3;
 
         return new Location(res1, res2, res3);
-
     }
-
 
 
     /**

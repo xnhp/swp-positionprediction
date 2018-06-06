@@ -4,15 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.Date;
-import java.util.LinkedList;
 
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
-import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 
-public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
+public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
 
     private final int weight_max = 100;
     private Context context;

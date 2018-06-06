@@ -1,7 +1,7 @@
 package project.software.uni.positionprediction.algorithm;
 
 import org.junit.Test;
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Location;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,42 +15,56 @@ public class AlgorithmTests {
     private double delta = 0.000001;
 
     @Test
-    public void arithmetic3D() throws Exception {
-        Location3D a = new Location3D(4.55, 11, -1);
-        Location3D b = new Location3D(2, -3, 4);
+    public void arithmetic() throws Exception {
+        Location a = new Location(4.55, 11, -1);
+        Location b = new Location(2, -3, 4);
         double number = 3.11;
 
         // Addition
-        Location3D method_add = a.add(b);
-        Location3D own_add = new Location3D(6.55, 8, 3);
+        Location method_add = a.add(b);
+        Location own_add = new Location(6.55, 8, 3);
 
-        assertEquals(method_add.getLoc_long(), own_add.getLoc_long(), delta);
-        assertEquals(method_add.getLoc_lat(), own_add.getLoc_lat(), delta);
-        assertEquals(method_add.getLoc_height(), own_add.getLoc_height(), delta);
+        assertEquals(method_add.getLon(), own_add.getLon(), delta);
+        assertEquals(method_add.getLat(), own_add.getLat(), delta);
+        assertEquals(method_add.getAlt(), own_add.getAlt(), delta);
 
         // Subtraction
-        Location3D method_sub = a.subtract(b);
-        Location3D own_sub = new Location3D(2.55, 14, -5);
+        Location method_sub = a.subtract(b);
+        Location own_sub = new Location(2.55, 14, -5);
 
-        assertEquals(method_add.getLoc_long(), own_add.getLoc_long(), delta);
-        assertEquals(method_add.getLoc_lat(), own_add.getLoc_lat(), delta);
-        assertEquals(method_add.getLoc_height(), own_add.getLoc_height(), delta);
+        assertEquals(method_add.getLon(), own_add.getLon(), delta);
+        assertEquals(method_add.getLat(), own_add.getLat(), delta);
+        assertEquals(method_add.getAlt(), own_add.getAlt(), delta);
 
         // Multiplication
-        Location3D method_mult = a.multiply(number);
-        Location3D own_mult = new Location3D(14.1505, -34.21, -3.11);
+        Location method_mult = a.multiply(number);
+        Location own_mult = new Location(14.1505, -34.21, -3.11);
 
-        assertEquals(method_add.getLoc_long(), own_add.getLoc_long(), delta);
-        assertEquals(method_add.getLoc_lat(), own_add.getLoc_lat(), delta);
-        assertEquals(method_add.getLoc_height(), own_add.getLoc_height(), delta);
+        assertEquals(method_add.getLon(), own_add.getLon(), delta);
+        assertEquals(method_add.getLat(), own_add.getLat(), delta);
+        assertEquals(method_add.getAlt(), own_add.getAlt(), delta);
 
         // Division
-        Location3D method_div = a.divide(number);
-        Location3D own_div = new Location3D(1.463022508, -3.536977492, -0.3215434084);
+        Location method_div = a.divide(number);
+        Location own_div = new Location(1.463022508, -3.536977492, -0.3215434084);
 
-        assertEquals(method_add.getLoc_long(), own_add.getLoc_long(), delta);
-        assertEquals(method_add.getLoc_lat(), own_add.getLoc_lat(), delta);
-        assertEquals(method_add.getLoc_height(), own_add.getLoc_height(), delta);
+        assertEquals(method_add.getLon(), own_add.getLon(), delta);
+        assertEquals(method_add.getLat(), own_add.getLat(), delta);
+        assertEquals(method_add.getAlt(), own_add.getAlt(), delta);
 
     }
+
+
+    @Test
+    public void vector() throws Exception {
+        Location v1 = new Location(1,0,0);
+        Location v2 = new Location( 0, 1, 0);
+        double computed_angle = v1.getAngle(v2);
+        double expected_angle = Math.PI / 2;
+
+        assertEquals(expected_angle, computed_angle, delta);
+
+    }
+
+
 }

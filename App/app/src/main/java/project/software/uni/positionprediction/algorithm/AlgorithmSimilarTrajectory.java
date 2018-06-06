@@ -1,22 +1,16 @@
 package project.software.uni.positionprediction.algorithm;
 
 import android.content.Context;
-import android.renderscript.Matrix3f;
-
-import org.apache.commons.math3.linear.MatrixUtils;
 
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import project.software.uni.positionprediction.datatype.AngleSteplength;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.Location3D;
 import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
-import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 
 
