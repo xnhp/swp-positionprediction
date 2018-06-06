@@ -1,19 +1,17 @@
 package project.software.uni.positionprediction.algorithm;
 
 import android.content.Context;
-import android.location.Location;
 import android.util.Log;
 
 import java.util.Date;
-import java.util.LinkedList;
 
 import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
-import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 
-public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
+public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
 
     private final int weight_max = 100;
     private Context context;
@@ -35,7 +33,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
      * @return
      */
     @Override
-    public LinkedList<Location3D> predict(Date date_past, Date date_pred, int study_id, int bird_id) {
+    public Location predict(Date date_past, Date date_pred, int study_id, int bird_id) {
 
         // Still hardcoded
         int constant = 10; // Use last 10 data points
@@ -55,15 +53,14 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         }
 
         // Use only needed data
-        Location3D loc_data[] = new Location3D[constant];
+        Location loc_data[] = new Location[constant];
         int size = data.length;
         for (int i = 0; i < constant; i++) {
             loc_data[i] = data[size - 1 - constant + i].getLocation().to3D();
         }
 
         // Compute prediction
-        LinkedList<Location3D> prediction = next_Location(loc_data, constant);
-        return prediction;
+        return next_Location(loc_data, constant);
     }
 
 
@@ -74,56 +71,53 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
      * @param data
      * @return
      */
-    public LinkedList<Location3D> next_Location(Location3D data[], int date) {
+    public Location next_Location(Location data[], int date) {
         int n = data.length - 1;
-        Location3D vector_collection[] = new Location3D[date - 1];
+        Location vector_collection[] = new Location[date - 1];
         // Fill collection
         for (int t = 1; t < date; t++) {
             // Compute difference of pair n and n-t
             // Get n-th point
-            Location3D vec_n = data[n];
+            Location vec_n = data[n];
 
             // Get n-t point
-            Location3D vec_old = data[n-t];
+            Location vec_old = data[n-t];
 
             // Compute vector between them
-            Location3D vec_delta = vec_n.subtract(vec_old);
+            Location vec_delta = vec_n.subtract(vec_old);
 
             // Compute average
-            Location3D vec_avg = vec_delta.divide(t);
+            Location vec_avg = vec_delta.divide(t);
 
             // Add vector to collection
             vector_collection[t - 1] = vec_avg;
         }
 
         // Compute average of all computed vectors in collection
-        Location3D avg = weighted_average(vector_collection);
-        Location3D curr_loc = data[data.length - 1];
+        Location avg = weighted_average(vector_collection);
+        Location curr_loc = data[data.length - 1];
 
-        // Add avg vector to current Location3D
-        LinkedList<Location3D> result_list = new LinkedList<>();
-        Location3D result_vector = curr_loc.add(avg);
-        result_list.add(result_vector);
-        return result_list;
+        // Add avg vector to current Location
+        return curr_loc.add(avg);
     }
 
 
     /**
-     * Computes (weighted) average of Location3D vectors
+     * Computes (weighted) average of Location vectors
      *
      * @param collection
      * @return
      */
-    public Location3D weighted_average(Location3D collection[]) {
+    public Location weighted_average(Location collection[]) {
         double sum_long = 0;
         double sum_lat = 0;
         double sum_height = 0;
 
         // Compute sum
         for (int i = 0; i < collection.length; i++) {
-            sum_long += collection[i].getLoc_long();
-            sum_lat += collection[i].getLoc_lat();
-            sum_height += collection[i].getLoc_height();
+            sum_long += collection[i].getLon();
+            sum_lat += collection[i].getLat();
+            sum_height += collection[i].getAlt();
         }
 
         // Compute average
@@ -132,6 +126,6 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
         double res_lat = sum_lat / length;
         double res_height = sum_height / length;
 
-        return new Location3D(res_long, res_lat, res_height);
+        return new Location(res_long, res_lat, res_height);
     }
 }
