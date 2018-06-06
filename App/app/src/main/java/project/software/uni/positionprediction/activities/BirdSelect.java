@@ -32,6 +32,7 @@ import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationE
 import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.PermissionManager;
@@ -283,7 +284,7 @@ public class BirdSelect extends AppCompatActivity {
                     @Override
                     public void run() {
                         AlgorithmSimilarTrajectory algo = new AlgorithmSimilarTrajectory(birdSelect);
-                        Location loc = algo.predict(null, null, bird.getStudyId(), bird.getId());
+                        MultipleTrajectories loc = algo.predict(null,null, null, bird.getStudyId(), bird.getId());
                     }
                 });
             }
