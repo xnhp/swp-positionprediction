@@ -1,14 +1,22 @@
 package project.software.uni.positionprediction.algorithm;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.location.Location;
+import android.util.Log;
+
+import java.util.Date;
 import java.util.LinkedList;
 
+import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location3D;
-import project.software.uni.positionprediction.interfaces.SingleTrajPredictionAlgorithm;
+import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
+import project.software.uni.positionprediction.movebank.SQLDatabase;
 
-public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgorithm {
+public class AlgorithmExtrapolationExtended implements PredictionAlgorithm {
 
     private final int weight_max = 100;
+    private Context context;
 
     // Algorithm objects are singletons because you cannot declare static methods in an interface.
     // TODO: maybe abstract classes would be better after all?
@@ -24,7 +32,11 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
      * Compute the difference between two successive data points and take the average of them.
      * By adding the average to the last data point we get a very simple prediction algorithm
      *
-     * TODO javadoc
+     * @param date_past
+     * @param date_pred
+     * @param study_id
+     * @param bird_id
+     * @return
      */
     @Override
     public ArrayList<Location3D> predict(PredictionUserParameters params, PredictionBaseData data) {
@@ -43,7 +55,7 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
      * @param data
      * @return
      */
-    public ArrayList<Location3D> next_Location(Location3D data[], int date) {
+    public Location next_Location(Location data[], int date) {
         int n = data.length - 1;
         Location3D vector_collection[] = new Location3D[date - 1];
         // Fill collection
@@ -70,7 +82,7 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
         Location3D curr_loc = data[data.length - 1];
 
         // Add avg vector to current Location3D
-        ArrayList<Location3D> result_list = new ArrayList<>();
+        LinkedList<Location3D> result_list = new LinkedList<>();
         Location3D result_vector = curr_loc.add(avg);
         result_list.add(result_vector);
         return result_list;
@@ -83,16 +95,16 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
      * @param collection
      * @return
      */
-    public Location3D weighted_average(Location3D collection[]) {
+    public Location weighted_average(Location collection[]) {
         double sum_long = 0;
         double sum_lat = 0;
         double sum_height = 0;
 
         // Compute sum
         for (int i = 0; i < collection.length; i++) {
-            sum_long += weight(i) * collection[i].getLoc_long();
-            sum_lat += weight(i) * collection[i].getLoc_lat();
-            sum_height += weight(i) * collection[i].getLoc_height();
+            sum_long += collection[i].getLon();
+            sum_lat += collection[i].getLat();
+            sum_height += collection[i].getAlt();
         }
 
         // Compute average
@@ -101,7 +113,7 @@ public class AlgorithmExtrapolationExtended implements SingleTrajPredictionAlgor
         double res_lat = sum_lat / length;
         double res_height = sum_height / length;
 
-        return new Location3D(res_long, res_lat, res_height);
+        return new Location(res_long, res_lat, res_height);
     }
 
 
