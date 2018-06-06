@@ -89,7 +89,8 @@ public class PredictionWorkflowController {
             throws InsufficientTrackingDataException {
 
         // TODO: do this based on date
-        int pastDataPoints = 10; // Use last 10 data points
+        // todo: link this to hardcoded limit in algorithm
+        int pastDataPoints = 50; // Use last 10 data points
 
         // Fetch data from database
         SQLDatabase db = SQLDatabase.getInstance(ctx);
