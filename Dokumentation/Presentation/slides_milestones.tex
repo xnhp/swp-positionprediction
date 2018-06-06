@@ -36,7 +36,7 @@
 
 \usecolortheme{seahorse} %colour theme, cf https://www.hartwork.org/beamer-theme-matrix/
 
-\title[] {Group 1.2 - Position Prediction}
+\title[] {Group 1.2 - Predicition App}
 \date{} % no date
 
 % empty to have to numbering of split-up frames from allowframebreaks
@@ -89,12 +89,12 @@
 	\begin{column}{0.5\textwidth}
 		\fontsize{9pt}{9}\selectfont
 		Benefits:
-		\begin{itemize} 
+		\begin{itemize}
 		 	 \item Easier to write: Controller doesn't care about Algo or Map implementation
 		 	 \item Easier to integrate (call from anywhere)
 		 	 \item Highly extensible (could subclass controllers?)
 		 	 \item Same code for visualisation of past and predicted locations {\tiny(assumption: never want to see data without a prediction $\rightarrow$ AnimalTracker)}
-		\end{itemize} 
+		\end{itemize}
  	\end{column}
 	\end{columns}
 \end{frame}
@@ -107,14 +107,14 @@
 	\end{column}
 	\begin{column}{0.5\textwidth}
 		\fontsize{9pt}{7.2}\selectfont
-		Challenges: 
-		\begin{itemize} 
+		Challenges:
+		\begin{itemize}
 			\item Separation of Concerns, D.R.Y.
 		 	 \item How to model data in a general but still meaningful, usable, maintainable way?
 		 	 \begin{itemize}
 		 	 	\item e.g. Types \lstinline$Locations > SingleTrajectory$, \lstinline$SingleTrajectoryVis$, \lstinline$AlgParams$
 		 	 \end{itemize}
-		\end{itemize} 
+		\end{itemize}
  	\end{column}
 	\end{columns}
 \end{frame}
@@ -128,16 +128,16 @@
 	\end{column}
 	\begin{column}{0.5\textwidth}
 		\fontsize{9pt}{7.2}\selectfont
-		\begin{itemize} 
+		\begin{itemize}
 		 	 \item \lstinline$OSMDroidAdapter$: Convert data to OSM-specific Types and call the right drawing methods.
 		 	 \item \lstinline$OSMDroidMap$: Library specific code %
-		 	 \begin{itemize} 
+		 	 \begin{itemize}
 		 	  	 \item enable features
 		 	  	 \item draw stuff
-		 	  	 \item handle events 
+		 	  	 \item handle events
 		 	  	 \item make undocumented library functions usable
-		 	 \end{itemize} 
-		\end{itemize} 
+		 	 \end{itemize}
+		\end{itemize}
  	\end{column}
 	\end{columns}
 \end{frame}
@@ -154,9 +154,9 @@
 	\begin{itemize}
 		\item Achieve higher generality in \lstinline$WorkflowController$
 	\end{itemize}
-	\begin{itemize} 
-	 	 \item ... see project timeline. 
-	\end{itemize} 
+	\begin{itemize}
+	 	 \item ... see project timeline.
+	\end{itemize}
 \end{frame}
 
 
@@ -184,7 +184,10 @@
 \begin{frame}
 	\frametitle{What we have achieved so far - Database}
     
-
+	\begin{itemize}
+		\item CSV-Files from the Movebank are parsed and the data is put into the Database.
+		\item Data can be accessed using SQL queries
+	\end{itemize}
     
 \end{frame}
 
@@ -275,12 +278,12 @@
 	\begin{itemize} 
 		\item Design suitable visualizations for different types of\\ prediction output (trajectories, clouds, ...)
 		\item Improve visualisation readability
-		\begin{itemize} 
+		\begin{itemize}
 		 	\item On low zoom levels: cluster points without losing information \textit{(cf Example)}
 		 	\item (Idea) Visualise time (e.g. map to point opacity)
 		 	\item (Idea) Visualise speed (e.g. map to line segment colour)
 		 	\item ...
-		\end{itemize} 
+		\end{itemize}
 		% \item Display current location % bm: hab ich schon
 		\item Speed improvements
 		\item Alternative map tile sources
