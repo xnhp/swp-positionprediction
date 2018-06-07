@@ -49,12 +49,12 @@
 \frame{\titlepage}
 
 \begin{frame}
-	\frametitle{Workflow so far}
+	\frametitle{\textbf{Workflow}~~(so far)}
 	\includegraphics[width=\textwidth]{diagrams/Tasks.pdf}
 \end{frame}
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Design}
+	\frametitle{\textbf{Software Design}~~--~~achieved so far}
 	%
 	\large{Milestone 1 (15.5.)}
 	\normalsize
@@ -81,7 +81,7 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Software Architecture}
+	\frametitle{\textbf{Software Architecture I}~~--~~achieved so far}
 	\begin{columns}
 	\begin{column}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{diagrams/controller-flow.pdf}
@@ -100,7 +100,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Software Architecture}
+	\frametitle{\textbf{Software Architecture II}~~--~~achieved so far}
 	\begin{columns}
 	\begin{column}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{diagrams/controller-flow.pdf}
@@ -121,7 +121,7 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Software Architecture}
+	\frametitle{\textbf{Software Architecture III}~~--~~achieved so far}
 	\begin{columns}
 	\begin{column}{0.5\textwidth}
 		\includegraphics[width=\textwidth]{diagrams/controller-flow.pdf}
@@ -144,7 +144,7 @@
 
 
 \begin{frame}
-	\frametitle{Next steps - Software Architecture}
+	\frametitle{\textbf{Software Architecture IV}~~--~~next steps}
 	How to integrate...
 	\begin{itemize}
 		\item ... error handling? (throw where, catch where?)
@@ -163,7 +163,7 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Movebank}
+	\frametitle{\textbf{Movebank}~~--~~achieved so far}
 	\Large{Milestone 1 (15.5.)}
 	\normalsize
 	\begin{itemize} 
@@ -182,7 +182,7 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Database}
+	\frametitle{\textbf{Internal Database}~~--~~achieved so far}
     
 	\begin{itemize}
 		\item CSV-Files from the Movebank are parsed and the data is put into the Database.
@@ -194,7 +194,7 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Algorithms I}
+	\frametitle{\textbf{Prediction I}~~--~~achieved so far}
 	%
 	\large{Milestone 2 (5.6.)}
 	\normalsize
@@ -207,7 +207,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Algorithms II}
+	\frametitle{\textbf{Prediction II}~~--~~achieved so far}
 	\Large{AlgorithmExtrapolationExtended}
 	\normalsize{}
 			\begin{itemize}
@@ -223,7 +223,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Algorithms III}
+	\frametitle{\textbf{Prediction III}~~--~~achieved so far}
 	\Large{AlgorithmSimilarTrajectory}
 	\normalsize{}
 			\begin{itemize}
@@ -241,7 +241,7 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Visualization (OSM) I}
+	\frametitle{\textbf{Visualization (OSM) I}~~--~~achieved so far}
 	%
 	\large{Milestone 2 (5.6.)}
 	\normalsize
@@ -256,46 +256,51 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Visualization (OSM) I}
+	\frametitle{\textbf{Visualization (OSM) II}~~--~~mock-ups}
 	\begin{columns}
 	\begin{column}{0.5\textwidth}
-		\includegraphics[width=\textwidth]{VisualizationFunctional.png}
+		Geometric primitives\\
+		(points, lines, polygons)
+		\includegraphics[width=\textwidth]{screenshots/vis-functional-1.png}
 	\end{column}
-	\begin{column}{0.5\textwidth}
+	\begin{column}{0.56\textwidth}
+		Real data
 		\includegraphics[width=\textwidth]{screenshots/vis-functional-2.jpg}
 	\end{column}
 	\end{columns}
 \end{frame}
 
 
-
+\begin{frame}
+	\frametitle{\textbf{Visualization (OSM) III}~~--~~implementation}
+		\includegraphics[width=\textwidth]{diagrams/ClassDiagram_OSM.png}
+\end{frame}
 
 
 
 \begin{frame}
-	\frametitle{Next steps - Visualization (OSM) II}
+	\frametitle{\textbf{Visualization (OSM) IV}~~--~~next steps}
 	%
 	\begin{itemize} 
 		\item Design suitable visualizations for different types of\\ prediction output (trajectories, clouds, ...)
-		\item Improve visualisation readability
-		\begin{itemize}
-		 	\item On low zoom levels: cluster points without losing information \textit{(cf Example)}
-		 	\item (Idea) Visualise time (e.g. map to point opacity)
-		 	\item (Idea) Visualise speed (e.g. map to line segment colour)
-		 	\item ...
-		\end{itemize}
-		% \item Display current location % bm: hab ich schon
 		\item Speed improvements
 		\item Alternative map tile sources
+		\item Improve visualisation readability
+		\begin{itemize}
+			\item On low zoom levels: cluster points without losing information \textit{(cf Example)}
+			\item (Idea) Visualise time (e.g. map to point opacity)
+			\item (Idea) Visualise speed (e.g. map to line segment colour)
+			\item ...
+		\end{itemize}		
 	\end{itemize} 
 \end{frame}
 
 \begin{frame}
-	\frametitle{Next Steps - Visualisation Readability (Example)}
+	\frametitle{\textbf{Visualization (OSM) V}~~--~~next steps: readibility}
 	Low zoom levels leave out information:
 	\begin{columns}
 	\begin{column}{0.5\textwidth}
-		\includegraphics[width=1\textwidth]{screenshots/vis-readability-1.jpg}
+		\includegraphics[width=1\textwidth]{screenshots/vis-functional-2.jpg}
 	\end{column}
 	\begin{column}{0.5\textwidth}
 		\begin{center}
@@ -307,7 +312,7 @@
 
 
 \begin{frame}
-	\frametitle{What we have achieved so far - Visualization (Cesium)}
+	\frametitle{\textbf{Visualization (Cesium)}~~--~~next steps}
 	%
 	\large{Milestone 2 (5.6.)}
 	\normalsize
@@ -320,8 +325,72 @@
 \end{frame}
 
 
+\begin{frame}
+	\frametitle{\textbf{Project timeline I}}
+	%
+	\Large{Woche 1 (07.-15.05.)}
+	\normalsize
+	~\\
+	\begin{itemize}
+		\item \color{Green} Grundgerüst der Applikation
+		\item \color{Green} Daten von der \textit{Movebank}-API abfragen
+		\item \color{Green} \textit{Software Design Document} verfassen
+		\item \color{Green} \textbf{Milestone 1} erreicht
+	\end{itemize}
+	~\\
+	\Large{Woche 2 (15.-22.05.)}
+	\normalsize		
+	~\\
+	\begin{itemize}
+		\item \color{Green} Daten verarbeiten (Movebank, Robustheit berücksichtigen) 
+		\item \color{Green} Darstellung einer 2D-Karte \\
+		\item \color{Green} Vorhersagemethode und -Interface implementieren
+	\end{itemize}
+	~\\		
+	%
+	\Large{Woche 3 (22.-29.05.)}
+	\normalsize
+	~\\
+	\begin{itemize}
+		\item \color{Green} Dummy-Visualisierung auf 2D-Karte \\
+		\item \color{Green} Ergebnis der Vorhersage wird visualisiert. \\
+		\item \color{Green} Visualisierung von Daten aus der Vergangenheit
+	\end{itemize}	
+\end{frame}
 
-
+\begin{frame}
+	\frametitle{\textbf{Project timeline II}}
+	%
+	\Large{Woche 4 (29.05.-05.06.)}
+	\normalsize		
+	~\\
+	\begin{itemize}
+		\item \color{Green} Cesium-Integration
+		\item \color{Green} Speicherung von Kartendaten
+		\item \color{Green} Datenvis. in Cesium
+		\item \color{Green} \textbf{Milestone 2} erreicht
+	\end{itemize}			
+	~\\
+	%
+	\Large{Woche 5 (05.-12.06.)}
+	\normalsize		
+	~\\
+	\begin{itemize}
+		\item \color{Green} Suche nach Vogel
+		\item \color{Green} Akt. Position auf Karte
+		\item \color{Red} Speicherung von Mb-Nutzerdaten
+	\end{itemize}		
+	~\\
+	%
+	\Large{Woche 6 (12.-19.06.)}
+	\normalsize		
+	~\\
+	\begin{itemize}
+		\item \color{Red} Modi 
+		\item \color{Red} Auswahl des Vorhersagezeitraums
+		\item \color{Red} Auswahl von Daten für die Vorhersage
+	\end{itemize}		
+\end{frame}
 
 
 \end{document}
