@@ -14,6 +14,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.util.ErrorMsg;
 import project.software.uni.positionprediction.util.XML;
 
 public class Settings extends AppCompatActivity {
