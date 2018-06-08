@@ -10,6 +10,11 @@ public class XML {
     private LinkedList<Class> visualizations;
     private LinkedList<String> downloaded_studies;
 
+
+    public XML() {
+
+    }
+
     public XML(double hours_past, double hours_fut, LinkedList<Class> algorithms, LinkedList<Class> visualizations, LinkedList<String> downloaded_studies) {
         this.hours_past = hours_past;
         this.hours_fut = hours_fut;

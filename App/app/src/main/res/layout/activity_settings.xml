@@ -44,12 +44,14 @@
 
 
                 <SeekBar
+                    android:id="@+id/seekbar_past"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:max="72"/>
 
                 <EditText
+                    android:id="@+id/text_alg"
                     android:text="24"
                     android:gravity="center"
                     android:layout_gravity="right"
@@ -67,11 +69,13 @@
 
 
                 <SeekBar
+                    android:id="@+id/seekbar_future"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"/>
 
                 <EditText
+                    android:id="@+id/text_vis"
                     android:text="24"
                     android:gravity="center"
                     android:layout_gravity="right"
