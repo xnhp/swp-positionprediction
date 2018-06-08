@@ -21,16 +21,15 @@ public class Settings extends AppCompatActivity {
 
         setContentView(R.layout.activity_settings);
 
-        //get the spinner from the xml.
-        Spinner dropdown = findViewById(R.id.spinner_alg);
-        //create a list of items for the spinner.
-        String[] items = new String[]{"1", "2", "three"};
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-        //There are multiple variations of this, but this is the basic variant.
+        Spinner dropdown_alg = findViewById(R.id.spinner_alg);
+        String[] items = new String[]{"Algorithm 1", "Algorithm 2"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        //set the spinners adapter to the previously created one.
-        dropdown.setAdapter(adapter);
+        dropdown_alg.setAdapter(adapter);
 
+        Spinner dropdown_vis = findViewById(R.id.spinner_vis);
+        String[] items_vis = new String[]{"Vis 1", "Vis 2"};
+        ArrayAdapter<String> adapter_vis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items_vis);
+        dropdown_vis.setAdapter(adapter);
 
         buttonSave = findViewById(R.id.settings_button_save);
 
