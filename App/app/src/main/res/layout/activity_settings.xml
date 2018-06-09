@@ -7,8 +7,13 @@
     tools:context="project.software.uni.positionprediction.activities.Settings">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -21,18 +26,122 @@
                 android:orientation="vertical">
 
 
-                <Switch
+                <TextView
+                    android:text="Settings:"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/settings_settings_margin"
-                    android:text="Dummy Setting 1" />
+                    android:layout_margin="20dp"
+                    android:textSize="25dp"/>
 
 
-                <Switch
+
+                <TextView
+                    android:text="How much data do you want to use? \n (in hours)"
+                    android:layout_margin="20dp"
+                    android:textSize="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <SeekBar
+                    android:id="@+id/seekbar_past"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/settings_settings_margin"
-                    android:text="Dummy Setting 2" />
+                    android:layout_margin="20dp"
+                    android:max="72"/>
+
+                <EditText
+                    android:id="@+id/text_past"
+                    android:text="24"
+                    android:gravity="center"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+
+                <TextView
+                    android:text="Until when should the prediction be made?  \n (in hours)"
+                    android:layout_margin="20dp"
+                    android:textSize="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <SeekBar
+                    android:id="@+id/seekbar_future"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"/>
+
+                <EditText
+                    android:id="@+id/text_future"
+                    android:text="24"
+                    android:gravity="center"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+
+
+                <TextView
+                    android:text="Choose your algorithm:"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <Spinner
+                    android:id="@+id/spinner_alg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown"/>
+
+                <TextView
+                    android:text="Choose your visualization:"
+                    android:layout_margin="20dp"
+                    android:textSize="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <Spinner
+                    android:id="@+id/spinner_vis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown"/>
+
+
+                <TextView
+                    android:text="Downloaded Studies:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="25dp"/>
+
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></ListView>
+
+
+
+
+
+
 
             </LinearLayout>
         </ScrollView>
