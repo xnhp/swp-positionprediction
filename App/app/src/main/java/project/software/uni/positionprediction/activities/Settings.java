@@ -137,8 +137,8 @@ public class Settings extends AppCompatActivity {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                         if (fromUser) {
-                            xml.setHours_past(progress);
-                            text_past.setText(""+progress);
+                            xml.setHours_fut(progress);
+                            text_future.setText(""+progress);
                         }
                     }
 
