@@ -51,7 +51,7 @@
                     android:max="72"/>
 
                 <EditText
-                    android:id="@+id/text_alg"
+                    android:id="@+id/text_past"
                     android:text="24"
                     android:gravity="center"
                     android:layout_gravity="right"
@@ -75,7 +75,7 @@
                     android:layout_margin="20dp"/>
 
                 <EditText
-                    android:id="@+id/text_vis"
+                    android:id="@+id/text_future"
                     android:text="24"
                     android:gravity="center"
                     android:layout_gravity="right"

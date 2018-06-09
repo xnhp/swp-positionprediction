@@ -5,7 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
-public class ErrorMsg {
+import project.software.uni.positionprediction.R;
+
+public class Message {
+
+
+
+
+    public Message() {
+
+    }
+
 
 
     /**
@@ -13,18 +23,12 @@ public class ErrorMsg {
      *
      *      ErrorMsg e = new ErrorMsg();
      *      e.disp(this,
-     *              "Error 007",
+     *              "Error",
      *              "Couldn't download data without internet connection. Check your connection.",
      *              true);
      *
      */
-
-
-    public ErrorMsg() {
-
-    }
-
-    public void disp (Context c, String errorTitle, String errorMsg, boolean button) {
+    public void disp_error (Context c, String errorTitle, String errorMsg, boolean button) {
         if (errorTitle == null) {
             Log.e("Warning", "No error title");
         }
@@ -49,6 +53,7 @@ public class ErrorMsg {
                             }
                     )
                     .setTitle(errorTitle)
+                    //.setIcon(R.id.)
                     .create();
             alert.show();
         } else {
@@ -61,4 +66,50 @@ public class ErrorMsg {
             alert.show();
         }
     }
+
+
+
+    public void disp_wait (Context c, String loadMsg) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(c);
+
+        alert.setMessage
+                (
+                        "Click to continue in background..."
+                )
+                .setTitle("Laden")
+                //.setIcon
+                .create();
+        alert.show();
+    }
+
+
+
+    public void disp_download (Context c, String dwTitle, String dwMessage) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(c);
+            alert.setMessage
+                    (
+                            dwMessage
+                    )
+                    .setIcon(R.drawable.download)
+                    .setTitle(dwTitle)
+                    .create();
+            alert.show();
+    }
+
+
+    public void disp_success (Context c, String title, String msg) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(c);
+            alert.setMessage
+                    (
+                            msg
+                    )
+                    //.setIcon(R.drawable.bonuspack_bubble)
+                    .setTitle(title)
+                    .create();
+            alert.show();
+    }
+
+
+
+
 }
