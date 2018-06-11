@@ -48,7 +48,7 @@ import static android.graphics.Color.red;
 
 
 /**
- * This class embodies a mapView that displays OpenStreetMap/Mapnik data via OSMDroid.
+ * This class embodies a mapView that displays OpenStreetMap data via OSMDroid via a specified Tile Provider.
  * It exposes methods to programmatically navigate the mapView, as well as save and clear offline data.
  *
  * Note that zooming and panning at the same time is not supported yet. Calling both methods at the
@@ -82,6 +82,7 @@ public class OSMDroidMap {
     public MapView mapView = null; // initalised by constructor
     // exposed for calling mapView.onResume() and mapView.onPause() in the activity.
     private IMapController mapController = null;
+    private SqlNoDelTileWriter tileWriter = null;
     private CacheManager cacheManager = null;
     private Context context = null;
 
@@ -100,6 +101,7 @@ public class OSMDroidMap {
 
         // load OSMDroid configuration
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        Configuration.getInstance().setUserAgentValue("SP_1-2"); // todo: put this somewhere else
 
         // TODO: What happens if obtaining permission fails?
         // todo: need this here?
@@ -107,18 +109,30 @@ public class OSMDroidMap {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, 0,(AppCompatActivity) context);
     }
 
-    public void initMap(MapView view, GeoPoint center, final double zoom) {
+    // todo: move this to the bottom of this file
+
+
+    public void initMap(MapView view, GeoPoint center, final double zoom) throws MapInitException {
         // I decided to only take a MapView here instead of taking the layout id and doing the cast
         // to `MapView` here because after all the mapping from view id to to a MapView object is not
         // the responsibility of this class.
         // sample usage: argument `view` could e.g. be given as `(MapView) findViewById(R.id.mapView)`;
         mapView = (MapView) view;
         mapController = mapView.getController();
-        cacheManager = new CacheManager(mapView);
+
+        // initialise a CacheManager with an archive tile writer as additional argument
+        // for *persistent* offline saving
+        // cf https://github.com/osmdroid/osmdroid/wiki/Offline-Map-Tiles, look for "Tile Archives"
+        initArchiveTileWriter();
+        cacheManager = new CacheManager(mapView, tileWriter);
+        // todo: now we have to somehow control the size of that cache i assume?
 
         // use Mapnik by default
         // TODO: other tile sources interesting?
         // such as https://wiki.openstreetmap.org/wiki/Hike_%26_Bike_Map
+        // (!!) note that this calls for a clearing of the cache (cf cacheManager)
+        // however, the interface implementation of IFileSystemCache given to the CacheManager
+        // may override the `remove()` method.
         mapView.setTileSource(TileSourceFactory.MAPNIK);
 
         // disable gray zoom buttons at bottom of map (enabled by default)
@@ -390,7 +404,9 @@ public class OSMDroidMap {
      * osmdroid checks if tiles are already downloaded and does not redownload in that case.
      * (cf. CacheManager.loadTile())
      * osmdroid checks if cached tiles exceed a hardcoded capacity, then removes tiles that are not
-     * in or close to the viewport (cf. MapTileCache.garbageCollection()).
+     * in or close to the viewport, cf:
+     *      - MapTileCache.garbageCollection()    (check & removal)
+     *      - MapTileCache constructor            (hardcoded limit)
      * @param bbox area to be saved
      * @param zoomMin minimal zoom level to be saved
      * @param zoomMax maximum zoom level to be saved
@@ -435,10 +451,45 @@ public class OSMDroidMap {
         });
     }
 
+
     public void cleanAreaFromCache(BoundingBox bbox, int zoomMin, int zoomMax) {
         // zoom levels are of type `int` here because `cleanAreaAsync` requires it. This seems to  be
         // an inconsistency in osmdroid.
         cacheManager.cleanAreaAsync(context, bbox, zoomMin, zoomMax);
+    }
+
+    /**
+     * Retrieve the amount of currently occupied space in bytes.
+     * Can be converted into a human-readable string with e.g. https://stackoverflow.com/a/26502430/156884
+     */
+    public long getCacheSize() {
+        return cacheManager.currentCacheUsage();
+    }
+
+    /**
+     * Clear the entire cache
+     * cf. https://github.com/osmdroid/osmdroid/blob/master/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/cache/CachePurge.java
+     */
+    public void clearCache() {
+        if (this.tileWriter == null) {
+            // no tileWriter registered, hence nothing to do
+        } else {
+            this.tileWriter.purgeCache();
+        }
+    }
+
+    /**
+     * intialise an archive tile writer with sensible options.
+     * What is written to this writer can only manually be deleted
+     * (see implementation for precise meaning).
+     * @return
+     */
+    private void initArchiveTileWriter() throws MapInitException {
+        try {
+            this.tileWriter = new SqlNoDelTileWriter();
+        } catch (Exception e) {
+            throw new MapInitException();
+        }
     }
 
     /**

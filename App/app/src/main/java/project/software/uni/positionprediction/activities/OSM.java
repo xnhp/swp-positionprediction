@@ -20,8 +20,10 @@ import project.software.uni.positionprediction.algorithm.PredictionUserParameter
 import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
+import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
+import project.software.uni.positionprediction.util.Message;
 
 public class OSM extends AppCompatActivity {
 
@@ -34,6 +36,7 @@ public class OSM extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // savedInstanceState is a Bundle object containing the activity's previously saved state.
         super.onCreate(savedInstanceState);
         final OSM osm = this;
 
@@ -46,7 +49,14 @@ public class OSM extends AppCompatActivity {
 
         MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
-        mymap.initMap(mapView, center, 6);
+
+        try {
+            mymap.initMap(mapView, center, 6);
+        } catch (MapInitException e) {
+            // todo: this will be moved to a controller anyway, handle errors there
+            Message msg = new Message();
+            msg.disp_error(this, "Error saving maps", "Could not save maps for offline use", true);
+        }
 
 
         //Bird myBird = new Bird(2911040, 2911059, "Zwitschi");
