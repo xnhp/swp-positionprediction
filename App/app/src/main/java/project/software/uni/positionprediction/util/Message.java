@@ -68,22 +68,31 @@ public class Message {
     }
 
 
-
-    public static void disp_wait (Context c, String loadMsg) {
+    /**
+     * Success message
+     * @param c
+     * @param title
+     * @param msg
+     */
+    public void disp_success (Context c, String title, String msg) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
-
         alert.setMessage
                 (
-                        "Click to continue in background..."
+                        msg
                 )
-                .setTitle("Laden")
-                //.setIcon
+                .setIcon(R.drawable)
+                .setTitle(title)
                 .create();
         alert.show();
     }
 
 
-
+    /**
+     * Download message
+     * @param c
+     * @param dwTitle
+     * @param dwMessage
+     */
     public void disp_download (Context c, String dwTitle, String dwMessage) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
             alert.setMessage
@@ -97,17 +106,7 @@ public class Message {
     }
 
 
-    public void disp_success (Context c, String title, String msg) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(c);
-            alert.setMessage
-                    (
-                            msg
-                    )
-                    //.setIcon(R.drawable.bonuspack_bubble)
-                    .setTitle(title)
-                    .create();
-            alert.show();
-    }
+
 
 
 
