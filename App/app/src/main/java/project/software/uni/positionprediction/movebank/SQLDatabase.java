@@ -466,7 +466,9 @@ public class SQLDatabase {
     public void dropAllData(){
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        db.execSQL("DELETE FROM trackpoints WHERE TRUE");
+        // WHERE TRUE throws error.
+        db.execSQL("DELETE FROM trackpoints");
+        //Todo remove trash can from every object
     }
 
 

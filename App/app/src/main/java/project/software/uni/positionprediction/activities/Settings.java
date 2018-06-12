@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.activities;
 
+import android.content.Context;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
-
+        final Context c = this;
 
         spinner_alg = findViewById(R.id.spinner_alg);
         spinner_vis = findViewById(R.id.spinner_vis);
@@ -239,6 +240,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.dropAllData();
+                m.disp_success(c, "Deleted", "All data where deleted successfully");
             }
         });
 

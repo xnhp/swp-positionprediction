@@ -23,8 +23,7 @@
             <WebView
                 android:id="@+id/cesium_webview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/cesium_button_predict">
+                android:layout_height="match_parent">
             </WebView>
 
 
