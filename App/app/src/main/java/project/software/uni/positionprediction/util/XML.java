@@ -6,19 +6,14 @@ import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTraject
 
 public class XML {
 
-    private int hours_past;
-    private int hours_fut;
+    private static int hours_past;
+    private static int hours_fut;
     private static Class[] algorithms;
     private static Class[] visualizations;
-    private int used_alg;
-    private int used_vis;
-    private LinkedList<String> downloaded_studies;
+    private static int used_alg;
+    private static int used_vis;
 
     public XML() {
-
-        String algo = "AlgorithmSimilarTrajectory";
-
-
     }
 
     public XML(int hours_past, int hours_fut, Class[] algorithms, Class[] visualizations, int used_alg, int used_vis, LinkedList<String> downloaded_studies) {
@@ -28,7 +23,6 @@ public class XML {
         this.visualizations = visualizations;
         this.used_alg = used_alg;
         this.used_vis = used_vis;
-        this.downloaded_studies = downloaded_studies;
     }
 
 
@@ -78,14 +72,6 @@ public class XML {
 
     public void setUsed_vis(int used_vis) {
         this.used_vis = used_vis;
-    }
-
-    public LinkedList<String> getDownloaded_studies() {
-        return downloaded_studies;
-    }
-
-    public void setDownloaded_studies(LinkedList<String> downloaded_studies) {
-        this.downloaded_studies = downloaded_studies;
     }
 
 
