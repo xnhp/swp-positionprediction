@@ -61,7 +61,7 @@ public class Settings extends AppCompatActivity {
         text_past = findViewById(R.id.text_past);
         text_future = findViewById(R.id.text_future);
 
-        Class algorithms[] = new Class[2];
+        Class algorithms[] = new Class[2]; // { new Algo.....getClass , ...}
         algorithms[0] = new AlgorithmExtrapolationExtended().getClass();
         algorithms[1] = new AlgorithmSimilarTrajectory().getClass() ;
         xml.setAlgorithms(algorithms);
