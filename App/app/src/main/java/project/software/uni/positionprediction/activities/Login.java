@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
     private EditText editTextPassword;
     private Button buttonLogin;
 
-    private XML xml;
+    private XML xml = new XML();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +44,11 @@ public class Login extends AppCompatActivity {
         };
         xml.setAlgorithms(algorithms);
 
-        Class visualizations[] = new Class[3]{
+        Class visualizations[] = new Class[]{
                 SingleTrajectory.class,
                 StyledPoint.class,
                 StyledLineSegment.class
-        }
+        };
         xml.setVisualizations(visualizations);
 
 
