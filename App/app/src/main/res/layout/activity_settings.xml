@@ -137,10 +137,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></ListView>
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
 
+                <TextView
+                    android:id="@+id/osmCacheSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Current size of the OSM map cache size"
+                    android:text="TextView"
+                    tools:text="foo" />
 
-
-
+                <Button
+                    android:id="@+id/settings_button_clearcache"
+                    style="@android:style/Widget.Material.Light.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cache leeren" />
 
 
             </LinearLayout>

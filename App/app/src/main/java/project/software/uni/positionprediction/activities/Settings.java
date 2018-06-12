@@ -4,14 +4,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.controllers.ModeController;
+import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
 
@@ -21,6 +25,7 @@ public class Settings extends AppCompatActivity {
 
     // Components
     private Button buttonSave = null;
+    private Button buttonClearCache = null;
     private SeekBar seekbar_past = null;
     private SeekBar seekbar_future = null;
     private EditText text_past = null;
@@ -36,12 +41,18 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Settings settings = this;
+
+        // retrieve a final reference so we can access it in click handlers
+        final OSMCacheControl osmCacheControl = ModeController.getInstance(settings).osmCacheControl;
+
         setContentView(R.layout.activity_settings);
 
 
         spinner_alg = findViewById(R.id.spinner_alg);
         spinner_vis = findViewById(R.id.spinner_vis);
         buttonSave = findViewById(R.id.settings_button_save);
+        buttonClearCache = findViewById(R.id.settings_button_clearcache);
         seekbar_past = findViewById(R.id.seekbar_past);
         seekbar_future = findViewById(R.id.seekbar_future);
         text_past = findViewById(R.id.text_past);
@@ -59,10 +70,19 @@ public class Settings extends AppCompatActivity {
         spinner_vis.setAdapter(adapter_vis);
 
 
+        // get cache size and display it in the UI
+        updateCacheSize();
 
 
-
-        final Settings settings = this;
+        // Clear Cache Button Listener
+        buttonClearCache.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("cache management", "cache clearing triggered");
+                osmCacheControl.clearCache();
+                updateCacheSize();
+            }
+        });
 
         // Save Button Listener
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +91,7 @@ public class Settings extends AppCompatActivity {
                 settings.finish();
             }
         });
+
 
         // SeekbarListener (Past)
         seekbar_past.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -192,9 +213,18 @@ public class Settings extends AppCompatActivity {
                     }
 
         });
+    }
 
+    public void onResume() {
+        updateCacheSize();
+        super.onResume();
+    }
 
-
-
+    private void updateCacheSize() {
+        TextView cacheSizeTextview = findViewById(R.id.osmCacheSize);
+        String cacheSize = android.text.format.Formatter.formatShortFileSize(this,
+                ModeController.getInstance(this).osmCacheControl.getCacheSize());
+        cacheSizeTextview.setText("Current cache size is: " + cacheSize);
+        Log.i("cache", "cache info updated to " + cacheSize);
     }
 }

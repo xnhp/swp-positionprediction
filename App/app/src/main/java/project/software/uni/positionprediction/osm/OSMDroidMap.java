@@ -19,6 +19,7 @@ import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
+import org.osmdroid.tileprovider.modules.SqlTileWriter;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -38,6 +39,7 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 import java.util.List;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.controllers.ModeController;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
 
@@ -82,7 +84,7 @@ public class OSMDroidMap {
     public MapView mapView = null; // initalised by constructor
     // exposed for calling mapView.onResume() and mapView.onPause() in the activity.
     private IMapController mapController = null;
-    private SqlNoDelTileWriter tileWriter = null;
+    private SqlTileWriter tileWriter = null;
     private CacheManager cacheManager = null;
     private Context context = null;
 
@@ -120,12 +122,14 @@ public class OSMDroidMap {
         mapView = (MapView) view;
         mapController = mapView.getController();
 
-        // initialise a CacheManager with an archive tile writer as additional argument
+        // initialise a CacheManager with a tile writer as additional argument
         // for *persistent* offline saving
         // cf https://github.com/osmdroid/osmdroid/wiki/Offline-Map-Tiles, look for "Tile Archives"
-        initArchiveTileWriter();
+        // SqlNoDelTileWriter tileWriter = ModeController.getInstance().getOSMTileWriter();
+
+        SqlTileWriter tileWriter = ModeController.getInstance(this.context).getOSMTileWriter();
+        //tileWriter.setCleanupOnStart(false);
         cacheManager = new CacheManager(mapView, tileWriter);
-        // todo: now we have to somehow control the size of that cache i assume?
 
         // use Mapnik by default
         // TODO: other tile sources interesting?
@@ -149,13 +153,13 @@ public class OSMDroidMap {
 
         // enableFollowLocation(); // TODO
 
-        Marker myMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_home_black_24dp));
-        placeMarker(mapView, myMarker, center);
+        Marker locationMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_menu_mylocation));
+        placeMarker(mapView, locationMarker, center);
         // Note that as of now, the marker has to have already been placed on the map with placeMarker()
         // this means we have to supply it with an initial position (or else we would have to rethink
         // what the placeMarker method is for).
         // TODO: not do that, check dynamically whether marker is already placed or not.
-        enableCustomLocationMarker(myMarker);
+        enableCustomLocationMarker(locationMarker);
     }
 
     /**
@@ -204,7 +208,7 @@ public class OSMDroidMap {
      *
      * For more methods cf https://github.com/osmdroid/osmdroid/blob/987bdea49a899f14844674a8faa19f74c648cc57/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/data/SampleMarker.java
      *  @param view The MapView
-     * @param location Location3D of the Marker
+     * @param location Location of the Marker
      * @param marker Icon to be displayed for the marker
      */
     private void placeMarker(MapView view, Marker marker, GeoPoint location) {
@@ -234,26 +238,29 @@ public class OSMDroidMap {
         registerLocationUpdates(new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                Log.d("location on map", "location changed to " + location);
                 // TODO: error handling
                 if (location != null) {
                     marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
                 }
-
             }
 
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
+                Log.d("location on map", "status changed");
                 // cf https://developer.android.com/reference/android/location/LocationListener.html#onStatusChanged(java.lang.String,%20int,%20android.os.Bundle)
                 // TODO: Hide marker?
             }
 
             @Override
             public void onProviderEnabled(String s) {
+                Log.d("location on map", "provider enabled");
                 // TODO: redisplay marker?
             }
 
             @Override
             public void onProviderDisabled(String s) {
+                Log.d("location on map", "provider disabled");
                 // TODO: hide marker?
             }
         });
@@ -265,7 +272,7 @@ public class OSMDroidMap {
      */
     @SuppressLint("MissingPermission") // TODO
     private void registerLocationUpdates(LocationListener listener) {
-        Log.d("Location3D", "call to update location");
+        Log.d("Location on map", "call to update location");
         // because receiving the first location might take a while,
         // we call a first update immediately with the last known location
         // cf https://developer.android.com/reference/android/location/LocationManager.html#requestLocationUpdates(java.lang.String,%20long,%20float,%20android.location.LocationListener)
@@ -360,8 +367,8 @@ public class OSMDroidMap {
      * Map will always center on the user's location.
      * Manual panning is disabled.
      * For a nice implementation that additionally allows panning, see
-     * TODO: Error handling?
      * https://github.com/osmdroid/osmdroid/blob/db1d2e54b44bc10c6b47c49df2a08f19664ae6f5/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/location/SampleFollowMe.java
+     * TODO: Error handling?
      */
     private void enableFollowLocation() {
         if (locationOverlay != null) locationOverlay.enableFollowLocation();
@@ -451,46 +458,14 @@ public class OSMDroidMap {
         });
     }
 
-
+    // todo: remove
     public void cleanAreaFromCache(BoundingBox bbox, int zoomMin, int zoomMax) {
         // zoom levels are of type `int` here because `cleanAreaAsync` requires it. This seems to  be
         // an inconsistency in osmdroid.
         cacheManager.cleanAreaAsync(context, bbox, zoomMin, zoomMax);
     }
 
-    /**
-     * Retrieve the amount of currently occupied space in bytes.
-     * Can be converted into a human-readable string with e.g. https://stackoverflow.com/a/26502430/156884
-     */
-    public long getCacheSize() {
-        return cacheManager.currentCacheUsage();
-    }
 
-    /**
-     * Clear the entire cache
-     * cf. https://github.com/osmdroid/osmdroid/blob/master/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/cache/CachePurge.java
-     */
-    public void clearCache() {
-        if (this.tileWriter == null) {
-            // no tileWriter registered, hence nothing to do
-        } else {
-            this.tileWriter.purgeCache();
-        }
-    }
-
-    /**
-     * intialise an archive tile writer with sensible options.
-     * What is written to this writer can only manually be deleted
-     * (see implementation for precise meaning).
-     * @return
-     */
-    private void initArchiveTileWriter() throws MapInitException {
-        try {
-            this.tileWriter = new SqlNoDelTileWriter();
-        } catch (Exception e) {
-            throw new MapInitException();
-        }
-    }
 
     /**
      * Set the zoom level of the mapView, no animation

@@ -29,7 +29,7 @@ import java.io.InputStream;
  * prevent deletion of tiles by garbage collection or such by overriding
  * the relevant methods with noops.
  */
-class SqlNoDelTileWriter extends SqlTileWriter {
+public class SqlNoDelTileWriter extends org.osmdroid.tileprovider.modules.SqlTileWriter {
 
     @Override
     public boolean remove(final ITileSource tileSource, final long pMapTileIndex) {
