@@ -10,16 +10,18 @@ public class XML {
     private int hours_fut;
     private static Class[] algorithms;
     private static Class[] visualizations;
-    private Class used_alg;
-    private Class used_vis;
+    private int used_alg;
+    private int used_vis;
     private LinkedList<String> downloaded_studies;
-
 
     public XML() {
 
+        String algo = "AlgorithmSimilarTrajectory";
+
+
     }
 
-    public XML(int hours_past, int hours_fut, Class[] algorithms, Class[] visualizations, Class used_alg, Class used_vis, LinkedList<String> downloaded_studies) {
+    public XML(int hours_past, int hours_fut, Class[] algorithms, Class[] visualizations, int used_alg, int used_vis, LinkedList<String> downloaded_studies) {
         this.hours_past = hours_past;
         this.hours_fut = hours_fut;
         this.algorithms = algorithms;
@@ -62,19 +64,19 @@ public class XML {
         this.visualizations = visualizations;
     }
 
-    public Class getUsed_alg() {
+    public int getUsed_alg() {
         return used_alg;
     }
 
-    public void setUsed_alg(Class used_alg) {
+    public void setUsed_alg(int used_alg) {
         this.used_alg = used_alg;
     }
 
-    public Class getUsed_vis() {
+    public int getUsed_vis() {
         return used_vis;
     }
 
-    public void setUsed_vis(Class used_vis) {
+    public void setUsed_vis(int used_vis) {
         this.used_vis = used_vis;
     }
 

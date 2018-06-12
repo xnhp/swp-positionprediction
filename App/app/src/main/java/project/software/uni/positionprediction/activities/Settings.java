@@ -47,7 +47,6 @@ public class Settings extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        xml = new XML();
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
@@ -61,16 +60,6 @@ public class Settings extends AppCompatActivity {
         text_past = findViewById(R.id.text_past);
         text_future = findViewById(R.id.text_future);
 
-        Class algorithms[] = new Class[2]; // { new Algo.....getClass , ...}
-        algorithms[0] = new AlgorithmExtrapolationExtended().getClass();
-        algorithms[1] = new AlgorithmSimilarTrajectory().getClass() ;
-        xml.setAlgorithms(algorithms);
-
-        Class visualizations[] = new Class[3];
-        visualizations[0] = new SingleTrajectory().getClass();
-        visualizations[1] = new StyledPoint(null, null, 0).getClass();
-        visualizations[2] = new StyledLineSegment(null, null, null).getClass();
-        xml.setVisualizations(visualizations);
 
 
         // Define Dropdown for algorithms
