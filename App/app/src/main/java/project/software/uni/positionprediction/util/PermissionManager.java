@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +33,9 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
     private static final String loggingPrefix = loggingTag + ": ";
 
     private static final int PERM_REQ_MAP = 1;
+
+    private AppCompatActivity currentActivity = null;
+    private Intent currentIntent = null;
 
     /**
      * This Method tells if a certain permission is granted
@@ -107,6 +111,7 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
                 }
             }
             // might be extended in the future
+
         }
     }
 }

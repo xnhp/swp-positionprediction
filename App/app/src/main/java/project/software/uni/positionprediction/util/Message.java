@@ -28,7 +28,7 @@ public class Message {
      *              true);
      *
      */
-    public void disp_error (Context c, String errorTitle, String errorMsg, boolean button) {
+    public static void disp_error (Context c, String errorTitle, String errorMsg, boolean button) {
         if (errorTitle == null) {
             Log.e("Warning", "No error title");
         }
@@ -69,7 +69,7 @@ public class Message {
 
 
 
-    public void disp_wait (Context c, String loadMsg) {
+    public static void disp_wait (Context c, String loadMsg) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
 
         alert.setMessage

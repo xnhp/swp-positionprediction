@@ -12,6 +12,18 @@
 
     <string name="dialog_map_download_complete">Download fertiggestellt</string>
 
+    <string name="dialog_unknown_network_error">Es ist ein unbekannter Netzwerkfehler aufgetreten. Bitte später erneut versuchen</string>
+    <string name="dialog_error_title">Fehler</string>
+
+    <string name="dialog_accept_licence_needed">Sie müssen die Lizensbedingungen der Studie akzeptieren. Öffnen sie die Study-Page dazu mit ihrem Browser</string>
+    <string name="dialog_warning_title">Warnung</string>
+
+    <string name="dialog_no_birds_available">Die Studie verfügt über keine Vogeldaten auf die sie Zugriff haben</string>
+
+    <string name="dialog_permissions_needed">Die App benötigt die Zugriffsrechte für Standort und Speicher um Lauffähig zu sein. Bitte räumen sie die Rechte ein und versuchen sie es erneut</string>
+
+    <string name="settings_file_name">Settings.xml</string>
+
 
     <string name="alert_ok">OK</string>
 
@@ -24,9 +36,9 @@
     <string name="login_lable_username_text">Username:</string>
     <string name="login_lable_password_text">Password:</string>
 
-    <string name="login_failed_text">Error. Try again later</string>
-    <string name="login_field_missing">Insert Username and Password</string>
-    <string name="login_wrong_creds_warning">Error: wrong Username or Password</string>
+    <string name="login_failed_text">Bitte später erneut versuchen</string>
+    <string name="login_field_missing">Bitte Benutzername und Passwort eingeben</string>
+    <string name="login_wrong_creds_warning">Falscher Benutzername oder Passwort</string>
 
     // Cesium Activity
 

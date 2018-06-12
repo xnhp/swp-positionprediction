@@ -1,13 +1,28 @@
 package project.software.uni.positionprediction.util;
 
+import android.content.Context;
+import android.util.Xml;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.LinkedList;
 
-import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
+import project.software.uni.positionprediction.R;
 
 public class XML {
 
     private static int hours_past;
     private static int hours_fut;
+    private static String movebank_user;
+    private static String movebank_password;
     private static Class[] algorithms;
     private static Class[] visualizations;
     private static int used_alg;
@@ -73,6 +88,127 @@ public class XML {
     public void setUsed_vis(int used_vis) {
         this.used_vis = used_vis;
     }
+
+
+    private void setTag(String tag, String val, XmlSerializer xmlSerializer) throws IOException {
+        xmlSerializer.startTag(null, tag);
+        xmlSerializer.text(val + "");
+        xmlSerializer.endTag(null, tag);
+    }
+
+    public void writeFile(Context context){
+        try {
+            FileOutputStream fileOutputStream = context.openFileOutput(context.getResources().getString(R.string.settings_file_name), Context.MODE_PRIVATE);
+
+            XmlSerializer xmlSerializer = Xml.newSerializer();
+            StringWriter writer = new StringWriter();
+
+            xmlSerializer.setOutput(writer);
+            xmlSerializer.startDocument("UTF-8", true);
+
+            setTag("hours_past", hours_past + "", xmlSerializer);
+
+            setTag("hours_fut", hours_fut + "", xmlSerializer);
+
+            setTag("movebank_user", movebank_user, xmlSerializer);
+
+            setTag("movebank_password", movebank_password, xmlSerializer);
+
+            setTag("used_alg", used_alg + "", xmlSerializer);
+
+            setTag("used_vis", used_vis + "", xmlSerializer);
+
+            xmlSerializer.endDocument();
+            xmlSerializer.flush();
+            String dataWrite = writer.toString();
+            fileOutputStream.write(dataWrite.getBytes());
+            fileOutputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean fileExists( String filename, Context context) {
+        File file = context.getFileStreamPath(filename);
+        if(file == null || !file.exists()) {
+            return false;
+        }
+        return true;
+    }
+
+    public void readFile(Context context){
+
+        String filename = context.getResources().getString(R.string.settings_file_name);
+
+        if(fileExists(filename, context)) {
+            try {
+                FileInputStream fileInputStream = context.openFileInput(filename);
+                XmlPullParserFactory xmlParserFactory = XmlPullParserFactory.newInstance();
+                XmlPullParser xmlParser = xmlParserFactory.newPullParser();
+                xmlParser.setInput(fileInputStream, null);
+
+                parseXML(xmlParser);
+
+                fileInputStream.close();
+
+            } catch (Exception e) {
+
+                setStandardVals();
+
+                e.printStackTrace();
+            }
+        }else{
+            setStandardVals();
+        }
+
+    }
+
+    private void setStandardVals(){
+        movebank_user = null;
+        movebank_password = null;
+
+        used_vis = 0;
+        used_alg = 0;
+
+        hours_past = 5;
+        hours_fut = 5;
+    }
+
+    private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException {
+
+        int parserEvent = parser.getEventType();
+
+        while (parserEvent != XmlPullParser.END_DOCUMENT) {
+            switch (parserEvent) {
+                case XmlPullParser.START_TAG:
+                    String name = parser.getName();
+                    switch (name) {
+                        case "hours_past":
+                            hours_past = Integer.parseInt(parser.nextText());
+                            break;
+                        case "hours_fut":
+                            hours_fut = Integer.parseInt(parser.nextText());
+                            break;
+                        case "used_alg":
+                            used_alg = Integer.parseInt(parser.nextText());
+                            break;
+                        case "used_vis":
+                            used_vis = Integer.parseInt(parser.nextText());
+                            break;
+                        case "movebank_user":
+                            movebank_user = parser.nextText();
+                            break;
+                        case "movebank_password":
+                            movebank_password = parser.nextText();
+                            break;
+                    }
+                    break;
+            }
+            parserEvent = parser.next();
+        }
+    }
+
 
 
 }
