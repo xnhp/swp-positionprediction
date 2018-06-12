@@ -31,6 +31,7 @@ public class Cesium extends AppCompatActivity {
 
     private Button buttonSettings = null;
     private Button buttonBack = null;
+    private Button buttonOffline = null;
 
     private WebServer webServer;
     private static String CESIUM_URI = "http://localhost:8080/";
@@ -40,27 +41,17 @@ public class Cesium extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cesium);
-
+        final Cesium cesium = this;
 
         this.buttonSettings = findViewById(R.id.navbar_button_settings);
         this.buttonBack = findViewById(R.id.navbar_button_back);
+        this.buttonOffline = findViewById(R.id.offline_btn);
 
-        final Cesium cesium = this;
+        registerEventHandlers(cesium);
 
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
-        buttonSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent buttonIntent =  new Intent(cesium, Settings.class);
-                startActivity(buttonIntent);
-            }
-        });
+
+
 
         // Load the webserver.
         this.webServer = new WebServer(getAssets());
@@ -85,6 +76,32 @@ public class Cesium extends AppCompatActivity {
         webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
 
         launchWebView(webView);
+    }
+
+
+    private void registerEventHandlers(final Cesium cesium){
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent buttonIntent =  new Intent(cesium, Settings.class);
+                startActivity(buttonIntent);
+            }
+        });
+
+        buttonOffline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent buttonIntent = new Intent(cesium, OSM.class);
+                startActivity(buttonIntent);
+            }
+        });
     }
 
     public void launchBrowser(View view) {

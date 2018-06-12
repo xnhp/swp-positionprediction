@@ -77,8 +77,6 @@ public class Login extends AppCompatActivity {
 
     private void login(final String username, final String password){
 
-        Message.disp_wait(this, "Login...");
-
         final Login login = this;
 
         if(BuildConfig.DEBUG){

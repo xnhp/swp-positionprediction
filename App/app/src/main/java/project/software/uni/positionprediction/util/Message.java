@@ -80,7 +80,7 @@ public class Message {
                 (
                         msg
                 )
-                .setIcon(R.drawable)
+                //.setIcon(R.drawable.)
                 .setTitle(title)
                 .create();
         alert.show();

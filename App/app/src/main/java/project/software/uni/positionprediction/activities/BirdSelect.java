@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.Study;
@@ -55,8 +54,6 @@ public class BirdSelect extends AppCompatActivity {
         editTextNavbar = (TextView) findViewById(R.id.navbar_text);
         buttonSettings = (Button) findViewById(R.id.navbar_button_settings);
         buttonBack = (Button) findViewById(R.id.navbar_button_back);
-        buttonOpenMap = (Button) findViewById(R.id.birdselect_button_openmap);
-        buttonOpenCesium = (Button) findViewById(R.id.birdselect_button_opencesium);
 
         LayoutInflater inflater = getLayoutInflater();
 
@@ -83,6 +80,7 @@ public class BirdSelect extends AppCompatActivity {
 
         editTextNavbar.setText(getResources().getString(R.string.bird_select_study_select));
 
+        /** DONT NEED THIS
         buttonOpenMap.setOnClickListener(createOpenMapClickListener(this));
 
         buttonOpenCesium.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +89,7 @@ public class BirdSelect extends AppCompatActivity {
                 startIntent =  new Intent(birdSelect, Cesium.class);
                 checkForPermissions();
             }
-        });
+        });*/
 
         editTextSearch.addTextChangedListener(createSearchTextWatcher(this));
 

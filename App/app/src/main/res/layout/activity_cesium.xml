@@ -36,7 +36,31 @@
                 android:layout_alignParentBottom="true"
                 android:text="@string/cesium_button_predict_text" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_vertical">
+
+                // Add Buttons here
+                <Button
+                    android:id="@+id/offline_btn"
+                    android:text="OFFL."
+                    android:layout_marginRight="5dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp" />
+
+
+            </LinearLayout>
+
+
+
         </RelativeLayout>
+
+
+
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

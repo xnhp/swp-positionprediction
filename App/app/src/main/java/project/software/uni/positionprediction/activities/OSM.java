@@ -31,6 +31,7 @@ public class OSM extends AppCompatActivity {
     private Button buttonDownload = null;
     private Button buttonPanTo    = null;
     private Button buttonBack     = null;
+    private Button buttonOnline   = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class OSM extends AppCompatActivity {
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
+        buttonOnline = findViewById(R.id.online_btn);
         //buttonPanTo    = findViewById(R.id.map_panto_button);
         registerEventHandlers(osm);
 
@@ -142,6 +144,16 @@ public class OSM extends AppCompatActivity {
                 mymap.saveAreaToCache(subafrica, 5,7);
             }
         });
+
+
+        buttonOnline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent buttonIntent = new Intent(osm, Cesium.class);
+                startActivity(buttonIntent);
+            }
+        });
+
     }
 
 

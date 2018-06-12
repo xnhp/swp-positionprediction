@@ -14,8 +14,7 @@
             layout="@layout/navigation_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"/>
-
+            android:layout_alignParentTop="true" />
 
         <org.osmdroid.views.MapView android:id="@+id/map"
             android:layout_width="fill_parent"
@@ -56,8 +55,11 @@
 
             // Add Buttons here
             <Button
-                android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:id="@+id/online-btn"
+                android:text="3D"
+                android:layout_marginRight="5dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp" />
 
 
         </LinearLayout>
