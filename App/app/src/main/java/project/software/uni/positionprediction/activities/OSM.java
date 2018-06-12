@@ -149,6 +149,7 @@ public class OSM extends AppCompatActivity {
         buttonOnline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 Intent buttonIntent = new Intent(osm, Cesium.class);
                 startActivity(buttonIntent);
             }

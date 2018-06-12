@@ -98,6 +98,7 @@ public class Cesium extends AppCompatActivity {
         buttonOffline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 Intent buttonIntent = new Intent(cesium, OSM.class);
                 startActivity(buttonIntent);
             }
