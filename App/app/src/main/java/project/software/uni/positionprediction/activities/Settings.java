@@ -42,7 +42,7 @@ public class Settings extends AppCompatActivity {
     private Spinner spinner_vis = null;
 
     // Other
-    private XML xml;
+    private XML xml = new XML();
     Message m = new Message();
 
     @Override
