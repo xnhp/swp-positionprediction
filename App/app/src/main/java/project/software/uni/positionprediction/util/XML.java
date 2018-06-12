@@ -89,6 +89,22 @@ public class XML {
         this.used_vis = used_vis;
     }
 
+    public String getMovebank_user() {
+        return movebank_user;
+    }
+
+    public void setMovebank_user(String new_movebank_user){
+        movebank_user = new_movebank_user;
+    }
+
+    public String getMovebank_password(){
+        return movebank_password;
+    }
+
+    public void setMovebank_password(String new_movebank_password){
+        movebank_password = new_movebank_password;
+    }
+
 
     private void setTag(String tag, String val, XmlSerializer xmlSerializer) throws IOException {
         xmlSerializer.startTag(null, tag);

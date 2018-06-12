@@ -20,6 +20,7 @@ import project.software.uni.positionprediction.datatype.HttpStatusCode;
 import project.software.uni.positionprediction.datatype.Request;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
+import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation.StyledPoint;
@@ -60,17 +61,23 @@ public class Login extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login();
+                login(  editTextUsername.getText().toString(),
+                        editTextPassword.getText().toString() );
             }
         });
 
+        xml.readFile(this);
+
+        // try login with saved user data
+        if(xml.getMovebank_user() != null && xml.getMovebank_password() != null){
+            login(xml.getMovebank_user(), xml.getMovebank_password());
+        }
 
     }
 
-    void login(){
+    private void login(final String username, final String password){
 
-        final String username = editTextUsername.getText().toString();
-        final String password = editTextPassword.getText().toString();
+        Message.disp_wait(this, "Login...");
 
         final Login login = this;
 
@@ -117,6 +124,10 @@ public class Login extends AppCompatActivity {
                         public void run() {
                             Intent buttonIntent =  new Intent(login, BirdSelect.class);
                             startActivity(buttonIntent);
+                            xml.setMovebank_user(username);
+                            xml.setMovebank_password(password);
+                            xml.writeFile(login);
+                            finish();
                         }
                     });
 
