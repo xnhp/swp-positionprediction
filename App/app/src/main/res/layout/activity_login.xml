@@ -51,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/login_margin_side"
                 android:layout_marginRight="@dimen/login_margin_side"
-                android:layout_below="@id/login_lable_password"/>
+                android:layout_below="@id/login_lable_password"
+                android:inputType="textPassword"/>
 
         </RelativeLayout>
 

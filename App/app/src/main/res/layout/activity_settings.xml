@@ -52,7 +52,7 @@
 
                 <EditText
                     android:id="@+id/text_past"
-                    android:text="24"
+                    android:text="0"
                     android:gravity="center"
                     android:layout_gravity="right"
                     android:layout_marginRight="20dp"
@@ -76,7 +76,7 @@
 
                 <EditText
                     android:id="@+id/text_future"
-                    android:text="24"
+                    android:text="0"
                     android:gravity="center"
                     android:layout_gravity="right"
                     android:layout_marginRight="20dp"
@@ -123,20 +123,23 @@
 
 
                 <TextView
-                    android:text="Downloaded Studies:"
+                    android:text="Delete all downloaded studies:"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="80dp"
                     android:layout_marginBottom="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:textSize="25dp"/>
 
-
-                <ListView
+                <Button
+                    android:id="@+id/delete_btn"
+                    android:text="Delete"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></ListView>
-
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginBottom="150dp"/>
 
 
 

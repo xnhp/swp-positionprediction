@@ -1,6 +1,11 @@
 package project.software.uni.positionprediction.algorithm;
 
+import android.util.Log;
+
 import org.junit.Test;
+
+import java.io.File;
+
 import project.software.uni.positionprediction.datatype.Location;
 
 import static org.junit.Assert.assertEquals;
@@ -9,6 +14,21 @@ import static org.junit.Assert.assertEquals;
 public class AlgorithmTests {
 
     private double delta = 0.000001;
+
+
+    @Test
+    public void path() throws Exception {
+        File dir = new File("src/main/java/project/software/uni/positionprediction/algorithm");
+        if (dir.exists()) {
+            System.out.println("Project Path " +dir.getPath() + " exists");
+            File[] a = dir.listFiles();
+            for (int i = 0; i<a.length; i++) {
+                System.out.println("Project Path " + a[i].getName());
+            }
+        }
+    }
+
+
 
     @Test
     public void arithmetic() throws Exception {
