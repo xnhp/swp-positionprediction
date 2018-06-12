@@ -14,9 +14,15 @@ import android.widget.EditText;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.HttpStatusCode;
 import project.software.uni.positionprediction.datatype.Request;
+import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
+import project.software.uni.positionprediction.util.XML;
+import project.software.uni.positionprediction.visualisation.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 public class Login extends AppCompatActivity {
 
@@ -24,10 +30,27 @@ public class Login extends AppCompatActivity {
     private EditText editTextPassword;
     private Button buttonLogin;
 
+    private XML xml;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Define default algorithms and visualization
+        Class algorithms[] = new Class[]{
+                AlgorithmExtrapolationExtended.class,
+                AlgorithmSimilarTrajectory.class
+        };
+        xml.setAlgorithms(algorithms);
+
+        Class visualizations[] = new Class[3]{
+                SingleTrajectory.class,
+                StyledPoint.class,
+                StyledLineSegment.class
+        }
+        xml.setVisualizations(visualizations);
+
 
         editTextUsername = (EditText)findViewById(R.id.login_edittext_username);
         editTextPassword = (EditText)findViewById(R.id.login_edittext_password);
