@@ -1,19 +1,32 @@
 package project.software.uni.positionprediction.activities;
 
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
+
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
+import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
+import project.software.uni.positionprediction.visualisation.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 import static android.text.TextUtils.isDigitsOnly;
 
@@ -29,11 +42,12 @@ public class Settings extends AppCompatActivity {
     private Spinner spinner_vis = null;
 
     // Other
-    private XML xml = new XML();
+    private XML xml;
     Message m = new Message();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        xml = new XML();
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
@@ -47,18 +61,27 @@ public class Settings extends AppCompatActivity {
         text_past = findViewById(R.id.text_past);
         text_future = findViewById(R.id.text_future);
 
+        Class algorithms[] = new Class[2];
+        algorithms[0] = new AlgorithmExtrapolationExtended().getClass();
+        algorithms[1] = new AlgorithmSimilarTrajectory().getClass() ;
+        xml.setAlgorithms(algorithms);
+
+        Class visualizations[] = new Class[3];
+        visualizations[0] = new SingleTrajectory().getClass();
+        visualizations[1] = new StyledPoint(null, null, 0).getClass();
+        visualizations[2] = new StyledLineSegment(null, null, null).getClass();
+        xml.setVisualizations(visualizations);
+
 
         // Define Dropdown for algorithms
-        String[] items_alg = new String[]{"Algorithm 1", "Algorithm 2"};
-        ArrayAdapter<String> adapter_alg = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items_alg);
+        Class[] items_alg = xml.getAlgorithms();
+        ArrayAdapter<String> adapter_alg = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_alg));
         spinner_alg.setAdapter(adapter_alg);
 
         // Define dropdown for Visualization
-        String[] items_vis = new String[]{"Vis 1", "Vis 2"};
-        ArrayAdapter<String> adapter_vis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items_vis);
+        Class[] items_vis = xml.getVisualizations();
+        ArrayAdapter<String> adapter_vis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_vis));
         spinner_vis.setAdapter(adapter_vis);
-
-
 
 
 
@@ -194,7 +217,47 @@ public class Settings extends AppCompatActivity {
         });
 
 
+        spinner_alg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
+        spinner_vis.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
 
     }
+
+
+
+
+
+    // Other methods
+    public String[] asStringArray(Class[] array) {
+        int n = array.length;
+        String r_array[] = new String[n];
+        for (int i = 0; i<n; i++) {
+            r_array[i] = array[i].getSimpleName();
+        }
+        return r_array;
+    }
+
 }
+
+
+
