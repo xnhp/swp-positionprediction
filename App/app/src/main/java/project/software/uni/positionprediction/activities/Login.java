@@ -30,7 +30,7 @@ public class Login extends AppCompatActivity {
     private EditText editTextPassword;
     private Button buttonLogin;
 
-    private XML xml;
+    private XML xml = new XML();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
