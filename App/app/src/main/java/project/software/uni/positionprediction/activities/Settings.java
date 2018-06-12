@@ -230,7 +230,7 @@ public class Settings extends AppCompatActivity {
     private void updateCacheSize() {
         TextView cacheSizeTextview = findViewById(R.id.osmCacheSize);
         String cacheSize = osmCacheControl.getCacheSizeReadable(this);
-        cacheSizeTextview.setText("Current cache size is: " + cacheSize);
+        cacheSizeTextview.setText(getString(R.string.settings_cache_size_label) + ":  " + cacheSize);
         Log.i("cache", "cache info updated to " + cacheSize);
     }
 
@@ -248,9 +248,12 @@ public class Settings extends AppCompatActivity {
      * 3. updates the displayed number in the UI
      */
     private void clearCacheWithUI() {
-        String explanation = "Current cache volume has grown large. Would you like to clear the cache?";
+        String title = getString(R.string.settings_cache_size_prompt_title);
+        String format = getString(R.string.settings_cache_size_prompt_text);
+        String text = String.format(format, osmCacheControl.getCacheSizeReadable(this));
+        String positiveLabel = getString(R.string.settings_cache_size_prompt_confirm);
         Message m = new Message();
-        m.disp_confirm(this, "Large cache", explanation, "Clear", new DialogInterface.OnClickListener() {
+        m.disp_confirm(this, title, text, positiveLabel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 osmCacheControl.clearCache();
