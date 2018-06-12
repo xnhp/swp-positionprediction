@@ -30,18 +30,19 @@ public class ModeController {
      */
 
     private static ModeController self;
-    private static Context context;
+    //private static Context context;
+
 
     public static ModeController getInstance(Context ctx) {
         if (self == null) {
-            context = ctx;
-            self = new ModeController();
+            self = new ModeController(ctx);
         }
         return self;
     }
 
-    public ModeController() {
-        this.osmCacheControl = new OSMCacheControl(context);
+
+    public ModeController(Context ctx) {
+        this.osmCacheControl = new OSMCacheControl(ctx);
     }
 
     public OSMCacheControl osmCacheControl;

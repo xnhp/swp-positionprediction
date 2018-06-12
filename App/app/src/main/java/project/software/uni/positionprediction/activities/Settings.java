@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.activities;
 
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -37,14 +38,19 @@ public class Settings extends AppCompatActivity {
     private XML xml = new XML();
     Message m = new Message();
 
+    // retrieve a final reference so we can access it in click handlers
+    //final OSMCacheControl osmCacheControl = ModeController.getInstance(this).osmCacheControl;
+    ModeController mc;
+    OSMCacheControl osmCacheControl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Settings settings = this;
+        mc = new ModeController(this);
+        osmCacheControl = mc.osmCacheControl;
 
-        // retrieve a final reference so we can access it in click handlers
-        final OSMCacheControl osmCacheControl = ModeController.getInstance(settings).osmCacheControl;
+        final Settings settings = this;
 
         setContentView(R.layout.activity_settings);
 
@@ -70,6 +76,9 @@ public class Settings extends AppCompatActivity {
         spinner_vis.setAdapter(adapter_vis);
 
 
+        // check cache size and display a note to the user if its large
+        // todo: check on startup of app?
+        checkCacheSize();
         // get cache size and display it in the UI
         updateCacheSize();
 
@@ -78,9 +87,7 @@ public class Settings extends AppCompatActivity {
         buttonClearCache.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("cache management", "cache clearing triggered");
-                osmCacheControl.clearCache();
-                updateCacheSize();
+                clearCacheWithUI();
             }
         });
 
@@ -222,9 +229,33 @@ public class Settings extends AppCompatActivity {
 
     private void updateCacheSize() {
         TextView cacheSizeTextview = findViewById(R.id.osmCacheSize);
-        String cacheSize = android.text.format.Formatter.formatShortFileSize(this,
-                ModeController.getInstance(this).osmCacheControl.getCacheSize());
+        String cacheSize = osmCacheControl.getCacheSizeReadable(this);
         cacheSizeTextview.setText("Current cache size is: " + cacheSize);
         Log.i("cache", "cache info updated to " + cacheSize);
+    }
+
+    // check if cache is "large" (see OSMCacheControl)
+    // if so, display a notice to the user
+    private void checkCacheSize() {
+        if (osmCacheControl.isCacheTooLarge()) {
+            clearCacheWithUI();
+        }
+    }
+
+    /**
+     * 1. shows dialog box for confirmation
+     * 2. clears the cache
+     * 3. updates the displayed number in the UI
+     */
+    private void clearCacheWithUI() {
+        String explanation = "Current cache volume has grown large. Would you like to clear the cache?";
+        Message m = new Message();
+        m.disp_confirm(this, "Large cache", explanation, "Clear", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                osmCacheControl.clearCache();
+                updateCacheSize();
+            }
+        });
     }
 }

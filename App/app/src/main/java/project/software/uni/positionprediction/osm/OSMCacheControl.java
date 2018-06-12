@@ -3,6 +3,7 @@ package project.software.uni.positionprediction.osm;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.modules.SqlTileWriter;
@@ -11,8 +12,13 @@ public class OSMCacheControl {
 
     // the tileWriter is the central mechanism for reading/writing/managing data
     public final SqlTileWriter tileWriter;
+    // private Context context;
+
+    private final long maxCacheSize = 600L * 1024 * 1024; // 600MB
 
     public OSMCacheControl(Context ctx) {
+        // this.context = ctx;
+        // context is only used for this
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         this.tileWriter = new SqlNoDelTileWriter();
     }
@@ -30,7 +36,19 @@ public class OSMCacheControl {
      * cf. https://github.com/osmdroid/osmdroid/blob/master/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/cache/CachePurge.java
      */
     public void clearCache() {
+        Log.i("OSMCacheControl", "clear cache triggered");
         tileWriter.purgeCache();
+    }
+
+    public boolean isCacheTooLarge() {
+        //return getCacheSize() > maxCacheSize;
+        return getCacheSize() > maxCacheSize;
+    }
+
+    public String getCacheSizeReadable(Context context) {
+        String cacheSize = android.text.format.Formatter.formatShortFileSize(context,
+                this.getCacheSize());
+        return cacheSize;
     }
 
 }

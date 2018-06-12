@@ -127,7 +127,8 @@ public class OSMDroidMap {
         // cf https://github.com/osmdroid/osmdroid/wiki/Offline-Map-Tiles, look for "Tile Archives"
         // SqlNoDelTileWriter tileWriter = ModeController.getInstance().getOSMTileWriter();
 
-        SqlTileWriter tileWriter = ModeController.getInstance(this.context).getOSMTileWriter();
+        ModeController mc = new ModeController(this.context);
+        SqlTileWriter tileWriter = mc.getOSMTileWriter();
         //tileWriter.setCleanupOnStart(false);
         cacheManager = new CacheManager(mapView, tileWriter);
 
