@@ -23,6 +23,7 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
+import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment;
@@ -40,10 +41,12 @@ public class Settings extends AppCompatActivity {
     private EditText text_future = null;
     private Spinner spinner_alg = null;
     private Spinner spinner_vis = null;
+    private Button delete_btn = null;
 
     // Other
     private XML xml = new XML();
     Message m = new Message();
+    SQLDatabase db = SQLDatabase.getInstance(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +62,7 @@ public class Settings extends AppCompatActivity {
         seekbar_future = findViewById(R.id.seekbar_future);
         text_past = findViewById(R.id.text_past);
         text_future = findViewById(R.id.text_future);
-
+        delete_btn = findViewById(R.id.delete_btn);
 
 
         // Define Dropdown for algorithms
@@ -230,7 +233,21 @@ public class Settings extends AppCompatActivity {
         });
 
 
+
+
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.dropAllData();
+            }
+        });
+
+
+
+
     }
+
+
 
 
 
