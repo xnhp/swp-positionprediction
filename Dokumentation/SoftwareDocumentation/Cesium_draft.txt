@@ -1,0 +1,58 @@
+WebView: JavaScriptInterface
+----------------------------
+
+- https://developer.android.com/reference/android/webkit/WebView#addJavascriptInterface(java.lang.Object,%20java.lang.String)
+
+
+Methods to pass data between Java and JScript
+---------------------------------------------
+
+1. String containing the JS function call
+
+2. Arrays of primitives (doubles for data, strings for colors)
+
+3. **Best:** JSON. _(JavaScript: "JSON.parse()")
+_
+- https://stackoverflow.com/questions/2250917/passing-a-javascript-object-using-addjavascriptinterface-on-android?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+
+- https://androidcookbook.com/Recipe.seam?recipeId=4426
+
+
+
+Draft for (2.)
+--------------
+
+class InjectedObject {
+    @JavascriptInterface
+    public Array<double> getData() { ... };
+    public Array<String> getStyle { ... };
+ }
+
+ webview.getSettings().setJavaScriptEnabled(true);										// enable JS in webview
+ webView.addJavascriptInterface(new InjectedObject(), "injectedObject"); 				// instantiate JsObject injectedObject
+ webView.loadData("", "text/html", null);												// Load HTML
+ webView.loadUrl("javascript:draw(injectedObject.getData(), injectedObject.Style())");  // JS alerts "Result"
+
+
+
+---------
+
+
+<html>
+
+  <head>
+    <script res="test.js"
+  </head>
+
+  <body>
+
+  // Cesium stuff
+
+  <script
+    data = Android.getData(); // Call Java Method. Android is of type WebAppInterface
+    visualize(data);
+  </script>
+
+  </body>
+
+</html>
