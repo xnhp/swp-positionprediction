@@ -3,9 +3,10 @@ package project.software.uni.positionprediction.algorithm;
 import java.util.Date;
 
 import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 
 /**
- * *User-Supplied* parameters to an algorithm
+ * *User-Supplied* parameters for the prediction, including which algorithm to use
  * Potentially, there could be more parameters as an input to an algorithm,
  * such as time of day, weather etc.
  * In contrast to database-provided parameters such as tracking points from the past.
@@ -18,13 +19,25 @@ public class PredictionUserParameters {
 
     }
 
-    public PredictionUserParameters(Date date_past,Date date_pred, Bird bird) {
+
+    // TODO: remove this when OSM_new is working
+    public PredictionUserParameters(
+            Date date_past,
+            Date date_pred,
+            Bird bird
+    ) {
         this.date_past = date_past;
         this.date_pred = date_pred;
         this.bird = bird;
     }
 
-    public PredictionUserParameters(Date date_past, Date date_pred, Bird bird, Date time_of_day) {
+    // TODO: remove this when OSM_new is working
+    public PredictionUserParameters(
+            Date date_past,
+            Date date_pred,
+            Bird bird,
+            Date time_of_day
+    ) {
         this.date_past = date_past;
         this.date_pred = date_pred;
         this.bird = bird;
@@ -32,10 +45,38 @@ public class PredictionUserParameters {
     }
 
 
+    public PredictionUserParameters(
+            PredictionAlgorithm algorithm,
+            Date date_past,
+            Date date_pred,
+            Bird bird
+    ) {
+        this.algorithm = algorithm;
+        this.date_past = date_past;
+        this.date_pred = date_pred;
+        this.bird = bird;
+    }
+
+    public PredictionUserParameters(
+            PredictionAlgorithm algorithm,
+            Date date_past,
+            Date date_pred,
+            Bird bird,
+            Date time_of_day
+    ) {
+        this.algorithm = algorithm;
+        this.date_past = date_past;
+        this.date_pred = date_pred;
+        this.bird = bird;
+        this.time_of_day = time_of_day;
+    }
+
+    public PredictionAlgorithm algorithm;
     public Date date_past; // minimum date used in prediction
     public Date date_pred; // to use only data in a given time frame
     public Bird bird;
     public Date time_of_day;
+
 
 
     // ...

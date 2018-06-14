@@ -14,7 +14,7 @@ import project.software.uni.positionprediction.interfaces.PredictionAlgorithmRet
 
 
 
-public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTrajectories {
+public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTrajectories{
 
     public AlgorithmSimilarTrajectory() {
     }

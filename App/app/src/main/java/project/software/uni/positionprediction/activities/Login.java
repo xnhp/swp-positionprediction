@@ -14,16 +14,9 @@ import android.widget.EditText;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.HttpStatusCode;
 import project.software.uni.positionprediction.datatype.Request;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
-import project.software.uni.positionprediction.util.Message;
-import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 public class Login extends AppCompatActivity {
 
@@ -31,27 +24,10 @@ public class Login extends AppCompatActivity {
     private EditText editTextPassword;
     private Button buttonLogin;
 
-    private XML xml = new XML();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // Define default algorithms and visualization
-        Class algorithms[] = new Class[]{
-                AlgorithmExtrapolationExtended.class,
-                AlgorithmSimilarTrajectory.class
-        };
-        xml.setAlgorithms(algorithms);
-
-        Class visualizations[] = new Class[]{
-                SingleTrajectory.class,
-                StyledPoint.class,
-                StyledLineSegment.class
-        };
-        xml.setVisualizations(visualizations);
-
 
         editTextUsername = (EditText)findViewById(R.id.login_edittext_username);
         editTextPassword = (EditText)findViewById(R.id.login_edittext_password);
@@ -61,23 +37,17 @@ public class Login extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login(  editTextUsername.getText().toString(),
-                        editTextPassword.getText().toString() );
+                login();
             }
         });
 
-        xml.readFile(this);
-
-        // try login with saved user data
-        if(xml.getMovebank_user() != null && xml.getMovebank_password() != null){
-            login(xml.getMovebank_user(), xml.getMovebank_password());
-        }
 
     }
 
-    private void login(final String username, final String password){
+    void login(){
 
-        Message.disp_wait(this, "Login...");
+        final String username = editTextUsername.getText().toString();
+        final String password = editTextPassword.getText().toString();
 
         final Login login = this;
 
@@ -124,10 +94,6 @@ public class Login extends AppCompatActivity {
                         public void run() {
                             Intent buttonIntent =  new Intent(login, BirdSelect.class);
                             startActivity(buttonIntent);
-                            xml.setMovebank_user(username);
-                            xml.setMovebank_password(password);
-                            xml.writeFile(login);
-                            finish();
                         }
                     });
 

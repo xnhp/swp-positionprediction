@@ -14,4 +14,8 @@ public class SingleTrajectory extends Locations {
     public SingleTrajectory(ArrayList<Location> l) {
         super(l);
     }
+
+    public SingleTrajectory(Locations l) {
+        super(l);
+    }
 }

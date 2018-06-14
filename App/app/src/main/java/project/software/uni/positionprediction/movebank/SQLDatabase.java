@@ -128,7 +128,6 @@ public class SQLDatabase {
                         + (table[4][i].equals("") ? "NULL" : "'" + table[4][i] + "'") + ")");
             }
         }
-
     }
 
 
@@ -141,17 +140,15 @@ public class SQLDatabase {
      * @param studyId The id of the study the bird belongs to
      * @param indivId The id of the bird
      */
-    public float updateBirdDataSync(int studyId, int indivId){
+    public void updateBirdDataSync(int studyId, int indivId){
 
         Request request = MovebankConnector.getInstance(context).getBirdDataSync(studyId, indivId);
 
         if(request.getResponseStatus() == HttpStatusCode.OK) {
-            return insertBirdData(studyId, indivId, request.getResponse());
+            insertBirdData(studyId, indivId, request.getResponse());
         } else {
             Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
         }
-
-        return 0.0f;
 
     }
 
@@ -180,16 +177,14 @@ public class SQLDatabase {
      * This Method inserts TrackingPoints into the Database
      * @param response the response of the MovebankRequest to insert
      */
-    private float insertBirdData(int studyId, int indivId, String response) {
+    private void insertBirdData(int studyId, int indivId, String response) {
 
-        if(response.contains("no data available")) return 0.0f;
+        if(response.contains("no data available")) return;
 
         String data[][] = CSVParser.parseColumnsRows(response);
         String table[][] = CSVParser.getColumns(data, new String[]{"timestamp", "location_long", "location_lat", "individual_id", "tag_id"});
 
         SQLiteDatabase db = helper.getWritableDatabase();
-
-        int badDataCounter = 0;
 
         if (table.length > 0) {
             for (int i = 1; i < table[0].length; i++) {
@@ -201,55 +196,29 @@ public class SQLDatabase {
                             + (table[4][i].equals("") ? "NULL" : table[4][i]) + ", "
                             + table[3][i] + ", "
                             + studyId + ")");
-                } else badDataCounter++;
+                }
             }
 
-            db.execSQL("UPDATE birds SET last_update=DATE('now') WHERE study_id=" + studyId + " AND id=" + indivId);
         }
-
-        if(table.length > 0) return ((float)badDataCounter) / ((float)table[0].length);
-        return 0.0f;
-
     }
 
 
-    /**
-     * This methods requests a list of birds for a given study and inserts it into the database.
-     * Don't call this Method from Main Thread!
-     *
-     * @param studyId the id of the study to get the birds for
-     * @return 0: OK, 1: accept license needed, 2: no birds for study, -1: error
-     */
-    public int updateBirdsSync(int studyId){
+    public void updateBirdsSync(int studyId){
 
         Request request = MovebankConnector.getInstance(context).getBirdsSync(studyId);
 
         if(request.getResponseStatus() == HttpStatusCode.OK) {
-
-                if(request.getResponse().contains("The requested download may contain copyrighted material.")) return 1;
-                else if(request.getResponse().contains("No data are available for download")) return 2;
-
                 insertBirds(studyId, request.getResponse());
-
-                return 0;
         } else {
             Log.e("SQLDatabase", "couldn't get birds for study: " + studyId);
-
-            return -1;
         }
     }
 
-    /**
-     * This methods requests a list of birds for a given study and inserts it into the database.
-     *
-     * @param studyId the id of the study to get the birds for
-     */
     public void updateBirds(final int studyId){
         MovebankConnector.getInstance(context).getBirds(studyId, new RequestHandler() {
             @Override
             public void handleResponse(Request response) {
                 if(response.getResponseStatus() == HttpStatusCode.OK){
-
                     insertBirds(studyId, response.getResponse());
                 } else {
                     Log.e("SQLDatabase", "couldn't birds for study: " + studyId);
@@ -258,12 +227,6 @@ public class SQLDatabase {
         });
     }
 
-    /**
-     * This Method parses the given CSV file and inserts it's content into the database
-     *
-     * @param studyId the studyId of the birds
-     * @param response the CSV file as string
-     */
     private void insertBirds(int studyId, String response){
 
         if(response.contains("The requested download may contain copyrighted material.")
@@ -285,7 +248,6 @@ public class SQLDatabase {
             }
 
         }
-
     }
 
     /**
@@ -352,7 +314,6 @@ public class SQLDatabase {
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
-            Log.e("SQL", ""+cursor.getInt(4));
             points[rowIndex] = new TrackingPoint(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
                     new Date(cursor.getLong(0)*1000));
@@ -360,6 +321,7 @@ public class SQLDatabase {
         }
 
         cursor.close();
+
 
         return new BirdData(studyId, indivId, points);
 
@@ -370,23 +332,19 @@ public class SQLDatabase {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT id, nick_name, favorite, last_update FROM birds WHERE study_id = " +
+                "SELECT id, nick_name FROM birds WHERE study_id = " +
                         studyId + " ORDER BY nick_name ASC", new String[]{});
 
         Bird birds[] = new Bird[cursor.getCount()];
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
-            birds[rowIndex] = new Bird(
-                    cursor.getInt(0),
-                    studyId,
-                    cursor.getString(1),
-                    cursor.getString(2).equals("TRUE"),
-                    cursor.isNull(3) ? null : new Date(cursor.getLong(3) * 1000));
+            birds[rowIndex] = new Bird(cursor.getInt(0), studyId, cursor.getString(1));
             rowIndex++;
         }
 
         cursor.close();
+
 
         return birds;
 
@@ -397,7 +355,7 @@ public class SQLDatabase {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
-                "SELECT id, nick_name, favorite, last_update FROM birds WHERE study_id = " +
+                "SELECT id, nick_name FROM birds WHERE study_id = " +
                         studyId + " AND (nick_name LIKE '%" + searchString + "%' OR id LIKE '%"
                         + searchString + "%') ORDER BY nick_name ASC", new String[]{});
 
@@ -405,70 +363,16 @@ public class SQLDatabase {
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
-            birds[rowIndex] = new Bird(
-                    cursor.getInt(0),
-                    studyId, cursor.getString(1),
-                    cursor.getString(2).equals("TRUE"),
-                    cursor.isNull(3) ? null : new Date(cursor.getLong(3) * 1000));
+            birds[rowIndex] = new Bird(cursor.getInt(0), studyId, cursor.getString(1));
             rowIndex++;
         }
 
         cursor.close();
 
-        return birds;
-
-    }
-
-    /**
-     * This Method sets the favorite attribute for a given bird to true
-     * @param studyId the studyId of the given bird
-     * @param individualId the individualId of the given bird
-     * @param favorite
-     */
-    public void setFavorite(int studyId, int individualId, boolean favorite){
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        db.execSQL("UPDATE birds SET favorite=" + (favorite ? "'TRUE'" : "'FALSE'")
-                + " WHERE study_id = " + studyId + " AND id = " + individualId);
-
-    }
-    public Bird[] getFavorites(){
-        SQLiteDatabase db = helper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery(
-                "SELECT id, nick_name, study_id, last_update FROM birds WHERE favorite = 'TRUE' ORDER BY study_id", new String[]{});
-
-        Bird birds[] = new Bird[cursor.getCount()];
-
-        int rowIndex = 0;
-        while(cursor.moveToNext()) {
-            birds[rowIndex] = new Bird(
-                    cursor.getInt(0),
-                    cursor.getInt(2),
-                    cursor.getString(1),
-                    true,
-                    (cursor.isNull(3) ? null : new Date(cursor.getLong(3)*1000)));
-            rowIndex++;
-        }
-
-        cursor.close();
 
         return birds;
+
     }
-
-    public void deleteBirdData(int studyId, int indivId){
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        db.execSQL("DELETE FROM trackpoints WHERE study_id=" + studyId + " AND individual_id=" + indivId);
-        db.execSQL("UPDATE birds SET last_update=NULL WHERE study_id=" + studyId + " AND id=" + indivId);
-    }
-
-    public void dropAllData(){
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        db.execSQL("DELETE FROM trackpoints WHERE TRUE");
-    }
-
 
 }
 
@@ -497,9 +401,7 @@ class SQLDatabaseHelper extends SQLiteOpenHelper {
                             "death_comments VARCHAR, " +
                             "id INTEGER, " +
                             "study_id INTEGER, " +
-                            "nick_name VARCHAR," +
-                            "favorite BOOLEAN DEFAULT FALSE, " +
-                            "last_update TIMESTAMP DEFAULT NULL, " +
+                            "nick_name VARCHAR, " +
                             "PRIMARY KEY(id) );";
 
     private static final String SQL_DELETE_STUDIES = "DROP TABLE studies";

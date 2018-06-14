@@ -1,8 +1,8 @@
 package project.software.uni.positionprediction.datatype;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
-import java.sql.Time;
-import java.util.Date;
 
 /**
  * Only contains superficial information for working with Birds in the program.
@@ -16,22 +16,11 @@ public class Bird implements Serializable {
     private int id;
     private String nickName;
     private int studyId;
-    private boolean favorite;
-    private Date lastUpdated;
 
     public Bird(int id, int studyId, String nickName){
         this.id = id;
         this.studyId = studyId;
         this.nickName = nickName;
-        this.favorite = false;
-    }
-
-    public Bird(int id, int studyId, String nickName, boolean favorite, Date lastUpdated){
-        this.id = id;
-        this.studyId = studyId;
-        this.nickName = nickName;
-        this.favorite = favorite;
-        this.lastUpdated = lastUpdated;
     }
 
     public int getId(){
@@ -48,14 +37,6 @@ public class Bird implements Serializable {
 
     public String toString() {
         return "(Bird: " + this.nickName + " | indivID " + this.id + " | studyID " + this.studyId + " )";
-    }
-
-    public boolean isFavorite(){
-        return favorite;
-    }
-
-    public Date getDateLastUpdated(){
-        return lastUpdated;
     }
 
 }

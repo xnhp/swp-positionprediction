@@ -1,33 +1,19 @@
 package project.software.uni.positionprediction.activities;
 
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
-
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
-import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 import static android.text.TextUtils.isDigitsOnly;
 
@@ -41,12 +27,10 @@ public class Settings extends AppCompatActivity {
     private EditText text_future = null;
     private Spinner spinner_alg = null;
     private Spinner spinner_vis = null;
-    private Button delete_btn = null;
 
     // Other
     private XML xml = new XML();
     Message m = new Message();
-    SQLDatabase db = SQLDatabase.getInstance(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +46,19 @@ public class Settings extends AppCompatActivity {
         seekbar_future = findViewById(R.id.seekbar_future);
         text_past = findViewById(R.id.text_past);
         text_future = findViewById(R.id.text_future);
-        delete_btn = findViewById(R.id.delete_btn);
 
 
         // Define Dropdown for algorithms
-        Class[] items_alg = xml.getAlgorithms();
-        ArrayAdapter<String> adapter_alg = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_alg));
+        String[] items_alg = new String[]{"Algorithm 1", "Algorithm 2"};
+        ArrayAdapter<String> adapter_alg = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items_alg);
         spinner_alg.setAdapter(adapter_alg);
 
         // Define dropdown for Visualization
-        Class[] items_vis = xml.getVisualizations();
-        ArrayAdapter<String> adapter_vis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_vis));
+        String[] items_vis = new String[]{"Vis 1", "Vis 2"};
+        ArrayAdapter<String> adapter_vis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items_vis);
         spinner_vis.setAdapter(adapter_vis);
+
+
 
 
 
@@ -209,61 +194,7 @@ public class Settings extends AppCompatActivity {
         });
 
 
-        spinner_alg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-
-        spinner_vis.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-
-
-
-        delete_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.dropAllData();
-            }
-        });
-
-
 
 
     }
-
-
-
-
-
-
-
-    // Other methods
-    public String[] asStringArray(Class[] array) {
-        int n = array.length;
-        String r_array[] = new String[n];
-        for (int i = 0; i<n; i++) {
-            r_array[i] = array[i].getSimpleName();
-        }
-        return r_array;
-    }
-
 }
-
-
-
