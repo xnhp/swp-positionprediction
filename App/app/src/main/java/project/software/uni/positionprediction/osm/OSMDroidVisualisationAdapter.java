@@ -33,7 +33,7 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
         if (mapView instanceof OSMDroidMap) {
             this.map = (OSMDroidMap) mapView;
         } else {
-            InvalidMapViewException e = new InvalidMapViewException();
+            MapInitException e = new MapInitException();
             e.printStackTrace();
         }
     }

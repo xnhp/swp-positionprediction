@@ -16,6 +16,41 @@ public class Message {
 
     }
 
+    /**
+     * Display a message to the user, together with two options.  either calls a different action.
+     */
+    public static void disp_choice(Context c, String title, String message,
+                            String positiveLabel,
+                            DialogInterface.OnClickListener positiveCallback,
+                            String negativeLabel,
+                            DialogInterface.OnClickListener negativeCallback) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(c);
+        alert.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(positiveLabel, positiveCallback);
+        if (negativeCallback!=null && negativeLabel!=null) {
+            alert.setNegativeButton(negativeLabel, negativeCallback);
+        } else {
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // noop
+                }
+            });
+        }
+        alert.show();
+    }
+
+    /**
+     * Like disp_choice, except there is no negative option
+     * @param c
+     * @param title
+     * @param message
+     */
+    public void disp_confirm(Context c, String title, String message, String positiveLabel,
+                             DialogInterface.OnClickListener positiveCallback) {
+        disp_choice(c, title, message, positiveLabel, positiveCallback,null, null);
+    }
 
 
     /**
@@ -68,14 +103,10 @@ public class Message {
     }
 
 
-    /**
-     * Success message
-     * @param c
-     * @param title
-     * @param msg
-     */
-    public void disp_success (Context c, String title, String msg) {
+
+    public static void disp_wait (Context c, String title, String msg) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
+
         alert.setMessage
                 (
                         msg
@@ -106,7 +137,17 @@ public class Message {
     }
 
 
-
+    public static void disp_success (Context c, String title, String msg) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(c);
+            alert.setMessage
+                    (
+                            msg
+                    )
+                    //.setIcon(R.drawable.bonuspack_bubble)
+                    .setTitle(title)
+                    .create();
+            alert.show();
+    }
 
 
 

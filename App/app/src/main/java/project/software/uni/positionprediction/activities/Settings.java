@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.activities;
 
+import android.content.DialogInterface;
 import android.content.Context;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -21,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
@@ -36,6 +39,7 @@ public class Settings extends AppCompatActivity {
 
     // Components
     private Button buttonSave = null;
+    private Button buttonClearCache = null;
     private SeekBar seekbar_past = null;
     private SeekBar seekbar_future = null;
     private EditText text_past = null;
@@ -49,9 +53,16 @@ public class Settings extends AppCompatActivity {
     Message m = new Message();
     SQLDatabase db = SQLDatabase.getInstance(this);
 
+    // this is a field because we need to be able to access it in click handlers.
+    OSMCacheControl osmCacheControl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        osmCacheControl = OSMCacheControl.getInstance(this);
+
+        final Settings settings = this;
 
         setContentView(R.layout.activity_settings);
         final Context c = this;
@@ -59,6 +70,7 @@ public class Settings extends AppCompatActivity {
         spinner_alg = findViewById(R.id.spinner_alg);
         spinner_vis = findViewById(R.id.spinner_vis);
         buttonSave = findViewById(R.id.settings_button_save);
+        buttonClearCache = findViewById(R.id.settings_button_clearcache);
         seekbar_past = findViewById(R.id.seekbar_past);
         seekbar_future = findViewById(R.id.seekbar_future);
         text_past = findViewById(R.id.text_past);
@@ -77,8 +89,19 @@ public class Settings extends AppCompatActivity {
         spinner_vis.setAdapter(adapter_vis);
 
 
+        // check cache size and display a note to the user if its large
+        // todo: check on startup of app?
+        checkCacheSize();
+        // get cache size and display it in the UI
+        updateCacheSize();
 
-        final Settings settings = this;
+        // Clear Cache Button Listener
+        buttonClearCache.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearCacheWithUI();
+            }
+        });
 
         // Save Button Listener
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -209,7 +232,6 @@ public class Settings extends AppCompatActivity {
 
         });
 
-
         spinner_alg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -243,10 +265,46 @@ public class Settings extends AppCompatActivity {
                 m.disp_success(c, "Deleted", "All data where deleted successfully");
             }
         });
+    }
 
+    public void onResume() {
+        updateCacheSize();
+        super.onResume();
+    }
 
+    private void updateCacheSize() {
+        TextView cacheSizeTextview = findViewById(R.id.osmCacheSize);
+        String cacheSize = osmCacheControl.getCacheSizeReadable(this);
+        cacheSizeTextview.setText(getString(R.string.settings_cache_size_label) + ":  " + cacheSize);
+        Log.i("cache", "cache info updated to " + cacheSize);
+    }
 
+    // check if cache is "large" (see OSMCacheControl)
+    // if so, display a notice to the user
+    private void checkCacheSize() {
+        if (osmCacheControl.isCacheTooLarge()) {
+            clearCacheWithUI();
+        }
+    }
 
+    /**
+     * 1. shows dialog box for confirmation
+     * 2. clears the cache
+     * 3. updates the displayed number in the UI
+     */
+    private void clearCacheWithUI() {
+        String title = getString(R.string.settings_cache_size_prompt_title);
+        String format = getString(R.string.settings_cache_size_prompt_text);
+        String text = String.format(format, osmCacheControl.getCacheSizeReadable(this));
+        String positiveLabel = getString(R.string.settings_cache_size_prompt_confirm);
+        Message m = new Message();
+        m.disp_confirm(this, title, text, positiveLabel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                osmCacheControl.clearCache();
+                updateCacheSize();
+            }
+        });
     }
 
 
@@ -266,6 +324,3 @@ public class Settings extends AppCompatActivity {
     }
 
 }
-
-
-

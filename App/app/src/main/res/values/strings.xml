@@ -26,6 +26,7 @@
 
 
     <string name="alert_ok">OK</string>
+    <string name="alert_cancel">Abbrechen</string>
 
     // Navbar
 
@@ -45,8 +46,13 @@
     <string name="cesium_button_predict_text">Vorhersage</string>
 
     // Settings Activity
-
     <string name="settings_button_save_text">Speichern</string>
+    <string name="settings_button_clearcache_text">Cache leeren</string>
+    <string name="settings_cache_size_prompt_text">Zwischengespeicherte 2D-Karten belegen momentan %s. Wollen Sie den Zwischenspeicher löschen?</string>
+    <string name="settings_cache_size_prompt_title">Großer Cache</string>
+    <string name="settings_cache_size_prompt_confirm">Löschen</string>
+
+    <string name="settings_cache_size_label">Zwischenspeicher für 2D-Karten</string>
 
     // Prediction Activity
 
