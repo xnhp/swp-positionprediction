@@ -4,11 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="project.software.uni.positionprediction.activities.OSM">
+    tools:context="project.software.uni.positionprediction.activities.OSM"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
+
 
         <include
             layout="@layout/navigation_bar"
@@ -17,6 +20,7 @@
             android:layout_alignParentTop="true" />
 
         <org.osmdroid.views.MapView android:id="@+id/map"
+
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/navbar"
@@ -63,6 +67,7 @@
 
 
         </LinearLayout>
+
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

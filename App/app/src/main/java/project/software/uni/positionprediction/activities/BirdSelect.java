@@ -523,7 +523,7 @@ public class BirdSelect extends AppCompatActivity {
 
         final BirdSelect birdSelect = this;
 
-        startIntent = new Intent(this, OSM.class);
+        startIntent = new Intent(this, Cesium.class);
         startIntent.putExtra("bird", bird);
         checkForPermissions();
 
@@ -584,7 +584,7 @@ public class BirdSelect extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startIntent = new Intent(birdSelect, OSM.class);
+                startIntent = new Intent(birdSelect, Cesium.class);
                 checkForPermissions();
             }
         };

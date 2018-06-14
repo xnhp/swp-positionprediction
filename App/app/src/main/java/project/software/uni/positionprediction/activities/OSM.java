@@ -1,11 +1,13 @@
 package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -29,7 +31,6 @@ public class OSM extends AppCompatActivity {
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
-    private Button buttonPanTo    = null;
     private Button buttonBack     = null;
     private Button buttonOnline   = null;
 
@@ -42,6 +43,7 @@ public class OSM extends AppCompatActivity {
         // note: the actions in the OSMDroidMap constructor have to happen *before*
         // setContentView is called.
         mymap = new OSMDroidMap(this);
+
 
         setContentView(R.layout.activity_osm);
 
@@ -65,6 +67,9 @@ public class OSM extends AppCompatActivity {
         // TODO: this is for testing
         //Bird myTestBird = new Bird(2911059,2911040, "albatros");
         //showPrediction(myTestBird);
+
+        // Set color in offline mode
+
 
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
