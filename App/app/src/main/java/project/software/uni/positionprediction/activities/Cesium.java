@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.datatype.Bird;
 
 
 /**
@@ -38,6 +39,9 @@ public class Cesium extends AppCompatActivity {
     private static String CESIUM_URI = "http://localhost:8080/";
     private WebView webView;
 
+    // the bird that was selected in a previous activity
+    Bird selectedBird;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +52,9 @@ public class Cesium extends AppCompatActivity {
         this.buttonBack = findViewById(R.id.navbar_button_back);
         this.buttonOffline = findViewById(R.id.offline_btn);
 
+        this.selectedBird = (Bird) getIntent().getSerializableExtra("selectedBird");
+
         registerEventHandlers(cesium);
-
-
-
-
 
         // Load the webserver.
         this.webServer = new WebServer(getAssets());
@@ -101,6 +103,7 @@ public class Cesium extends AppCompatActivity {
             public void onClick(View view) {
                 finish();
                 Intent buttonIntent = new Intent(cesium, OSM.class);
+                buttonIntent.putExtra("selectedBird", selectedBird);
                 startActivity(buttonIntent);
             }
         });

@@ -63,13 +63,13 @@ public class OSM extends AppCompatActivity {
         //Bird myBird = new Bird(2911040, 2911059, "Zwitschi");
 
         Intent i = getIntent();
-        Bird selectedBird = (Bird) i.getSerializableExtra("bird");
+        Bird selectedBird = (Bird) i.getSerializableExtra("selectedBird");
         if (selectedBird != null) {
             // todo download maps and show note to user when done
-
-            Log.i("VisBird", "Trying to show prediction for " + selectedBird.toString());
-
+            Log.i("VisBird OSM", "Trying to show prediction for " + selectedBird.toString());
             showPrediction(selectedBird); // TODO tmp
+        } else {
+            Log.e("VisBird OSM", "No bird for prediction was passed into this activity");
         }
 
         // TODO: this is for testing

@@ -524,7 +524,7 @@ public class BirdSelect extends AppCompatActivity {
         final BirdSelect birdSelect = this;
 
         startIntent = new Intent(this, Cesium.class);
-        startIntent.putExtra("bird", bird);
+        startIntent.putExtra("selectedBird", bird);
         checkForPermissions();
 
     }
