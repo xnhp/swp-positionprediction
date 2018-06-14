@@ -30,8 +30,5 @@
     <dimen name="birdselect_edittext_search_margin">20dp</dimen>
     <dimen name="birdselect_listentry_margin">10dp</dimen>
     <dimen name="birdselect_listentry_textsize">20sp</dimen>
-    <dimen name="birdselect_start_size">20dp</dimen>
-    <dimen name="birdselect_star_margin">5dp</dimen>
-    <dimen name="birdselect_start_margin_right">10dp</dimen>
 
 </resources>

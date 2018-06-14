@@ -8,7 +8,7 @@ import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Locations;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 
-public interface PredictionAlgorithmReturnsTrajectory {
+public interface PredictionAlgorithmReturnsTrajectory extends PredictionAlgorithm {
 
     /**
      * Description: Interface for an algorithm, which returns one single trajectory.

@@ -18,7 +18,7 @@ import project.software.uni.positionprediction.datatype.Locations;
 public class Visualisation {
 
     // Data
-    // todo: remove, only use styledPoints
+    // todo: remove, only use styledPoints TJ: Why remove?!
     public Locations locations;
 
     // Constructor

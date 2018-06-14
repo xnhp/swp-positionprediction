@@ -13,8 +13,12 @@ import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
+import project.software.uni.positionprediction.osm.OSMDroidMap;
+import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
+
+import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 /**
  * This class coordinates between
@@ -45,13 +49,6 @@ public class PredictionWorkflowController {
         // todo: have this throw exceptions that are handled on ui level
     {
 
-       /*
-        1.) fetch data
-        2.) run pred alg
-        3.) build vis
-        4.) draw vis
-         */
-
        // TODO: avoid making too many requests.
         // check whether a request was made in the last n seconds?
         new Thread(new Runnable() {
@@ -60,9 +57,10 @@ public class PredictionWorkflowController {
 
                 // TODO: indicate activity / progress to user
 
-                // will make an async network request for new data
+                // 1.) Make an async network request for new data
                 SQLDatabase.getInstance(ctx).updateBirdData(algParams.bird.getStudyId(), algParams.bird.getId());
 
+                // 2.) When succesful, call method "onDataUpdate"
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
@@ -83,16 +81,28 @@ public class PredictionWorkflowController {
 
     }
 
-    private void onDataUpdate(final IVisualisationAdapter visAdapter,
-                              PredictionAlgorithmReturnsTrajectory algorithm,
-                              final PredictionUserParameters algParams)
-            throws InsufficientTrackingDataException {
+    /**
+     * Execute the following procedures:
+     * 1.) Fetch data from database -> Locations pastTracks
+     * 2.) Run prediction -> Locations prediction
+     * 3.) Set visual properties and build visualisastion object
+     * 4.) draw vis
+     */
+    private void onDataUpdate(
+            final IVisualisationAdapter visAdapter,
+            PredictionAlgorithmReturnsTrajectory algorithm,
+            final PredictionUserParameters algParams
+    ) throws InsufficientTrackingDataException {
 
         // TODO: do this based on date
         // todo: link this to hardcoded limit in algorithm
         int pastDataPoints = 50; // Use last 10 data points
 
-        // Fetch data from database
+
+        // ----------------------------------------------------
+        // 1.) Fetch data from database -> Locations pastTracks
+        // ----------------------------------------------------
+
         SQLDatabase db = SQLDatabase.getInstance(ctx);
         BirdData birddata = db.getBirdData(algParams.bird.getStudyId(), algParams.bird.getId());
         TrackingPoint tracks[] = birddata.getTrackingPoints();
@@ -139,26 +149,41 @@ public class PredictionWorkflowController {
         // in the future, might access different sources of information here (e.g. current weather)
         // and save that in PredictionBaseDate to be used for a position prediction
 
-        // run prediction
+
+        // ------------------------------------------
+        // 2.) Run prediction -> Locations prediction
+        // ------------------------------------------
         Locations prediction = algorithm.predict(algParams, data);
 
-        // think about how to visualise prediction
+
+        // The entirety of all locations to be displayed
+        Locations locations = pastTracks.addAll(prediction);
+
+        if(visAdapter instanceof OSMDroidVisualisationAdapter){
+            //TJ: Center the map so that all locations are visible
+            ((OSMDroidVisualisationAdapter)visAdapter).setMapCenter(locations);
+            ((OSMDroidVisualisationAdapter)visAdapter).setMapZoom(locations);
+        }
+
+        // ---------------------------------------------------------
+        // 3.) Set visual properties and build visualisastion object
+        // ---------------------------------------------------------
+        // thanks to the interface, we can write it this generally here, no matter if osm or cesium
+
+        // predicted data vis properties
         // todo: data type for colors
         String predPointCol = "#ff0077"; // pink
         String predLineCol = "#e28a16";  // orange
         int predPointRadius = 20;
         SingleTrajectoryVis predVis = new SingleTrajectoryVis(prediction, predPointCol, predLineCol, predPointRadius);
 
-        // do visualise it
-        //visAdapter.visualiseSingleTraj(predVis);
 
-        // visualise past data
+        // past data vis properties
         String pastPointCol = "#9116e2"; // purple
         String pastLineCol = "#1668e2"; // blue
         int pastPointRadius = 15;
         SingleTrajectoryVis pastVis = new SingleTrajectoryVis(pastTracks, pastPointCol, pastLineCol, pastPointRadius);
 
-        //visAdapter.visualiseSingleTraj(pastVis);
 
         // combine the two visualisations
         String connectingLineColor = "#f7f300"; // yellow
@@ -167,7 +192,7 @@ public class PredictionWorkflowController {
         visAdapter.visualiseSingleTraj(combinedVis);
 
         // adapter is obtained outside of here. (see class comments)
-        // thanks to the interface, we can write it this generally here, no matter if osm or cesium
+
     }
 
 

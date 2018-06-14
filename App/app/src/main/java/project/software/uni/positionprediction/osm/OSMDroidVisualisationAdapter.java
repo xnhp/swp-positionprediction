@@ -15,11 +15,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatype.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation.StyledPoint;
+
+import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
@@ -28,6 +32,8 @@ import project.software.uni.positionprediction.visualisation.StyledPoint;
 public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
 
     private OSMDroidMap map;
+
+    public OSMDroidMap getMap() {return map;}
 
     public void linkMap (Object mapView) {
         if (mapView instanceof OSMDroidMap) {
@@ -38,12 +44,23 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
         }
     }
 
+    public void setMapCenter(Locations locs) {
+        map.setCenter(LocationToGeoPoint(locs.getCenter()));
+    }
+
+    public void setMapZoom(Locations locs) {
+        map.setZoom(OSMDroidMap.calculateZoomLevel(locs.getSpread()));
+    }
+
     @Override
     public void visualiseSingleTraj(SingleTrajectoryVis vis) {
 
-        //map.draw(points, vis.defaultLineColor, vis.defaultPointColor);
+        // pan to the correct region
+
+        setMapCenter(vis.locations);
+        setMapZoom(vis.locations);
         
-        // 1.) draw styled polylines
+        // 2.) draw styled polylines
         for (StyledLineSegment seg :
                 vis.styledLineSegments) {
             // todo: note: this will create an "osmdroid overlay" for each segment.
@@ -55,7 +72,7 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
         }
 
 
-        // 2.) draw styled points
+        // 3.) draw styled points
         // obtain a list of styled points of the type that osmdroid needs.
         OSMStyledPointList osmStyledPoints = new OSMStyledPointList();
         for (StyledPoint styledPoint :

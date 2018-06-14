@@ -21,6 +21,6 @@ public interface PredictionAlgorithmReturnsCloud {
      *
      * @return
      */
-    Cloud predict(PredictionUserParameters algParams, PredictionBaseData data);
+    //Cloud predict(PredictionUserParameters algParams, PredictionBaseData data);
 
 }

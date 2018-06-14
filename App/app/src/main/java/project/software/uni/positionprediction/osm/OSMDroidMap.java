@@ -107,6 +107,9 @@ public class OSMDroidMap {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, 0,(AppCompatActivity) context);
     }
 
+
+
+
     public void initMap(MapView view, GeoPoint center, final double zoom) {
         // I decided to only take a MapView here instead of taking the layout id and doing the cast
         // to `MapView` here because after all the mapping from view id to to a MapView object is not
@@ -458,6 +461,52 @@ public class OSMDroidMap {
         // this is for consistency with other methods which take parameters related to zoom
         // (e.g. minZoom) but have them declared as `int`s.
         mapController.setZoom((float) zoom);
+    }
+
+    // Calculate the correct zoom level for a given spread (in degrees) of elements that shall be visible
+    public static int calculateZoomLevel(double spread) {
+        int zoomLevel = 0;
+        int correction = 10;
+        if (spread < 0.0005) {
+            zoomLevel = 19 - correction;
+        } else if (spread < 0.001) {
+            zoomLevel = 18 - correction;
+        } else if (spread < 0.003) {
+            zoomLevel = 17 - correction;
+        } else if (spread < 0.005) {
+            zoomLevel = 16 - correction;
+        } else if (spread < 0.011) {
+            zoomLevel = 15 - correction;
+        } else if (spread < 0.022) {
+            zoomLevel = 14 - correction;
+        } else if (spread < 0.044) {
+            zoomLevel = 13 - correction;
+        } else if (spread < 0.088) {
+            zoomLevel = 12 - correction;
+        } else if (spread < 0.176) {
+            zoomLevel = 11 - correction;
+        } else if (spread < 0.352) {
+            zoomLevel = 10 - correction;
+        } else if (spread < 0.703) {
+            zoomLevel = 9 - correction;
+        } else if (spread < 1.406) {
+            zoomLevel = 8 - correction;
+        } else if (spread < 2.813) {
+            zoomLevel = 7 - correction;
+        } else if (spread < 5.625) {
+            zoomLevel = 6 - correction;
+        } else if (spread < 11.25) {
+            zoomLevel = 5 - correction;
+        } else if (spread < 22.5) {
+            zoomLevel = 4 - correction;
+        } else if (spread < 45) {
+            zoomLevel = 3 - correction;
+        } else if (spread < 90) {
+            zoomLevel = 2 - correction;
+        } else if (spread < 180) {
+            zoomLevel = 1 - correction;
+        }
+        return zoomLevel;
     }
 
     private double getZoomLevel() {

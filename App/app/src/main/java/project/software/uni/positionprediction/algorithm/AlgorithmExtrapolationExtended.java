@@ -38,7 +38,8 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
 
         // Compute prediction
         Locations prediction = next_Location(data.pastTracks, pastDataPoints);
-        return prediction;
+        SingleTrajectory trajectory = new SingleTrajectory(prediction);
+        return trajectory;
     }
 
 
