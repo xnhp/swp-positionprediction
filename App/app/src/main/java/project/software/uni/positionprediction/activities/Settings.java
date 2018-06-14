@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.controllers.ModeController;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
@@ -38,17 +37,14 @@ public class Settings extends AppCompatActivity {
     private XML xml = new XML();
     Message m = new Message();
 
-    // retrieve a final reference so we can access it in click handlers
-    //final OSMCacheControl osmCacheControl = ModeController.getInstance(this).osmCacheControl;
-    ModeController mc;
+    // this is a field because we need to be able to access it in click handlers.
     OSMCacheControl osmCacheControl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mc = new ModeController(this);
-        osmCacheControl = mc.osmCacheControl;
+        osmCacheControl = OSMCacheControl.getInstance(this);
 
         final Settings settings = this;
 

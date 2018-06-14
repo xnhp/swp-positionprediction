@@ -14,10 +14,24 @@ public class OSMCacheControl {
     public final SqlTileWriter tileWriter;
     // private Context context;
 
-    private final long maxCacheSize = 600L * 1024 * 1024; // 600MB
+    public final long maxCacheSize = 600L * 1024 * 1024; // 600MB
+
+    private static OSMCacheControl self;
+
+    /**
+     * note: a context is required for initialisation, however
+     * it is discarded afterwards.
+     * @param ctx
+     * @return
+     */
+    public static OSMCacheControl getInstance(Context ctx) {
+        if (self == null) {
+            self = new OSMCacheControl(ctx);
+        }
+        return self;
+    }
 
     public OSMCacheControl(Context ctx) {
-        // this.context = ctx;
         // context is only used for this
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         this.tileWriter = new SqlNoDelTileWriter();

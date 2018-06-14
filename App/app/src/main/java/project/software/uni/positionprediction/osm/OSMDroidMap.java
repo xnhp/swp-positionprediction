@@ -39,7 +39,6 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 import java.util.List;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.controllers.ModeController;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
 
@@ -125,10 +124,7 @@ public class OSMDroidMap {
         // initialise a CacheManager with a tile writer as additional argument
         // for *persistent* offline saving
         // cf https://github.com/osmdroid/osmdroid/wiki/Offline-Map-Tiles, look for "Tile Archives"
-        // SqlNoDelTileWriter tileWriter = ModeController.getInstance().getOSMTileWriter();
-
-        ModeController mc = new ModeController(this.context);
-        SqlTileWriter tileWriter = mc.getOSMTileWriter();
+        SqlTileWriter tileWriter = OSMCacheControl.getInstance(this.context).tileWriter;
         //tileWriter.setCleanupOnStart(false);
         cacheManager = new CacheManager(mapView, tileWriter);
 
