@@ -60,15 +60,12 @@ public class PredictionWorkflowController {
 
                 // TODO: indicate activity / progress to user
 
-                // will make an async network request for new data
-                SQLDatabase.getInstance(ctx).updateBirdData(algParams.bird.getStudyId(), algParams.bird.getId());
+                // will make a network request for new data
+                SQLDatabase.getInstance(ctx).updateBirdDataSync(algParams.bird.getStudyId(), algParams.bird.getId());
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                       // AlgorithmExtrapolationExtended algo = new AlgorithmExtrapolationExtended(birdSelect);
-                       // LinkedList<Location3D> list = algo.predict(null, null, bird.getStudyId(), bird.getId());
-                       // Log.e("Result", ""+ list.get(0).getLoc_long() );
                         try {
                             onDataUpdate(visAdapter, algorithm, algParams);
                         } catch (InsufficientTrackingDataException e) {
@@ -104,11 +101,6 @@ public class PredictionWorkflowController {
         }
 
         /*
-        // Size error
-        if (d.length == 0) {
-            Log.e("Error", "Data has length 0");
-        }
-
         // Date error
         Date now = new Date();
         if (now.before(date_past)) {
