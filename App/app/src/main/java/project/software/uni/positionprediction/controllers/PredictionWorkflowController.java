@@ -60,8 +60,8 @@ public class PredictionWorkflowController {
 
                 // TODO: indicate activity / progress to user
 
-                // will make an async network request for new data
-                SQLDatabase.getInstance(ctx).updateBirdData(algParams.bird.getStudyId(), algParams.bird.getId());
+                // will make a network request for new data
+                SQLDatabase.getInstance(ctx).updateBirdDataSync(algParams.bird.getStudyId(), algParams.bird.getId());
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
