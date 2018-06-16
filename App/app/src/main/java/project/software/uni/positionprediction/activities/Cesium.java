@@ -2,13 +2,14 @@ package project.software.uni.positionprediction.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -17,10 +18,18 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
+import project.software.uni.positionprediction.datatype.BirdData;
+import project.software.uni.positionprediction.datatype.Locations;
+import project.software.uni.positionprediction.datatype.SingleTrajectory;
+import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatype.Bird;
+
 
 
 /**
@@ -39,8 +48,14 @@ public class Cesium extends AppCompatActivity {
     private static String CESIUM_URI = "http://localhost:8080/";
     private WebView webView;
 
-    // the bird that was selected in a previous activity
-    Bird selectedBird;
+    private Bird selectedBird;
+
+    private int pastDataPoints = 50;
+
+    private ArrayList<Double> longitudes = new ArrayList<>();
+    private ArrayList<Double> latitudes = new ArrayList<>();
+
+    private Locations pastTracks = new SingleTrajectory();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +93,44 @@ public class Cesium extends AppCompatActivity {
         // Web Location: http://localhost:8080/test.html
         webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
 
+        SQLDatabase db = SQLDatabase.getInstance(this);
+        BirdData birddata = db.getBirdData(2911040, 2911059);
+        TrackingPoint tracks[] = birddata.getTrackingPoints();
+
+        for (int i = 0; i < pastDataPoints; i++) {
+            //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
+            pastTracks.add( tracks[tracks.length-1 - pastDataPoints + i].getLocation() );
+        }
+
         launchWebView(webView);
+    }
+
+    class JsObject {
+
+        @JavascriptInterface
+        public int getAmountPoints() { return pastDataPoints; }
+
+        @JavascriptInterface
+        public double getLongitudes(int i) { return pastTracks.locs.get(i).getLon(); }
+
+        @JavascriptInterface
+        public double getLatitudes(int i) { return pastTracks.locs.get(i).getLat(); }
+
+        @JavascriptInterface
+        public double getAltitudes(int i) { return pastTracks.locs.get(i).getAlt(); }
+
+    }
+
+    private void addValues() {
+        longitudes.add(9.299999);
+        longitudes.add(9.199999);
+        longitudes.add(9.099999);
+        longitudes.add(8.599999);
+
+        latitudes.add(47.899999);
+        latitudes.add(47.799999);
+        latitudes.add(47.699999);
+        latitudes.add(47.099999);
     }
 
 
@@ -123,6 +175,8 @@ public class Cesium extends AppCompatActivity {
         // Copied and modified from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
         this.webView = findViewById(R.id.cesium_webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new JsObject(), "injectedObject");
+
         final Activity activity = this;
 
         webView.setWebViewClient(new WebViewClient() {
