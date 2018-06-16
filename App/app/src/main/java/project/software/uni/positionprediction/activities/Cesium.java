@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +49,8 @@ public class Cesium extends AppCompatActivity {
     private static String CESIUM_URI = "http://localhost:8080/";
     private WebView webView;
 
-    private Bird selectedBird;
+    // the bird that was selected in a previous activity
+    Bird selectedBird;
 
     private int pastDataPoints = 50;
 
