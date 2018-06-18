@@ -26,7 +26,7 @@ import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.util.Message;
 
-public class OSM extends AppCompatActivity implements FloatingMapButtons.MyfabClickListener {
+public class OSM extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
 
     OSMDroidMap osmDroidMap;
 

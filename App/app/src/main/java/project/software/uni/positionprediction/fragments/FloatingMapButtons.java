@@ -15,7 +15,7 @@ public class FloatingMapButtons extends Fragment {
 
     private final String logTag = "FloatingMapButtons";
 
-    private MyfabClickListener clickListener;
+    private floatingMapButtonsClickListener clickListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class FloatingMapButtons extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         Log.i(logTag, "onCreateView");
         // tmpl: return super.onCreateView(inflater, container, savedInstanceState);
-        View view =  inflater.inflate(R.layout.floatingmapbuttons_fragment, container, false);
+        View view =  inflater.inflate(R.layout.fragment_floatingmapbuttons, container, false);
 
 
         view.findViewById(R.id.fab_showData).setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class FloatingMapButtons extends Fragment {
      * [1] https://developer.android.com/guide/components/fragments
      * [2] https://developer.android.com/topic/libraries/architecture/viewmodel
      */
-    public interface MyfabClickListener {
+    public interface floatingMapButtonsClickListener {
         void onShowDataClick();
         void onShowPredClick();
         void onShowLocClick();
@@ -91,7 +91,7 @@ public class FloatingMapButtons extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            clickListener = (MyfabClickListener) context;
+            clickListener = (floatingMapButtonsClickListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
         }

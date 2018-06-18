@@ -36,13 +36,12 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="center_vertical">
 
-                // Add Buttons here
-                <Button
-                    android:id="@+id/offline_btn"
-                    android:text="OFFL."
-                    android:layout_marginRight="5dp"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp" />
+                <fragment
+                    android:id="@+id/fragment"
+                    android:name="project.software.uni.positionprediction.fragments.FloatingMapButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
 
             </LinearLayout>
