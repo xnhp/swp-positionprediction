@@ -19,20 +19,20 @@ import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationE
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
 import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.util.Message;
 
-public class OSM extends AppCompatActivity {
+public class OSM extends AppCompatActivity implements FloatingMapButtons.MyfabClickListener {
 
     OSMDroidMap osmDroidMap;
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
     private Button buttonBack     = null;
-    private Button buttonOnline   = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,8 @@ public class OSM extends AppCompatActivity {
         setContentView(R.layout.activity_osm);
 
         MapView mapView = (MapView) findViewById(R.id.map);
+        // todo: automatically set to position of visualisation
+        // todo: already done by timo, just not merged into this branch yet.
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
 
         try {
@@ -82,8 +84,6 @@ public class OSM extends AppCompatActivity {
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
-        buttonOnline = findViewById(R.id.online_btn);
-        //buttonPanTo    = findViewById(R.id.map_panto_button);
         registerEventHandlers(osm);
 
 
@@ -158,16 +158,6 @@ public class OSM extends AppCompatActivity {
             }
         });
 
-
-        buttonOnline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent buttonIntent = new Intent(osm, Cesium.class);
-                startActivity(buttonIntent);
-            }
-        });
-
     }
 
 
@@ -184,4 +174,36 @@ public class OSM extends AppCompatActivity {
         super.onPause();
         if (osmDroidMap != null) osmDroidMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
+
+    /*
+        Click handlers for fragments.FloatingMapButtons
+     */
+
+    @Override
+    public void onShowDataClick() {
+        Log.i("osm activity", "on my fab click");
+        // todo, cf changes timo
+    }
+
+    @Override
+    public void onShowPredClick() {
+        // todo, cf changes timo
+    }
+
+    @Override
+    public void onShowLocClick() {
+        Log.i("osm activ", "on show loc click");
+        osmDroidMap.enableFollowLocation(); // todo: toggle, disable on pan
+    }
+
+    @Override
+    public void onSwitchModeClick() {
+        // switch to Cesium Activity
+        // todo: toggle
+        finish();
+        Intent buttonIntent = new Intent(this, Cesium.class);
+        startActivity(buttonIntent);
+    }
+
+
 }

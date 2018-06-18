@@ -87,8 +87,8 @@ public class OSMDroidMap {
     private CacheManager cacheManager = null;
     private Context context = null;
 
-    private Marker marker;
     private LocationManager locationManager;
+    private Marker locationMarker;
     private MyLocationNewOverlay locationOverlay = null;
     private CompassOverlay compassOverlay = null;
 
@@ -150,7 +150,7 @@ public class OSMDroidMap {
 
         // enableFollowLocation(); // TODO
 
-        Marker locationMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_menu_mylocation));
+        locationMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_menu_mylocation));
         placeMarker(mapView, locationMarker, center);
         // Note that as of now, the marker has to have already been placed on the map with placeMarker()
         // this means we have to supply it with an initial position (or else we would have to rethink
@@ -367,11 +367,11 @@ public class OSMDroidMap {
      * https://github.com/osmdroid/osmdroid/blob/db1d2e54b44bc10c6b47c49df2a08f19664ae6f5/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/location/SampleFollowMe.java
      * TODO: Error handling?
      */
-    private void enableFollowLocation() {
+    public void enableFollowLocation() {
         if (locationOverlay != null) locationOverlay.enableFollowLocation();
     }
 
-    private void disableFollowLocation() {
+    public void disableFollowLocation() {
         if (locationOverlay != null) locationOverlay.disableFollowLocation();
     }
 
