@@ -8,6 +8,8 @@ public class TrackingPoints {
 
     private List<TrackingPoint> trackingpoints;
 
+    public TrackingPoints() { }
+
     public TrackingPoints(List<TrackingPoint> trackingpoints) {
         this.trackingpoints = trackingpoints;
     }

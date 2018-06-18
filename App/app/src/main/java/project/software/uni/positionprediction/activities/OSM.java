@@ -99,7 +99,7 @@ public class OSM extends AppCompatActivity {
 
         // have it draw the visualisation
         // (I am making the assumption that an algorithm only has one specific fitting Visualisation)
-        PredictionAlgorithmReturnsTrajectory algorithm = new AlgorithmExtrapolationExtended();
+        PredictionAlgorithmReturnsTrajectory algorithm = new AlgorithmExtrapolationExtended(this);
         PredictionWorkflowController controller = new PredictionWorkflowController(this);
 
         // todo: get these from user / from settings

@@ -5,19 +5,24 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.Locations;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatype.TrackingPoints;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
+import project.software.uni.positionprediction.util.Message;
 
 public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
 
+    private Context c;
 
-    public AlgorithmExtrapolationExtended() {
+    public AlgorithmExtrapolationExtended(Context c) {
+        this.c = c;
     }
 
 
@@ -33,11 +38,9 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      */
     @Override
     public Locations predict(PredictionUserParameters params, PredictionBaseData data) {
-        // TODO determine pastDataPoints from params.past_date
-        int pastDataPoints = 50;
 
         // Compute prediction
-        Locations prediction = next_Location(data.pastTracks, pastDataPoints);
+        Locations prediction = next_Location(data.pastTracks, params.date_past, params.date_pred);
         return prediction;
     }
 
@@ -49,17 +52,28 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      * @param data
      * @return
      */
-    public Locations next_Location(Locations data, int date) {
+    public Locations next_Location(TrackingPoints data, Date date_past, Date date_pred) {
         int n = data.getLength() - 1;
         ArrayList<Location> vector_collection = new ArrayList<>();
+        int c = 0;
+
         // Fill collection
-        for (int t = 1; t < date; t++) { // todo: loop conditions correct?
+        for (int t = 1; t < n; t++) {
+            Date date_t = data.get(n-t).getDate();
+
+            // Break if date until we want the data is reached
+            if (date_t.before(date_past)) {
+                Log.e("Break", "" + c + " data points where usedfor prediction");
+                break;
+            }
+            c++; // Count for Log.e
+
             // Compute difference of pair n and n-t
             // Get n-th point
-            Location vec_n = data.get(n);
+            Location vec_n = data.get(n).getLocation();
 
             // Get n-t point
-            Location vec_old = data.get(n-t);
+            Location vec_old = data.get(n-t).getLocation();
 
             // Compute vector between them
             Location vec_delta = vec_n.subtract(vec_old);
@@ -72,14 +86,18 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
             vector_collection.add(vec_avg);
         }
 
+        // Compute prediction factor
+        double pred_factor = (date_pred == null)? 1 : compute_pred_length(data, date_pred, vector_collection.size());
+
+
         // Compute average of all computed vectors in collection
         Location avg = weighted_average(vector_collection);
-        Location curr_loc = data.get(data.getLength() - 1);
+        Location curr_loc = data.get(data.getLength() - 1).getLocation();
 
         // Add avg vector to current Location
         Locations result_list = new SingleTrajectory();
-        // todo: returns locations with hasAltitude = true. not good.
-        Location result_vector = curr_loc.to3D().add(avg);
+
+        Location result_vector = curr_loc.add( avg.multiply(pred_factor) );
         result_list.add(result_vector);
         return result_list;
     }
@@ -120,14 +138,42 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
     }
 
 
-    /**
-     * Todo: possible weight function
-     *
-     * @param a
-     * @return
-     */
-    private int weight(int a) {
-        return 1;
+
+    private double compute_pred_length(TrackingPoints data, Date date_pred, int nr_of_pts) {
+        if (data.getLength() < nr_of_pts ){
+            Message m = new Message();
+            m.disp_error(c, "Data size", "There is to less data to compute a good result");
+            return 1;
+        }
+
+        // Get the used tracking points
+        LinkedList<Number> delta_ms = new LinkedList<Number>();
+        int n = data.getLength();
+        for (int i = 0; i<nr_of_pts; i++){
+            TrackingPoint p_curr = data.get(n - nr_of_pts + i);
+            TrackingPoint p_before = data.get(n - nr_of_pts + i - 1);
+            long t1 = p_curr.getDate().getTime();
+            long t2 = p_before.getDate().getTime();
+            long delta_t = Math.abs(t1-t2);
+            delta_ms.add(delta_t);
+        }
+
+        // Get average time between Trackingpoints
+        long sum = 0;
+        int m = delta_ms.size();
+        for (int j = 0; j < n; j++) {
+            sum = sum + (long) delta_ms.get(j);
+        }
+        long avg = sum / m;
+        Log.e("Note", "Average of last few data points (in millis) = " + avg );
+
+        // Get relative frequency of avg time in whole in prediction
+        long duration_pred = date_pred.getTime();
+        double freq = avg / duration_pred;
+
+        return freq;
+
     }
+
 
 }
