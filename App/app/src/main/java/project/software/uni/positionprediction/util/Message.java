@@ -63,7 +63,7 @@ public class Message {
      *              true);
      *
      */
-    public static void disp_error (Context c, String errorTitle, String errorMsg) {
+    public static void disp_error (Context c, String errorTitle, String errorMsg, boolean button) {
         if (errorTitle == null) {
             Log.e("Warning", "No error title");
         }
@@ -74,6 +74,7 @@ public class Message {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
 
+        if (button) {
             alert.setMessage
                     (
                             errorMsg
@@ -90,6 +91,15 @@ public class Message {
                     //.setIcon(R.id.)
                     .create();
             alert.show();
+        } else {
+            alert.setMessage
+                    (
+                            errorMsg
+                    )
+                    .setTitle(errorTitle)
+                    .create();
+            alert.show();
+        }
     }
 
 
