@@ -39,6 +39,7 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 import java.util.List;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.datatype.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
 
@@ -46,6 +47,7 @@ import static android.graphics.Color.argb;
 import static android.graphics.Color.blue;
 import static android.graphics.Color.green;
 import static android.graphics.Color.red;
+import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 
 /**
@@ -483,6 +485,52 @@ public class OSMDroidMap {
         mapController.setZoom((float) zoom);
     }
 
+    // Calculate the correct zoom level for a given spread (in degrees) of elements that shall be visible
+    public static int calculateZoomLevel(double spread) {
+        int zoomLevel = 0;
+        int correction = 10;
+        if (spread < 0.0005) {
+            zoomLevel = 19 - correction;
+        } else if (spread < 0.001) {
+            zoomLevel = 18 - correction;
+        } else if (spread < 0.003) {
+            zoomLevel = 17 - correction;
+        } else if (spread < 0.005) {
+            zoomLevel = 16 - correction;
+        } else if (spread < 0.011) {
+            zoomLevel = 15 - correction;
+        } else if (spread < 0.022) {
+            zoomLevel = 14 - correction;
+        } else if (spread < 0.044) {
+            zoomLevel = 13 - correction;
+        } else if (spread < 0.088) {
+            zoomLevel = 12 - correction;
+        } else if (spread < 0.176) {
+            zoomLevel = 11 - correction;
+        } else if (spread < 0.352) {
+            zoomLevel = 10 - correction;
+        } else if (spread < 0.703) {
+            zoomLevel = 9 - correction;
+        } else if (spread < 1.406) {
+            zoomLevel = 8 - correction;
+        } else if (spread < 2.813) {
+            zoomLevel = 7 - correction;
+        } else if (spread < 5.625) {
+            zoomLevel = 6 - correction;
+        } else if (spread < 11.25) {
+            zoomLevel = 5 - correction;
+        } else if (spread < 22.5) {
+            zoomLevel = 4 - correction;
+        } else if (spread < 45) {
+            zoomLevel = 3 - correction;
+        } else if (spread < 90) {
+            zoomLevel = 2 - correction;
+        } else if (spread < 180) {
+            zoomLevel = 1 - correction;
+        }
+        return zoomLevel;
+    }
+
     private double getZoomLevel() {
         return mapView.getProjection().getZoomLevel();
     }
@@ -527,6 +575,14 @@ public class OSMDroidMap {
 
     public void panWithAnimationTo(GeoPoint newCenter) {
         mapController.animateTo(newCenter);
+    }
+
+    public void setMapCenter(Locations locs) {
+        this.setCenter(LocationToGeoPoint(locs.getCenter()));
+    }
+
+    public void setMapZoom(Locations locs) {
+        this.setZoom(OSMDroidMap.calculateZoomLevel(locs.getSpread()));
     }
 
 

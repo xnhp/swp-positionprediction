@@ -41,9 +41,12 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
     @Override
     public void visualiseSingleTraj(SingleTrajectoryVis vis) {
 
-        //map.draw(points, vis.defaultLineColor, vis.defaultPointColor);
+        // pan to the correct region
         
-        // 1.) draw styled polylines
+        map.setMapCenter(vis.locations);
+        map.setMapZoom(vis.locations);
+
+        // 2.) draw styled polylines
         for (StyledLineSegment seg :
                 vis.styledLineSegments) {
             // todo: note: this will create an "osmdroid overlay" for each segment.
