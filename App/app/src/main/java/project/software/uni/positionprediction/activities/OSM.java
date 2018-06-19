@@ -2,8 +2,11 @@ package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -158,6 +161,21 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
             }
         });
 
+
+        // manual interaction with the map will always disable osmdroid's
+        // followLocation. This is used to update the button accordingly.
+        osmDroidMap.mapView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.i("foo", "on touch listener on mapview called, returning true");
+                toggleShowLocBtn(false);
+                return false; // indicates that the touch event was not
+                              // successfully handled (it will propagated
+                              // further, such as to the mapView to actually
+                              // pan/zoom/rotate it).
+            }
+        });
+
     }
 
 
@@ -175,27 +193,11 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
         if (osmDroidMap != null) osmDroidMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    /*
-        Click handlers for fragments.FloatingMapButtons
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
      */
-
-    @Override
-    public void onShowDataClick() {
-        Log.i("osm activity", "on my fab click");
-        // todo, cf changes timo
-    }
-
-    @Override
-    public void onShowPredClick() {
-        // todo, cf changes timo
-    }
-
-    @Override
-    public void onShowLocClick() {
-        Log.i("osm activ", "on show loc click");
-        osmDroidMap.enableFollowLocation(); // todo: toggle, disable on pan
-    }
-
     @Override
     public void onSwitchModeClick() {
         // switch to Cesium Activity
@@ -204,6 +206,61 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
         Intent buttonIntent = new Intent(this, Cesium.class);
         startActivity(buttonIntent);
     }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowDataClick() {
+        Log.i("osm activity", "on my fab click");
+        // todo, cf changes timo
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowPredClick() {
+        // todo, cf changes timo
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowLocClick() {
+        Log.i("FollowLocation", "FollowLocation was " + osmDroidMap.isFollowingLocation());
+        Log.i("osm activ", "on show loc click");
+        // toggle following users current position
+        if (!osmDroidMap.isFollowingLocation()) {
+            // toggle button
+            toggleShowLocBtn(true);
+            // enable functionality
+            osmDroidMap.enableFollowLocation();
+        } else {
+            toggleShowLocBtn(false);
+            osmDroidMap.disableFollowLocation();
+        }
+    }
+
+    /**
+     * Toggle the icon of the "show location" button
+     * @param state true if currently following the users location
+     */
+    private void toggleShowLocBtn(boolean state) {
+        // obtain reference to floating buttons fragment
+        FloatingMapButtons fragment = (FloatingMapButtons) getSupportFragmentManager().findFragmentById(R.id.floating_map_buttons);
+        if (fragment != null) {
+            fragment.toggleShowLocBtn(state);
+        } else {
+            Log.e("FloatingMapButtons", "No fragment button to toggle! This probably means that no fragment is attached.");
+        }
+    }
+
+
 
 
 }

@@ -4,6 +4,8 @@ package project.software.uni.positionprediction.osm;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -112,8 +114,6 @@ public class OSMDroidMap {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, 0,(AppCompatActivity) context);
     }
 
-    // todo: move this to the bottom of this file
-
 
     public void initMap(MapView view, GeoPoint center, final double zoom) throws MapInitException {
         // I decided to only take a MapView here instead of taking the layout id and doing the cast
@@ -145,13 +145,18 @@ public class OSMDroidMap {
         setZoom(zoom);
         setCenter(center);
 
-        enableCompassOverlay(); // works
+        // enableCompassOverlay(); // works
         enableRotationGestures(); // works
 
-        //enableLocationOverlay(); // works
+        enableLocationOverlay(); // works
 
-        // enableFollowLocation(); // TODO
+        // enableFollowLocation();
 
+        /*
+        This is an alternative method of a location marker
+        the marker and obtaining/updating the location is managed "manually",
+        without using the osmdroid library.
+        This potentially provides more flexibility
         locationMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_menu_mylocation));
         placeMarker(mapView, locationMarker, center);
         // Note that as of now, the marker has to have already been placed on the map with placeMarker()
@@ -159,6 +164,7 @@ public class OSMDroidMap {
         // what the placeMarker method is for).
         // TODO: not do that, check dynamically whether marker is already placed or not.
         enableCustomLocationMarker(locationMarker);
+        */
     }
 
     /**
@@ -178,11 +184,28 @@ public class OSMDroidMap {
 
 
     /**
-     * Shows current location using a built-in marker
+     * Shows current location of the user using osmdroid's LocationOverlay.
+     * provides functionality like always centering the map around the location.
      */
     private void enableLocationOverlay() {
         MyLocationNewOverlay overlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), mapView);
+
         overlay.enableMyLocation();
+
+        Bitmap bitmapMarker = BitmapFactory.decodeResource(
+                context.getResources(),
+                R.drawable.ic_menu_mylocation
+        );
+        overlay.setPersonIcon(bitmapMarker);
+
+        // the "hotspot" is the exact position of the icon that is mapped
+        // to the users current location.
+        // assume it is the center of the icon (e.g. for crosshair icon)
+        overlay.setPersonHotspot(bitmapMarker.getWidth() / 2, bitmapMarker.getHeight() / 2);
+
+        // save reference for accessing it from other methods
+        // (such as e.g.) toggling of following the location.
+        this.locationOverlay = overlay;
 
         mapView.getOverlays().add(overlay);
     }
@@ -222,6 +245,7 @@ public class OSMDroidMap {
      * When the device location changes, the marker location on the map also changes.
      * Note that as of now, the marker has to have already been placed on the map with placeMarker()
      * TODO: onResume(), does the location have to be explicitly updated?
+     * Alternatively, osmdroid's locationOverlay can be used
      */
     private void enableCustomLocationMarker(final Marker marker) {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
@@ -243,6 +267,7 @@ public class OSMDroidMap {
                 if (location != null) {
                     marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
                 }
+                Log.i("FloatingMapButtons", "followLocation is " + locationOverlay.isFollowLocationEnabled());
             }
 
             @Override
@@ -364,18 +389,26 @@ public class OSMDroidMap {
     }
 
     /**
-     * Map will always center on the user's location.
-     * Manual panning is disabled.
-     * For a nice implementation that additionally allows panning, see
-     * https://github.com/osmdroid/osmdroid/blob/db1d2e54b44bc10c6b47c49df2a08f19664ae6f5/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/location/SampleFollowMe.java
+     * Center map on user's location and keep it there until another
+     * user interaction (panning, zooming etc)
+     *
+     * NOTE: contrary to osmdroid's documentation (cf MyLocationNewOverlay)
+     * this DOES NOT disable manual panning. In fact, on panning the map
+     * locationOverlay.isFollowLocationEnabled() is set to false again.
      * TODO: Error handling?
      */
     public void enableFollowLocation() {
-        if (locationOverlay != null) locationOverlay.enableFollowLocation();
+        if (locationOverlay != null) {
+            locationOverlay.enableFollowLocation();
+        }
     }
 
     public void disableFollowLocation() {
         if (locationOverlay != null) locationOverlay.disableFollowLocation();
+    }
+
+    public boolean isFollowingLocation() {
+        return locationOverlay.isFollowLocationEnabled();
     }
 
     /**
