@@ -3,6 +3,7 @@ package project.software.uni.positionprediction.algorithm;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import project.software.uni.positionprediction.datatypes_new.Location;
@@ -34,14 +35,14 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
     public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
         // TODO determine pastDataPoints from params.past_date
         int pastDataPoints = 50;
-        PredictionResultData result = null;
+        PredictionResultData result = new PredictionResultData();
 
         // Compute prediction
         Locations prediction = next_Location(data.getTrackedLocations(), pastDataPoints);
         Trajectory trajectory = new Trajectory(prediction);
 
-        Map<Shape, ArrayList<Locations>> map = null;
-        ArrayList<Locations> trajectories = null;
+        Map<Shape, ArrayList<Locations>> map = new HashMap<>();
+        ArrayList<Locations> trajectories = new ArrayList<Locations>();
         trajectories.add(trajectory);
         map.put(Shape.TRAJECTORY, trajectories);
 

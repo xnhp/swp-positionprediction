@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -18,13 +17,9 @@ import java.util.Date;
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
-import project.software.uni.positionprediction.controllers.PredictVisController;
 import project.software.uni.positionprediction.controllers.PredictVisController_new;
-import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
-import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 
 public class OSM_new extends AppCompatActivity {
