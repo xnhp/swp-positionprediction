@@ -176,6 +176,7 @@ public class OSMDroidMap {
     }
 
 
+
     /**
      * Shows current location using a built-in marker
      */

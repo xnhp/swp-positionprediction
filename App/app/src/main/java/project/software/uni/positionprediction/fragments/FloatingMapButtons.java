@@ -93,7 +93,7 @@ public class FloatingMapButtons extends Fragment {
         try {
             clickListener = (floatingMapButtonsClickListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnArticleSelectedListener");
+            throw new ClassCastException(context.toString() + " must implement listener");
         }
     }
 
