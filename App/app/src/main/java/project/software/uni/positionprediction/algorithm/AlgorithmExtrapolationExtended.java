@@ -1,18 +1,17 @@
 package project.software.uni.positionprediction.algorithm;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Map;
 
-import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.Locations;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.Location;
+import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
-import project.software.uni.positionprediction.movebank.SQLDatabase;
+import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
+import project.software.uni.positionprediction.util.Shape;
 
 public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
 
@@ -32,14 +31,23 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      * Add this vector to X and get p1.
      */
     @Override
-    public Locations predict(PredictionUserParameters params, PredictionBaseData data) {
+    public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
         // TODO determine pastDataPoints from params.past_date
         int pastDataPoints = 50;
+        PredictionResultData result = null;
 
         // Compute prediction
-        Locations prediction = next_Location(data.pastTracks, pastDataPoints);
-        SingleTrajectory trajectory = new SingleTrajectory(prediction);
-        return trajectory;
+        Locations prediction = next_Location(data.getTrackedLocations(), pastDataPoints);
+        Trajectory trajectory = new Trajectory(prediction);
+
+        Map<Shape, ArrayList<Locations>> map = null;
+        ArrayList<Locations> trajectories = null;
+        trajectories.add(trajectory);
+        map.put(Shape.TRAJECTORY, trajectories);
+
+        result.setData(map);
+
+        return result;
     }
 
 
@@ -78,7 +86,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
         Location curr_loc = data.get(data.getLength() - 1);
 
         // Add avg vector to current Location
-        Locations result_list = new SingleTrajectory();
+        Locations result_list = new Trajectory();
         // todo: returns locations with hasAltitude = true. not good.
         Location result_vector = curr_loc.to3D().add(avg);
         result_list.add(result_vector);

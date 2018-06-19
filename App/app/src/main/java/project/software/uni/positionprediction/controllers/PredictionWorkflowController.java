@@ -145,7 +145,7 @@ public class PredictionWorkflowController {
         }
 
         PredictionBaseData data = new PredictionBaseData();
-        data.pastTracks = pastTracks;
+        //data.pastTracks = pastTracks;
         // in the future, might access different sources of information here (e.g. current weather)
         // and save that in PredictionBaseDate to be used for a position prediction
 

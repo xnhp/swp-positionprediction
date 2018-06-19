@@ -1,12 +1,12 @@
 package project.software.uni.positionprediction.interfaces;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Map;
 
-import project.software.uni.positionprediction.algorithm.PredictionBaseData;
+import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
-import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.Locations;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 
 public interface PredictionAlgorithmReturnsTrajectory extends PredictionAlgorithm {
 
@@ -22,7 +22,7 @@ public interface PredictionAlgorithmReturnsTrajectory extends PredictionAlgorith
      *      - Cloud:         List of Locations. The order is not necessary
      *
      */
-    Locations predict(PredictionUserParameters algParams, PredictionBaseData data);
+    PredictionResultData predict(PredictionUserParameters algParams, PredictionBaseData data);
 
 
 }

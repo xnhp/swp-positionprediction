@@ -19,11 +19,13 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictVisController;
+import project.software.uni.positionprediction.controllers.PredictVisController_new;
 import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
+import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 
 public class OSM_new extends AppCompatActivity {
 
@@ -62,8 +64,8 @@ public class OSM_new extends AppCompatActivity {
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
-        //buttonPanTo    = findViewById(R.id.map_panto_button);
-        registerEventHandlers(this);
+        buttonPanTo    = findViewById(R.id.map_panto_button);
+        //registerEventHandlers(this);
 
 
         // 1.) Create OSMdroid map.
@@ -79,7 +81,7 @@ public class OSM_new extends AppCompatActivity {
         // ---------------------------------------
 
         // TJ: todo: Alternately, provide Constructor which takes map as argument
-        OSMDroidVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter();
+        OSMDroidVisualisationAdapter_new myVisAdap = new OSMDroidVisualisationAdapter_new();
         myVisAdap.linkMap(myMap);
 
 
@@ -87,7 +89,7 @@ public class OSM_new extends AppCompatActivity {
         // 3.) Trigger controller workflow
         // -------------------------------
 
-        PredictVisController pvContr = new PredictVisController(
+        PredictVisController_new pvContr = new PredictVisController_new(
                 this,
                 myVisAdap,
                 getPredictionUserParameters()

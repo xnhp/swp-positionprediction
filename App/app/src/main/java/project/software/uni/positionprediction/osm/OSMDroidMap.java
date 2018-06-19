@@ -108,6 +108,10 @@ public class OSMDroidMap {
     }
 
 
+    MyLocationNewOverlay getMyLocationOverlay(){
+        return locationOverlay;
+    }
+
 
 
     public void initMap(MapView view, GeoPoint center, final double zoom) {
@@ -166,10 +170,10 @@ public class OSMDroidMap {
      * Shows current location using a built-in marker
      */
     private void enableLocationOverlay() {
-        MyLocationNewOverlay overlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), mapView);
-        overlay.enableMyLocation();
+        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), mapView);
+        locationOverlay.enableMyLocation();
 
-        mapView.getOverlays().add(overlay);
+        mapView.getOverlays().add(locationOverlay);
     }
 
 

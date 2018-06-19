@@ -5,17 +5,28 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import project.software.uni.positionprediction.algorithm.PredictionBaseData;
-import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
+import java.util.ArrayList;
+import java.util.Map;
+
+//import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.Locations;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
+import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
+import project.software.uni.positionprediction.datatypes_new.Cloud;
+import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.TrackedLocation;
+//import project.software.uni.positionprediction.datatypes_new.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
+import project.software.uni.positionprediction.util.Shape;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter_new;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
+import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis_new;
 import project.software.uni.positionprediction.visualisation.StyleTrajectory;
 
 /**
@@ -26,19 +37,19 @@ import project.software.uni.positionprediction.visualisation.StyleTrajectory;
  * 4.) Visualize (Build Visualisation object based on pre-defined visual properties and draw it)
   * @author Timo, based on PredictionWorkflowContrroller by Benny
  */
-public class PredictVisController {
+public class PredictVisController_new {
 
 
     private final Context ctx;
-    private final IVisualisationAdapter visAdapter;
+    private final IVisualisationAdapter_new visAdapter;
     private final PredictionUserParameters predictionUserParameters;
     private PredictionAlgorithm algorithm;
     private PredictionBaseData data;
 
 
-    public PredictVisController(
+    public PredictVisController_new(
             Context ctx,
-            IVisualisationAdapter visAdapter,
+            IVisualisationAdapter_new visAdapter,
             PredictionUserParameters predictionUserParameters
     ) {
         this.ctx = ctx;
@@ -66,7 +77,7 @@ public class PredictVisController {
                     // cant catch this "from outside"
                 }
 
-                final Locations locs_past = data.pastTracks;
+                final Locations locs_past = data.getTrackedLocations();
 
                 // TODO: throw (algorithm classes)
                 // TODO: try/catch
@@ -82,18 +93,20 @@ public class PredictVisController {
                 // TODO: Obtaining locations from prediction result will be more compliceted
                 // TODO: (cont'd) esp. in the case that a loop is needed
 
-                final Locations locs_pred = (Locations) algorithm.predict(predictionUserParameters, data);
+                final PredictionResultData data_pred = algorithm.predict(predictionUserParameters, data);
 
                 // The entirety of all locations to be displayed
-                final Locations locs_all = locs_past.addAll(locs_pred);
+
+                // todo: loop through map iot. get the enterity of the locations (needed for panning)
+                //final Locations locs_all = locs_past.addAll(locs_pred);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
 
                     public void run() {
-                        if (locs_all.getLength() > 0) {
-                            panToLocations(locs_all);
-                            visualize(locs_past, locs_pred);
-                        }
+                       //if (locs_all.getLength() > 0) {
+                            //panToLocations(locs_all);
+                            visualize(data.getTrackedLocations(), data_pred.getData());
+                        //}
                     }
                 });
 
@@ -119,11 +132,13 @@ public class PredictVisController {
         int pastDataPoints = 50; // Use last 10 data points
 
         SQLDatabase db = SQLDatabase.getInstance(ctx);
-        BirdData birddata = db.getBirdData(predictionUserParameters.bird.getStudyId(), predictionUserParameters.bird.getId());
+        BirdData birddata = db.getBirdData(
+                predictionUserParameters.bird.getStudyId(),
+                predictionUserParameters.bird.getId());
         Locations tracks = birddata.getTrackingPoints();
 
         // Check data
-        if (tracks.length == 0) {
+        if (tracks.size() == 0) {
             Log.e("Error", "Size of data is 0");
             throw new InsufficientTrackingDataException("Size of data is 0");
         }
@@ -131,15 +146,15 @@ public class PredictVisController {
         // Use only needed data
         // todo: do this via SQL request?
         //Location loc_data[] = new Location[pastDataPoints];
-        Locations pastTracks = new SingleTrajectory();
-        int size = tracks.length;
+        Trajectory pastTracks = new Trajectory();
+        int size = tracks.size();
         for (int i = 0; i < pastDataPoints; i++) {
             //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
-            pastTracks.add(tracks[tracks.length - 1 - pastDataPoints + i].getLocation());
+            // todo: What is going on here?
+            pastTracks.add(tracks.get(tracks.size() - 1 - pastDataPoints + i));
         }
 
-        PredictionBaseData data = new PredictionBaseData();
-        data.pastTracks = pastTracks;
+        PredictionBaseData data = new PredictionBaseData(pastTracks);
 
         return data;
         // in the future, might access different sources of information here (e.g. current weather)
@@ -147,12 +162,20 @@ public class PredictVisController {
     }
 
 
-    private void visualize(Locations locs_past, Locations locs_pred) {
-        if (locs_pred instanceof SingleTrajectory) {
-            visualizeTrajectory(locs_past, locs_pred);
-        } else {
-            // TODO: Other Visualization types
+    private void visualize(Trajectory past, Map<Shape, ArrayList<Locations>> pred) {
+        visualizeTrajectory(past, 0);
+        for (ArrayList<Locations> type : pred.values()) {
+            int counter = 1;
+            for (Locations locs : type) {
+                if (locs instanceof Trajectory) {
+                    visualizeTrajectory(locs, counter);
+                } else if (locs instanceof Cloud) {
+                    // visualizeCloud(locs, i);
+                }
+                counter++;
+            }
         }
+
     }
 
 
@@ -160,31 +183,20 @@ public class PredictVisController {
      * Build Visualisation object based on pre-defined visual properties and draw it
      * We can write it this generically here, no matter if osm or cesium
      */
-    private void visualizeTrajectory(Locations locs_past, Locations locs_pred) {
+    private void visualizeTrajectory(Locations locs, int counter) {
 
-        if (locs_pred instanceof SingleTrajectory) {
+        if (locs instanceof Trajectory) {
 
             // Build Visualizations
-            SingleTrajectoryVis pastVis = new SingleTrajectoryVis(
-                    locs_past,
+            SingleTrajectoryVis_new vis = new SingleTrajectoryVis_new(
+                    locs,
                     StyleTrajectory.pastPointCol.asString(),
                     StyleTrajectory.pastLineCol.asString(),
                     StyleTrajectory.pastPointRadius.asInt()
             );
-            SingleTrajectoryVis predVis = new SingleTrajectoryVis(
-                    locs_pred,
-                    StyleTrajectory.predPointCol.asString(),
-                    StyleTrajectory.predLineCol.asString(),
-                    StyleTrajectory.predPointRadius.asInt()
-            );
-            SingleTrajectoryVis combinedVis = SingleTrajectoryVis.concat(
-                    pastVis,
-                    predVis,
-                    StyleTrajectory.connectingLineColor.asString()
-            );
 
             // Draw
-            visAdapter.visualiseSingleTraj(combinedVis);
+            visAdapter.visualiseSingleTraj(vis);
 
         } else {
             // TODO: Exception
@@ -204,8 +216,8 @@ public class PredictVisController {
     private void panToLocations(Locations locations) {
         if (visAdapter instanceof OSMDroidVisualisationAdapter) {
             //TJ: Center the map so that all locations are visible
-            ((OSMDroidVisualisationAdapter) visAdapter).setMapCenter(locations);
-            ((OSMDroidVisualisationAdapter) visAdapter).setMapZoom(locations);
+            ((OSMDroidVisualisationAdapter_new) visAdapter).setMapCenter(locations);
+            ((OSMDroidVisualisationAdapter_new) visAdapter).setMapZoom(locations);
         } // else if (visAdapter instanceof CesiumVisualisationAdapter){ }
     }
 

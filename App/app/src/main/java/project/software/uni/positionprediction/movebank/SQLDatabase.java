@@ -2,8 +2,8 @@ package project.software.uni.positionprediction.movebank;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.Date;
@@ -11,12 +11,13 @@ import java.util.Date;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.HttpStatusCode;
-import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.Location2D;
-import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatype.Request;
 import project.software.uni.positionprediction.datatype.Study;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes_new.TrackedLocation;
+
+//import project.software.uni.positionprediction.datatypes_new.BirdData_new;
 
 /**
  * Created by simon on 22.05.18.
@@ -310,13 +311,15 @@ public class SQLDatabase {
                 "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
                 " ORDER BY timestamp DESC", new String[]{});
 
-        TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
+        //TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
+        Locations points = new Locations();
+
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
-            points[rowIndex] = new TrackingPoint(
+            points.add( new TrackedLocation(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
-                    new Date(cursor.getLong(0)*1000));
+                    new Date(cursor.getLong(0)*1000)));
             rowIndex++;
         }
 
@@ -326,6 +329,8 @@ public class SQLDatabase {
         return new BirdData(studyId, indivId, points);
 
     }
+
+
 
     public Bird[] getBirds(int studyId){
 

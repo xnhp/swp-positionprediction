@@ -1,6 +1,5 @@
-package project.software.uni.positionprediction.datatype;
+package project.software.uni.positionprediction.datatypes_new;
 
-import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.datatypes_new.TrackedLocation;
 
 /**
@@ -12,10 +11,10 @@ public class BirdData {
     private int individualId;
     private int studyId;
 
-    private Locations trackingPoints;
+    private TrackedLocation[] trackingPoints;
 
 
-    public BirdData(int studyId, int individualId, Locations trackingPoints){
+    public BirdData(int studyId, int individualId, TrackedLocation[] trackingPoints){
         this.studyId = studyId;
         this.individualId = individualId;
         this.trackingPoints = trackingPoints;
@@ -27,7 +26,7 @@ public class BirdData {
         this.trackingPoints = null;
     }
 
-    public Locations getTrackingPoints(){
+    public TrackedLocation[] getTrackingPoints(){
         return trackingPoints;
     }
 
