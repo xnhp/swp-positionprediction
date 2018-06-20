@@ -2,8 +2,11 @@ package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,20 +22,20 @@ import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationE
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflowController;
 import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.util.Message;
 
-public class OSM extends AppCompatActivity {
+public class OSM extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
 
     OSMDroidMap osmDroidMap;
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
     private Button buttonBack     = null;
-    private Button buttonOnline   = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class OSM extends AppCompatActivity {
         setContentView(R.layout.activity_osm);
 
         MapView mapView = (MapView) findViewById(R.id.map);
+        // todo: automatically set to position of visualisation
+        // todo: already done by timo, just not merged into this branch yet.
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
 
         try {
@@ -82,8 +87,6 @@ public class OSM extends AppCompatActivity {
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
-        buttonOnline = findViewById(R.id.online_btn);
-        //buttonPanTo    = findViewById(R.id.map_panto_button);
         registerEventHandlers(osm);
 
 
@@ -159,12 +162,17 @@ public class OSM extends AppCompatActivity {
         });
 
 
-        buttonOnline.setOnClickListener(new View.OnClickListener() {
+        // manual interaction with the map will always disable osmdroid's
+        // followLocation. This is used to update the button accordingly.
+        osmDroidMap.mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                finish();
-                Intent buttonIntent = new Intent(osm, Cesium.class);
-                startActivity(buttonIntent);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.i("foo", "on touch listener on mapview called, returning true");
+                toggleShowLocBtn(false);
+                return false; // indicates that the touch event was not
+                              // successfully handled (it will propagated
+                              // further, such as to the mapView to actually
+                              // pan/zoom/rotate it).
             }
         });
 
@@ -184,4 +192,75 @@ public class OSM extends AppCompatActivity {
         super.onPause();
         if (osmDroidMap != null) osmDroidMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
+
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onSwitchModeClick() {
+        // switch to Cesium Activity
+        // todo: toggle
+        finish();
+        Intent buttonIntent = new Intent(this, Cesium.class);
+        startActivity(buttonIntent);
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowDataClick() {
+        Log.i("osm activity", "on my fab click");
+        // todo, cf changes timo
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowPredClick() {
+        // todo, cf changes timo
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowLocClick() {
+        Log.i("FollowLocation", "FollowLocation was " + osmDroidMap.isFollowingLocation());
+        Log.i("osm activ", "on show loc click");
+        // toggle following users current position
+        if (!osmDroidMap.isFollowingLocation()) {
+            // toggle button
+            toggleShowLocBtn(true);
+            // enable functionality
+            osmDroidMap.enableFollowLocation();
+        } else {
+            toggleShowLocBtn(false);
+            osmDroidMap.disableFollowLocation();
+        }
+    }
+
+    /**
+     * Toggle the icon of the "show location" button
+     * @param state true if currently following the users location
+     */
+    private void toggleShowLocBtn(boolean state) {
+        // obtain reference to floating buttons fragment
+        FloatingMapButtons fragment = (FloatingMapButtons) getSupportFragmentManager().findFragmentById(R.id.floating_map_buttons);
+        if (fragment != null) {
+            fragment.toggleShowLocBtn(state);
+        } else {
+            Log.e("FloatingMapButtons", "No fragment button to toggle! This probably means that no fragment is attached.");
+        }
+    }
+
+
+
+
 }

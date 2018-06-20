@@ -22,6 +22,9 @@ import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis
  * data fetching -> prediction calculation -> result visualisation -> visualisation drawing
  *
  * This is not static or a singleton because it requires a context for the SQL connection.
+ *
+ *
+ * todo: static not possible?
  */
 public class PredictionWorkflowController {
 

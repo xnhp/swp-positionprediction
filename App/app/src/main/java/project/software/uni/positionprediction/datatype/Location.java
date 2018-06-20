@@ -1,5 +1,7 @@
 package project.software.uni.positionprediction.datatype;
 
+import project.software.uni.positionprediction.util.Dimension;
+
 /**
  * Elementary class for holding (abstract, not map-dependent) location values.
  * TODO: This will replace Location2D, Location3D
@@ -23,6 +25,16 @@ public class Location {
         this.has_altitude = false;
     }
 
+    // A parametrized getter for either lat, lon or alt
+    public double getDimension(Dimension dim) {
+        double value = 0;
+        switch (dim) {
+            case LAT: value = getLat(); break;
+            case LON: value = getLon(); break;
+            case ALT: value = getAlt(); break;
+        }
+        return value;
+    }
 
     public double getLon() {
         return lon;

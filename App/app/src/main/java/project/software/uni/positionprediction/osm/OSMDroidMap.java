@@ -4,6 +4,8 @@ package project.software.uni.positionprediction.osm;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -39,6 +41,7 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 import java.util.List;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.datatype.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
 
@@ -46,6 +49,7 @@ import static android.graphics.Color.argb;
 import static android.graphics.Color.blue;
 import static android.graphics.Color.green;
 import static android.graphics.Color.red;
+import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 
 /**
@@ -87,8 +91,8 @@ public class OSMDroidMap {
     private CacheManager cacheManager = null;
     private Context context = null;
 
-    private Marker marker;
     private LocationManager locationManager;
+    private Marker locationMarker;
     private MyLocationNewOverlay locationOverlay = null;
     private CompassOverlay compassOverlay = null;
 
@@ -109,8 +113,6 @@ public class OSMDroidMap {
         PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, 0,(AppCompatActivity) context);
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, 0,(AppCompatActivity) context);
     }
-
-    // todo: move this to the bottom of this file
 
 
     public void initMap(MapView view, GeoPoint center, final double zoom) throws MapInitException {
@@ -143,20 +145,26 @@ public class OSMDroidMap {
         setZoom(zoom);
         setCenter(center);
 
-        enableCompassOverlay(); // works
+        // enableCompassOverlay(); // works
         enableRotationGestures(); // works
 
-        //enableLocationOverlay(); // works
+        enableLocationOverlay(); // works
 
-        // enableFollowLocation(); // TODO
+        // enableFollowLocation();
 
-        Marker locationMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_menu_mylocation));
+        /*
+        This is an alternative method of a location marker
+        the marker and obtaining/updating the location is managed "manually",
+        without using the osmdroid library.
+        This potentially provides more flexibility
+        locationMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_menu_mylocation));
         placeMarker(mapView, locationMarker, center);
         // Note that as of now, the marker has to have already been placed on the map with placeMarker()
         // this means we have to supply it with an initial position (or else we would have to rethink
         // what the placeMarker method is for).
         // TODO: not do that, check dynamically whether marker is already placed or not.
         enableCustomLocationMarker(locationMarker);
+        */
     }
 
     /**
@@ -174,12 +182,30 @@ public class OSMDroidMap {
     }
 
 
+
     /**
-     * Shows current location using a built-in marker
+     * Shows current location of the user using osmdroid's LocationOverlay.
+     * provides functionality like always centering the map around the location.
      */
     private void enableLocationOverlay() {
         MyLocationNewOverlay overlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), mapView);
+
         overlay.enableMyLocation();
+
+        Bitmap bitmapMarker = BitmapFactory.decodeResource(
+                context.getResources(),
+                R.drawable.ic_menu_mylocation
+        );
+        overlay.setPersonIcon(bitmapMarker);
+
+        // the "hotspot" is the exact position of the icon that is mapped
+        // to the users current location.
+        // assume it is the center of the icon (e.g. for crosshair icon)
+        overlay.setPersonHotspot(bitmapMarker.getWidth() / 2, bitmapMarker.getHeight() / 2);
+
+        // save reference for accessing it from other methods
+        // (such as e.g.) toggling of following the location.
+        this.locationOverlay = overlay;
 
         mapView.getOverlays().add(overlay);
     }
@@ -219,6 +245,7 @@ public class OSMDroidMap {
      * When the device location changes, the marker location on the map also changes.
      * Note that as of now, the marker has to have already been placed on the map with placeMarker()
      * TODO: onResume(), does the location have to be explicitly updated?
+     * Alternatively, osmdroid's locationOverlay can be used
      */
     private void enableCustomLocationMarker(final Marker marker) {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
@@ -240,6 +267,7 @@ public class OSMDroidMap {
                 if (location != null) {
                     marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
                 }
+                Log.i("FloatingMapButtons", "followLocation is " + locationOverlay.isFollowLocationEnabled());
             }
 
             @Override
@@ -361,18 +389,26 @@ public class OSMDroidMap {
     }
 
     /**
-     * Map will always center on the user's location.
-     * Manual panning is disabled.
-     * For a nice implementation that additionally allows panning, see
-     * https://github.com/osmdroid/osmdroid/blob/db1d2e54b44bc10c6b47c49df2a08f19664ae6f5/OpenStreetMapViewer/src/main/java/org/osmdroid/samplefragments/location/SampleFollowMe.java
+     * Center map on user's location and keep it there until another
+     * user interaction (panning, zooming etc)
+     *
+     * NOTE: contrary to osmdroid's documentation (cf MyLocationNewOverlay)
+     * this DOES NOT disable manual panning. In fact, on panning the map
+     * locationOverlay.isFollowLocationEnabled() is set to false again.
      * TODO: Error handling?
      */
-    private void enableFollowLocation() {
-        if (locationOverlay != null) locationOverlay.enableFollowLocation();
+    public void enableFollowLocation() {
+        if (locationOverlay != null) {
+            locationOverlay.enableFollowLocation();
+        }
     }
 
-    private void disableFollowLocation() {
+    public void disableFollowLocation() {
         if (locationOverlay != null) locationOverlay.disableFollowLocation();
+    }
+
+    public boolean isFollowingLocation() {
+        return locationOverlay.isFollowLocationEnabled();
     }
 
     /**
@@ -483,6 +519,52 @@ public class OSMDroidMap {
         mapController.setZoom((float) zoom);
     }
 
+    // Calculate the correct zoom level for a given spread (in degrees) of elements that shall be visible
+    public static int calculateZoomLevel(double spread) {
+        int zoomLevel = 0;
+        int correction = 10;
+        if (spread < 0.0005) {
+            zoomLevel = 19 - correction;
+        } else if (spread < 0.001) {
+            zoomLevel = 18 - correction;
+        } else if (spread < 0.003) {
+            zoomLevel = 17 - correction;
+        } else if (spread < 0.005) {
+            zoomLevel = 16 - correction;
+        } else if (spread < 0.011) {
+            zoomLevel = 15 - correction;
+        } else if (spread < 0.022) {
+            zoomLevel = 14 - correction;
+        } else if (spread < 0.044) {
+            zoomLevel = 13 - correction;
+        } else if (spread < 0.088) {
+            zoomLevel = 12 - correction;
+        } else if (spread < 0.176) {
+            zoomLevel = 11 - correction;
+        } else if (spread < 0.352) {
+            zoomLevel = 10 - correction;
+        } else if (spread < 0.703) {
+            zoomLevel = 9 - correction;
+        } else if (spread < 1.406) {
+            zoomLevel = 8 - correction;
+        } else if (spread < 2.813) {
+            zoomLevel = 7 - correction;
+        } else if (spread < 5.625) {
+            zoomLevel = 6 - correction;
+        } else if (spread < 11.25) {
+            zoomLevel = 5 - correction;
+        } else if (spread < 22.5) {
+            zoomLevel = 4 - correction;
+        } else if (spread < 45) {
+            zoomLevel = 3 - correction;
+        } else if (spread < 90) {
+            zoomLevel = 2 - correction;
+        } else if (spread < 180) {
+            zoomLevel = 1 - correction;
+        }
+        return zoomLevel;
+    }
+
     private double getZoomLevel() {
         return mapView.getProjection().getZoomLevel();
     }
@@ -527,6 +609,14 @@ public class OSMDroidMap {
 
     public void panWithAnimationTo(GeoPoint newCenter) {
         mapController.animateTo(newCenter);
+    }
+
+    public void setMapCenter(Locations locs) {
+        this.setCenter(LocationToGeoPoint(locs.getCenter()));
+    }
+
+    public void setMapZoom(Locations locs) {
+        this.setZoom(OSMDroidMap.calculateZoomLevel(locs.getSpread()));
     }
 
 

@@ -30,6 +30,7 @@ import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 
 
 
@@ -39,11 +40,11 @@ import project.software.uni.positionprediction.datatype.Bird;
  */
 
 
-public class Cesium extends AppCompatActivity {
+public class Cesium extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
 
     private Button buttonSettings = null;
     private Button buttonBack = null;
-    private Button buttonOffline = null;
+    //private Button buttonOffline = null;
 
     private WebServer webServer;
     private static String CESIUM_URI = "http://localhost:8080/";
@@ -67,7 +68,7 @@ public class Cesium extends AppCompatActivity {
 
         this.buttonSettings = findViewById(R.id.navbar_button_settings);
         this.buttonBack = findViewById(R.id.navbar_button_back);
-        this.buttonOffline = findViewById(R.id.offline_btn);
+        //this.buttonOffline = findViewById(R.id.offline_btn);
 
         this.selectedBird = (Bird) getIntent().getSerializableExtra("selectedBird");
 
@@ -152,15 +153,6 @@ public class Cesium extends AppCompatActivity {
             }
         });
 
-        buttonOffline.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent buttonIntent = new Intent(cesium, OSM.class);
-                buttonIntent.putExtra("selectedBird", selectedBird);
-                startActivity(buttonIntent);
-            }
-        });
     }
 
     public void launchBrowser(View view) {
@@ -208,4 +200,27 @@ public class Cesium extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onShowDataClick() {
+
+    }
+
+    @Override
+    public void onShowPredClick() {
+
+    }
+
+    @Override
+    public void onShowLocClick() {
+
+    }
+
+    @Override
+    public void onSwitchModeClick() {
+        finish(); // todo: do we really want this? maybe its better to keep the map activities
+                  // so they dont have to be reloaded.
+        Intent buttonIntent = new Intent(this, OSM.class);
+        buttonIntent.putExtra("selectedBird", selectedBird);
+        startActivity(buttonIntent);
+    }
 }
