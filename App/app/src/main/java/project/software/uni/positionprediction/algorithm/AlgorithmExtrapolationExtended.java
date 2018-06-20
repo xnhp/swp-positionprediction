@@ -142,7 +142,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
     private double compute_pred_length(TrackingPoints data, Date date_pred, int nr_of_pts) {
         if (data.getLength() < nr_of_pts ){
             Message m = new Message();
-            m.disp_error(c, "Data size", "There is to less data to compute a good result");
+            m.disp_error(c, "Data size", "There is to less data to compute a good result",true);
             return 1;
         }
 

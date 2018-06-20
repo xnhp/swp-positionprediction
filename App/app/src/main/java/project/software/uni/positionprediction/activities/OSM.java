@@ -61,7 +61,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
         } catch (MapInitException e) {
             // todo: this will (?) be moved to a controller anyway, handle errors there
             Message msg = new Message();
-            msg.disp_error(this, "Error saving maps", "Could not save maps for offline use");
+            msg.disp_error(this, "Error saving maps", "Could not save maps for offline use",true);
         }
 
 
