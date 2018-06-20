@@ -10,6 +10,7 @@ import java.util.List;
 import project.software.uni.positionprediction.datatype.Location;
 import project.software.uni.positionprediction.datatype.MultipleTrajectories;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
+import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectories;
 
 
@@ -39,9 +40,15 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
 
 
         // Length of trajectory
-        int traj_length = 5;
-        int pred_traj_length = 5;
-
+        Date date_past = algParams.date_past;
+        int traj_length = 0;
+        int n = data.getPastTracks().getLength() - 1;
+        Date date_curr = data.getPastTracks().get(n).getDate();
+        while (date_past.before(date_curr) && n > 0) {
+            date_curr = data.getPastTracks().get(n).getDate();
+            n--;
+            traj_length++;
+        }
 
         // Algorithm
         int size = data.pastTracks.getLength();
@@ -52,14 +59,14 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
         List<Number> delta_angles = new LinkedList<Number>();
 
         // Compute main angle. All other angles (delta_angles) are computed relative to this one.
-        Location n0 = data.pastTracks.get(size - 1).to3D();
-        Location n1 = data.pastTracks.get(size - 2).to3D();
+        Location n0 = data.pastTracks.get(size - 1).getLocation();
+        Location n1 = data.pastTracks.get(size - 2).getLocation();
         Location nth_vector = n0.subtract(n1);
 
         // Compare all other angles with main vector to get relative angles (rotation of n_th vector doesn't matter)
         for (int j = 2; j <= traj_length; j++) {
-            Location loc1 = data.pastTracks.get(size - j).to3D();
-            Location loc2 = data.pastTracks.get(size - j - 1).to3D();
+            Location loc1 = data.pastTracks.get(size - j).getLocation();
+            Location loc2 = data.pastTracks.get(size - j - 1).getLocation();
             Location vector = loc1.subtract(loc2);
             double alpha = vector.getAngle(nth_vector);
             delta_angles.add(alpha);
@@ -75,8 +82,8 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
             // Check if angle is approx. the same
             boolean is_similar = false;
 
-            Location m0 = data.pastTracks.get(i - 1).to3D();
-            Location m1 = data.pastTracks.get(i - 2).to3D();
+            Location m0 = data.pastTracks.get(i - 1).getLocation();
+            Location m1 = data.pastTracks.get(i - 2).getLocation();
             Location mth_vector = m0.subtract(m1);
 
             // Run backwards through every trajectory
@@ -84,8 +91,8 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
                 is_similar = false;
                 System.out.println("traj: " + k);
                 // Get angle of two locations
-                Location loc1 = data.pastTracks.get(i - k).to3D();
-                Location loc2 = data.pastTracks.get(i - k - 1).to3D();
+                Location loc1 = data.pastTracks.get(i - k).getLocation();
+                Location loc2 = data.pastTracks.get(i - k - 1).getLocation();
                 Location vector = loc1.subtract(loc2);
                 double beta = vector.getAngle(mth_vector);
 
@@ -114,18 +121,33 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
                 Location new_loc = n0;
                 Location new_vector = nth_vector;
 
-                for (int m = 0; m < pred_traj_length; m++) {
+
+
+
+                int m = 0;
+                long curr_past = data.pastTracks.get((int) possible_indices.get(l)).getDate().getTime();
+                long curr_pres = data.pastTracks.get( data.pastTracks.getLength() - 1 ).getDate().getTime();
+                long pred = curr_pres + algParams.date_pred.getTime();
+                long loc = data.pastTracks.get((int) possible_indices.get(l) + m + 1).getDate().getTime();
+
+                // As long as the distance between now and prediction date is bigger than distance between end points of known trajectory
+                while (Math.abs( curr_past - loc ) < Math.abs( curr_pres - pred )) {
                     // Last locations of similar trajectory
-                    Location pos1 = data.pastTracks.get((int) possible_indices.get(l) + m - 1);
-                    Location pos2 = data.pastTracks.get((int) possible_indices.get(l) + m);
+                    TrackingPoint t1 = data.pastTracks.get((int) possible_indices.get(l) + m - 1);
+                    TrackingPoint t2 = data.pastTracks.get((int) possible_indices.get(l) + m);
+                    Location loc1 = t1.getLocation();
+                    Location loc2 = t2.getLocation();
                     // Last vector of known trajectory
-                    Location vector = pos2.subtract(pos1);
+                    Location vector = loc2.subtract(loc1);
 
                     // First locations after similar trajectory
-                    Location next1 = data.pastTracks.get((int) possible_indices.get(l) + m + 1);
-                    Location next2 = data.pastTracks.get((int) possible_indices.get(l) + m + 2);
+                    TrackingPoint t_next1 = data.pastTracks.get((int) possible_indices.get(l) + m + 1);
+                    TrackingPoint t_next2 = data.pastTracks.get((int) possible_indices.get(l) + m + 2);
+                    Location loc_next1 = t_next1.getLocation();
+                    Location loc_next2 = t_next2.getLocation();
+
                     // First vector after similiar trajectory (want to get this angle)
-                    Location iter_vector = next2.subtract(next1);
+                    Location iter_vector = loc_next2.subtract(loc_next1);
 
                     // Relative angle to vector from similiar trajectoy
                     double gamma = iter_vector.dotProduct(vector);
@@ -136,6 +158,10 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
 
                     // Add new locations to current trajectory
                     trajectory.add(new_loc);
+
+                    // Refresh variables
+                    loc = t_next1.getDate().getTime();
+                    m++;
                 }
                 // Add trajectory to List
                 trajectories.add(trajectory);

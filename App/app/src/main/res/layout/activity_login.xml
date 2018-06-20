@@ -19,6 +19,7 @@
             android:layout_above="@id/login_button_login"
             android:gravity="center">
 
+            
             <TextView
                 android:id="@+id/login_lable_username"
                 android:layout_width="match_parent"
