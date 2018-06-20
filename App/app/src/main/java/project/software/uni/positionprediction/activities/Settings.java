@@ -67,6 +67,9 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         final Context c = this;
 
+        
+        xml.readFile(c);
+
         spinner_alg = findViewById(R.id.spinner_alg);
         spinner_vis = findViewById(R.id.spinner_vis);
         buttonSave = findViewById(R.id.settings_button_save);
@@ -107,6 +110,7 @@ public class Settings extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                xml.writeFile(c);
                 settings.finish();
             }
         });
@@ -322,5 +326,12 @@ public class Settings extends AppCompatActivity {
         }
         return r_array;
     }
+
+
+
+    public static void useSettings() {
+
+    }
+
 
 }
