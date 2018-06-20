@@ -1,14 +1,21 @@
 package project.software.uni.positionprediction.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.JsonReader;
+import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
@@ -17,6 +24,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +41,7 @@ import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatype.Bird;
-
+import project.software.uni.positionprediction.util.PermissionManager;
 
 
 /**
@@ -49,6 +60,9 @@ public class Cesium extends AppCompatActivity {
     private static String CESIUM_URI = "http://localhost:8080/";
     private WebView webView;
 
+
+    private Context context = this;
+
     // the bird that was selected in a previous activity
     Bird selectedBird;
 
@@ -58,6 +72,9 @@ public class Cesium extends AppCompatActivity {
     private ArrayList<Double> latitudes = new ArrayList<>();
 
     private Locations pastTracks = new SingleTrajectory();
+
+    // android.location, not ours
+    Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +138,87 @@ public class Cesium extends AppCompatActivity {
         @JavascriptInterface
         public double getAltitudes(int i) { return pastTracks.locs.get(i).getAlt(); }
 
+        @JavascriptInterface
+        public String getFoo() {
+            return "foo";
+        }
+
+        /**
+         * return a json string containing the current user location.
+         * Note: the default way to receive a location is letting the LocationManager
+         * actively call a listener in the application.
+         * However, we need to *provide* a method that will return the location.
+         * We have a (locally defined) listener write the most recent location into
+         * a field which is then accessed by a getter method.
+         * We have the javascript regularly access this getter for location updates.
+         *
+         * I decided to not fetch location via javascript since that introduces
+         * a range of different problems concerning javascript and the WebView.
+         *
+         * @return a JSON string containing lat and lng if a location fix has been
+         * previously obtained. an empty JSON string otherwise.
+         */
+        @SuppressLint("MissingPermission") // todo
+        @JavascriptInterface
+        public String getUserLocationJSON() {
+            JSONObject jo = new JSONObject();
+            try {
+                if (userLocation!=null) {
+                    jo.put("lat", userLocation.getLatitude());
+                    jo.put("lng", userLocation.getLongitude());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jo.toString();
+            // cf:
+            // Building JSONObjects: https://stackoverflow.com/a/18983290/156884
+            // the thing with the "builder pattern in java 7" does not work here.
+            // https://duckduckgo.com/?q=javascript+parse+json&t=ffab&ia=qa
+        }
+
     }
+
+    @SuppressLint("MissingPermission") // we do take care of permissions
+    private void registerLocationListener() {
+        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                // fill class field with location.
+                // location is accessed by e.g. getUserLocationJSON
+                Log.i("location", location.toString());
+                userLocation = location;
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+        locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener);
+    }
+
+    /*
+    private void injectUserLocation() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("enable();", null);
+        } else {
+            Log.e("WebView", "webView.evaluateJavascript not compatible with SDK version");
+        }
+    }*/
 
     private void addValues() {
         longitudes.add(9.299999);
@@ -196,6 +293,8 @@ public class Cesium extends AppCompatActivity {
 
         // Load the URL
         webView.loadUrl(CESIUM_URI);
+
+        registerLocationListener();
     }
 
     @Override
