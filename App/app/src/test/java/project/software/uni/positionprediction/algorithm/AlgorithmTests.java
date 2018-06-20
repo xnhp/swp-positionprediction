@@ -1,7 +1,7 @@
 package project.software.uni.positionprediction.algorithm;
 
 import org.junit.Test;
-import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatypes_new.Location;
 
 import static org.junit.Assert.assertEquals;
 

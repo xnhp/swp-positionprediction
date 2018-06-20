@@ -2,19 +2,15 @@ package project.software.uni.positionprediction.algorithm;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
+import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
-import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectory;
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
-import project.software.uni.positionprediction.util.Shape;
 
-public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturnsTrajectory {
+public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTrajectory {
 
 
     public AlgorithmExtrapolationExtended() {
@@ -33,22 +29,16 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      */
     @Override
     public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
-        // TODO determine pastDataPoints from params.past_date
+
+        // TODO: Get UserParamSettings
         int pastDataPoints = 50;
-        PredictionResultData result = new PredictionResultData();
 
         // Compute prediction
         Locations prediction = next_Location(data.getTrackedLocations(), pastDataPoints);
-        Trajectory trajectory = new Trajectory(prediction);
 
-        Map<Shape, ArrayList<Locations>> map = new HashMap<>();
-        ArrayList<Locations> trajectories = new ArrayList<Locations>();
-        trajectories.add(trajectory);
-        map.put(Shape.TRAJECTORY, trajectories);
 
-        result.setData(map);
-
-        return result;
+        // Create correct result type
+        return createResultData(new Trajectory(prediction));
     }
 
 
@@ -59,9 +49,9 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      * @param data
      * @return
      */
-    public Locations next_Location(Locations data, int date) {
-        int n = data.getLength() - 1;
-        ArrayList<Location> vector_collection = new ArrayList<>();
+    private Locations next_Location(Locations data, int date) {
+        int n = data.size() - 1;
+        Collection<Location> vector_collection = new Collection<>();
         // Fill collection
         for (int t = 1; t < date; t++) { // todo: loop conditions correct?
             // Compute difference of pair n and n-t
@@ -84,7 +74,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
 
         // Compute average of all computed vectors in collection
         Location avg = weighted_average(vector_collection);
-        Location curr_loc = data.get(data.getLength() - 1);
+        Location curr_loc = data.get(data.size() - 1);
 
         // Add avg vector to current Location
         Locations result_list = new Trajectory();
@@ -101,7 +91,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
      * @param collection
      * @return
      */
-    public Location weighted_average(ArrayList<Location> collection) {
+    private Location weighted_average(Collection<Location> collection) {
         double sum_long = 0;
         double sum_lat = 0;
         double sum_height = 0;
@@ -109,7 +99,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
         // Compute sum
         for (int i = 0; i < collection.size(); i++) {
 
-            if (collection.get(i).has_altitude) {
+            if (collection.get(i).hasAltitude()) {
                 Log.i("algorithm", "a location has altitude set!");
             } else {
                 Log.i("algorithm", "a location doesnt have alt set!");

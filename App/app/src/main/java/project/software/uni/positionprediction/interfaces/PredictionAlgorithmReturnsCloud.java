@@ -1,26 +1,19 @@
 package project.software.uni.positionprediction.interfaces;
 
-import java.util.Date;
 
-import project.software.uni.positionprediction.algorithm.PredictionBaseData;
-import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
-import project.software.uni.positionprediction.datatype.Cloud;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.Cloud;
+import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.Trajectory;
 
-public interface PredictionAlgorithmReturnsCloud {
-
+public abstract class PredictionAlgorithmReturnsCloud extends PredictionAlgorithm<Cloud> {
     /**
-     * Description: Interface for an algorithm, which returns a set of locations. Therefore it is
-     * not necessary to pay attention to the order of the locations.
-     *
-     * Distinction to the other interfaces:
-     *      - Trajectory:    One List of Locations. The order is necessary!
-     *      - Trajectories:  Multiple Lists of Locatsions. The order of the elements are important!
-     *                       The order of the trajectories is not important.
-     *      - Cloud:         List of Locations. The order is not necessary
-     *
-     * @return
+     * TJ: Subtypes of this class use this method to create proper result data.
+     * In this case, the methods simply calls the appropriate constructor. However, more complex
+     * algorithms could return e.g. a combination of trajectories and clouds or novel shapes.
+     * Then, the method would coordinate the creation of a proper PredictionResultData object.
      */
-    //Cloud predict(PredictionUserParameters algParams, PredictionBaseData data);
-
+    protected PredictionResultData createResultData(Cloud cloud) {
+        return new PredictionResultData(cloud);
+    }
 }

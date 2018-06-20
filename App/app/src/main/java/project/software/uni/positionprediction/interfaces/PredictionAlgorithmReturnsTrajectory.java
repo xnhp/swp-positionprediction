@@ -1,29 +1,21 @@
 package project.software.uni.positionprediction.interfaces;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
-import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
-import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes_new.Collection;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.Trajectory;
 
-public interface PredictionAlgorithmReturnsTrajectory extends PredictionAlgorithm {
+public abstract class PredictionAlgorithmReturnsTrajectory extends PredictionAlgorithm<Trajectory> {
 
     /**
-     * Description: Interface for an algorithm, which returns one single trajectory.
-     * This trajectory can be one single point and therefore can also be used to predict one
-     * single point.
-     *
-     * Distinction to the other interfaces:
-     *      - Trajectory:    One List of Locations. The order is necessary!
-     *      - Trajectories:  Multiple Lists of Locatsions. The order of the elements are important!
-     *                       The order of the trajectories is not important.
-     *      - Cloud:         List of Locations. The order is not necessary
-     *
+     * TJ: Subtypes of this class use this method to create proper result data.
+     * In this case, the methods simply calls the appropriate constructor. However, more complex
+     * algorithms could return e.g. a combination of trajectories and clouds or novel shapes.
+     * Then, the method would coordinate the creation of a proper PredictionResultData object.
      */
-    PredictionResultData predict(PredictionUserParameters algParams, PredictionBaseData data);
-
+    @Override
+    protected PredictionResultData createResultData(Trajectory trajectory){
+        return new PredictionResultData(trajectory);
+    }
 
 }
 

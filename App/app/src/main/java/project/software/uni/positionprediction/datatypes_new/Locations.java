@@ -1,31 +1,34 @@
 package project.software.uni.positionprediction.datatypes_new;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 
 import project.software.uni.positionprediction.util.Dimension;
 
 
-public class Locations extends ArrayList<Location> {
+public class Locations extends Collection<Location> {
 
     public Locations() { super(); }
-    public Locations(Locations tp) { super(tp); }
+    public Locations(Locations locs) { super(locs); }
+    public Locations(Location loc) { super(loc); }
 
-    /* Methods inherited from ArrayList<TrackingPoint>:
-     - add(TrackingPoint)
-     - boolean addAll(TrackingPoints)
-     - get(int)
-     - iterator()
+    /**
+     * Methods inherited from ArrayList<Location>:
+     * - boolean add(Location)
+     * - boolean addAll(Locations)
+     * - Location get(int)
+     * - iterator()
      */
 
+    /*
     public Locations addAll(Locations locs){
         return this.addAll(locs);
     }
+    */
 
-    // mere renaming
+    /* // mere renaming
     public int getLength() { return this.size(); }
+    */
 
 
     public Map<String, Double> getBounds(){

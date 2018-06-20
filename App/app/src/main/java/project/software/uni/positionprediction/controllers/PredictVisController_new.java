@@ -5,27 +5,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Map;
 
-//import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.Collection;
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Cloud;
 import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
-import project.software.uni.positionprediction.datatypes_new.TrackedLocation;
-//import project.software.uni.positionprediction.datatypes_new.TrackingPoint;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
-import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.util.Shape;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter_new;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis_new;
 import project.software.uni.positionprediction.visualisation.StyleTrajectory;
 
@@ -81,17 +75,6 @@ public class PredictVisController_new {
 
                 // TODO: throw (algorithm classes)
                 // TODO: try/catch
-                // TODO: Use new type PredictionResult insetead of Locations
-                // TODO: (cont'd) because MultipleTrajectories will be a
-
-                // TODO: We CANNOT assume that the prediction algorithm returns an object
-                // TODO: (cont'd) of type "Locations" or one of its subtypes!
-                // TODO: (cont'd) E.g.: "MultipleTrajectories" which is a collection of
-                // TODO: (cont'd) trajectories and hereby of "Locations"s
-
-                // TODO: Replace "Object" by generic PredictionOutput class
-                // TODO: Obtaining locations from prediction result will be more compliceted
-                // TODO: (cont'd) esp. in the case that a loop is needed
 
                 final PredictionResultData data_pred = algorithm.predict(predictionUserParameters, data);
 
@@ -103,7 +86,7 @@ public class PredictVisController_new {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
 
                     public void run() {
-                       //if (locs_all.getLength() > 0) {
+                       //if (locs_all.size() > 0) {
                             //panToLocations(locs_all);
                             visualize(data.getTrackedLocations(), data_pred.getData());
                         //}
@@ -145,7 +128,7 @@ public class PredictVisController_new {
 
         // Use only needed data
         // todo: do this via SQL request?
-        //Location loc_data[] = new Location[pastDataPoints];
+
         Trajectory pastTracks = new Trajectory();
         int size = tracks.size();
         for (int i = 0; i < pastDataPoints; i++) {
@@ -162,9 +145,9 @@ public class PredictVisController_new {
     }
 
 
-    private void visualize(Trajectory past, Map<Shape, ArrayList<Locations>> pred) {
+    private void visualize(Trajectory past, Map<Shape, Collection<? extends Locations>> pred) {
         visualizeTrajectory(past, 0);
-        for (ArrayList<Locations> type : pred.values()) {
+        for (Collection<? extends Locations> type : pred.values()) {
             int counter = 1;
             for (Locations locs : type) {
                 if (locs instanceof Trajectory) {
@@ -206,15 +189,15 @@ public class PredictVisController_new {
 
 
     private void panToMyLocation() {
-        if (visAdapter instanceof OSMDroidVisualisationAdapter) {
+        if (visAdapter instanceof OSMDroidVisualisationAdapter_new) {
             //TJ: Center the map so that all locations are visible
-            ((OSMDroidVisualisationAdapter) visAdapter).panToMyLocation();
+            ((OSMDroidVisualisationAdapter_new) visAdapter).panToMyLocation();
         } // else if (visAdapter instanceof CesiumVisualisationAdapter){ }
 
     }
 
     private void panToLocations(Locations locations) {
-        if (visAdapter instanceof OSMDroidVisualisationAdapter) {
+        if (visAdapter instanceof OSMDroidVisualisationAdapter_new) {
             //TJ: Center the map so that all locations are visible
             ((OSMDroidVisualisationAdapter_new) visAdapter).setMapCenter(locations);
             ((OSMDroidVisualisationAdapter_new) visAdapter).setMapZoom(locations);

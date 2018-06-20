@@ -10,10 +10,10 @@ public class Location {
 
     // CLASS VARIABLES
 
-    public double lon; // Latitude
-    public double lat; // Longitude
-    public double alt; // Altitude
-    public boolean has_altitude;
+    private double lon; // Latitude
+    private double lat; // Longitude
+    private double alt; // Altitude
+    private boolean has_altitude;
 
 
     // CONSTRUCTORS
@@ -35,6 +35,7 @@ public class Location {
     public Location(double lon, double lat) {
         this.lon = lon;
         this.lat = lat;
+        this.alt = 0;
         this.has_altitude = false;
     }
 
@@ -76,7 +77,7 @@ public class Location {
         return has_altitude;
     }
 
-    // Setters
+    // basic setters
     public void setLon(double lon) {
         this.lon = lon;
     }

@@ -12,15 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import project.software.uni.positionprediction.datatypes_new.Locations;
-import project.software.uni.positionprediction.util.GeoDataUtils_new;
-import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter_new;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
 import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis_new;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment_new;
 import project.software.uni.positionprediction.visualisation.StyledPoint_new;
 
-import static project.software.uni.positionprediction.util.GeoDataUtils_new.LocationToGeoPoint;
+import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
@@ -67,8 +65,8 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter_n
             // todo: note: this will create an "osmdroid overlay" for each segment.
             // this is potentially bad for performance
             List<GeoPoint> locs = new ArrayList<>();
-            locs.add(GeoDataUtils_new.LocationToGeoPoint(seg.start));
-            locs.add(GeoDataUtils_new.LocationToGeoPoint(seg.end));
+            locs.add(GeoDataUtils.LocationToGeoPoint(seg.start));
+            locs.add(GeoDataUtils.LocationToGeoPoint(seg.end));
             map.drawPolyLine(locs, seg.lineColor);
         }
 

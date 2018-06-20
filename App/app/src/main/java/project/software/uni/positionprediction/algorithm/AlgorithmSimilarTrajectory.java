@@ -3,18 +3,21 @@ package project.software.uni.positionprediction.algorithm;
 import android.content.Context;
 import android.util.Log;
 
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.MultipleTrajectories;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
+import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.datatypes_new.Location;
+import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithmReturnsTrajectories;
 
 
 
-public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTrajectories{
+public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajectories{
 
     public AlgorithmSimilarTrajectory() {
     }
@@ -34,8 +37,7 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
      *
      * @return
      */
-    @Override
-    public MultipleTrajectories predict(PredictionUserParameters algParams, PredictionBaseData data) {
+    public PredictionResultData predict(PredictionUserParameters algParams, PredictionBaseData data) {
 
 
         // Length of trajectory
@@ -44,7 +46,7 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
 
 
         // Algorithm
-        int size = data.pastTracks.getLength();
+        int size = data.getTrackedLocations().size();
 
         double eps = 1E-5;
 
@@ -52,14 +54,14 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
         List<Number> delta_angles = new LinkedList<Number>();
 
         // Compute main angle. All other angles (delta_angles) are computed relative to this one.
-        Location n0 = data.pastTracks.get(size - 1).to3D();
-        Location n1 = data.pastTracks.get(size - 2).to3D();
+        Location n0 = data.getTrackedLocations().get(size - 1).to3D();
+        Location n1 = data.getTrackedLocations().get(size - 2).to3D();
         Location nth_vector = n0.subtract(n1);
 
         // Compare all other angles with main vector to get relative angles (rotation of n_th vector doesn't matter)
         for (int j = 2; j <= traj_length; j++) {
-            Location loc1 = data.pastTracks.get(size - j).to3D();
-            Location loc2 = data.pastTracks.get(size - j - 1).to3D();
+            Location loc1 = data.getTrackedLocations().get(size - j).to3D();
+            Location loc2 = data.getTrackedLocations().get(size - j - 1).to3D();
             Location vector = loc1.subtract(loc2);
             double alpha = vector.getAngle(nth_vector);
             delta_angles.add(alpha);
@@ -75,8 +77,8 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
             // Check if angle is approx. the same
             boolean is_similar = false;
 
-            Location m0 = data.pastTracks.get(i - 1).to3D();
-            Location m1 = data.pastTracks.get(i - 2).to3D();
+            Location m0 = data.getTrackedLocations().get(i - 1).to3D();
+            Location m1 = data.getTrackedLocations().get(i - 2).to3D();
             Location mth_vector = m0.subtract(m1);
 
             // Run backwards through every trajectory
@@ -84,8 +86,8 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
                 is_similar = false;
                 System.out.println("traj: " + k);
                 // Get angle of two locations
-                Location loc1 = data.pastTracks.get(i - k).to3D();
-                Location loc2 = data.pastTracks.get(i - k - 1).to3D();
+                Location loc1 = data.getTrackedLocations().get(i - k).to3D();
+                Location loc2 = data.getTrackedLocations().get(i - k - 1).to3D();
                 Location vector = loc1.subtract(loc2);
                 double beta = vector.getAngle(mth_vector);
 
@@ -106,24 +108,24 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
         }
 
 
-            MultipleTrajectories trajectories = new MultipleTrajectories();
+            Collection<Trajectory> trajectories = new Collection<>();
 
             for (int l = 0; l < possible_indices.size(); l++) {
 
-                SingleTrajectory trajectory = new SingleTrajectory();
+                Trajectory trajectory = new Trajectory();
                 Location new_loc = n0;
                 Location new_vector = nth_vector;
 
                 for (int m = 0; m < pred_traj_length; m++) {
                     // Last locations of similar trajectory
-                    Location pos1 = data.pastTracks.get((int) possible_indices.get(l) + m - 1);
-                    Location pos2 = data.pastTracks.get((int) possible_indices.get(l) + m);
+                    Location pos1 = data.getTrackedLocations().get((int) possible_indices.get(l) + m - 1);
+                    Location pos2 = data.getTrackedLocations().get((int) possible_indices.get(l) + m);
                     // Last vector of known trajectory
                     Location vector = pos2.subtract(pos1);
 
                     // First locations after similar trajectory
-                    Location next1 = data.pastTracks.get((int) possible_indices.get(l) + m + 1);
-                    Location next2 = data.pastTracks.get((int) possible_indices.get(l) + m + 2);
+                    Location next1 = data.getTrackedLocations().get((int) possible_indices.get(l) + m + 1);
+                    Location next2 = data.getTrackedLocations().get((int) possible_indices.get(l) + m + 2);
                     // First vector after similiar trajectory (want to get this angle)
                     Location iter_vector = next2.subtract(next1);
 
@@ -141,7 +143,7 @@ public class AlgorithmSimilarTrajectory implements PredictionAlgorithmReturnsTra
                 trajectories.add(trajectory);
             }
 
-            return trajectories;
+            return createResultData(trajectories);
         }
     }
 
