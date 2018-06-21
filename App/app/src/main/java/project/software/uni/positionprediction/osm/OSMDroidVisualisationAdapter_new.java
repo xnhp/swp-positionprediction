@@ -13,18 +13,19 @@ import java.util.List;
 
 import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
-import project.software.uni.positionprediction.visualisation.IVisualisationAdapter_new;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis_new;
-import project.software.uni.positionprediction.visualisation.StyledLineSegment_new;
-import project.software.uni.positionprediction.visualisation.StyledPoint_new;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.Polyline;
+import project.software.uni.positionprediction.visualisation.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation.StyledPoint;
+import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
 import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
- * Merely *draws* what is specified in the Visualisation obejct
+ * Merely *draws* what is specified in the Geometry obejct
  */
-public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter_new {
+public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
 
     private OSMDroidMap map;
 
@@ -56,12 +57,12 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter_n
     }
 
     @Override
-    public void visualiseSingleTraj(SingleTrajectoryVis_new vis) {
+    public void visualiseSingleTraj(TrajectoryVis vis) {
 
         
-        // draw styled polylines
-        for (StyledLineSegment_new seg :
-                vis.styledLineSegments) {
+        // draw styled linesegments
+        for (StyledLineSegment seg :
+                vis.getLine().styledLineSegments) {
             // todo: note: this will create an "osmdroid overlay" for each segment.
             // this is potentially bad for performance
             List<GeoPoint> locs = new ArrayList<>();
@@ -74,8 +75,8 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter_n
         // draw styled points
         // obtain a list of styled points of the type that osmdroid needs.
         OSMStyledPointList osmStyledPoints = new OSMStyledPointList();
-        for (StyledPoint_new styledPoint :
-                vis.styledPoints) {
+        for (StyledPoint styledPoint :
+                vis.getLine().styledPoints) {
             Paint pointStyle = new Paint();
             pointStyle.setColor(Color.parseColor(styledPoint.pointColor));
             osmStyledPoints.pts.add(

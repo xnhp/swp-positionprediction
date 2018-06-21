@@ -6,11 +6,11 @@ public class Collection<E> extends ArrayList<E> {
 
     public Collection() { super(); }
 
-    public Collection(Collection e) { super(e); }
+    public Collection(Collection c) { super(c); }
 
     public Collection(E e) {
-        Collection<E> c = new Collection<>();
-        c.add(e);
+        //Collection<E> c = new Collection<>();
+        this.add(e);
     }
 
     public Collection<E> addElement(E e){

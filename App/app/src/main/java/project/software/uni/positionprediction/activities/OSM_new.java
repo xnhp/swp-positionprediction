@@ -16,8 +16,10 @@ import java.util.Date;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictVisController_new;
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
@@ -81,16 +83,26 @@ public class OSM_new extends AppCompatActivity {
 
 
 
-        // 3.) Trigger controller workflow
+        // 3.) Trigger prediction workflow
         // -------------------------------
 
+        // todo: this should be done in activity BirdSlelect or Settings
+
+        /*
         PredictVisController_new pvContr = new PredictVisController_new(
                 this,
                 myVisAdap,
                 getPredictionUserParameters()
         );
         pvContr.trigger();
+*/
 
+        PredictionWorkflow predWorkflow = new PredictionWorkflow(
+                this,
+                getPredictionUserParameters(),
+                myVisAdap
+        );
+        predWorkflow.trigger();
 
     }
 

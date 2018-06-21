@@ -1,10 +1,8 @@
 package project.software.uni.positionprediction.algorithm;
 
-import android.content.Context;
+
 import android.util.Log;
 
-
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,9 +42,10 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         int traj_length = 5;
         int pred_traj_length = 5;
 
+        Collection<Trajectory> trajectories = new Collection<>();
 
         // Algorithm
-        int size = data.getTrackedLocations().size();
+        int size = data.getTrajectory().size();
 
         double eps = 1E-5;
 
@@ -54,14 +53,14 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         List<Number> delta_angles = new LinkedList<Number>();
 
         // Compute main angle. All other angles (delta_angles) are computed relative to this one.
-        Location n0 = data.getTrackedLocations().get(size - 1).to3D();
-        Location n1 = data.getTrackedLocations().get(size - 2).to3D();
+        Location n0 = data.getTrajectory().getLocation(size - 1).to3D();
+        Location n1 = data.getTrajectory().getLocation(size - 2).to3D();
         Location nth_vector = n0.subtract(n1);
 
         // Compare all other angles with main vector to get relative angles (rotation of n_th vector doesn't matter)
         for (int j = 2; j <= traj_length; j++) {
-            Location loc1 = data.getTrackedLocations().get(size - j).to3D();
-            Location loc2 = data.getTrackedLocations().get(size - j - 1).to3D();
+            Location loc1 = data.getTrajectory().getLocation(size - j).to3D();
+            Location loc2 = data.getTrajectory().getLocation(size - j - 1).to3D();
             Location vector = loc1.subtract(loc2);
             double alpha = vector.getAngle(nth_vector);
             delta_angles.add(alpha);
@@ -77,8 +76,11 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
             // Check if angle is approx. the same
             boolean is_similar = false;
 
-            Location m0 = data.getTrackedLocations().get(i - 1).to3D();
-            Location m1 = data.getTrackedLocations().get(i - 2).to3D();
+            Location m0 = data.getTrajectory().getLocation(i - 1).to3D();
+            // this works correctly
+            Log.i("algorithm", "m0: " + m0.toString());
+
+            Location m1 = data.getTrajectory().getLocation(i - 2).to3D();
             Location mth_vector = m0.subtract(m1);
 
             // Run backwards through every trajectory
@@ -86,8 +88,8 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
                 is_similar = false;
                 System.out.println("traj: " + k);
                 // Get angle of two locations
-                Location loc1 = data.getTrackedLocations().get(i - k).to3D();
-                Location loc2 = data.getTrackedLocations().get(i - k - 1).to3D();
+                Location loc1 = data.getTrajectory().getLocation(i - k).to3D();
+                Location loc2 = data.getTrajectory().getLocation(i - k - 1).to3D();
                 Location vector = loc1.subtract(loc2);
                 double beta = vector.getAngle(mth_vector);
 
@@ -108,42 +110,45 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         }
 
 
-            Collection<Trajectory> trajectories = new Collection<>();
+        Log.i("algorithm", "possible_indices size: " + possible_indices.size());
+        // todo: possible_indices size is 0. Why??
+        for (int l = 0; l < possible_indices.size(); l++) {
 
-            for (int l = 0; l < possible_indices.size(); l++) {
+            Trajectory trajectory = new Trajectory();
+            Location new_loc = n0;
+            Location new_vector = nth_vector;
 
-                Trajectory trajectory = new Trajectory();
-                Location new_loc = n0;
-                Location new_vector = nth_vector;
+            for (int m = 0; m < pred_traj_length; m++) {
+                // Last locations of similar trajectory
+                Location pos1 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m - 1);
+                Location pos2 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m);
+                // Last vector of known trajectory
+                Location vector = pos2.subtract(pos1);
 
-                for (int m = 0; m < pred_traj_length; m++) {
-                    // Last locations of similar trajectory
-                    Location pos1 = data.getTrackedLocations().get((int) possible_indices.get(l) + m - 1);
-                    Location pos2 = data.getTrackedLocations().get((int) possible_indices.get(l) + m);
-                    // Last vector of known trajectory
-                    Location vector = pos2.subtract(pos1);
+                // First locations after similar trajectory
+                Location next1 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m + 1);
+                Location next2 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m + 2);
+                // First vector after similiar trajectory (want to get this angle)
+                Location iter_vector = next2.subtract(next1);
 
-                    // First locations after similar trajectory
-                    Location next1 = data.getTrackedLocations().get((int) possible_indices.get(l) + m + 1);
-                    Location next2 = data.getTrackedLocations().get((int) possible_indices.get(l) + m + 2);
-                    // First vector after similiar trajectory (want to get this angle)
-                    Location iter_vector = next2.subtract(next1);
+                // Relative angle to vector from similiar trajectoy
+                double gamma = iter_vector.dotProduct(vector);
+                // Rotate old vector with relative angle as known from similar trajectories
+                new_vector = new_vector.rotate(gamma);
+                // Add vector to current location
+                new_loc = new_loc.add(new_vector);
 
-                    // Relative angle to vector from similiar trajectoy
-                    double gamma = iter_vector.dotProduct(vector);
-                    // Rotate old vector with relative angle as known from similar trajectories
-                    new_vector = new_vector.rotate(gamma);
-                    // Add vector to current location
-                    new_loc = new_loc.add(new_vector);
+                // Add new locations to current trajectory
+                trajectory.addLocation(new_loc);
 
-                    // Add new locations to current trajectory
-                    trajectory.add(new_loc);
-                }
-                // Add trajectory to List
-                trajectories.add(trajectory);
             }
+            // Add trajectory to List
+            Log.i("algorithm", "size of trajectory: " + trajectory.size());
+            trajectories.add(trajectory);
+        }
 
-            return createResultData(trajectories);
+        Log.i("algorithm", "size of trajectories: " + trajectories.size());
+        return createResultData(trajectories);
         }
     }
 

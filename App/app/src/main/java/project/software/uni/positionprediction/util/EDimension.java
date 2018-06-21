@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.util;
 
-public enum Shape {
-    TRAJECTORY,
-    CLOUD
+public enum EDimension {
+    LAT,
+    LON,
+    ALT
 }

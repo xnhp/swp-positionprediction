@@ -5,16 +5,17 @@ import java.util.Iterator;
 
 import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes_new.Shape;
 
 /* a single trajectory merely consists of a series of points */
-public class SingleTrajectoryVis_new extends Visualisation_new {
+public class Polyline extends Geometry {
 
 
         // todo: only keep either locations or styledPoints
         // todo: this might be pulled up into a common ancestor "TrajectoryVis" but im not
         // sure yet how we will do it for multiple trajectories
-        public final ArrayList<StyledPoint_new> styledPoints = new ArrayList<>();
-        public final ArrayList<StyledLineSegment_new> styledLineSegments = new ArrayList<>();
+        public final ArrayList<StyledPoint> styledPoints = new ArrayList<>();
+        public final ArrayList<StyledLineSegment> styledLineSegments = new ArrayList<>();
         // why this?
         // because: if points will be styled individually, *at some point* we need to fetch
         // the colour for each point.
@@ -24,11 +25,11 @@ public class SingleTrajectoryVis_new extends Visualisation_new {
         //          2) to visualise which data is more recent in past tracks (see benny's screenshot)
 
 
-        public SingleTrajectoryVis_new(Locations locations) {
+        public Polyline(Locations locations) {
             super(locations);
         }
 
-        public SingleTrajectoryVis_new(Locations pts, String pointColor, String lineColor, int pointRadius) {
+        public Polyline(Locations pts, String pointColor, String lineColor, int pointRadius) {
             super(pts);
             makeStyledObjects(pointColor, lineColor, pointRadius);
         }
@@ -40,9 +41,9 @@ public class SingleTrajectoryVis_new extends Visualisation_new {
             Location prev = locations.get(0);
             while(it.hasNext()) {
                 Location next = it.next();
-                this.styledPoints.add(new StyledPoint_new(next, pointColor, pointRadius));
+                this.styledPoints.add(new StyledPoint(next, pointColor, pointRadius));
                 if (prev != next) {
-                    this.styledLineSegments.add(new StyledLineSegment_new(prev, next, lineColor));
+                    this.styledLineSegments.add(new StyledLineSegment(prev, next, lineColor));
                 }
                 prev = next;
             }
@@ -59,18 +60,18 @@ public class SingleTrajectoryVis_new extends Visualisation_new {
          * @return
          */
         // todo: data type for colors
-        public static SingleTrajectoryVis_new concat(SingleTrajectoryVis_new a, SingleTrajectoryVis_new b, String connectingLineColor) {
+        public static Polyline concat(Polyline a, Polyline b, String connectingLineColor) {
             // add all points
-            SingleTrajectoryVis_new c = new SingleTrajectoryVis_new(a.locations);
+            Polyline c = new Polyline(a.locations);
             c.locations.addAll(b.locations);
             c.styledPoints.addAll(a.styledPoints);
             c.styledPoints.addAll(b.styledPoints);
             // add all line segments of a
             c.styledLineSegments.addAll(a.styledLineSegments);
             // add a connecting line segment from the last point in a to the first point in b
-            StyledPoint_new last = a.styledPoints.get(a.styledPoints.size()-1);
-            StyledPoint_new first = b.styledPoints.get(0);
-            c.styledLineSegments.add(new StyledLineSegment_new(last.location, first.location, connectingLineColor));
+            StyledPoint last = a.styledPoints.get(a.styledPoints.size()-1);
+            StyledPoint first = b.styledPoints.get(0);
+            c.styledLineSegments.add(new StyledLineSegment(last.location, first.location, connectingLineColor));
             // add all line segments of b
             c.styledLineSegments.addAll(b.styledLineSegments);
             return c;

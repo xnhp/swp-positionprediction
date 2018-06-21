@@ -2,17 +2,17 @@ package project.software.uni.positionprediction.datatypes_new;
 
 import java.util.Comparator;
 
-import project.software.uni.positionprediction.util.Dimension;
+import project.software.uni.positionprediction.util.EDimension;
 
 public class LocationsComparator implements Comparator<Location> {
-    Dimension dim;
-    public LocationsComparator(Dimension dim){
+    EDimension dim;
+    public LocationsComparator(EDimension dim){
         this.dim = dim;
     };
 
     public final int compare(Location locA, Location locB){return 0;}
 
-    public final int compare(Location locA, Location locB, Dimension dim){
+    public final int compare(Location locA, Location locB, EDimension dim){
         double a = locA.getDimension(dim);
         double b = locB.getDimension(dim);
         if(a < b){

@@ -2,20 +2,20 @@ package project.software.uni.positionprediction.datatypes_new;
 
 public class PredictionBaseData {
 
-    private Trajectory trackedLocations = new Trajectory();
+    private Trajectory trajectory = new Trajectory();
 
     public PredictionBaseData() {}
 
-    public PredictionBaseData(Trajectory trackedLocations){
-        this.trackedLocations = trackedLocations;
+    public PredictionBaseData(Trajectory trajectory){
+        this.trajectory = trajectory;
     }
 
-    public Trajectory getTrackedLocations() {
-        return trackedLocations;
+    public Trajectory getTrajectory() {
+        return trajectory;
     }
 
-    public void setTrackedLocations(Trajectory trackedLocations) {
-        this.trackedLocations = trackedLocations;
+    public void setTrackedLocations(Trajectory trajectory) {
+        this.trajectory = trajectory;
     }
 
 }

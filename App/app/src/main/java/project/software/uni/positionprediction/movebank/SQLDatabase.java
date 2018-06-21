@@ -14,8 +14,8 @@ import project.software.uni.positionprediction.datatype.HttpStatusCode;
 import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatype.Request;
 import project.software.uni.positionprediction.datatype.Study;
+import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.Locations;
-import project.software.uni.positionprediction.datatypes_new.TrackedLocation;
 
 //import project.software.uni.positionprediction.datatypes_new.BirdData_new;
 
@@ -317,7 +317,7 @@ public class SQLDatabase {
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
-            points.add( new TrackedLocation(
+            points.add( new LocationWithValue<Date>(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
                     new Date(cursor.getLong(0)*1000)));
             rowIndex++;

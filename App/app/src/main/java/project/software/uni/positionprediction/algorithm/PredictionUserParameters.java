@@ -15,6 +15,12 @@ import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
  */
 public class PredictionUserParameters {
 
+    public PredictionAlgorithm algorithm;
+    public Date date_past; // minimum date used in prediction
+    public Date date_pred; // to use only data in a given time frame
+    public Bird bird;
+    public Date time_of_day;
+
     public PredictionUserParameters() {
 
     }
@@ -71,11 +77,7 @@ public class PredictionUserParameters {
         this.time_of_day = time_of_day;
     }
 
-    public PredictionAlgorithm algorithm;
-    public Date date_past; // minimum date used in prediction
-    public Date date_pred; // to use only data in a given time frame
-    public Bird bird;
-    public Date time_of_day;
+
 
 
 

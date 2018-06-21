@@ -5,37 +5,39 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.Map;
-
 import project.software.uni.positionprediction.datatype.BirdData;
 import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.datatypes_new.Collections;
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Cloud;
 import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.Shape;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.interfaces.PredictionAlgorithm;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
-import project.software.uni.positionprediction.util.Shape;
-import project.software.uni.positionprediction.visualisation.IVisualisationAdapter_new;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis_new;
+import project.software.uni.positionprediction.util.EShape;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.Polyline;
 import project.software.uni.positionprediction.visualisation.StyleTrajectory;
+import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
 /**
  * Call of method "trigger" triggers execution of the following procedures:
  * 1.) Request data update from Movebank (method "request")
  * 2.) Fetch data from internal database (method "fetch")
  * 3.) Run prediction
- * 4.) Visualize (Build Visualisation object based on pre-defined visual properties and draw it)
+ * 4.) Visualize (Build Geometry object based on pre-defined visual properties and draw it)
   * @author Timo, based on PredictionWorkflowContrroller by Benny
  */
+
 public class PredictVisController_new {
 
 
     private final Context ctx;
-    private final IVisualisationAdapter_new visAdapter;
+    private final IVisualisationAdapter visAdapter;
     private final PredictionUserParameters predictionUserParameters;
     private PredictionAlgorithm algorithm;
     private PredictionBaseData data;
@@ -43,7 +45,7 @@ public class PredictVisController_new {
 
     public PredictVisController_new(
             Context ctx,
-            IVisualisationAdapter_new visAdapter,
+            IVisualisationAdapter visAdapter,
             PredictionUserParameters predictionUserParameters
     ) {
         this.ctx = ctx;
@@ -71,7 +73,7 @@ public class PredictVisController_new {
                     // cant catch this "from outside"
                 }
 
-                final Locations locs_past = data.getTrackedLocations();
+                //final Locations locs_past = data.getTrajectory();
 
                 // TODO: throw (algorithm classes)
                 // TODO: try/catch
@@ -79,8 +81,7 @@ public class PredictVisController_new {
                 final PredictionResultData data_pred = algorithm.predict(predictionUserParameters, data);
 
                 // The entirety of all locations to be displayed
-
-                // todo: loop through map iot. get the enterity of the locations (needed for panning)
+                Log.i("prediction controller","number of predicted points:" + data_pred.getShapes().size());
                 //final Locations locs_all = locs_past.addAll(locs_pred);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -88,7 +89,7 @@ public class PredictVisController_new {
                     public void run() {
                        //if (locs_all.size() > 0) {
                             //panToLocations(locs_all);
-                            visualize(data.getTrackedLocations(), data_pred.getData());
+                            visualize(data.getTrajectory(), data_pred.getShapes());
                         //}
                     }
                 });
@@ -134,7 +135,7 @@ public class PredictVisController_new {
         for (int i = 0; i < pastDataPoints; i++) {
             //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
             // todo: What is going on here?
-            pastTracks.add(tracks.get(tracks.size() - 1 - pastDataPoints + i));
+            pastTracks.addLocation(tracks.get(tracks.size() - 1 - pastDataPoints + i));
         }
 
         PredictionBaseData data = new PredictionBaseData(pastTracks);
@@ -145,13 +146,13 @@ public class PredictVisController_new {
     }
 
 
-    private void visualize(Trajectory past, Map<Shape, Collection<? extends Locations>> pred) {
+    private void visualize(Trajectory past, Collections<EShape, ? extends Shape> pred) {
         visualizeTrajectory(past, 0);
-        for (Collection<? extends Locations> type : pred.values()) {
+        for (Collection<? extends Shape> type : pred.values()) {
             int counter = 1;
-            for (Locations locs : type) {
+            for (Shape locs : type) {
                 if (locs instanceof Trajectory) {
-                    visualizeTrajectory(locs, counter);
+                    visualizeTrajectory((Trajectory) locs, counter);
                 } else if (locs instanceof Cloud) {
                     // visualizeCloud(locs, i);
                 }
@@ -163,27 +164,24 @@ public class PredictVisController_new {
 
 
     /**
-     * Build Visualisation object based on pre-defined visual properties and draw it
+     * Build Geometry object based on pre-defined visual properties and draw it
      * We can write it this generically here, no matter if osm or cesium
      */
-    private void visualizeTrajectory(Locations locs, int counter) {
-
-        if (locs instanceof Trajectory) {
+    private void visualizeTrajectory(Trajectory traj, int counter) {
 
             // Build Visualizations
-            SingleTrajectoryVis_new vis = new SingleTrajectoryVis_new(
-                    locs,
+            Polyline line = new Polyline(
+                    traj.getLocations(),
                     StyleTrajectory.pastPointCol.asString(),
                     StyleTrajectory.pastLineCol.asString(),
                     StyleTrajectory.pastPointRadius.asInt()
             );
 
+            TrajectoryVis vis = new TrajectoryVis(line);
+
+
             // Draw
             visAdapter.visualiseSingleTraj(vis);
-
-        } else {
-            // TODO: Exception
-        }
 
     }
 

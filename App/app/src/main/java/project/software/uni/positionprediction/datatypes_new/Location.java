@@ -1,6 +1,6 @@
 package project.software.uni.positionprediction.datatypes_new;
 
-import project.software.uni.positionprediction.util.Dimension;
+import project.software.uni.positionprediction.util.EDimension;
 
 /**
  * Elementary class for holding location values.
@@ -47,7 +47,7 @@ public class Location {
     // GETTERS AND SETTERS
 
     // A parametrized getter for either lat, lon or alt
-    public double getDimension(Dimension dim) {
+    public double getDimension(EDimension dim) {
         double value = 0;
         switch (dim) {
             case LAT:
@@ -279,6 +279,10 @@ public class Location {
     public void print() {
         System.out.print("[" + this.lon + ", " + this.lat + ", " + this.alt + "]\n");
 
+    }
+
+    public String toString(){
+        return "[" + this.lon + ", " + this.lat + ", " + this.alt + "]";
     }
 
     public Location to3D() {

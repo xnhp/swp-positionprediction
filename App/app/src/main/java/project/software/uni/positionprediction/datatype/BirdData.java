@@ -1,7 +1,6 @@
 package project.software.uni.positionprediction.datatype;
 
 import project.software.uni.positionprediction.datatypes_new.Locations;
-import project.software.uni.positionprediction.datatypes_new.TrackedLocation;
 
 /**
  * Created by simon on 29.05.18.

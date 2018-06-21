@@ -9,6 +9,7 @@ import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
+import project.software.uni.positionprediction.util.EShape;
 
 public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTrajectory {
 
@@ -34,11 +35,18 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         int pastDataPoints = 50;
 
         // Compute prediction
-        Locations prediction = next_Location(data.getTrackedLocations(), pastDataPoints);
+        Locations prediction = next_Location(data.getTrajectory().getLocations(), pastDataPoints);
 
+        Trajectory trajectory = new Trajectory(prediction);
+
+        Log.i("algorithm", "trajecory locations: " + (trajectory.getLocations().size()));
 
         // Create correct result type
-        return createResultData(new Trajectory(prediction));
+        PredictionResultData result = createResultData(trajectory);
+
+        Log.i("algorithm", "result size: " + (result.getShapes().get(EShape.TRAJECTORY).size()/*get(0).getLocations().get(0).toString()*/));
+
+        return result;
     }
 
 
@@ -77,7 +85,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         Location curr_loc = data.get(data.size() - 1);
 
         // Add avg vector to current Location
-        Locations result_list = new Trajectory();
+        Locations result_list = new Locations();
         // todo: returns locations with hasAltitude = true. not good.
         Location result_vector = curr_loc.to3D().add(avg);
         result_list.add(result_vector);

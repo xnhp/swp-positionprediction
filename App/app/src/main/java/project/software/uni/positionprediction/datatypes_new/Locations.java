@@ -1,9 +1,11 @@
 package project.software.uni.positionprediction.datatypes_new;
 
+import org.osmdroid.util.BoundingBox;
+
 import java.util.Collections;
 import java.util.Map;
 
-import project.software.uni.positionprediction.util.Dimension;
+import project.software.uni.positionprediction.util.EDimension;
 
 
 public class Locations extends Collection<Location> {
@@ -17,7 +19,7 @@ public class Locations extends Collection<Location> {
      * - boolean add(Location)
      * - boolean addAll(Locations)
      * - Location get(int)
-     * - iterator()
+     * - locationsIterator()
      */
 
     /*
@@ -34,13 +36,13 @@ public class Locations extends Collection<Location> {
     public Map<String, Double> getBounds(){
 
         Map<String, Double> bounds = null;
-        Dimension dim;
+        EDimension dim;
 
-        dim = Dimension.LON;
+        dim = EDimension.LON;
         bounds.put("lon_min", Collections.min(this, new LocationsComparator(dim)).getDimension(dim));
         bounds.put("lon_max", Collections.max(this, new LocationsComparator(dim)).getDimension(dim));
 
-        dim = Dimension.LAT;
+        dim = EDimension.LAT;
         bounds.put("lat_min", Collections.min(this, new LocationsComparator(dim)).getDimension(dim));
         bounds.put("lat_max", Collections.max(this, new LocationsComparator(dim)).getDimension(dim));
 
@@ -67,4 +69,19 @@ public class Locations extends Collection<Location> {
         return Math.max(lonSpread, latSpread);
     }
 
+    public BoundingBox getBoungingBox() {
+
+        EDimension dim;
+        double north, south, east, west;
+
+        dim = EDimension.LON;
+        west = Collections.min(this, new LocationsComparator(dim)).getDimension(dim);
+        east = Collections.max(this, new LocationsComparator(dim)).getDimension(dim);
+
+        dim = EDimension.LAT;
+        south = Collections.min(this, new LocationsComparator(dim)).getDimension(dim);
+        north = Collections.max(this, new LocationsComparator(dim)).getDimension(dim);
+
+        return new BoundingBox(north, east, south, west);
+    }
 }
