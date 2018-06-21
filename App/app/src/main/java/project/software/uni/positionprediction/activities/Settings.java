@@ -67,7 +67,7 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         final Context c = this;
 
-        
+
         xml.readFile(c);
 
         spinner_alg = findViewById(R.id.spinner_alg);
@@ -329,9 +329,6 @@ public class Settings extends AppCompatActivity {
 
 
 
-    public static void useSettings() {
-
-    }
 
 
 }
