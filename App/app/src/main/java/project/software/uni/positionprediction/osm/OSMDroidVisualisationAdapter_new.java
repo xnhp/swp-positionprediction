@@ -11,14 +11,11 @@ import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation_new.StyledPoint;
 import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
-
-import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.

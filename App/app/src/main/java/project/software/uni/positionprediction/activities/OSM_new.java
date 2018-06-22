@@ -20,12 +20,13 @@ import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapola
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 
 
-public class OSM_new extends AppCompatActivity {
+public class OSM_new extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener{
 
 
     // CONTENTS
@@ -38,6 +39,7 @@ public class OSM_new extends AppCompatActivity {
     private Button buttonDownload = null;
     private Button buttonPanTo    = null;
     private Button buttonBack     = null;
+    OSMDroidMap osmDroidMap;
 
 
 
@@ -71,7 +73,7 @@ public class OSM_new extends AppCompatActivity {
 
         // This is the blank/default map, before sth. is drawn on it
         // TJ: todo: There should be an appropriate constructor in class "OSMdroidMap" to do this
-        OSMDroidMap myMap = createMap(this, 2.290849, 48.856359, 6);
+        osmDroidMap = createMap(this, 2.290849, 48.856359, 6);
 
 
 
@@ -80,7 +82,7 @@ public class OSM_new extends AppCompatActivity {
 
         // TJ: todo: Alternately, provide Constructor which takes map as argument
         OSMDroidVisualisationAdapter_new myVisAdap = new OSMDroidVisualisationAdapter_new();
-        myVisAdap.linkMap(myMap);
+        myVisAdap.linkMap(osmDroidMap);
 
 
 
@@ -132,6 +134,8 @@ public class OSM_new extends AppCompatActivity {
 
         Intent i = getIntent();
         Bird bird = (Bird) i.getSerializableExtra("bird");
+
+        if(bird == null) Log.i("OSM_new", "no bird");
 
         return new PredictionUserParameters(
                 new AlgorithmExtrapolationExtended(),
@@ -202,6 +206,73 @@ public class OSM_new extends AppCompatActivity {
                 mymap.saveAreaToCache(subafrica, 5,7);
             }
         });
+    }
+
+
+/**
+ * Click handler triggered by the according button in
+ * fragments.FloatingMapButtons
+ */
+    @Override
+    public void onSwitchModeClick() {
+        // switch to Cesium Activity
+        // todo: toggle
+        finish();
+        Intent buttonIntent = new Intent(this, Cesium.class);
+        startActivity(buttonIntent);
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowDataClick() {
+        Log.i("osm activity", "on my fab click");
+        // todo, cf changes timo
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowPredClick() {
+        // todo, cf changes timo
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onShowLocClick() {
+        Log.i("FollowLocation", "FollowLocation was " + osmDroidMap.isFollowingLocation());
+        Log.i("osm activ", "on show loc click");
+        // toggle following users current position
+        if (!osmDroidMap.isFollowingLocation()) {
+            // toggle button
+            toggleShowLocBtn(true);
+            // enable functionality
+            osmDroidMap.enableFollowLocation();
+        } else {
+            toggleShowLocBtn(false);
+            osmDroidMap.disableFollowLocation();
+        }
+    }
+
+    /**
+     * Toggle the icon of the "show location" button
+     * @param state true if currently following the users location
+     */
+    private void toggleShowLocBtn(boolean state) {
+        // obtain reference to floating buttons fragment
+        FloatingMapButtons fragment = (FloatingMapButtons) getSupportFragmentManager().findFragmentById(R.id.floating_map_buttons);
+        if (fragment != null) {
+            fragment.toggleShowLocBtn(state);
+        } else {
+            Log.e("FloatingMapButtons", "No fragment button to toggle! This probably means that no fragment is attached.");
+        }
     }
 
 }//class

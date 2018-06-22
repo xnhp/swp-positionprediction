@@ -33,7 +33,7 @@ import project.software.uni.positionprediction.util.Message;
 
 public class OSM extends AppCompatActivity /*implements FloatingMapButtons.floatingMapButtonsClickListener*/ {
 /*
-    OSMDroidMap osmDroidMap;
+    OSMDroidMap OSMDroidMap;
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
@@ -48,7 +48,7 @@ public class OSM extends AppCompatActivity /*implements FloatingMapButtons.float
         // TODO: put this in own method
         // note: the actions in the OSMDroidMap constructor have to happen *before*
         // setContentView is called.
-        osmDroidMap = new OSMDroidMap(this);
+        OSMDroidMap = new OSMDroidMap(this);
 
 
         setContentView(R.layout.activity_osm);
@@ -59,7 +59,7 @@ public class OSM extends AppCompatActivity /*implements FloatingMapButtons.float
         GeoPoint center = new GeoPoint(48.856359, 2.290849);
 
         try {
-            osmDroidMap.initMap(mapView, center, 6);
+            OSMDroidMap.initMap(mapView, center, 6);
         } catch (MapInitException e) {
             // todo: this will (?) be moved to a controller anyway, handle errors there
             Message msg = new Message();
@@ -100,7 +100,7 @@ public class OSM extends AppCompatActivity /*implements FloatingMapButtons.float
         // obtain an adapter
         OSMDroidVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter();
         // set the map for the adapter
-        myVisAdap.linkMap(osmDroidMap);
+        myVisAdap.linkMap(OSMDroidMap);
 
         // have it draw the visualisation
         // (I am making the assumption that an algorithm only has one specific fitting Visualisation)
@@ -159,14 +159,14 @@ public class OSM extends AppCompatActivity /*implements FloatingMapButtons.float
             @Override
             public void onClick(View view) {
                 BoundingBox subafrica = new BoundingBox(19.635663, 12.921289,7.006371,-4.305273);
-                osmDroidMap.saveAreaToCache(subafrica, 5,7);
+                OSMDroidMap.saveAreaToCache(subafrica, 5,7);
             }
         });
 
 
         // manual interaction with the map will always disable osmdroid's
         // followLocation. This is used to update the button accordingly.
-        osmDroidMap.mapView.setOnTouchListener(new View.OnTouchListener() {
+        OSMDroidMap.mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.i("foo", "on touch listener on mapview called, returning true");
@@ -187,12 +187,12 @@ public class OSM extends AppCompatActivity /*implements FloatingMapButtons.float
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        if (osmDroidMap != null) osmDroidMap.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+        if (OSMDroidMap != null) OSMDroidMap.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
     public void onPause(){
         super.onPause();
-        if (osmDroidMap != null) osmDroidMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+        if (OSMDroidMap != null) OSMDroidMap.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
 
@@ -234,17 +234,17 @@ public class OSM extends AppCompatActivity /*implements FloatingMapButtons.float
      *//*
     @Override
     public void onShowLocClick() {
-        Log.i("FollowLocation", "FollowLocation was " + osmDroidMap.isFollowingLocation());
+        Log.i("FollowLocation", "FollowLocation was " + OSMDroidMap.isFollowingLocation());
         Log.i("osm activ", "on show loc click");
         // toggle following users current position
-        if (!osmDroidMap.isFollowingLocation()) {
+        if (!OSMDroidMap.isFollowingLocation()) {
             // toggle button
             toggleShowLocBtn(true);
             // enable functionality
-            osmDroidMap.enableFollowLocation();
+            OSMDroidMap.enableFollowLocation();
         } else {
             toggleShowLocBtn(false);
-            osmDroidMap.disableFollowLocation();
+            OSMDroidMap.disableFollowLocation();
         }
     }
 
