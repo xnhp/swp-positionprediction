@@ -2,33 +2,33 @@ package project.software.uni.positionprediction.osm;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.support.annotation.NonNull;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
 import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
-import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis;
-import project.software.uni.positionprediction.visualisation.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation.StyledPoint;
+import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation_new.StyledPoint;
+import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
+
+import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
- * Merely *draws* what is specified in the Visualisation obejct
+ * Merely *draws* what is specified in the Geometry obejct
  */
-/*
-public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
+public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
 
     private OSMDroidMap map;
+
+    public OSMDroidMap getMap() {return map;}
 
     public void linkMap (Object mapView) {
         if (mapView instanceof OSMDroidMap) {
@@ -39,17 +39,31 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
         }
     }
 
+
+    /* TJ 180622
+    public void panToMyLocation() {
+        GeoPoint myLocation = map.getMyLocationOverlay().getMyLocation();
+        map.setCenter(myLocation);
+        map.setZoom(6);
+    }
+
+    public void setMapCenter(Locations locs) {
+        map.setCenter(LocationToGeoPoint(locs.getCenter()));
+    }
+
+    public void setMapZoom(Locations locs) {
+        map.setZoom(OSMDroidMap.calculateZoomLevel(locs.getSpread()));
+    }
+
+    */
+
     @Override
-    public void visualiseSingleTraj(SingleTrajectoryVis vis) {
+    public void visualiseSingleTraj(TrajectoryVis vis) {
 
-        // pan to the correct region
         
-        map.setMapCenter(vis.locations);
-        map.setMapZoom(vis.locations);
-
-        // 2.) draw styled polylines
+        // draw styled linesegments
         for (StyledLineSegment seg :
-                vis.styledLineSegments) {
+                vis.getLine().styledLineSegments) {
             // todo: note: this will create an "osmdroid overlay" for each segment.
             // this is potentially bad for performance
             List<GeoPoint> locs = new ArrayList<>();
@@ -59,11 +73,11 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
         }
 
 
-        // 2.) draw styled points
+        // draw styled points
         // obtain a list of styled points of the type that osmdroid needs.
         OSMStyledPointList osmStyledPoints = new OSMStyledPointList();
         for (StyledPoint styledPoint :
-                vis.styledPoints) {
+                vis.getLine().styledPoints) {
             Paint pointStyle = new Paint();
             pointStyle.setColor(Color.parseColor(styledPoint.pointColor));
             osmStyledPoints.pts.add(
@@ -92,36 +106,4 @@ public class OSMDroidVisualisationAdapter implements IVisualisationAdapter {
     }
 
 }
-*/
-class OSMStyledPointList implements SimpleFastPointOverlay.PointAdapter{
 
-    ArrayList<IGeoPoint> pts = new ArrayList<>();
-
-    // apparently StyledLabelledGeoPoint fits into IGeoPoint
-
-    @Override
-    public int size() {
-        return pts.size();
-    }
-
-    @Override
-    public IGeoPoint get(int i) {
-        return (IGeoPoint) pts.get(i);
-    }
-
-    @Override
-    public boolean isLabelled() {
-        return false;
-    }
-
-    @Override
-    public boolean isStyled() {
-        return true;
-    }
-
-    @NonNull
-    @Override
-    public Iterator<IGeoPoint> iterator() {
-        return pts.iterator();
-    }
-}

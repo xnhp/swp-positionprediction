@@ -26,6 +26,8 @@ import project.software.uni.positionprediction.visualisation.SingleTrajectoryVis
  *
  * todo: static not possible?
  */
+
+/*
 public class PredictionWorkflowController {
 
     private Context ctx;
@@ -39,7 +41,7 @@ public class PredictionWorkflowController {
      *
      * We receive the visualisation adapter from outside because it needs to be linked to a map.
      * That linking should be done close to where that map is handled/created (e.g. in the Activity).
-     */
+     *//*
     public void doSingleTrajPrediction(
             final IVisualisationAdapter visAdapter,
             final PredictionAlgorithmReturnsTrajectory algorithm,
@@ -53,7 +55,7 @@ public class PredictionWorkflowController {
         2.) run pred alg
         3.) build vis
         4.) draw vis
-         */
+         *//*
 
        // TODO: avoid making too many requests.
         // check whether a request was made in the last n seconds?
@@ -117,7 +119,7 @@ public class PredictionWorkflowController {
         if (bird_id <= 0) {
             Log.e("Error", "ID not valid");
         }
-         */
+         *//*
 
         // Use only needed data
         // todo: do this via SQL request?
@@ -167,3 +169,4 @@ public class PredictionWorkflowController {
 
 
 }
+*/

@@ -16,23 +16,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activities.Cesium"
             android:label="@string/title_activity_cesium"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.Settings"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
+
         <activity
             android:name=".activities.OSM"
+            android:label="@string/title_activity_osm"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".activities.OSM_new"
             android:label="@string/title_activity_osm"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
@@ -55,6 +61,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
     </application>

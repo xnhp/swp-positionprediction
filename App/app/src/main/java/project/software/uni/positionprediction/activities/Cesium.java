@@ -37,11 +37,12 @@ import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 /**
  * (Nearly) Minimal working example for running cesium with a webserver inside the browser or
  * inside a webview.
+ * todo: TJ 180622: to be replaced by correct workflow
  */
 
 
-public class Cesium extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
-
+public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.floatingMapButtonsClickListener*/ {
+/*
     private Button buttonSettings = null;
     private Button buttonBack = null;
     //private Button buttonOffline = null;
@@ -219,8 +220,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     public void onSwitchModeClick() {
         finish(); // todo: do we really want this? maybe its better to keep the map activities
                   // so they dont have to be reloaded.
-        Intent buttonIntent = new Intent(this, OSM.class);
+        Intent buttonIntent = new Intent(this, OSM_new.class);
         buttonIntent.putExtra("selectedBird", selectedBird);
         startActivity(buttonIntent);
     }
+*/
 }

@@ -6,8 +6,7 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.Location3D;
+import project.software.uni.positionprediction.datatypes_new.Location;
 
 /**
  * Utility methods for manipulating geographical data (types).
@@ -37,11 +36,8 @@ public abstract class GeoDataUtils {
         return newPoints;
     }
 
-    /**
-     * convert a list of `Location3D`s to osmdroid's `GeoPoint`s.
-     * @param points
-     * @return
-     */
+
+    /* TJ 180622
     public static List<GeoPoint> ListLocationToGeoPoint(ArrayList<Location3D> points) {
         List<GeoPoint> newPoints = new ArrayList<>();
         for (Location3D loc : points) {
@@ -53,6 +49,7 @@ public abstract class GeoDataUtils {
     public static GeoPoint Location3DToGeoPoint(Location3D loc) {
         return new GeoPoint(loc.getLoc_lat(), loc.getLoc_long());
     }
+    */
 
     public static GeoPoint LocationToGeoPoint(Location loc) {
         return new GeoPoint(loc.getLat(), loc.getLon());

@@ -9,14 +9,13 @@ import android.util.Log;
 import java.util.Date;
 
 import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.datatype.BirdData;
+import project.software.uni.positionprediction.datatypes_new.BirdData;
 import project.software.uni.positionprediction.datatype.HttpStatusCode;
-import project.software.uni.positionprediction.datatype.Location;
-import project.software.uni.positionprediction.datatype.Location2D;
-import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatype.Request;
 import project.software.uni.positionprediction.datatype.Study;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
+import project.software.uni.positionprediction.datatypes_new.Locations;
 
 /**
  * Created by simon on 22.05.18.
@@ -348,6 +347,8 @@ public class SQLDatabase {
                 "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
                 " ORDER BY timestamp DESC", new String[]{});
 
+        /* TJ 180622
+
         TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
 
         int rowIndex = 0;
@@ -356,6 +357,19 @@ public class SQLDatabase {
             points[rowIndex] = new TrackingPoint(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
                     new Date(cursor.getLong(0)*1000));
+            rowIndex++;
+        }
+
+        */
+
+        Locations points = new Locations();
+
+
+        int rowIndex = 0;
+        while(cursor.moveToNext()) {
+            points.add( new LocationWithValue<Date>(
+                    new Location(cursor.getDouble(1), cursor.getDouble(2)),
+                    new Date(cursor.getLong(0)*1000)));
             rowIndex++;
         }
 

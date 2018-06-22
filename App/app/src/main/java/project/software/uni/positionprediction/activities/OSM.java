@@ -17,6 +17,7 @@ import org.osmdroid.views.MapView;
 import java.util.Calendar;
 import java.util.Date;
 
+/*
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
@@ -28,9 +29,10 @@ import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.util.Message;
+*/
 
-public class OSM extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
-
+public class OSM extends AppCompatActivity /*implements FloatingMapButtons.floatingMapButtonsClickListener*/ {
+/*
     OSMDroidMap osmDroidMap;
 
     private Button buttonSettings = null;
@@ -197,7 +199,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     /**
      * Click handler triggered by the according button in
      * fragments.FloatingMapButtons
-     */
+     *//*
     @Override
     public void onSwitchModeClick() {
         // switch to Cesium Activity
@@ -210,7 +212,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     /**
      * Click handler triggered by the according button in
      * fragments.FloatingMapButtons
-     */
+     *//*
     @Override
     public void onShowDataClick() {
         Log.i("osm activity", "on my fab click");
@@ -220,7 +222,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     /**
      * Click handler triggered by the according button in
      * fragments.FloatingMapButtons
-     */
+     *//*
     @Override
     public void onShowPredClick() {
         // todo, cf changes timo
@@ -229,7 +231,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     /**
      * Click handler triggered by the according button in
      * fragments.FloatingMapButtons
-     */
+     *//*
     @Override
     public void onShowLocClick() {
         Log.i("FollowLocation", "FollowLocation was " + osmDroidMap.isFollowingLocation());
@@ -249,7 +251,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     /**
      * Toggle the icon of the "show location" button
      * @param state true if currently following the users location
-     */
+     *//*
     private void toggleShowLocBtn(boolean state) {
         // obtain reference to floating buttons fragment
         FloatingMapButtons fragment = (FloatingMapButtons) getSupportFragmentManager().findFragmentById(R.id.floating_map_buttons);
@@ -262,5 +264,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
 
 
 
-
+*/
 }
+
+

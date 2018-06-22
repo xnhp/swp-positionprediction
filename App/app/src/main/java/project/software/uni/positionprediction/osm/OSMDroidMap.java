@@ -41,7 +41,7 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 import java.util.List;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.datatype.Locations;
+import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
 
