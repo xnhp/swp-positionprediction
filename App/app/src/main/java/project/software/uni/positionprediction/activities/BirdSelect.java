@@ -23,6 +23,7 @@ import project.software.uni.positionprediction.datatype.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.PermissionManager;
+import project.software.uni.positionprediction.util.XML;
 
 public class BirdSelect extends AppCompatActivity {
 
@@ -44,6 +45,7 @@ public class BirdSelect extends AppCompatActivity {
     private int selectedStudy;
 
     private Intent startIntent = null;
+    private XML xml = new XML();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class BirdSelect extends AppCompatActivity {
 
         background = findViewById(R.id.background);
 
+        xml.readFile(this);
 
         LayoutInflater inflater = getLayoutInflater();
 

@@ -63,7 +63,7 @@ public class AlgorithmExtrapolationExtended implements PredictionAlgorithmReturn
 
             // Break if date until we want the data is reached
             if (date_t.before(date_past)) {
-                Log.e("Break", "" + c + " data points where usedfor prediction");
+                Log.e("Break", "" + c + " data points where used for prediction");
                 break;
             }
             c++; // Count for Log.e
