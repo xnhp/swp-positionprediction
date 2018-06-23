@@ -1,36 +1,24 @@
 package project.software.uni.positionprediction.activities;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
-import project.software.uni.positionprediction.datatypes_new.Locations;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
-import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
-import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 
 

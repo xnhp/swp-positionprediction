@@ -9,6 +9,9 @@ public class CloudVis extends Visualisation {
 
     @Override
     public BoundingBox getBoundingBox() {
-        return points.getBoundingBox().concat(hull.getBoundingBox());
+        BoundingBox bbox = null;
+        if(points != null) bbox = points.getBoundingBox();
+        if(hull != null) bbox = bbox.concat(hull.getBoundingBox());
+        return bbox;
     }
 }

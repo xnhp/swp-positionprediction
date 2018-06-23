@@ -18,8 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.datatype.Bird;
-import project.software.uni.positionprediction.datatype.Study;
+import project.software.uni.positionprediction.datatypes_new.Bird;
+import project.software.uni.positionprediction.datatypes_new.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.PermissionManager;

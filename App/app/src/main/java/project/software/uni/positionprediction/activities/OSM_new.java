@@ -19,7 +19,7 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
-import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;

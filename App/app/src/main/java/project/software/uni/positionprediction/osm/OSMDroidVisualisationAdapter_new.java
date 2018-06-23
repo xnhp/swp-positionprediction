@@ -2,7 +2,9 @@ package project.software.uni.positionprediction.osm;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
@@ -11,6 +13,7 @@ import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
@@ -23,7 +26,7 @@ import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
  */
 public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
 
-    private OSMDroidMap map;
+    public OSMDroidMap map;
 
     public OSMDroidMap getMap() {return map;}
 
@@ -43,11 +46,21 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
         map.setCenter(myLocation);
         map.setZoom(6);
     }
+    */
 
-    public void setMapCenter(Locations locs) {
-        map.setCenter(LocationToGeoPoint(locs.getCenter()));
+    public void setMapCenter(GeoPoint center) {
+        map.setCenter(center);
     }
 
+    @Override
+    public void panToBoundingBox(BoundingBox boundingBox) {
+        map.setCenter(boundingBox.getCenterWithDateLine());
+
+        // TJ: Not working (OSM issue discussed on stackoverflow)
+        // map.mapView.zoomToBoundingBox(boundingBox, false);
+    }
+
+    /*
     public void setMapZoom(Locations locs) {
         map.setZoom(OSMDroidMap.calculateZoomLevel(locs.getSpread()));
     }
@@ -56,8 +69,6 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
 
     @Override
     public void visualiseSingleTraj(TrajectoryVis vis) {
-
-        map.mapView.zoomToBoundingBox(vis.getBoundingBox(),false);
 
         
         // draw styled linesegments
@@ -102,6 +113,15 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
                 ;
         final SimpleFastPointOverlay overlay = new SimpleFastPointOverlay(osmStyledPoints, options);
         map.mapView.getOverlays().add(overlay);
+
+        if(vis.hasFunnel()); //todo: draw polygon
+    }
+
+
+
+    @Override
+    public void setCenter(GeoPoint center) {
+        map.setCenter(center);
     }
 
 }

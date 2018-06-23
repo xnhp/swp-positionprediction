@@ -2,7 +2,6 @@ package project.software.uni.positionprediction.activities;
 
 import android.content.DialogInterface;
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,21 +16,11 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
-
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
-import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 import static android.text.TextUtils.isDigitsOnly;
 

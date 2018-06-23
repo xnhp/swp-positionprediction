@@ -78,8 +78,8 @@ public class MovebankRequest {
         // Request a string response from the provided URL.
         Log.i("MovebankRequest", "sending string request to " + url);
 
-        project.software.uni.positionprediction.datatype.Request request =
-                new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
+        project.software.uni.positionprediction.datatypes_new.Request request =
+                new project.software.uni.positionprediction.datatypes_new.Request(getNextRequestCode());
 
         requestHandler.setRequest(request);
 
@@ -93,7 +93,7 @@ public class MovebankRequest {
      * This Method must never be called from the main thread.
      * @param attributes URL-encoded string of attributes that are requested.
      */
-    public project.software.uni.positionprediction.datatype.Request requestDataSync(String attributes){
+    public project.software.uni.positionprediction.datatypes_new.Request requestDataSync(String attributes){
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -104,8 +104,8 @@ public class MovebankRequest {
         // Request a string response from the provided URL.
         Log.i("MovebankRequest", "sending string request to " + url);
 
-        project.software.uni.positionprediction.datatype.Request request =
-                new project.software.uni.positionprediction.datatype.Request(getNextRequestCode());
+        project.software.uni.positionprediction.datatypes_new.Request request =
+                new project.software.uni.positionprediction.datatypes_new.Request(getNextRequestCode());
 
         StringRequest stringRequest = createStringRequest(request, url, requestFuture, requestFuture);
 
@@ -154,7 +154,7 @@ public class MovebankRequest {
      * @param request the Request to return the HttpStatusCode for
      * @return the HttpStatusCode as int
      */
-    public static int getStatusForRequest(project.software.uni.positionprediction.datatype.Request request){
+    public static int getStatusForRequest(project.software.uni.positionprediction.datatypes_new.Request request){
         return statusMap.remove(request.getId());
     }
 
@@ -176,7 +176,7 @@ public class MovebankRequest {
      * @param errorListener the errorListener
      * @return a StringRequest
      */
-    private StringRequest createStringRequest(final project.software.uni.positionprediction.datatype.Request request,
+    private StringRequest createStringRequest(final project.software.uni.positionprediction.datatypes_new.Request request,
                                               String url,
                                               Response.Listener<String> responseListener,
                                               Response.ErrorListener errorListener){
