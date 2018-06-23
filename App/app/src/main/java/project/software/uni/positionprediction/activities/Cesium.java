@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
@@ -24,8 +25,8 @@ import java.util.ArrayList;
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithm.PredictionUserParameters;
-import project.software.uni.positionprediction.datatype.BirdData;
-import project.software.uni.positionprediction.datatype.Locations;
+import project.software.uni.positionprediction.datatypes_new.BirdData;
+import project.software.uni.positionprediction.datatypes_new.Locations;
 import project.software.uni.positionprediction.datatype.SingleTrajectory;
 import project.software.uni.positionprediction.datatype.TrackingPoint;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
@@ -41,8 +42,8 @@ import project.software.uni.positionprediction.fragments.FloatingMapButtons;
  */
 
 
-public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.floatingMapButtonsClickListener*/ {
-/*
+public class Cesium extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
+
     private Button buttonSettings = null;
     private Button buttonBack = null;
     //private Button buttonOffline = null;
@@ -59,7 +60,7 @@ public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.fl
     private ArrayList<Double> longitudes = new ArrayList<>();
     private ArrayList<Double> latitudes = new ArrayList<>();
 
-    private Locations pastTracks = new SingleTrajectory();
+    //private Locations pastTracks = new SingleTrajectory();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,8 @@ public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.fl
 
         SQLDatabase db = SQLDatabase.getInstance(this);
         BirdData birddata = db.getBirdData(2911040, 2911059);
+
+        /*
         TrackingPoint tracks[] = birddata.getTrackingPoints();
 
         for (int i = 0; i < pastDataPoints; i++) {
@@ -107,8 +110,10 @@ public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.fl
         }
 
         launchWebView(webView);
+        */
     }
 
+    /*
     class JsObject {
 
         @JavascriptInterface
@@ -124,6 +129,7 @@ public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.fl
         public double getAltitudes(int i) { return pastTracks.locs.get(i).getAlt(); }
 
     }
+    */
 
     private void addValues() {
         longitudes.add(9.299999);
@@ -165,6 +171,8 @@ public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.fl
     // This works only on Lollipop or newer, as at least WebView v36 is required (WebGL support).
     // A correct fallback should maybe be implemented. ;)
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+
+    /*
     public void launchWebView(View view) {
 
         // Copied and modified from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
@@ -190,6 +198,7 @@ public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.fl
         // Load the URL
         webView.loadUrl(CESIUM_URI);
     }
+    */
 
     @Override
     protected void onDestroy() {
@@ -201,28 +210,29 @@ public class Cesium extends AppCompatActivity /*implements FloatingMapButtons.fl
         }
     }
 
-    @Override
+    //@Override
     public void onShowDataClick() {
 
     }
 
-    @Override
+    //@Override
     public void onShowPredClick() {
 
     }
 
-    @Override
+    //@Override
     public void onShowLocClick() {
 
     }
 
-    @Override
+    //@Override
     public void onSwitchModeClick() {
         finish(); // todo: do we really want this? maybe its better to keep the map activities
                   // so they dont have to be reloaded.
         Intent buttonIntent = new Intent(this, OSM_new.class);
+        Log.i("Cesium", "selectedBird is null: " + (selectedBird == null));
         buttonIntent.putExtra("selectedBird", selectedBird);
         startActivity(buttonIntent);
     }
-*/
+
 }

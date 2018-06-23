@@ -57,6 +57,8 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
     @Override
     public void visualiseSingleTraj(TrajectoryVis vis) {
 
+        map.mapView.zoomToBoundingBox(vis.getBoundingBox(),false);
+
         
         // draw styled linesegments
         for (StyledLineSegment seg :

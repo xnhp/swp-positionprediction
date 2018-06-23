@@ -78,10 +78,10 @@ public class PredictionWorkflow extends Controller {
 
                 // TODO: throw (algorithm classes)
                 // TODO: try/catch
-                final PredictionResultData data_pred = new PredictionResultData(); //userParams.algorithm.predict(userParams, data_past);
+                final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
                 Log.i("prediction workflow", "data_pred shapes size: " + (data_pred.getShapes().size()));
                 Log.i("prediction workflow", "data_pred keys: " + (data_pred.getShapes().keySet().toString()));
-                Log.i("prediction workflow", "data_pred trajectories size: " + (data_pred.getShapes().get(EShape.TRAJECTORY).size()));
+                //Log.i("prediction workflow", "data_pred trajectories size: " + (data_pred.getShapes().get(EShape.TRAJECTORY).size()));
 
                 //new Handler(Looper.getMainLooper()).post(new Runnable() {
 
@@ -109,6 +109,7 @@ public class PredictionWorkflow extends Controller {
     // TODO: throw RequestFailedException
     private void requestData() /*throws RequestFailedException*/ {
         // Make an async network request for new data
+        Log.i("OSM_new", "userParams.bird is null: " + (userParams.bird == null));
         SQLDatabase.getInstance(context)
                 .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId());
     }

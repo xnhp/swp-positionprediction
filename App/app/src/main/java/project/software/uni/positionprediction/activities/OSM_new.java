@@ -133,7 +133,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         Date date_pred = cl.getTime();
 
         Intent i = getIntent();
-        Bird bird = (Bird) i.getSerializableExtra("bird");
+        Bird bird = (Bird) i.getSerializableExtra("selectedBird");
 
         if(bird == null) Log.i("OSM_new", "no bird");
 
