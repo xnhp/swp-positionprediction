@@ -43,6 +43,8 @@ import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatype.Bird;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.util.PermissionManager;
+import project.software.uni.positionprediction.visualisation.Visualisation;
+import project.software.uni.positionprediction.visualisation_new.Visualisations;
 
 
 /**
@@ -117,32 +119,24 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         SQLDatabase db = SQLDatabase.getInstance(this);
         BirdData birddata = db.getBirdData(2911040, 2911059);
 
-        /*
-        TrackingPoint tracks[] = birddata.getTrackingPoints();
+
+        Locations tracks = birddata.getTrackingPoints();
 
         for (int i = 0; i < pastDataPoints; i++) {
             //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
-            pastTracks.add( tracks[tracks.length-1 - pastDataPoints + i].getLocation() );
+            //pastTracks.add( tracks.get(tracks.length-1 - pastDataPoints + i).getLocation() );
         }
 
         launchWebView(webView);
-        */
+
     }
 
-    /*
+
     class JsObject {
 
         @JavascriptInterface
-        public int getAmountPoints() { return pastDataPoints; }
-
-        @JavascriptInterface
-        public double getLongitudes(int i) { return pastTracks.locs.get(i).getLon(); }
-
-        @JavascriptInterface
-        public double getLatitudes(int i) { return pastTracks.locs.get(i).getLat(); }
-
-        @JavascriptInterface
-        public double getAltitudes(int i) { return pastTracks.locs.get(i).getAlt(); }
+        public int getAmountPoints() {
+            return pastDataPoints; }
 
         @JavascriptInterface
         public String getFoo() {
@@ -184,7 +178,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         }
 
     }
-    */
+
 
     @SuppressLint("MissingPermission") // we do take care of permissions
     private void registerLocationListener() {
@@ -268,7 +262,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     // A correct fallback should maybe be implemented. ;)
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 
-    /*
+
     public void launchWebView(View view) {
 
         // Copied and modified from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
@@ -296,7 +290,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         registerLocationListener();
     }
-    */
+
 
     @Override
     protected void onDestroy() {
