@@ -17,7 +17,13 @@ public class TrajectoryVis extends Visualisation {
 
     @Override
     public BoundingBox getBoundingBox() {
-        return line.getBoundingBox().concat(funnel.getBoundingBox());
+        BoundingBox bb;
+        if (funnel != null) {
+            bb = line.getBoundingBox().concat(funnel.getBoundingBox());
+        } else {
+            bb = line.getBoundingBox();
+        }
+        return bb;
     }
 
     public Polyline getLine() {
