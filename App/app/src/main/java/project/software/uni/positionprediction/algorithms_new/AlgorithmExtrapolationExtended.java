@@ -1,19 +1,26 @@
 package project.software.uni.positionprediction.algorithms_new;
 
+import android.content.Context;
 import android.util.Log;
 
-import project.software.uni.positionprediction.datatypes_new.EShape;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
-import project.software.uni.positionprediction.datatypes_new.Collection;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+
+import project.software.uni.positionprediction.datatype.SingleTrajectory;
+import project.software.uni.positionprediction.datatype.TrackingPoint;
+import project.software.uni.positionprediction.datatype.TrackingPoints;
 import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
-import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithmReturnsTrajectory;
+import project.software.uni.positionprediction.util.Message;
 
 public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTrajectory {
 
+    private Context c;
 
     public AlgorithmExtrapolationExtended() {
     }
@@ -32,22 +39,9 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
     @Override
     public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
 
-        // TODO: Get UserParamSettings
-        int pastDataPoints = 50;
-
         // Compute prediction
-        Locations prediction = next_Location(data.getTrajectory().getLocations(), pastDataPoints);
+        return next_Location(data.getTrajectory(), params.date_past, params.date_pred);
 
-        Trajectory trajectory = new Trajectory(prediction);
-
-        Log.i("algorithm", "trajecory locations: " + (trajectory.getLocations().size()));
-
-        // Create correct result type
-        PredictionResultData result = createResultData(trajectory);
-
-        Log.i("algorithm", "result size: " + (result.getShapes().get(EShape.TRAJECTORY).size()/*get(0).getLocations().get(0).toString()*/));
-
-        return result;
     }
 
 
@@ -58,39 +52,51 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @param data
      * @return
      */
-    private Locations next_Location(Locations data, int date) {
+    public Location next_Location(Trajectory data, Date date_past, Date date_pred) {
         int n = data.size() - 1;
-        Collection<Location> vector_collection = new Collection<>();
+        ArrayList<project.software.uni.positionprediction.datatype.Location> vector_collection = new ArrayList<>();
+        int c = 0;
+
         // Fill collection
-        for (int t = 1; t < date; t++) { // todo: loop conditions correct?
+        for (int t = 1; t < n; t++) {
+            Date date_t = data.getLocation(n-t).ge();
+
+            // Break if date until we want the data is reached
+            if (date_t.before(date_past)) {
+                Log.e("Break", "" + c + " data points where used for prediction");
+                break;
+            }
+            c++; // Count for Log.e
+
             // Compute difference of pair n and n-t
             // Get n-th point
-            Location vec_n = data.get(n);
+            project.software.uni.positionprediction.datatype.Location vec_n = data.get(n).getLocation();
 
             // Get n-t point
-            Location vec_old = data.get(n-t);
+            project.software.uni.positionprediction.datatype.Location vec_old = data.get(n-t).getLocation();
 
             // Compute vector between them
-            Location vec_delta = vec_n.subtract(vec_old);
+            project.software.uni.positionprediction.datatype.Location vec_delta = vec_n.subtract(vec_old);
 
             // Compute average
-            Location vec_avg = vec_delta.divide(t);
+            project.software.uni.positionprediction.datatype.Location vec_avg = vec_delta.divide(t);
 
             // Add vector to collection
             //vector_collection.set(t - 1, vec_avg);
             vector_collection.add(vec_avg);
         }
 
+        // Compute prediction factor
+        double pred_factor = (date_pred == null)? 1 : compute_pred_length(data, date_pred, vector_collection.size());
+
+
         // Compute average of all computed vectors in collection
-        Location avg = weighted_average(vector_collection);
-        Location curr_loc = data.get(data.size() - 1);
+        project.software.uni.positionprediction.datatype.Location avg = weighted_average(vector_collection);
+        project.software.uni.positionprediction.datatype.Location curr_loc = data.get(data.getLength() - 1).getLocation();
 
         // Add avg vector to current Location
-        Locations result_list = new Locations();
-        // todo: returns locations with hasAltitude = true. not good.
-        Location result_vector = curr_loc.to3D().add(avg);
-        result_list.add(result_vector);
-        return result_list;
+        return curr_loc.add( avg.multiply(pred_factor) );
+
     }
 
 
@@ -100,7 +106,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @param collection
      * @return
      */
-    private Location weighted_average(Collection<Location> collection) {
+    public project.software.uni.positionprediction.datatype.Location weighted_average(ArrayList<project.software.uni.positionprediction.datatype.Location> collection) {
         double sum_long = 0;
         double sum_lat = 0;
         double sum_height = 0;
@@ -108,7 +114,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // Compute sum
         for (int i = 0; i < collection.size(); i++) {
 
-            if (collection.get(i).hasAltitude()) {
+            if (collection.get(i).has_altitude) {
                 Log.i("algorithm", "a location has altitude set!");
             } else {
                 Log.i("algorithm", "a location doesnt have alt set!");
@@ -125,18 +131,45 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         double res_lat = sum_lat / length;
         double res_height = sum_height / length;
 
-        return new Location(res_long, res_lat, res_height);
+        return new project.software.uni.positionprediction.datatype.Location(res_long, res_lat, res_height);
     }
 
 
-    /**
-     * Todo: possible weight function
-     *
-     * @param a
-     * @return
-     */
-    private int weight(int a) {
-        return 1;
+
+    private double compute_pred_length(TrackingPoints data, Date date_pred, int nr_of_pts) {
+        if (data.getLength() < nr_of_pts ){
+            Message m = new Message();
+            m.disp_error(c, "Data size", "There is to less data to compute a good result",true);
+            return 1;
+        }
+
+        // Get the used tracking points
+        LinkedList<Number> delta_ms = new LinkedList<Number>();
+        int n = data.getLength();
+        for (int i = 0; i<nr_of_pts; i++){
+            TrackingPoint p_curr = data.get(n - nr_of_pts + i);
+            TrackingPoint p_before = data.get(n - nr_of_pts + i - 1);
+            long t1 = p_curr.getDate().getTime();
+            long t2 = p_before.getDate().getTime();
+            long delta_t = Math.abs(t1-t2);
+            delta_ms.add(delta_t);
+        }
+
+        // Get average time between Trackingpoints
+        long sum = 0;
+        int m = delta_ms.size();
+        for (int j = 0; j < n; j++) {
+            sum = sum + (long) delta_ms.get(j);
+        }
+        long avg = sum / m;
+        Log.e("Note", "Average of last few data points (in millis) = " + avg );
+
+        // Get relative frequency of avg time in whole in prediction
+        long duration_pred = date_pred.getTime();
+        double freq = avg / duration_pred;
+
+        return freq;
+
     }
 
 }

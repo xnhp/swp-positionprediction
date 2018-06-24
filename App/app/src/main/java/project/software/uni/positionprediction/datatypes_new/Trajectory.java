@@ -12,4 +12,5 @@ public class Trajectory extends Shape {
         super(locs);
     }
 
+
 }

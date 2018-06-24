@@ -90,7 +90,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         this.selectedBird = (Bird) getIntent().getSerializableExtra("selectedBird");
 
-        registerEventHandlers(cesium);
+        //registerEventHandlers(cesium);
 
         // Load the webserver.
         this.webServer = new WebServer(getAssets());
@@ -163,7 +163,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
          *
          * @return a JSON string containing lat and lng if a location fix has been
          * previously obtained. an empty JSON string otherwise.
-         */
+
         @SuppressLint("MissingPermission") // todo
         @JavascriptInterface
         public String getUserLocationJSON() {
@@ -308,22 +308,22 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         }
     }
 
-    //@Override
+    @Override
     public void onShowDataClick() {
 
     }
 
-    //@Override
+    @Override
     public void onShowPredClick() {
 
     }
 
-    //@Override
+    @Override
     public void onShowLocClick() {
 
     }
 
-    //@Override
+    @Override
     public void onSwitchModeClick() {
         finish(); // todo: do we really want this? maybe its better to keep the map activities
                   // so they dont have to be reloaded.
