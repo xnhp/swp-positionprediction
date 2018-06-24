@@ -65,21 +65,22 @@ public class PredictionWorkflow extends Controller {
         this.userParams = userParams;
         this.visAdapter = visAdapter;
         //this.algorithm = predictionUserParameters.algorithm;
+        // this will be taken from the Settings instead
     }
 
 
     public void trigger() {
-        // TODO: avoid making too many requests.
-        // check whether a request was made in the last n seconds?
         new Thread(new Runnable() {
             @Override
             public void run() {
 
+                // get tracking points from the movebank api
                 // TODO: indicate activity / progress to user
                 // TODO: try/catch RequestFailedException
                 requestData();
 
                 try {
+                    // fetch data (tracking points) from the local database
                     data_past = fetchData();
                     Log.i("prediction workflow", "data_past locs size: " + data_past.getTrajectory().getLocations().size());
                 } catch (InsufficientTrackingDataException e) {
@@ -127,7 +128,14 @@ public class PredictionWorkflow extends Controller {
     }
 
 
-    // Fetch data from internal database
+   /**
+   * Prepare any data that will be used for the prediction.
+   * The returned object will be handed to the predicition algorithm
+   * as the sole ressource.
+   *
+   * in the future, might access different sources of information here (e.g. current weather)
+     and save that in PredictionBaseDate to be used for a position prediction
+    */
     private PredictionBaseData fetchData() throws InsufficientTrackingDataException {
         // TODO: do this based on date
         // todo: link this to hardcoded limit in algorithm
@@ -151,16 +159,13 @@ public class PredictionWorkflow extends Controller {
         Trajectory pastTracks = new Trajectory();
         int size = tracks.size();
         for (int i = 0; i < pastDataPoints; i++) {
-            //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
-            // todo: What is going on here?
+            // get the i last points
             pastTracks.addLocation(tracks.get(tracks.size() - 1 - pastDataPoints + i));
         }
 
         PredictionBaseData data = new PredictionBaseData(pastTracks);
 
         return data;
-        // in the future, might access different sources of information here (e.g. current weather)
-        // and save that in PredictionBaseDate to be used for a position prediction
     }
 
 
