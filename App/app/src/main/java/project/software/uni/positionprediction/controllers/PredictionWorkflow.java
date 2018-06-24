@@ -23,12 +23,24 @@ import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
 import project.software.uni.positionprediction.visualisation_new.Visualisations;
 
 /** Workflow:
- * 1.) request data from Movebank and update internal DB
- * 2.) fetch data from internal DB
- * 3.) run prediction
- * 4.) build visualization objects
- * 5.) depending on indoor/outdoor-mode: open activity OSM or Cesium
- *     which triggers visualization workflow with suitable visualizationAdapter
+*
+  * 1.) On Bird select, `trigger` is called.
+*   2.) Data is fetched from the internal DB
+*   3.) Prediction is made
+*   4.) Visualisation objects (past and prediction) are built
+*   5.) Vis. objects are saved in static fields.
+*
+* Then, the map activities (OSM, Cesium) will fetch the
+* Visualisation objects from these static fields and hand them
+* (and the respective VisualisationAdapter) to the
+* `VisualisationWorkflow` controller.
+*
+* This is because in order to be able to display a visualisation,
+* the activity has to already be up and running (map view instanced
+* etc). An alternative approach would have been to hand the
+* visualisation data to the activity, however that would have been
+* more complicated since we will be switching back and forth between
+* OSM/Cesium too.
  */
 public class PredictionWorkflow extends Controller {
 

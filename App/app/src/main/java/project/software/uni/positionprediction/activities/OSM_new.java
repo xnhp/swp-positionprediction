@@ -107,6 +107,10 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         );
         predWorkflow.trigger();
 
+
+        // instead: access static fields from PredictionWorkflow,
+        // hand it and adapter to visualisatiion controller
+
     }
 
 
@@ -122,6 +126,9 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
 
     // TJ: todo: Implement this Method correctly in class "Settings"
+    // bm: Would rather put this somewhere else b/c "Settings" is an
+    // Activity and should only do UI-related stuff.
+    // Also, I think this task was assigned to SJ.
     public PredictionUserParameters getPredictionUserParameters() {
 
         Date date_past = new Date(2017, 5, 1, 0, 0);
