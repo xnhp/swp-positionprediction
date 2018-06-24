@@ -157,7 +157,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
          *
          * @return a JSON string containing lat and lng if a location fix has been
          * previously obtained. an empty JSON string otherwise.
-
+        */
         @SuppressLint("MissingPermission") // todo
         @JavascriptInterface
         public String getUserLocationJSON() {
@@ -212,14 +212,14 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener);
     }
 
-    /*
+
     private void injectUserLocation() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             webView.evaluateJavascript("enable();", null);
         } else {
             Log.e("WebView", "webView.evaluateJavascript not compatible with SDK version");
         }
-    }*/
+    }
 
     private void addValues() {
         longitudes.add(9.299999);
