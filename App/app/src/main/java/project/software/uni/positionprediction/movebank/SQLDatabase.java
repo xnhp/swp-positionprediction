@@ -6,7 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
@@ -364,19 +368,35 @@ public class SQLDatabase {
 
         Locations points = new Locations();
 
-
-        int rowIndex = 0;
         while(cursor.moveToNext()) {
             points.add( new LocationWithValue<Date>(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
-                    new Date(cursor.getLong(0)*1000)));
-            rowIndex++;
+                    parseDate(cursor.getString(0))));
         }
 
         cursor.close();
 
         return new BirdData(studyId, indivId, points);
 
+    }
+
+    /**
+     * Parses a date from string.
+     * @param dateString of the pattern 2008-05-31 19:30:18.998
+     * @return a Date object corresponding to the parsed date
+     */
+    private Date parseDate(String dateString) {
+        // cf https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+        Date date = null;
+        try {
+            date = df.parse(dateString);
+        } catch (ParseException e) {
+            Log.e("SQLDatabase", "Could not parse date of row");
+            e.printStackTrace();
+        }
+        Log.i("SQLDatabase", "retrieved date from db: " + date);
+        return date;
     }
 
     public Bird[] getBirds(int studyId){
