@@ -1,5 +1,10 @@
+
 var viewer = new Cesium.Viewer('cesiumContainer');
 
+// "Old" way of retrieving points, for reference
+// plan for the future: get injected json string that
+// contains the complete visualisation, parse and draw it
+/*
 var longitudes = [];
 var latitudes = [];
 var altitudes = [];
@@ -30,3 +35,6 @@ for(var i = 0; i < amountPoints; i++) {
 }
 
 viewer.zoomTo(viewer.entities);
+*/
+
+

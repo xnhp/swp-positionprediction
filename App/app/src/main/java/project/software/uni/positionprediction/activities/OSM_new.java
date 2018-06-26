@@ -25,7 +25,9 @@ import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 
-
+/*
+ * Note that this is not complete yet - requires transfer of some code from `OSM_new`.
+ */
 public class OSM_new extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener{
 
 

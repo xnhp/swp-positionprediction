@@ -44,8 +44,6 @@ import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 
 
 /**
- * (Nearly) Minimal working example for running cesium with a webserver inside the browser or
- * inside a webview.
  * todo: TJ 180622: to be replaced by correct workflow
  */
 
@@ -122,32 +120,13 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
             pastTracks.add( tracks[tracks.length-1 - pastDataPoints + i].getLocation() );
         }
-
-        launchWebView(webView);
         */
+        launchWebView(webView);
+
     }
 
-    /*
+
     class JsObject {
-
-        @JavascriptInterface
-        public int getAmountPoints() { return pastDataPoints; }
-
-        @JavascriptInterface
-        public double getLongitudes(int i) { return pastTracks.locs.get(i).getLon(); }
-
-        @JavascriptInterface
-        public double getLatitudes(int i) { return pastTracks.locs.get(i).getLat(); }
-
-        @JavascriptInterface
-        public double getAltitudes(int i) { return pastTracks.locs.get(i).getAlt(); }
-
-    }
-    */
-        @JavascriptInterface
-        public String getFoo() {
-            return "foo";
-        }
 
         /**
          * return a json string containing the current user location.
@@ -169,7 +148,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         public String getUserLocationJSON() {
             JSONObject jo = new JSONObject();
             try {
-                if (userLocation!=null) {
+                if (userLocation != null) {
                     jo.put("lat", userLocation.getLatitude());
                     jo.put("lng", userLocation.getLongitude());
                 }
@@ -185,6 +164,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     }
 
+    // TODO (bm): replace this with locationListener
     @SuppressLint("MissingPermission") // we do take care of permissions
     private void registerLocationListener() {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
@@ -216,15 +196,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener);
     }
-
-    /*
-    private void injectUserLocation() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            webView.evaluateJavascript("enable();", null);
-        } else {
-            Log.e("WebView", "webView.evaluateJavascript not compatible with SDK version");
-        }
-    }*/
 
     private void addValues() {
         longitudes.add(9.299999);
@@ -266,8 +237,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     // This works only on Lollipop or newer, as at least WebView v36 is required (WebGL support).
     // A correct fallback should maybe be implemented. ;)
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-
-    /*
+    // we are aware that js is enabled in the webview, however we only access
+    // local files and trust Cesium.
+    @SuppressLint("SetJavaScriptEnabled")
     public void launchWebView(View view) {
 
         // Copied and modified from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
@@ -295,7 +267,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         registerLocationListener();
     }
-    */
+
 
     @Override
     protected void onDestroy() {
@@ -306,6 +278,11 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             this.webServer.stop();
         }
     }
+
+
+    /*
+     * Handlers for buttons floating on top of map
+     */
 
     //@Override
     public void onShowDataClick() {
@@ -328,6 +305,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                   // so they dont have to be reloaded.
         Intent buttonIntent = new Intent(this, OSM_new.class);
         Log.i("Cesium", "selectedBird is null: " + (selectedBird == null));
+        // pass currently selected bird to other activity.
+        // this should be removed, instead the other activity
+        // should fetch is data from a static field in controllers.PredictionWorkflow
         buttonIntent.putExtra("selectedBird", selectedBird);
         startActivity(buttonIntent);
     }
