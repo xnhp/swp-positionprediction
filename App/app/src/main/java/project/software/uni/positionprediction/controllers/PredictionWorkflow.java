@@ -18,8 +18,9 @@ import project.software.uni.positionprediction.datatypes_new.EShape;
 import project.software.uni.positionprediction.visualisation_new.CloudVis;
 import project.software.uni.positionprediction.visualisation_new.Funnel;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation_new.PastTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation_new.Polyline;
-import project.software.uni.positionprediction.visualisation_new.StyleTrajectory;
+import project.software.uni.positionprediction.visualisation_new.PredTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
 import project.software.uni.positionprediction.visualisation_new.Visualisations;
 
@@ -97,20 +98,26 @@ public class PredictionWorkflow extends Controller {
                 final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
                 Log.i("prediction workflow", "data_pred shapes size: " + (data_pred.getShapes().size()));
                 Log.i("prediction workflow", "data_pred keys: " + (data_pred.getShapes().keySet().toString()));
-                //Log.i("prediction workflow", "data_pred trajectories size: " + (data_pred.getShapes().get(EShape.TRAJECTORY).size()));
 
-                //new Handler(Looper.getMainLooper()).post(new Runnable() {
+                // simply build a single traj vis
+                // for the past tracking data
+                vis_past = buildSingleTrajectoryVis(
+                        data_past.getTrajectory(),
+                        PastTrajectoryStyle.pointCol,
+                        PastTrajectoryStyle.lineCol,
+                        PastTrajectoryStyle.pointRadius
+                );
+                // `buildVisualizations` builds a visualisation
+                // possibly composed of smaller visualisations
+                // e.g. multiple trajectories
+                // `shapes` is a collection of "smaller visualisations"
+                vis_pred = buildVisualizations(data_pred.getShapes());
 
-                    //public void run() {
-                        vis_past = buildSingleTrajectoryVis(data_past.getTrajectory(), 0);
-                        vis_pred = buildVisualizations(data_pred.getShapes());
-                    //}
-                //});
-
-                Log.i("prediction workflow", "vis_pred size: " + (vis_pred.size()));
+                // these two visualisations are saved in static fields and
+                // then accessed by the map activities
 
 
-                // TODO: this will be initiated by the activity,
+                // TODO: this will be located in the activity
                 // accessing the prediction results via static fields
                 VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
                         context,
@@ -181,8 +188,14 @@ public class PredictionWorkflow extends Controller {
             int counter = 1;
             for (Shape locs : type) {
                 if (locs instanceof Trajectory) {
-                    Log.i("prediction worlflow", "Is instance of Trajectory.");
-                    result.add(buildSingleTrajectoryVis((Trajectory) locs, counter));
+                    Log.i("prediction workflow", "Is instance of Trajectory.");
+                    result.add(
+                            buildSingleTrajectoryVis(
+                                    (Trajectory) locs,
+                                    PredTrajectoryStyle.lineCol,
+                                    PredTrajectoryStyle.pointCol,
+                                    PredTrajectoryStyle.pointRadius)
+                    );
                 } else if (locs instanceof Cloud) {
                     result.add(buildSingleCloudVis((Cloud) locs, counter));
                 }
@@ -201,15 +214,20 @@ public class PredictionWorkflow extends Controller {
      * Build Geometry object based on pre-defined visual properties and draw it
      * We can write it this generically here, no matter if osm or cesium
      */
-    private TrajectoryVis buildSingleTrajectoryVis(Trajectory traj, int counter) {
+    private TrajectoryVis buildSingleTrajectoryVis(
+            Trajectory traj,
+            String pointColor,
+            String lineColor,
+            int pointRadius
+    ) {
 
         // Correct would be: build TrajectoryVis which consists of a polyline (among others)
         // Build Visualizations
         Polyline line = new Polyline(
                 traj.getLocations(),
-                StyleTrajectory.pastPointCol.asString(),
-                StyleTrajectory.pastLineCol.asString(),
-                StyleTrajectory.pastPointRadius.asInt()
+                pointColor,
+                lineColor,
+                pointRadius
         );
 
         if(traj.hasFunnel()){
