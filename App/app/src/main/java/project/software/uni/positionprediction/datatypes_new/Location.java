@@ -188,7 +188,12 @@ public class Location {
      * @return
      */
     public double getAngle(Location loc_pre) {
-        Location vec_horizontal = new Location(0,1,0);
+        Location vec_horizontal;
+        if (loc_pre.has_altitude) {
+            vec_horizontal = new Location(0,1,0);
+        } else {
+            vec_horizontal = new Location(0,1);
+        }
         Location vec = this.getVectorFrom(loc_pre);
         return Math.acos( vec_horizontal.dotProduct(vec) / (vec_horizontal.abs() * vec.abs()));
     }
