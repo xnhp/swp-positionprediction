@@ -120,8 +120,16 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     // But thats not important
     public PredictionUserParameters getPredictionUserParameters() {
 
-        Date date_past = new Date(2017, 5, 1, 0, 0);
+        // hardcoded date marking the lower bound for tracking data
+        // which should be included in the prediction
+        // note that if hour, second, ... is not specified the
+        // *current* hour, second, ... will be used
+        Calendar cal = Calendar.getInstance();
+        cal.set(2007, Calendar.MAY, 9);
+        Date date_past = cal.getTime();
+
         // for what point in the future we want the prediction
+        // hardcoded: 5 hours from current datetime
         int hoursInFuture = 5;
         Calendar cl = Calendar.getInstance();
         cl.setTime(new Date());

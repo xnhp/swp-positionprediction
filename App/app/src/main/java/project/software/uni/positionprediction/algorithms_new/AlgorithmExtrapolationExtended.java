@@ -3,6 +3,8 @@ package project.software.uni.positionprediction.algorithms_new;
 import android.content.Context;
 import android.util.Log;
 
+import org.apache.commons.math3.exception.InsufficientDataException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -87,7 +89,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
             // Break if date until we want the data is reached
             if (date_t.before(date_past)) {
 
-                Log.e("Break", "" + c + " data points where used for prediction");
+                Log.e("Break", "" + c + " data points were used for prediction");
                 Log.e("Use Data from", date_past.toString());
                 Log.e("Date which breaks loop", date_t.toString());
                 break;
@@ -112,6 +114,13 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
             vector_collection.add(vec_avg);
         }
 
+        // if the collection is empty at this point, it means that there was no
+        // data available within the requested lower bound.
+        if (vector_collection.size() == 0) {
+            Log.e("algorithm", "no data within given lower bound for timestamps");
+            // todo: handle this, show notice to user.
+        }
+
         // Compute prediction factor
         double pred_factor;
         if (has_timestamps) {
@@ -123,7 +132,9 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
 
         // Compute average of all computed vectors in collection
+        // avg has altitude or not based on the data that is passed in
         Location avg = weighted_average(vector_collection);
+        // curr_loc has altitude or not based on the data that is passed in
         Location curr_loc = data.getLocation(data.size() - 1);
 
         // Add Vector to current one
@@ -137,27 +148,39 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
     /**
      * Computes (weighted) average of Location vectors
+     * todo: move this to class Locations
      *
      * @param collection
      * @return
      */
     public Location weighted_average(ArrayList<Location> collection) {
+
+        if (collection.size() == 0) {
+            Log.e("algorithm", "cannot compute average of empty collection");
+        }
+
         double sum_long = 0;
         double sum_lat = 0;
         double sum_height = 0;
 
+        // we only consider the weighted average to have an altitude
+        // if all locations in the collection have an altitude set.
+        boolean have_alt = collection.get(0).hasAltitude();
+
         // Compute sum
         for (int i = 0; i < collection.size(); i++) {
 
-            if (collection.get(i).hasAltitude()) {
-                Log.i("algorithm", "a location has altitude set!");
-            } else {
-                Log.i("algorithm", "a location doesn't have alt set!");
-            }
-
             sum_long += collection.get(i).getLon();
             sum_lat += collection.get(i).getLat();
-            sum_height += collection.get(i).getAlt();
+
+            if (have_alt) {
+                sum_height += collection.get(i).getAlt();
+            } else {
+                // if any location in the given collection does not have
+                // alt set, do not consider altitude at all and return
+                // a weighted average location without altitude
+                have_alt = false;
+            }
         }
 
         // Compute average
@@ -166,7 +189,14 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         double res_lat = sum_lat / length;
         double res_height = sum_height / length;
 
-        return new Location(res_long, res_lat, res_height);
+        if (have_alt) {
+            // return a location with altitude
+            return new Location(res_long, res_lat, res_height);
+        } else {
+            // return a location *without* altitude
+            return new Location(res_long, res_lat);
+        }
+
     }
 
 
