@@ -3,7 +3,6 @@ package project.software.uni.positionprediction.datatypes_new;
 import java.util.Date;
 
 import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
-import project.software.uni.positionprediction.datatype.Bird;
 
 /**
  * *User-Supplied* parameters for the prediction, including which algorithm to use

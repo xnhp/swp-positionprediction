@@ -8,5 +8,4 @@ public abstract class Visualisation {
 
     private  BoundingBox boundingBox;
     public abstract BoundingBox getBoundingBox();
-
 }

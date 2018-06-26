@@ -5,7 +5,7 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import project.software.uni.positionprediction.datatype.Request;
+import project.software.uni.positionprediction.datatypes_new.Request;
 
 /**
  * Created by simon on 23.05.18.

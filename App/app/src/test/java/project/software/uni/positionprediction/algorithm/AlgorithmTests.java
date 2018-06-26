@@ -1,12 +1,10 @@
 package project.software.uni.positionprediction.algorithm;
 
-import android.util.Log;
-
 import org.junit.Test;
 
 import java.io.File;
 
-import project.software.uni.positionprediction.datatype.Location;
+import project.software.uni.positionprediction.datatypes_new.Location;
 
 import static org.junit.Assert.assertEquals;
 

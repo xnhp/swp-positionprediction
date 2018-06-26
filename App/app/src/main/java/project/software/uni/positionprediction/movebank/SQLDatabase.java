@@ -8,12 +8,12 @@ import android.util.Log;
 
 import java.util.Date;
 
-import project.software.uni.positionprediction.datatype.Bird;
+import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
-import project.software.uni.positionprediction.datatype.HttpStatusCode;
+import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
 import project.software.uni.positionprediction.datatypes_new.Location;
-import project.software.uni.positionprediction.datatype.Request;
-import project.software.uni.positionprediction.datatype.Study;
+import project.software.uni.positionprediction.datatypes_new.Request;
+import project.software.uni.positionprediction.datatypes_new.Study;
 import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.Locations;
 

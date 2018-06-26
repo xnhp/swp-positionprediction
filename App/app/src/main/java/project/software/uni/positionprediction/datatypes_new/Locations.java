@@ -10,6 +10,7 @@ public class Locations extends Collection<Location> {
 
     public Locations() { super(); }
     public Locations(Locations locs) { super(locs); }
+    public Locations(Collection<Location> locs) { super(locs); }
     public Locations(Location loc) { super(loc); }
 
     /**
@@ -82,4 +83,16 @@ public class Locations extends Collection<Location> {
 
         return new BoundingBox(north, east, south, west);
     }
+
+    public boolean haveValues(){
+        if (this.size() == 0){
+            return false;
+        } else if (this.get(0) instanceof LocationWithValue) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }

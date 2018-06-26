@@ -3,8 +3,6 @@ package project.software.uni.positionprediction;
 
 import org.junit.Test;
 
-import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-
 import static org.junit.Assert.*;
 
 

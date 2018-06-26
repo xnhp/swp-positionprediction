@@ -1,6 +1,7 @@
-package project.software.uni.positionprediction.datatype;
+package project.software.uni.positionprediction.util;
 
 import java.util.List;
+
 
 /**
  * Contains methods to debug the code
@@ -14,13 +15,6 @@ public class Debug {
 
 
     // Methods
-
-    public void print(TrackingPoint data[]) {
-        for (int i = 0; i<data.length; i++) {
-            data[i].getLocation().print();
-        }
-    }
-
 
 
 
