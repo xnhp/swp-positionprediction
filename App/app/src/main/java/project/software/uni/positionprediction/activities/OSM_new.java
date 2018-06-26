@@ -2,9 +2,10 @@ package project.software.uni.positionprediction.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -42,6 +43,10 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     private Button buttonBack     = null;
     OSMDroidMap osmDroidMap;
 
+    // padding to edges of map when zooming/panning
+    // to view something on the map.
+    // e.g. for zoomToBoundingBox
+    private int zoomPadding = 15;
 
 
     // BEHAVIOR
@@ -140,7 +145,11 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         Intent i = getIntent();
         Bird bird = (Bird) i.getSerializableExtra("selectedBird");
 
-        if(bird == null) Log.i("OSM_new", "no bird");
+        // for debug purposes
+        if(bird == null) {
+            Log.i("OSM_new", "no bird");
+            bird = new Bird(2911059, 2911040, "Galapagos");
+        }
 
         return new PredictionUserParameters(
                 new AlgorithmExtrapolationExtended(this),
@@ -224,7 +233,6 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         osmDroidMap.mapView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.i("foo", "on touch listener on mapview called, returning true");
                 toggleShowLocBtn(false);
                 return false; // indicates that the touch event was not
                 // successfully handled (it will propagated
@@ -241,6 +249,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
      */
     @Override
     public void onSwitchModeClick() {
+        toggleShowLocBtn(false);
         // switch to Cesium Activity
         finish();
         Intent buttonIntent = new Intent(this, Cesium.class);
@@ -253,17 +262,47 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
      */
     @Override
     public void onShowDataClick() {
-        Log.i("osm activity", "on my fab click");
-        // todo, cf changes timo
+        toggleShowLocBtn(false);
+
+        if (PredictionWorkflow.vis_past == null) {
+            Log.e("FloatingMapButtons", "no past vis available");
+            return;
+        }
+        osmDroidMap.mapView.invalidate();
+        osmDroidMap.safeZoomToBoundingBox(
+                PredictionWorkflow.vis_past.getBoundingBox(),
+                false,
+                this.zoomPadding
+        );
     }
 
     /**
      * Click handler triggered by the according button in
      * fragments.FloatingMapButtons
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onShowPredClick() {
-        // todo, cf changes timo
+        toggleShowLocBtn(false);
+
+        /*
+        Theoretically, zoomToBoundingBox should have been fixed as per
+        https://github.com/osmdroid/osmdroid/pull/702
+         */
+        if (PredictionWorkflow.vis_pred== null) {
+            Log.e("FloatingMapButtons", "no prediction visualisation available (yet?)");
+            return;
+        }
+        BoundingBox mybb = PredictionWorkflow.vis_pred.getBoundingBox();
+        // BoundingBox testbb = new BoundingBox(10, 10, 20, 20);
+        // final BoundingBox testbb = new BoundingBox(44899816, 5020385,44899001,5019482);
+
+
+        MapView mMapView = osmDroidMap.mapView;
+        mMapView.invalidate();
+        osmDroidMap.safeZoomToBoundingBox(mybb, false, this.zoomPadding);
+
+
     }
 
     /**

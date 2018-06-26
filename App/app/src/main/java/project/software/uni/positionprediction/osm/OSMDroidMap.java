@@ -25,6 +25,7 @@ import org.osmdroid.tileprovider.modules.SqlTileWriter;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.util.TileSystem;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polygon;
@@ -94,6 +95,14 @@ public class OSMDroidMap {
     private Marker locationMarker;
     private MyLocationNewOverlay locationOverlay = null;
     private CompassOverlay compassOverlay = null;
+
+    // minimal size of a bounding box in latitude/longitude difference
+    // (in case it e.g. describes only a single point)
+    // Note: this is risky since the actual distance from some
+    // lat/lon to another is different depending on where on the globe
+    // you are. However, I'll make the assumption that this is not
+    // important here.
+    private double boundingBoxMinSize = 0.1;
 
     // TODO: refresh tiles when switching from offline to inline
     // cf https://github.com/osmdroid/osmdroid/blob/ae026862fe4666ab6c8d037b9e2f8805233c8ebf/OpenStreetMapViewer/src/main/java/org/osmdroid/StarterMapActivity.java#L25
@@ -618,5 +627,64 @@ public class OSMDroidMap {
         this.setZoom(OSMDroidMap.calculateZoomLevel(locs.getSpread()));
     }
 
+    /**
+     * Additionally checks if the boxes' bounds are far enough apart.
+     * If so, it enlargens the BB by some predefined constant.
+     * e.g. if all values are equal, osmdroid doesnt do anything at all.
+     * ( `if (nextZoom == Double.MIN_VALUE) { return } ... `)
+     *
+     * IMPORTANT:
+     * note that when `animate` is true, the following problem occurs
+     * when the zoom distance is very far,
+     * zoomToBoundingBox zooms to the wrong center
+     *
+     * if `animate` is false, it works perfectly fine, which
+     * very much hints that this is an issue with osmdroid.
+     *
+     * the calculated bounding box passed into here
+     * does not change for the same visualisation.
+     * (our code about this seems to be correct)
+     *
+     * i am not the only one having this problem:
+     * see https://github.com/osmdroid/osmdroid/issues/955
+     * and this pull request that might solve it
+     * https://github.com/osmdroid/osmdroid/pull/948
+     * I think this is already included in the distr of osmdroid
+     * that is used here.
+     *
+     * triggering a setCenter afterwards with the center of bounding box does not
+     * have any effect.
+     *
+     * doing this: https://github.com/osmdroid/osmdroid/issues/955#issuecomment-370509751
+     * does not have any effect either.
+     *
+     * another thing to try would be to use postDelayed instead but, honestly,
+     * zooming to some random place and then panning to the correct place,
+     * each with animation is absolutely not what we want.
+     *
+     * @param boundingBox
+     * @param animate
+     * @param zoomPadding
+     */
+    public void safeZoomToBoundingBox(final BoundingBox boundingBox, final boolean animate, final int zoomPadding) {
+        // calculate nextZoom in advance
+        double diff = Math.min(
+                boundingBox.getLatNorth() - boundingBox.getLatSouth(),
+                boundingBox.getLonEast() - boundingBox.getLonWest()
+        );
 
+        // this would cause osmdroid to not zoom/pan at all.
+        // in this case, we simply enlarge the bounding box by a bit.
+        if (diff < 0.0001) {
+            boundingBox.set(
+                    boundingBox.getLatNorth() + this.boundingBoxMinSize/2,
+                    boundingBox.getLonWest() + this.boundingBoxMinSize/2,
+                    boundingBox.getLatSouth() - this.boundingBoxMinSize/2,
+                    boundingBox.getLonEast() - this.boundingBoxMinSize/2
+            );
+        }
+        mapView.zoomToBoundingBox(boundingBox, animate, zoomPadding);
+
+
+    }
 }
