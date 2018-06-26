@@ -21,6 +21,7 @@ import project.software.uni.positionprediction.util.Message;
 public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmReturnsTrajectory {
 
     Context c;
+    GeneralComputations comp = new GeneralComputations();
 
     public AlgorithmExtrapolationExtendedFunnel(Context c) {
         this.c = c;
@@ -110,7 +111,8 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
 
         // Add Vector to current one
         Trajectory traj = new Trajectory();
-        double alpha = Math.PI / 8;
+
+        double alpha = comp.getAngleVariance(data);
         traj.addLocation( new LocationWithValue<>(curr_loc.add( avg.multiply( pred_factor)), alpha));
 
         return new PredictionResultData(traj);
