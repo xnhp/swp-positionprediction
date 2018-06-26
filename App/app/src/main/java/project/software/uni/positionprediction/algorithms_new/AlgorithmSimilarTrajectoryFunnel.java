@@ -145,6 +145,9 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         if (possible_indices.size() == 0) {
             Log.e("No trajectory found", "There are no similar trajectories!");
             msg.disp_error(c, "No trajectory found", "There are no similar trajectories!");
+            return null;
+        } else {
+            Log.i("Number of trajectories", ""+possible_indices.size());
         }
 
         for (int l = 0; l < possible_indices.size(); l++) {

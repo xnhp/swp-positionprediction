@@ -22,6 +22,7 @@ import java.util.Date;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectoryFunnel;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
@@ -153,7 +154,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         }
 
         return new PredictionUserParameters(
-                new AlgorithmExtrapolationExtended(this),
+                new AlgorithmSimilarTrajectoryFunnel(this),
                 date_past,
                 date_pred,
                 bird

@@ -95,36 +95,46 @@ public class PredictionWorkflow extends Controller {
 
                 // TODO: throw (algorithm classes)
                 // TODO: try/catch
-                final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
-                Log.i("prediction workflow", "data_pred shapes size: " + (data_pred.getShapes().size()));
-                Log.i("prediction workflow", "data_pred keys: " + (data_pred.getShapes().keySet().toString()));
+                try {
+                    final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
+                    Log.i("prediction workflow", "data_pred shapes size: " + (data_pred.getShapes().size()));
+                    Log.i("prediction workflow", "data_pred keys: " + (data_pred.getShapes().keySet().toString()));
 
-                // simply build a single traj vis
-                // for the past tracking data
-                vis_past = buildSingleTrajectoryVis(
-                        data_past.getTrajectory(),
-                        PastTrajectoryStyle.pointCol,
-                        PastTrajectoryStyle.lineCol,
-                        PastTrajectoryStyle.pointRadius
-                );
-                // `buildVisualizations` builds a visualisation
-                // possibly composed of smaller visualisations
-                // e.g. multiple trajectories
-                // `shapes` is a collection of "smaller visualisations"
-                vis_pred = buildVisualizations(data_pred.getShapes());
+                    // simply build a single traj vis
+                    // for the past tracking data
+                    vis_past = buildSingleTrajectoryVis(
+                            data_past.getTrajectory(),
+                            PastTrajectoryStyle.pointCol,
+                            PastTrajectoryStyle.lineCol,
+                            PastTrajectoryStyle.pointRadius
+                    );
+                    // `buildVisualizations` builds a visualisation
+                    // possibly composed of smaller visualisations
+                    // e.g. multiple trajectories
+                    // `shapes` is a collection of "smaller visualisations"
+                    vis_pred = buildVisualizations(data_pred.getShapes());
 
-                // these two visualisations are saved in static fields and
-                // then accessed by the map activities
+                    // these two visualisations are saved in static fields and
+                    // then accessed by the map activities
 
 
-                // TODO: this will be located in the activity
-                // accessing the prediction results via static fields
-                VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
-                        context,
-                        visAdapter,
-                        vis_past,
-                        vis_pred);
-                visWorkflow.trigger();
+                    // TODO: this will be located in the activity
+                    // accessing the prediction results via static fields
+                    VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
+                            context,
+                            visAdapter,
+                            vis_past,
+                            vis_pred);
+                    visWorkflow.trigger();
+
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
 
             }
         }).start();
