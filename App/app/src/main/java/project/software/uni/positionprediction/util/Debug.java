@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 
@@ -69,10 +70,23 @@ public class Debug {
     }
 
 
+    /**
+     *
+     * @param data
+     */
     public void printDates(Trajectory data) {
 
         for (int i = 0; i<data.size(); i++){
             Log.e("Date", ((LocationWithValue) data.getLocation(i)).getValue().toString() );
         }
     }
+
+
+    public void log(String s, Location loc){
+        Log.d(s, ""+loc.getLat() + ", " + loc.getLon() + ", " + loc.getAlt() + ", " + loc.hasAltitude());
+    }
+
+
+
+
 }

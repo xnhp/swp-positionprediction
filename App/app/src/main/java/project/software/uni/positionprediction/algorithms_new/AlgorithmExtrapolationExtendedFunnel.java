@@ -20,8 +20,9 @@ import project.software.uni.positionprediction.util.Message;
 
 public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmReturnsTrajectory {
 
-    Context c;
-    GeneralComputations gc = new GeneralComputations();
+    private Context c;
+    private GeneralComputations gc = new GeneralComputations();
+    private Message msg = new Message();
 
     public AlgorithmExtrapolationExtendedFunnel(Context c) {
         this.c = c;
@@ -30,6 +31,11 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
 
     @Override
     public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
+
+        if (data == null || data.getTrajectory().size() == 0) {
+            msg.disp_error(this.c, "Data size", "The algorithm doesn't get enough data");
+            return null;
+        }
 
         // Compute prediction
         return next_Location(data.getTrajectory(), params.date_past, params.date_pred);
@@ -93,6 +99,14 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
             // Add vector to collection
             //vector_collection.set(t - 1, vec_avg);
             vector_collection.add(vec_avg);
+        }
+
+        // if the collection is empty at this point, it means that there was no
+        // data available within the requested lower bound.
+        if (vector_collection.size() == 0) {
+            Log.e("algorithm", "no data within given lower bound for timestamps");
+            msg.disp_error( this.c, "Bad date", "There are no data for your given intervall");
+            return null;
         }
 
         // Compute prediction factor

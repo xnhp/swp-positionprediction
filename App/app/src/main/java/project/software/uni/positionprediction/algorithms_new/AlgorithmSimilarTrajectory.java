@@ -42,7 +42,7 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         int traj_length = 5;
         int pred_traj_length = 5;
 
-        Collection<Trajectory> trajectories = new Collection<>();
+
 
         // Algorithm
         int size = data.getTrajectory().size();
@@ -110,8 +110,9 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         }
 
 
+        Collection<Trajectory> trajectories = new Collection<>();
+
         Log.i("algorithm", "possible_indices size: " + possible_indices.size());
-        // todo: possible_indices size is 0. Why??
         for (int l = 0; l < possible_indices.size(); l++) {
 
             Trajectory trajectory = new Trajectory();
