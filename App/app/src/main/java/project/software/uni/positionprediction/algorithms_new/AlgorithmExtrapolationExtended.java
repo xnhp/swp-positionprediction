@@ -135,20 +135,11 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         Location curr_loc = data.getLocation(data.size() - 1);
 
         // Add Vector to current one
-        Location predicted_Location = curr_loc.add( avg.multiply( pred_factor));
-
-        Location adjacent = predicted_Location.subtract(curr_loc);
-        double alpha = gc.getAngleVariance(data);
-        double uncertainty = adjacent.getLengthOfHypotenuse(alpha);
-
-        LocationWithValue predicted_result = new LocationWithValue(
-                predicted_Location,
-                uncertainty
-        );
-
-        // Add to trajectory
         Trajectory traj = new Trajectory();
-        traj.addLocation( predicted_Location );
+        Location predicted_loc = curr_loc.add( avg.multiply( pred_factor));
+
+        traj.addLocation( predicted_loc );
+
         return new PredictionResultData(traj);
 
     }

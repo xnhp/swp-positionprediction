@@ -21,7 +21,7 @@ import project.software.uni.positionprediction.util.Message;
 public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmReturnsTrajectory {
 
     Context c;
-    GeneralComputations comp = new GeneralComputations();
+    GeneralComputations gc = new GeneralComputations();
 
     public AlgorithmExtrapolationExtendedFunnel(Context c) {
         this.c = c;
@@ -104,17 +104,25 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
         }
 
 
-
-        // Compute average of all computed vectors in collection
+        // avg has altitude or not based on the data that is passed in
         Location avg = weighted_average(vector_collection);
+        // curr_loc has altitude or not based on the data that is passed in
         Location curr_loc = data.getLocation(data.size() - 1);
 
-        // Add Vector to current one
+        Location predicted_Location = curr_loc.add( avg.multiply( pred_factor));
+
+        Location adjacent = predicted_Location.subtract(curr_loc);
+        double alpha = gc.getAngleVariance(data);
+        double uncertainty = adjacent.getLengthOfHypotenuse(alpha);
+
+        LocationWithValue predicted_result = new LocationWithValue(
+                predicted_Location,
+                uncertainty
+        );
+
+        // Add to trajectory
         Trajectory traj = new Trajectory();
-
-        double alpha = comp.getAngleVariance(data);
-        traj.addLocation( new LocationWithValue<>(curr_loc.add( avg.multiply( pred_factor)), alpha));
-
+        traj.addLocation( predicted_Location );
         return new PredictionResultData(traj);
 
     }
