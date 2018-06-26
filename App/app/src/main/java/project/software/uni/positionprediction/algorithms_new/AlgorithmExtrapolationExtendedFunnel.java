@@ -7,34 +7,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
+import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.datatypes_new.EShape;
 import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.Locations;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.util.Message;
 
-public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTrajectory {
+public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmReturnsTrajectory {
 
-    private Context c;
+    Context c;
+    GeneralComputations comp = new GeneralComputations();
 
-    public AlgorithmExtrapolationExtended(Context c) {
+    public AlgorithmExtrapolationExtendedFunnel(Context c) {
         this.c = c;
     }
 
 
-    /**
-     * Main idea:
-     *
-     * ... ---> ---> ---> ---> X - - - >
-     * vn   v3   v2   v1   v0      p1
-     *
-     * Name v1,...,vn the known vectors, where v1 is the last known vector. Compute the average
-     * of the vectors (v1), (v1+v2), ..., (v1+..+vn). This gives a weighted average vector.
-     * Add this vector to X and get p1.
-     */
     @Override
     public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
 
@@ -118,7 +111,9 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
         // Add Vector to current one
         Trajectory traj = new Trajectory();
-        traj.addLocation( curr_loc.add( avg.multiply( pred_factor) ) );
+
+        double alpha = comp.getAngleVariance(data);
+        traj.addLocation( new LocationWithValue<>(curr_loc.add( avg.multiply( pred_factor)), alpha));
 
         return new PredictionResultData(traj);
 
@@ -180,7 +175,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
             delta_ms.add(delta_t);
         }
 
-        // Get average time between Trackingpoints
+        // Get average time between Tracking points
         long sum = 0;
         int m = delta_ms.size();
         for (int j = 0; j < n; j++) {
@@ -196,5 +191,6 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         return freq;
 
     }
+
 
 }

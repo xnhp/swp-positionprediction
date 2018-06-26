@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.datatypes_new;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Collection<E> extends ArrayList<E> {
 
@@ -22,6 +23,18 @@ public class Collection<E> extends ArrayList<E> {
     public Collection<E> addElements(Collection<E> e){
         Collection<E> result = this;
         result.addAll(e);
+        return result;
+    }
+
+    public Collection<E> reverse(){
+        Collection<E> result = this;
+        Collections.reverse(this);
+        return result;
+    }
+
+    public static Collection add(Collection a, Collection b){
+        Collection result = a;
+        result.addAll(b);
         return result;
     }
 }

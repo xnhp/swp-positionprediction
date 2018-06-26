@@ -1,4 +1,4 @@
-package project.software.uni.positionprediction.datatype;
+package project.software.uni.positionprediction.datatypes_new;
 
 public class AngleSteplength {
 

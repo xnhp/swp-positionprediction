@@ -14,16 +14,15 @@ import android.widget.EditText;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithm.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithm.AlgorithmSimilarTrajectory;
-import project.software.uni.positionprediction.datatype.HttpStatusCode;
-import project.software.uni.positionprediction.datatype.Request;
-import project.software.uni.positionprediction.datatype.SingleTrajectory;
+import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectory;
+import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
+import project.software.uni.positionprediction.datatypes_new.Request;
+import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
-import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation.StyledPoint;
+import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation_new.StyledPoint;
 
 public class Login extends AppCompatActivity {
 
@@ -46,7 +45,7 @@ public class Login extends AppCompatActivity {
         xml.setAlgorithms(algorithms);
 
         Class visualizations[] = new Class[]{
-                SingleTrajectory.class,
+                Trajectory.class,
                 StyledPoint.class,
                 StyledLineSegment.class
         };

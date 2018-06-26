@@ -16,6 +16,7 @@ import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.EShape;
 import project.software.uni.positionprediction.visualisation_new.CloudVis;
+import project.software.uni.positionprediction.visualisation_new.Funnel;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.Polyline;
 import project.software.uni.positionprediction.visualisation_new.StyleTrajectory;
@@ -205,6 +206,11 @@ public class PredictionWorkflow extends Controller {
                 StyleTrajectory.pastLineCol.asString(),
                 StyleTrajectory.pastPointRadius.asInt()
         );
+
+        if(traj.hasFunnel()){
+            Locations coords = traj.calculateFunnelCoords();
+            Funnel funnel = new Funnel(coords);
+        }
 
         return new TrajectoryVis(line);
 

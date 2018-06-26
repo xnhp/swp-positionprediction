@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.datatypes_new;
 
 public class LocationWithValue<T> extends Location {
+
     private T value;
 
     public LocationWithValue(){

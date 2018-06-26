@@ -15,6 +15,11 @@ public class TrajectoryVis extends Visualisation {
         this.funnel = funnel;
     }
 
+    public boolean hasFunnel(){
+        if(funnel == null) return false;
+        return true;
+    }
+
     @Override
     public BoundingBox getBoundingBox() {
         BoundingBox bb;
@@ -24,6 +29,12 @@ public class TrajectoryVis extends Visualisation {
             bb = line.getBoundingBox();
         }
         return bb;
+
+        // Commit second option...
+       /** BoundingBox bbox = null;
+        if(line != null) bbox = line.getBoundingBox();
+        if(funnel != null) bbox = bbox.concat(funnel.getBoundingBox());
+        return bbox; */
     }
 
     public Polyline getLine() {

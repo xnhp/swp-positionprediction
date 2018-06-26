@@ -1,8 +1,10 @@
 package project.software.uni.positionprediction.controllers;
 
 import android.content.Context;
+import android.util.Log;
 
 import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
 import project.software.uni.positionprediction.visualisation_new.Visualisation;
@@ -34,6 +36,15 @@ public class VisualizationWorkflow extends Controller {
         Visualisations pred = PredictionWorkflow.vis_pred;
         */
 
+        Log.i("osm adapter", "past BoundingBox: " + past.getBoundingBox().toString());
+        Log.i("osm adapter", "past BoundingBox center: " + past.getBoundingBox().getCenterWithDateLine());
+
+        // todo: TJ 180623: There is a multithread error
+        // visAdapter.panToBoundingBox(past.getBoundingBox());
+
+        //visAdapter.setMapCenter(past.getBoundingBox().getCenterWithDateLine());
+
+        Log.i("vis workflow", "traj line is null: " + (past.getLine() == null));
         visAdapter.visualiseSingleTraj(past);
 
 
