@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -36,6 +38,7 @@ public class Settings extends AppCompatActivity {
     private Spinner spinner_alg = null;
     private Spinner spinner_vis = null;
     private Button delete_btn = null;
+    private CheckBox checkBox = null;
 
     // Other
     private XML xml = new XML();
@@ -68,6 +71,7 @@ public class Settings extends AppCompatActivity {
         text_past = findViewById(R.id.text_past);
         text_future = findViewById(R.id.text_future);
         delete_btn = findViewById(R.id.delete_btn);
+        checkBox = findViewById(R.id.checkbox);
 
 
         // Define Dropdown for algorithms
@@ -110,7 +114,8 @@ public class Settings extends AppCompatActivity {
                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                        if (fromUser) {
                            xml.setHours_past(progress);
-                           text_past.setText(""+progress);
+                           text_past.setText("" + progress);
+                           checkBox.setChecked(false);
                        }
                    }
 
@@ -136,6 +141,7 @@ public class Settings extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 int input_as_int;
                 String input_as_str = s.toString();
 
@@ -258,6 +264,26 @@ public class Settings extends AppCompatActivity {
                 m.disp_success(c, "Deleted", "All data where deleted successfully");
             }
         });
+
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    xml.setHours_past(-1);
+                    text_past.setText(""+seekbar_past.getMax());
+                    text_past.setText("all");
+
+                } else {
+                    xml.setHours_past(seekbar_past.getMax());
+                    text_past.setText("0");
+
+                }
+            }
+        });
+
+
+
     }
 
     public void onResume() {
