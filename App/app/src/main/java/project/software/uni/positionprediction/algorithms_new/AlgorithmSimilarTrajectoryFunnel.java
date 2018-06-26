@@ -1,22 +1,30 @@
 package project.software.uni.positionprediction.algorithms_new;
 
 
+import android.content.Context;
 import android.util.Log;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import project.software.uni.positionprediction.datatypes_new.Collection;
 import project.software.uni.positionprediction.datatypes_new.Location;
+import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
+import project.software.uni.positionprediction.util.Message;
 
 
 public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturnsTrajectories {
 
-    public AlgorithmSimilarTrajectoryFunnel() {
+    Message msg = new Message();
+    Context c;
+
+    public AlgorithmSimilarTrajectoryFunnel(Context c) {
+        this.c = c;
     }
 
 
@@ -68,49 +76,77 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         // Find possible other trajectories and add the index of the last point to list
         List<Number> possible_indices = new LinkedList<Number>();
 
+
+        // Check for datatype correctness
+        boolean has_timestamps = false;
+        if (data.getTrajectory().getLocation(0) instanceof LocationWithValue) {
+            has_timestamps = true;
+            Log.i("Type-checking", "Locations have timestamps!");
+        } else if (data.getTrajectory().getLocation(0) instanceof Location) {
+            Log.e("Type-checking", "Locations don't have timestamps!");
+        } else {
+            Log.e("Type-checking", "Type couldn't be resolved!");
+        }
+
+
+
+
+        Trajectory traj = data.getTrajectory();
+
         // Run through all locations (or endpoint of all trajectories)
         for (int i = traj_length + 1; i < size; i++) {
-            System.out.println("LOCATION: " + i);
 
-            // Check if angle is approx. the same
-            boolean is_similar = false;
+            LocationWithValue loc_t = (LocationWithValue) traj.getLocation(i);
+            Date date_t = (Date) loc_t.getValue();
 
-            Location m0 = data.getTrajectory().getLocation(i - 1).to3D();
-            // this works correctly
-            Log.i("algorithm", "m0: " + m0.toString());
+            if (date_t.after(algParams.date_past)) {
 
-            Location m1 = data.getTrajectory().getLocation(i - 2).to3D();
-            Location mth_vector = m0.subtract(m1);
+                System.out.println("LOCATION: " + i);
 
-            // Run backwards through every trajectory
-            for (int k = 2; k < traj_length; k++) {
-                is_similar = false;
-                System.out.println("traj: " + k);
-                // Get angle of two locations
-                Location loc1 = data.getTrajectory().getLocation(i - k).to3D();
-                Location loc2 = data.getTrajectory().getLocation(i - k - 1).to3D();
-                Location vector = loc1.subtract(loc2);
-                double beta = vector.getAngle(mth_vector);
+                // Check if angle is approx. the same
+                boolean is_similar = false;
 
-                if (Math.abs(beta - (double) delta_angles.get(k - 1)) < eps) {
-                    is_similar = true;
-                    System.out.println("Similar");
+                Location m0 = data.getTrajectory().getLocation(i - 1).to3D();
+                // this works correctly
+                Log.i("algorithm", "m0: " + m0.toString());
+
+                Location m1 = data.getTrajectory().getLocation(i - 2).to3D();
+                Location mth_vector = m0.subtract(m1);
+
+                // Run backwards through every trajectory
+                for (int k = 2; k < traj_length; k++) {
+                    is_similar = false;
+                    System.out.println("traj: " + k);
+                    // Get angle of two locations
+                    Location loc1 = data.getTrajectory().getLocation(i - k).to3D();
+                    Location loc2 = data.getTrajectory().getLocation(i - k - 1).to3D();
+                    Location vector = loc1.subtract(loc2);
+                    double beta = vector.getAngle(mth_vector);
+
+                    if (Math.abs(beta - (double) delta_angles.get(k - 1)) < eps) {
+                        is_similar = true;
+                        System.out.println("Similar");
+                    }
+                    if (!is_similar) {
+                        System.out.println("Break");
+                        break; // The trajectory is probably not similar, so we don't check the other locations of the trajectory
+                    }
                 }
-                if (!is_similar) {
-                    System.out.println("Break");
-                    break; // The trajectory is probably not similar, so we don't check the other locations of the trajectory
-                }
-            }
 
-            // If all locations are similar, we can add the last point of the trajectory to our list
-            if (is_similar) {
-                possible_indices.add(i);
+                // If all locations are similar, we can add the last point of the trajectory to our list
+                if (is_similar) {
+                    possible_indices.add(i);
+                }
             }
         }
 
 
         Log.i("algorithm", "possible_indices size: " + possible_indices.size());
-        // todo: possible_indices size is 0. Why?? Answer from Sebastian: Could be that we don't find any similar trajectory
+        if (possible_indices.size() == 0) {
+            Log.e("No trajectory found", "There are no similar trajectories!");
+            msg.disp_error(c, "No trajectory found", "There are no similar trajectories!");
+        }
+
         for (int l = 0; l < possible_indices.size(); l++) {
 
             Trajectory trajectory = new Trajectory();
