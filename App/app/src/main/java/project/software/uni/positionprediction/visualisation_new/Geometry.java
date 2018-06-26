@@ -33,7 +33,7 @@ public abstract class Geometry {
     }
 
     BoundingBox getBoundingBox(){
-        return locations.getBoungingBox();
+        return locations.getBoundingBox();
     }
 
 }
