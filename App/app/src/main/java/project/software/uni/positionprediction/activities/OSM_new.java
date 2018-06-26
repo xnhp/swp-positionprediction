@@ -93,8 +93,10 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         );
         predWorkflow.trigger();
 
-        // register event handlers (button clicks etc)
-        // 0.) Set Buttons
+
+
+        // 4.) Set Buttons & register event handlers
+        // -----------------------------------------
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);

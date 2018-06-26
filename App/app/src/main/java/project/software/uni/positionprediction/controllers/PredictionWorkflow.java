@@ -58,8 +58,8 @@ public class PredictionWorkflow extends Controller {
 
 
     public void trigger() {
-        // TODO: avoid making too many requests.
-        // check whether a request was made in the last n seconds?
+
+        // work in sepearate thread to not block UI
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -94,6 +94,9 @@ public class PredictionWorkflow extends Controller {
 
                 Log.i("prediction workflow", "vis_pred size: " + (vis_pred.size()));
 
+
+                // TODO: this will be initiated by the activity,
+                // accessing the prediction results via static fields
                 VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
                         context,
                         visAdapter,
