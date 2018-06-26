@@ -14,11 +14,13 @@ import project.software.uni.positionprediction.datatypes_new.PredictionUserParam
 import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
+import project.software.uni.positionprediction.util.Debug;
 import project.software.uni.positionprediction.util.Message;
 
 public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTrajectory {
 
     private Context c;
+    private Debug d = new Debug();
 
     public AlgorithmExtrapolationExtended(Context c) {
         this.c = c;
@@ -52,6 +54,14 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @return
      */
     public PredictionResultData next_Location(Trajectory data, Date date_past, Date date_pred) {
+        Log.e("Date", "1"+((LocationWithValue) data.getLocation(0)).getValue().toString() );
+        Log.e("Date", "2"+((LocationWithValue) data.getLocation(1)).getValue().toString() );
+        Log.e("Date", "3"+((LocationWithValue) data.getLocation(2)).getValue().toString() );
+        Log.e("Date", "4"+((LocationWithValue) data.getLocation(3)).getValue().toString() );
+        Log.e("Date", "5"+((LocationWithValue) data.getLocation(4)).getValue().toString() );
+        d.printDates(data);
+
+        Log.e("Size of Data input", ""+ data.size());
 
         // Check for datatype correctness
         boolean has_timestamps = false;
@@ -65,9 +75,6 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         }
 
 
-
-
-
         int n = data.size() - 1;
         ArrayList<Location> vector_collection = new ArrayList<>();
         int c = 0;
@@ -79,7 +86,10 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
             // Break if date until we want the data is reached
             if (date_t.before(date_past)) {
+
                 Log.e("Break", "" + c + " data points where used for prediction");
+                Log.e("Use Data from", date_past.toString());
+                Log.e("Date which breaks loop", date_t.toString());
                 break;
             }
             c++; // Count for Log.e
@@ -186,7 +196,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         for (int j = 0; j < m; j++) {
             sum = sum + (long) delta_ms.get(j);
         }
-        long avg = sum / m;
+        long avg = (m == 0)? 0 : sum / m;
         Log.e("Note", "Average of last few data points (in millis) = " + avg );
 
         // Get relative frequency of avg time in whole in prediction

@@ -1,6 +1,11 @@
 package project.software.uni.positionprediction.util;
 
+import android.util.Log;
+
 import java.util.List;
+
+import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
+import project.software.uni.positionprediction.datatypes_new.Trajectory;
 
 
 /**
@@ -64,4 +69,10 @@ public class Debug {
     }
 
 
+    public void printDates(Trajectory data) {
+
+        for (int i = 0; i<data.size(); i++){
+            Log.e("Date", ((LocationWithValue) data.getLocation(i)).getValue().toString() );
+        }
+    }
 }
