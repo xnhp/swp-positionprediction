@@ -16,4 +16,7 @@ public class LocationWithValue<T> extends Location {
     public T getValue(){
         return value;
     }
+
+
+
 }

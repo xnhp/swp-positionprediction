@@ -272,6 +272,22 @@ public class Location {
     }
 
 
+    /**
+     * Get Length of Hypotenuse to compute width for funnel
+     * @param alpha
+     * @return
+     */
+    public double getLengthOfHypotenuse(double alpha){
+        return Math.tan(alpha) * this.abs();
+    }
+
+
+
+
+
+
+
+
     // =============================================================================================
 
     /**

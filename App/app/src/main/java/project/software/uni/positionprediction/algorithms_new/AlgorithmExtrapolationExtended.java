@@ -23,6 +23,8 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
     private Context c;
     private Debug d = new Debug();
+    private Message m = new Message();
+    private GeneralComputations gc = new GeneralComputations();
 
     public AlgorithmExtrapolationExtended(Context c) {
         this.c = c;
@@ -56,12 +58,6 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @return
      */
     public PredictionResultData next_Location(Trajectory data, Date date_past, Date date_pred) {
-        Log.e("Date", "1"+((LocationWithValue) data.getLocation(0)).getValue().toString() );
-        Log.e("Date", "2"+((LocationWithValue) data.getLocation(1)).getValue().toString() );
-        Log.e("Date", "3"+((LocationWithValue) data.getLocation(2)).getValue().toString() );
-        Log.e("Date", "4"+((LocationWithValue) data.getLocation(3)).getValue().toString() );
-        Log.e("Date", "5"+((LocationWithValue) data.getLocation(4)).getValue().toString() );
-        d.printDates(data);
 
         Log.e("Size of Data input", ""+ data.size());
 
@@ -118,7 +114,8 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // data available within the requested lower bound.
         if (vector_collection.size() == 0) {
             Log.e("algorithm", "no data within given lower bound for timestamps");
-            // todo: handle this, show notice to user.
+            m.disp_error( this.c, "Bad date", "There are no data for your given intervall");
+            return null;
         }
 
         // Compute prediction factor
@@ -138,9 +135,20 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         Location curr_loc = data.getLocation(data.size() - 1);
 
         // Add Vector to current one
-        Trajectory traj = new Trajectory();
-        traj.addLocation( curr_loc.add( avg.multiply( pred_factor) ) );
+        Location predicted_Location = curr_loc.add( avg.multiply( pred_factor));
 
+        Location adjacent = predicted_Location.subtract(curr_loc);
+        double alpha = gc.getAngleVariance(data);
+        double uncertainty = adjacent.getLengthOfHypotenuse(alpha);
+
+        LocationWithValue predicted_result = new LocationWithValue(
+                predicted_Location,
+                uncertainty
+        );
+
+        // Add to trajectory
+        Trajectory traj = new Trajectory();
+        traj.addLocation( predicted_Location );
         return new PredictionResultData(traj);
 
     }
@@ -203,8 +211,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
     private double compute_pred_length(Locations data, Date date_pred, int nr_of_pts) {
         if (data.size() < nr_of_pts ){
-            Message m = new Message();
-            m.disp_error(c, "Data size", "There is to less data to compute a good result",true);
+            m.disp_error(this.c, "Data size", "There is to less data to compute a good result");
             return 1;
         }
 

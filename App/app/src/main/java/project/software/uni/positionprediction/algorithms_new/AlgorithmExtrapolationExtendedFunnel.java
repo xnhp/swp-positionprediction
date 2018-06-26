@@ -159,7 +159,7 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
     private double compute_pred_length(Locations data, Date date_pred, int nr_of_pts) {
         if (data.size() < nr_of_pts ){
             Message m = new Message();
-            m.disp_error(c, "Data size", "There is to less data to compute a good result",true);
+            m.disp_error(c, "Data size", "There is to less data to compute a good result");
             return 1;
         }
 

@@ -158,7 +158,7 @@ public class Settings extends AppCompatActivity {
 
 
                 } else {
-                    m.disp_error(settings, "Wrong format", "You can only use numbers!", false);
+                    m.disp_error(settings, "Wrong format", "You can only use numbers!");
                 }
 
             }
@@ -219,7 +219,7 @@ public class Settings extends AppCompatActivity {
 
 
                         } else {
-                            m.disp_error(settings, "Wrong format", "You can only use numbers!", false);
+                            m.disp_error(settings, "Wrong format", "You can only use numbers!");
                         }
                     }
 

@@ -128,7 +128,7 @@ public class BirdSelect extends AppCompatActivity {
                     // permission was not granted. Display error
                     Message.disp_error(this,
                             getResources().getString(R.string.dialog_error_title),
-                            getResources().getString(R.string.dialog_permissions_needed),true);
+                            getResources().getString(R.string.dialog_permissions_needed));
                 }
                 return;
             }
@@ -145,7 +145,7 @@ public class BirdSelect extends AppCompatActivity {
                     // Fine Location permission was not granted. Dislay error
                     Message.disp_error(this,
                             getResources().getString(R.string.dialog_error_title),
-                            getResources().getString(R.string.dialog_permissions_needed),true);
+                            getResources().getString(R.string.dialog_permissions_needed));
                 }
                 return;
         }
@@ -489,7 +489,7 @@ public class BirdSelect extends AppCompatActivity {
                                     // unknown network error
                                     Message.disp_error(birdSelect,
                                             birdSelect.getResources().getString(R.string.dialog_error_title),
-                                            birdSelect.getResources().getString(R.string.dialog_unknown_network_error),true);
+                                            birdSelect.getResources().getString(R.string.dialog_unknown_network_error));
                                     break;
 
                                 case 0:
@@ -506,14 +506,14 @@ public class BirdSelect extends AppCompatActivity {
                                     // license terms have to be accepted
                                      Message.disp_error(birdSelect,
                                             birdSelect.getResources().getString(R.string.dialog_warning_title),
-                                            birdSelect.getResources().getString(R.string.dialog_accept_licence_needed),true);
+                                            birdSelect.getResources().getString(R.string.dialog_accept_licence_needed));
                                     break;
 
                                 case 2:
                                     // no birds available for study
                                     Message.disp_error(birdSelect,
                                             birdSelect.getResources().getString(R.string.dialog_warning_title),
-                                            birdSelect.getResources().getString(R.string.dialog_no_birds_available),true);
+                                            birdSelect.getResources().getString(R.string.dialog_no_birds_available));
                                     break;
                             }
                         }
