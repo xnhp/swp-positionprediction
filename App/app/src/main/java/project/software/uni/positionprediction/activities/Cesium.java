@@ -3,14 +3,13 @@ package project.software.uni.positionprediction.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-<<<<<<< HEAD
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-=======
->>>>>>> 15d141bc13c5a7f9765735ec9b87aa3c319c41bd
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +17,13 @@ import android.os.Bundle;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,15 +37,13 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.util.PermissionManager;
-import project.software.uni.positionprediction.visualisation.Visualisation;
-import project.software.uni.positionprediction.visualisation_new.Visualisations;
+import project.software.uni.positionprediction.datatypes_new.Bird;
+import project.software.uni.positionprediction.fragments.FloatingMapButtons;
+
 
 
 /**
- * (Nearly) Minimal working example for running cesium with a webserver inside the browser or
- * inside a webview.
  * todo: TJ 180622: to be replaced by correct workflow
  */
 
@@ -84,7 +86,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         this.selectedBird = (Bird) getIntent().getSerializableExtra("selectedBird");
 
-        //registerEventHandlers(cesium);
+        registerEventHandlers(cesium);
 
         // Load the webserver.
         this.webServer = new WebServer(getAssets());
@@ -111,29 +113,20 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         SQLDatabase db = SQLDatabase.getInstance(this);
         BirdData birddata = db.getBirdData(2911040, 2911059);
 
-
+        /*
         Locations tracks = birddata.getTrackingPoints();
 
         for (int i = 0; i < pastDataPoints; i++) {
             //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
             //pastTracks.add( tracks.get(tracks.length-1 - pastDataPoints + i).getLocation() );
         }
-
+        */
         launchWebView(webView);
 
     }
 
 
     class JsObject {
-
-        @JavascriptInterface
-        public int getAmountPoints() {
-            return pastDataPoints; }
-
-        @JavascriptInterface
-        public String getFoo() {
-            return "foo";
-        }
 
         /**
          * return a json string containing the current user location.
@@ -149,13 +142,13 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
          *
          * @return a JSON string containing lat and lng if a location fix has been
          * previously obtained. an empty JSON string otherwise.
-        */
+         */
         @SuppressLint("MissingPermission") // todo
         @JavascriptInterface
         public String getUserLocationJSON() {
             JSONObject jo = new JSONObject();
             try {
-                if (userLocation!=null) {
+                if (userLocation != null) {
                     jo.put("lat", userLocation.getLatitude());
                     jo.put("lng", userLocation.getLongitude());
                 }
@@ -172,6 +165,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     }
 
 
+    // TODO (bm): replace this with locationListener
     @SuppressLint("MissingPermission") // we do take care of permissions
     private void registerLocationListener() {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
@@ -202,15 +196,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         };
         locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener);
-    }
-
-
-    private void injectUserLocation() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            webView.evaluateJavascript("enable();", null);
-        } else {
-            Log.e("WebView", "webView.evaluateJavascript not compatible with SDK version");
-        }
     }
 
     private void addValues() {
@@ -253,8 +238,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     // This works only on Lollipop or newer, as at least WebView v36 is required (WebGL support).
     // A correct fallback should maybe be implemented. ;)
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-
-
+    // we are aware that js is enabled in the webview, however we only access
+    // local files and trust Cesium.
+    @SuppressLint("SetJavaScriptEnabled")
     public void launchWebView(View view) {
 
         // Copied and modified from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
@@ -294,6 +280,11 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         }
     }
 
+
+    /*
+     * Handlers for buttons floating on top of map
+     */
+
     @Override
     public void onShowDataClick() {
 
@@ -315,6 +306,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                   // so they dont have to be reloaded.
         Intent buttonIntent = new Intent(this, OSM_new.class);
         Log.i("Cesium", "selectedBird is null: " + (selectedBird == null));
+        // pass currently selected bird to other activity.
+        // this should be removed, instead the other activity
+        // should fetch is data from a static field in controllers.PredictionWorkflow
         buttonIntent.putExtra("selectedBird", selectedBird);
         startActivity(buttonIntent);
     }

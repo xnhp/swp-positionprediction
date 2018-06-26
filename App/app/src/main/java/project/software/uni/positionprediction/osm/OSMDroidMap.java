@@ -84,12 +84,11 @@ import static project.software.uni.positionprediction.util.GeoDataUtils.Location
  */
 public class OSMDroidMap {
 
-    public MapView mapView = null; // initalised by constructor
-    // exposed for calling mapView.onResume() and mapView.onPause() in the activity.
+    public MapView mapView = null; // initialised by constructor
+    // exposed for calling public methods from the activity
     private IMapController mapController = null;
-    private SqlTileWriter tileWriter = null;
     private CacheManager cacheManager = null;
-    private Context context = null;
+    private Context context;
 
     private LocationManager locationManager;
     private Marker locationMarker;
@@ -241,11 +240,11 @@ public class OSMDroidMap {
 
 
     /**
+     * Alternatively, osmdroid's locationOverlay can be used
      * Binds a marker to the user's current position.
      * When the device location changes, the marker location on the map also changes.
      * Note that as of now, the marker has to have already been placed on the map with placeMarker()
      * TODO: onResume(), does the location have to be explicitly updated?
-     * Alternatively, osmdroid's locationOverlay can be used
      */
     private void enableCustomLocationMarker(final Marker marker) {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);

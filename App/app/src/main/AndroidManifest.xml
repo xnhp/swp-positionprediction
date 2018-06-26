@@ -31,13 +31,6 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".activities.OSM"
-            android:label="@string/title_activity_osm"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
             android:name=".activities.OSM_new"
             android:label="@string/title_activity_osm"
             android:theme="@style/AppTheme.NoActionBar"
