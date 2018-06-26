@@ -23,7 +23,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
     private Context c;
     private Debug d = new Debug();
-    private Message m = new Message();
+    private Message msg = new Message();
     private GeneralComputations gc = new GeneralComputations();
 
     public AlgorithmExtrapolationExtended(Context c) {
@@ -44,6 +44,12 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
     @Override
     public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
 
+        if (data == null || data.getTrajectory().size() == 0) {
+            msg.disp_error(this.c, "Data size", "The algorithm doesn't get enough data");
+            return null;
+        }
+
+
         // Compute prediction
         return next_Location(data.getTrajectory(), params.date_past, params.date_pred);
 
@@ -58,14 +64,14 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @return
      */
     public PredictionResultData next_Location(Trajectory data, Date date_past, Date date_pred) {
-
-        Log.e("Size of Data input", ""+ data.size());
+        Log.i("Info", "Tries to predict from " + date_past.toString() + " until " + date_pred.toString());
+        Log.i("Size of Data input", ""+ data.size());
 
         // Check for datatype correctness
         boolean has_timestamps = false;
         if (data.getLocation(0) instanceof LocationWithValue) {
             has_timestamps = true;
-            Log.e("Type-checking", "Locations have timestamps!");
+            Log.i("Type-checking", "Locations have timestamps!");
         } else if (data.getLocation(0) instanceof Location) {
             Log.e("Type-checking", "Locations don't have timestamps!");
         } else {
@@ -84,13 +90,10 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
             // Break if date until we want the data is reached
             if (date_t.before(date_past)) {
-
-                Log.e("Break", "" + c + " data points were used for prediction");
-                Log.e("Use Data from", date_past.toString());
-                Log.e("Date which breaks loop", date_t.toString());
+                Log.i("Date which breaks loop", date_t.toString());
                 break;
             }
-            c++; // Count for Log.e
+            c++; // Count for Log.i
 
             // Compute difference of pair n and n-t
             // Get n-th point
@@ -109,12 +112,13 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
             //vector_collection.set(t - 1, vec_avg);
             vector_collection.add(vec_avg);
         }
+        Log.i("Break", "" + c + " data points were used for prediction");
 
         // if the collection is empty at this point, it means that there was no
         // data available within the requested lower bound.
         if (vector_collection.size() == 0) {
             Log.e("algorithm", "no data within given lower bound for timestamps");
-            m.disp_error( this.c, "Bad date", "There are no data for your given intervall");
+            msg.disp_error( this.c, "Bad date", "There are no data for your given intervall");
             return null;
         }
 
@@ -128,6 +132,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
 
 
+
         // Compute average of all computed vectors in collection
         // avg has altitude or not based on the data that is passed in
         Location avg = weighted_average(vector_collection);
@@ -136,9 +141,14 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
         // Add Vector to current one
         Trajectory traj = new Trajectory();
-        Location predicted_loc = curr_loc.add( avg.multiply( pred_factor));
+        Log.d("Pred_factor", ""+pred_factor);
+        Location predicted_loc = curr_loc.add( avg.multiply( pred_factor ));
 
         traj.addLocation( predicted_loc );
+
+        d.log("avg_vector", avg);
+        d.log("curr_loc", curr_loc);
+        d.log("pred_loc", predicted_loc);
 
         return new PredictionResultData(traj);
 
@@ -155,7 +165,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
     public Location weighted_average(ArrayList<Location> collection) {
 
         if (collection.size() == 0) {
-            Log.e("algorithm", "cannot compute average of empty collection");
+            Log.e("algorithm", "can't compute average of empty collection");
         }
 
         double sum_long = 0;
@@ -202,7 +212,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
     private double compute_pred_length(Locations data, Date date_pred, int nr_of_pts) {
         if (data.size() < nr_of_pts ){
-            m.disp_error(this.c, "Data size", "There is to less data to compute a good result");
+            msg.disp_error(this.c, "Data size", "There is to less data to compute a good result");
             return 1;
         }
 
@@ -224,14 +234,28 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         for (int j = 0; j < m; j++) {
             sum = sum + (long) delta_ms.get(j);
         }
-        long avg = (m == 0)? 0 : sum / m;
-        Log.e("Note", "Average of last few data points (in millis) = " + avg );
+        long avg = (m == 0) ? 0 : sum / m;
+        Log.i("Note", "Average of last few data points (in millis) = " + avg );
 
         // Get relative frequency of avg time in whole in prediction
-        long duration_pred = date_pred.getTime();
-        double freq = avg / duration_pred;
+        LocationWithValue p_first = (LocationWithValue) data.get(n-1);
+        Date date_last = (Date) p_first.getValue();
+        long duration_pred = date_pred.getTime() - date_last.getTime();
 
-        return freq;
+        float factor = duration_pred / avg;
+
+        // If the factor gets too large or too small, the distance between date_pred and the last data_point is
+        // definitely too high or too small. This happens for example if our last data points are every 30 min in 2008,
+        // but we want a prediction in 2018 => Probably not possible
+        if (factor > 10 || factor < 0.1) {
+            msg.disp_error(this.c, "Time Error","The data is probably to old to make a good prediction");
+            Log.e("Time error", "Factor (" + factor + ") is to big or to small to make a good prediction");
+            factor = 1;
+        }
+
+
+
+        return factor;
 
     }
 
