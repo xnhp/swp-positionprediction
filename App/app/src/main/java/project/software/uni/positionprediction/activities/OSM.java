@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,8 @@ import project.software.uni.positionprediction.interfaces.PredictionAlgorithmRet
 import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
+import project.software.uni.positionprediction.util.BearingListener;
+import project.software.uni.positionprediction.util.BearingProvider;
 import project.software.uni.positionprediction.util.Message;
 
 public class OSM extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
@@ -88,6 +91,29 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
         registerEventHandlers(osm);
+
+
+        // todo: only for testing
+        BearingProvider provider = new BearingProvider();
+        Location targetLocation = new Location("foo");
+        targetLocation.setLatitude(48.856614);
+        targetLocation.setLongitude(2.352222);
+        provider.registerBearingUpdates(this, targetLocation, new BearingListener() {
+            @Override
+            public void onBearingChanged(float newBearing) {
+                Log.i("OSM", "received bearing: " + newBearing);
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        });
 
 
     }
