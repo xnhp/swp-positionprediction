@@ -8,9 +8,7 @@ public class LocationsComparator implements Comparator<Location> {
         this.dim = dim;
     };
 
-    public final int compare(Location locA, Location locB){return 0;}
-
-    public final int compare(Location locA, Location locB, EDimension dim){
+    public final int compare(Location locA, Location locB){
         double a = locA.getDimension(dim);
         double b = locB.getDimension(dim);
         if(a < b){
