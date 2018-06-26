@@ -183,7 +183,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // Get average time between Trackingpoints
         long sum = 0;
         int m = delta_ms.size();
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < m; j++) {
             sum = sum + (long) delta_ms.get(j);
         }
         long avg = sum / m;

@@ -135,7 +135,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         if(bird == null) Log.i("OSM_new", "no bird");
 
         return new PredictionUserParameters(
-                new AlgorithmExtrapolationExtended(),
+                new AlgorithmExtrapolationExtended(this),
                 date_past,
                 date_pred,
                 bird
