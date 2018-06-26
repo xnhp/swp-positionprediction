@@ -83,15 +83,16 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
             Location m1 = data.getTrajectory().getLocation(i - 2).to3D();
             Location mth_vector = m0.subtract(m1);
 
+
             // Run backwards through every trajectory
             for (int k = 2; k < traj_length; k++) {
                 is_similar = false;
-                System.out.println("traj: " + k);
                 // Get angle of two locations
                 Location loc1 = data.getTrajectory().getLocation(i - k).to3D();
                 Location loc2 = data.getTrajectory().getLocation(i - k - 1).to3D();
                 Location vector = loc1.subtract(loc2);
                 double beta = vector.getAngle(mth_vector);
+                System.out.println("beta = " + beta);
 
                 if (Math.abs(beta - (double) delta_angles.get(k - 1)) < eps) {
                     is_similar = true;

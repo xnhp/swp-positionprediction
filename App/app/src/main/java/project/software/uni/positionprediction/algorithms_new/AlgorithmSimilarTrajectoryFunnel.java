@@ -54,7 +54,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         // Algorithm
         int size = data.getTrajectory().size();
 
-        double eps = 1E-5;
+        double eps = 0.1; //1E-5;
 
         // Get the trajectory (list of angles) you want to compare other trajectories
         List<Number> delta_angles = new LinkedList<Number>();
@@ -93,13 +93,18 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
         Trajectory traj = data.getTrajectory();
 
+        Date last_known_date = (Date) ((LocationWithValue) data.getTrajectory().getLocation(size-1) ).getValue();
+        long pred_duration = algParams.date_pred.getTime() - last_known_date.getTime();
+        long date_last_as_long = last_known_date.getTime() - pred_duration;
+        Date date_last = new Date(date_last_as_long);
+
         // Run through all locations (or endpoint of all trajectories)
         for (int i = traj_length + 1; i < size; i++) {
 
             LocationWithValue loc_t = (LocationWithValue) traj.getLocation(i);
             Date date_t = (Date) loc_t.getValue();
 
-            if (date_t.after(algParams.date_past)) {
+            if (date_t.after(algParams.date_past) && date_t.before(date_last)) {
 
                 System.out.println("LOCATION: " + i);
 
@@ -122,6 +127,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
                     Location loc2 = data.getTrajectory().getLocation(i - k - 1).to3D();
                     Location vector = loc1.subtract(loc2);
                     double beta = vector.getAngle(mth_vector);
+                    System.out.println("beta = " + beta + ", other = " + delta_angles.get(k - 1));
 
                     if (Math.abs(beta - (double) delta_angles.get(k - 1)) < eps) {
                         is_similar = true;

@@ -154,7 +154,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         }
 
         return new PredictionUserParameters(
-                new AlgorithmSimilarTrajectoryFunnel(this),
+                new AlgorithmExtrapolationExtended(this),
                 date_past,
                 date_pred,
                 bird
