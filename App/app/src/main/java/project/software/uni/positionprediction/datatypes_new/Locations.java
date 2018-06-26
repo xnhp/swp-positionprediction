@@ -68,7 +68,7 @@ public class Locations extends Collection<Location> {
         return Math.max(lonSpread, latSpread);
     }
 
-    public BoundingBox getBoungingBox() {
+    public BoundingBox getBoundingBox() {
 
         EDimension dim;
         double north, south, east, west;
