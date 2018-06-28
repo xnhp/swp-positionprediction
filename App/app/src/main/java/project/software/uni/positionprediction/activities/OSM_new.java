@@ -44,6 +44,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     private Button buttonDownload = null;
     private Button buttonBack     = null;
     OSMDroidMap osmDroidMap;
+    private XML xml = new XML();
 
     // padding to edges of map when zooming/panning
     // to view something on the map.
@@ -132,16 +133,27 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         // note that if hour, second, ... is not specified the
         // *current* hour, second, ... will be used
         Calendar cal = Calendar.getInstance();
-        cal.set(2007, Calendar.MAY, 9);
-        Date date_past = cal.getTime();
+
+        //hardcoded for visualization: cal.set(2007, Calendar.MAY, 9);
+
+
+        int hoursInPast = xml.getHours_past();
+        Calendar clp = Calendar.getInstance();
+        clp.setTime(new Date());
+        clp.add(Calendar.HOUR, hoursInPast);
+        Date date_past = clp.getTime();
+
 
         // for what point in the future we want the prediction
         // hardcoded: 5 hours from current datetime
-        int hoursInFuture = 5;
-        Calendar cl = Calendar.getInstance();
-        cl.setTime(new Date());
-        cl.add(Calendar.HOUR, hoursInFuture);
-        Date date_pred = cl.getTime();
+        int hoursInFuture = xml.getHours_fut();
+        Calendar clf = Calendar.getInstance();
+        clf.setTime(new Date());
+        clf.add(Calendar.HOUR, hoursInFuture);
+        Date date_pred = clf.getTime();
+
+
+
 
         // todo: fetch from PredictionWorkflow controller instead
         Intent i = getIntent();
@@ -154,7 +166,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         }
 
         return new PredictionUserParameters(
-                new AlgorithmExtrapolationExtended(this),
+                new AlgorithmSimilarTrajectoryFunnel(this),
                 date_past,
                 date_pred,
                 bird
@@ -340,5 +352,8 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             Log.e("FloatingMapButtons", "No fragment button to toggle! This probably means that no fragment is attached.");
         }
     }
+
+
+
 
 }//class

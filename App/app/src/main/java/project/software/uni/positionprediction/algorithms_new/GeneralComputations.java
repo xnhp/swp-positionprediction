@@ -22,11 +22,12 @@ public class GeneralComputations {
             Location loc_a = data.getLocation(i-1);
             Location loc_b = data.getLocation(i);
             double alpha = loc_a.getAngle(loc_b);
-            angles.addValue( data.getLocation(i).getAlt() );
+            Log.d("getAngleVariance", ""+alpha);
+            angles.addValue( data.getLocation(i).getLat() );
         }
 
         double var = angles.getVariance();
-        Log.e("Variance of Angle", "" + var);
+        Log.d("Variance of Angle", "" + var);
         return var;
     }
 

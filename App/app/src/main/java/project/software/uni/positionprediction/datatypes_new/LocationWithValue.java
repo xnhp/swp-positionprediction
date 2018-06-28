@@ -17,6 +17,14 @@ public class LocationWithValue<T> extends Location {
         return value;
     }
 
+    public void setValue(T value) {
+        this.value = value;
+    }
 
+    public void setLocation(Location loc){
+        this.setLon(loc.getLon());
+        this.setLat(loc.getLat());
+        this.setAlt(loc.getAlt());
+    }
 
 }

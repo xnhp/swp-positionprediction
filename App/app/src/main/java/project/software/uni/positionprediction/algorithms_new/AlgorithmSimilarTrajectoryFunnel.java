@@ -22,6 +22,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
     Message msg = new Message();
     Context c;
+    GeneralComputations gc = new GeneralComputations();
 
     public AlgorithmSimilarTrajectoryFunnel(Context c) {
         this.c = c;
@@ -44,6 +45,8 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
      */
     public PredictionResultData predict(PredictionUserParameters algParams, PredictionBaseData data) {
 
+        double uncertainty = gc.getAngleVariance(data.getTrajectory());
+        Log.d("uncertainty", ""+uncertainty);
 
         // Length of trajectory
         int traj_length = 5;
@@ -159,7 +162,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         for (int l = 0; l < possible_indices.size(); l++) {
 
             Trajectory trajectory = new Trajectory();
-            Location new_loc = n0;
+            LocationWithValue new_loc = new LocationWithValue(n0, uncertainty);
             Location new_vector = nth_vector;
 
             for (int m = 0; m < pred_traj_length; m++) {
@@ -180,7 +183,8 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
                 // Rotate old vector with relative angle as known from similar trajectories
                 new_vector = new_vector.rotate(gamma);
                 // Add vector to current location
-                new_loc = new_loc.add(new_vector);
+                new_loc.setLocation( new_loc.add(new_vector) );
+                new_loc.setValue( uncertainty * uncertainty_factor(m+1) );
 
                 // Add new locations to current trajectory
                 trajectory.addLocation(new_loc);
@@ -194,6 +198,21 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         Log.i("algorithm", "size of trajectories: " + trajectories.size());
         return createResultData(trajectories);
         }
+
+
+    /**
+     * todo: possible other function to change the factor which increases factor of uncertainty
+     * @param m
+     * @return
+     */
+    public double uncertainty_factor(int m){
+            return m;
+        }
+
+
+
+
+
     }
 
 
