@@ -2,16 +2,10 @@ package project.software.uni.positionprediction.util;
 
 import android.content.Context;
 import android.hardware.GeomagneticField;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
-
-import static android.content.Context.SENSOR_SERVICE;
 
 /**
  * This class will provide means to get the direction
@@ -22,7 +16,7 @@ import static android.content.Context.SENSOR_SERVICE;
  * have the bird right in front of him.
  *
  */
-public class BearingProvider implements SensorEventListener, LocationListener {
+public class BearingProvider implements LocationListener, OrientationListener {
 
     private Location targetLocation;
     private BearingListener listener;
@@ -30,78 +24,78 @@ public class BearingProvider implements SensorEventListener, LocationListener {
 
     // the angle between the device's y axis and the *magnetic* north pole
     // in degrees.
-    double azimuth;
+    double userOrientation;
 
 
     public  void registerBearingUpdates(Context ctx,
-                                              Location targetLocation,
-                                              BearingListener listener) {
+                                        Location targetLocation,
+                                        BearingListener listener) {
         this.targetLocation = targetLocation;
         this.listener = listener;
 
-        // initialise compass
-        SensorManager mSensorManager = (SensorManager) ctx.getSystemService(SENSOR_SERVICE);
-        mSensorManager.registerListener(
-                this,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-                SensorManager.SENSOR_DELAY_NORMAL
-        );
-
-        registerLocationUpdates(ctx);
-    }
-
-    private  void registerLocationUpdates(Context ctx) {
+        // register location updates
         LocationProvider.registerLocationListener(ctx, this);
+
+        // register orientation updates
+        OrientationProvider op = new OrientationProvider(ctx);
+        op.registerOrientationUpdates(this);
     }
 
+    // location
     @Override
     public void onLocationChanged(Location location) {
         userLocation = location;
-        updateBearingByUserLocation();
+        updateBearing();
     }
 
+    // location
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
 
     }
 
+    // location
     @Override
     public void onProviderEnabled(String s) {
         // hand through
         listener.onProviderEnabled(s);
     }
 
+    // location
     @Override
     public void onProviderDisabled(String s) {
         listener.onProviderDisabled(s);
     }
 
     /**
-     * Update the bearing after a change in user location
+     * Listener attached to an OrientationProvider.
+     * @param newOrientation
      */
-    private void updateBearingByUserLocation() {
-        listener.onBearingChanged(
-                calculateBearing(this.userLocation, targetLocation)
-        );
+    @Override
+    public void onOrientationChanged(float newOrientation) {
+        this.userOrientation = newOrientation;
+        updateBearing();
     }
+
 
     /**
-     * Update the bearing after a change in target location
+     * Recalculate the bearing based on the current values.
      */
-    private void updateBearingByTargetLocation() {
+    private void updateBearing() {
         listener.onBearingChanged(
-                calculateBearing(this.userLocation, targetLocation)
+                calculateBearing()
         );
     }
 
-    private float calculateBearing(Location userLocation, Location targetLocation) {
+
+    private float calculateBearing() {
         // bearing of the line between the user location and
         // the target location in degrees east of *geographic* north
-        float bearWrtGeoNorth = userLocation.bearingTo(targetLocation);
+        float bearWrtGeoNorth = this.userLocation.bearingTo(this.targetLocation);
 
         // heading of the user relative to degrees east of
         // (magnetic) north pole.
-        float headWrtMagnNorth = (float) azimuth; // todo: cast okay?
+        float headWrtMagnNorth = (float) this.userOrientation; // todo: cast okay?
 
         // declination is the angle between magnetic and geographic
         // north pole. cf http://www.magnetic-declination.com/what-is-magnetic-declination.php
@@ -126,25 +120,6 @@ public class BearingProvider implements SensorEventListener, LocationListener {
         return targetBearing360;
     }
 
-    /**
-     * Called when the compass (user heading w.r.t. north pole)
-     * is updated
-     * @param sensorEvent
-     */
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        float[] inR = new float[16];
-        float[] orientVals = new float[16];
-        SensorManager.getOrientation(inR, orientVals);
-        // angle of rotation about the -z axis. This value represents
-        // the angle between the device's y axis and the magnetic north pole
-        this.azimuth = Math.toDegrees(orientVals[0]);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-        // noop
-    }
 
 
     /**
@@ -156,4 +131,5 @@ public class BearingProvider implements SensorEventListener, LocationListener {
         if (value < 0) return value + 360;
         return value;
     }
+
 }

@@ -38,6 +38,12 @@
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/download"/>
 
+            <ImageView
+                android:id="@+id/compassArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/arrow_left" />
+
 
         </RelativeLayout>
 
