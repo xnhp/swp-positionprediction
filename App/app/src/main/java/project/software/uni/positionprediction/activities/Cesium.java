@@ -37,6 +37,7 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.Bird;
+import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.PermissionManager;
 import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
@@ -78,6 +79,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cesium);
+
+        LoadingIndicator.getInstance().hide();
+
         final Cesium cesium = this;
 
         this.buttonSettings = findViewById(R.id.navbar_button_settings);

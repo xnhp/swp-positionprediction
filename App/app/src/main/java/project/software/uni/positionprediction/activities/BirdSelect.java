@@ -3,6 +3,8 @@ package project.software.uni.positionprediction.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.datatypes_new.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
+import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.PermissionManager;
 import project.software.uni.positionprediction.util.XML;
@@ -29,8 +32,6 @@ public class BirdSelect extends AppCompatActivity {
 
     private Button buttonSettings = null;
     private Button buttonBack = null;
-    private Button buttonOpenMap = null;
-    private Button buttonOpenCesium = null;
 
     private EditText editTextSearch = null;
     private TextView editTextNavbar = null;
@@ -47,29 +48,31 @@ public class BirdSelect extends AppCompatActivity {
     private Intent startIntent = null;
     private XML xml = new XML();
 
+    private LoadingIndicator loadingIndicator = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bird_select);
 
-        scrollViewLayout = (LinearLayout) findViewById(R.id.birdselect_scrollview);
-        editTextSearch = (EditText) findViewById(R.id.birdselect_edittext_search);
-        editTextNavbar = (TextView) findViewById(R.id.navbar_text);
-        buttonSettings = (Button) findViewById(R.id.navbar_button_settings);
-        buttonBack = (Button) findViewById(R.id.navbar_button_back);
-
-        background = findViewById(R.id.background);
-
-        xml.readFile(this);
-
-        LayoutInflater inflater = getLayoutInflater();
-
-        state = STUDY_SELECT;
-
+        this.state = STUDY_SELECT;
+        this.xml.readFile(this);
+        this.loadingIndicator = LoadingIndicator.getInstance();
 
         final BirdSelect birdSelect = this;
 
-        buttonSettings.setOnClickListener(new View.OnClickListener() {
+        // initialize GUI elements
+        this.scrollViewLayout = (LinearLayout) findViewById(R.id.birdselect_scrollview);
+        this.editTextSearch = (EditText) findViewById(R.id.birdselect_edittext_search);
+        this.editTextNavbar = (TextView) findViewById(R.id.navbar_text);
+        this.buttonSettings = (Button) findViewById(R.id.navbar_button_settings);
+        this.buttonBack = (Button) findViewById(R.id.navbar_button_back);
+
+        this.background = findViewById(R.id.birdselect_layout);
+        this.background.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));
+
+
+        this.buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent buttonIntent =  new Intent(birdSelect, Settings.class);
@@ -77,7 +80,7 @@ public class BirdSelect extends AppCompatActivity {
             }
         });
 
-        buttonBack.setOnClickListener(new View.OnClickListener() {
+        this.buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(state == BIRD_SELECT) switchToStudySelect();
@@ -85,23 +88,10 @@ public class BirdSelect extends AppCompatActivity {
             }
         });
 
-        editTextNavbar.setText(getResources().getString(R.string.bird_select_study_select));
-
-        /** DONT NEED THIS
-        buttonOpenMap.setOnClickListener(createOpenMapClickListener(this));
-
-        buttonOpenCesium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startIntent =  new Intent(birdSelect, Cesium.class);
-                checkForPermissions();
-            }
-        });*/
-
-        editTextSearch.addTextChangedListener(createSearchTextWatcher(this));
+        this.editTextNavbar.setText(getResources().getString(R.string.bird_select_study_select));
+        this.editTextSearch.addTextChangedListener(createSearchTextWatcher(this));
 
         fillStudiesList(true);
-
 
     }
 
@@ -120,6 +110,7 @@ public class BirdSelect extends AppCompatActivity {
                                 this);
                     }else{
                         // all permissions are granted. Start Activity
+                        loadingIndicator.show(this);
                         startActivity(startIntent);
                     }
                 }
@@ -137,6 +128,7 @@ public class BirdSelect extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if(PermissionManager.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)){
                         // all permissions are granted. Start Activity
+                        loadingIndicator.show(this);
                         startActivity(startIntent);
                     }
                 }
@@ -165,12 +157,38 @@ public class BirdSelect extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onResume(){
+
+        super.onResume();
+
+        // update List in case the Settings changed
+        switch(state){
+            case BIRD_SELECT:
+            {
+                fillBirdsList(SQLDatabase.getInstance(this).searchBird(
+                        selectedStudy,
+                        editTextSearch.getText().toString()));
+                break;
+            }
+            case STUDY_SELECT:
+            {
+                fillStudiesListView(SQLDatabase.getInstance(this).searchStudie(
+                        editTextSearch.getText().toString()), false);
+                break;
+            }
+        }
+
+    }
+
 
     /**
      * This Method requests a list of studies from the database and inserts them into the scrollView
      * @param updateDatabase if true the Data in the database is updated before filling the scrollView
      */
     private void fillStudiesList(boolean updateDatabase){
+
+        loadingIndicator.show(this);
 
         // request studies which already are in the database
         Study studies[] = SQLDatabase.getInstance(this).getStudies();
@@ -194,11 +212,14 @@ public class BirdSelect extends AppCompatActivity {
                         @Override
                         public void run() {
                             fillStudiesListView(studies, true);
+                            loadingIndicator.hide();
                         }
                     });
 
                 }
             }).start();
+        }else{
+            loadingIndicator.hide();
         }
     }
     /**
@@ -228,6 +249,11 @@ public class BirdSelect extends AppCompatActivity {
             textView.setPadding(50, 50, 50, 50);
             textView.setText(studies[i].name);
 
+            textView.setTextColor(getResources().getColor(R.color.text_color));
+            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+            textView.setShadowLayer(getResources().getDimension(R.dimen.birdselect_text_shadow_radius),
+                    0, 0, Color.WHITE);
+
             final int index = i;
 
             textView.setOnClickListener(new View.OnClickListener() {
@@ -253,6 +279,8 @@ public class BirdSelect extends AppCompatActivity {
      */
     private void fillBirdsList(final Bird birds[]){
 
+        loadingIndicator.show(this);
+
         // remove previous content from scrollView
         scrollViewLayout.removeAllViews();
 
@@ -269,6 +297,8 @@ public class BirdSelect extends AppCompatActivity {
         }
 
         scrollViewLayout.invalidate();
+
+        loadingIndicator.hide();
     }
     /**
      * This Method add a Bird with a given Name to the scrollView
@@ -293,6 +323,10 @@ public class BirdSelect extends AppCompatActivity {
 
         textView.setText(name);
 
+        textView.setTextColor(getResources().getColor(R.color.text_color));
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        textView.setShadowLayer(getResources().getDimension(R.dimen.birdselect_text_shadow_radius),
+                0, 0, Color.WHITE);
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -535,12 +569,15 @@ public class BirdSelect extends AppCompatActivity {
      * This Method switches to STUDY_SELECT mode
      */
     private void switchToStudySelect(){
+        loadingIndicator.show(this);
+
         final BirdSelect birdSelect = this;
         editTextNavbar.setText(getResources().getString(R.string.bird_select_study_select));
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 fillStudiesListView(SQLDatabase.getInstance(birdSelect).getStudies(), true);
+                loadingIndicator.hide();
             }
         });
         editTextSearch.setText("");
@@ -554,6 +591,7 @@ public class BirdSelect extends AppCompatActivity {
         if (PermissionManager.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this) &&
                 PermissionManager.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
             // The App already has all required permissions
+            loadingIndicator.show(this);
             startActivity(startIntent);
             return;
         }
@@ -610,16 +648,20 @@ public class BirdSelect extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(state == STUDY_SELECT)
+                loadingIndicator.show(birdSelect);
+                if(state == STUDY_SELECT) {
                     // update Studie List
                     fillStudiesListView(SQLDatabase.getInstance(birdSelect).searchStudie(
                             editTextSearch.getText().toString()), false);
-                else if(state == BIRD_SELECT)
+                }
+                else if(state == BIRD_SELECT) {
                     // update Bird List
                     fillBirdsList(SQLDatabase.getInstance(birdSelect).searchBird(
                             selectedStudy,
                             editTextSearch.getText().toString()
                     ));
+                }
+                loadingIndicator.hide();
             }
         };
     }

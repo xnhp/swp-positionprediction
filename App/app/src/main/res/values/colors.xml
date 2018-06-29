@@ -7,4 +7,8 @@
     // Navbar
 
     <color name="navbar_background">#EFEFEF</color>
+
+    <color name="text_color">#000000</color>
+
+    <integer name="background_alpha">128</integer>
 </resources>

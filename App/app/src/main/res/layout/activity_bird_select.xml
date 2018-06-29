@@ -6,7 +6,7 @@
     tools:context="project.software.uni.positionprediction.activities.BirdSelect">
 
     <RelativeLayout
-        android:id="@+id/background"
+        android:id="@+id/birdselect_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/stork">
