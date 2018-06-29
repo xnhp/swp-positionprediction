@@ -27,7 +27,7 @@ public class GeneralComputations {
         }
 
         double var = angles.getVariance();
-        Log.d("Variance of Angle", "" + var);
+        Log.d("uncertainty", ""+var);
         return var;
     }
 
