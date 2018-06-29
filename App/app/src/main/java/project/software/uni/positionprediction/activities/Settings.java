@@ -87,6 +87,7 @@ public class Settings extends AppCompatActivity {
         text_future.setText(""+xml.getHours_fut());
 
 
+
         // Define Dropdown for algorithms
         Class[] items_alg = xml.getAlgorithms();
         ArrayAdapter<String> adapter_alg = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_alg));
@@ -258,7 +259,8 @@ public class Settings extends AppCompatActivity {
         spinner_alg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                Log.d("Algorithm changed", "ID " + position);
+                xml.setUsed_alg(position);
             }
 
             @Override
@@ -270,7 +272,8 @@ public class Settings extends AppCompatActivity {
         spinner_vis.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                Log.d("Visualization changed", "ID " + position);
+                xml.setUsed_vis(position);
             }
 
             @Override

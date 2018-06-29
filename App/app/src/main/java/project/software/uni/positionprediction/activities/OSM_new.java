@@ -17,12 +17,16 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.lang.reflect.Constructor;
 import java.util.Calendar;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectoryFunnel;
+import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
@@ -43,6 +47,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     private Button buttonSettings = null;
     private Button buttonDownload = null;
     private Button buttonBack     = null;
+    private Context ctx;
     OSMDroidMap osmDroidMap;
     private XML xml = new XML();
 
@@ -67,6 +72,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
         super.onCreate(savedInstanceState);
 
+        final Context ctx = this;
 
 
         // 1.) Create OSMdroid map.
@@ -126,7 +132,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     // bm: Would rather put this somewhere else b/c "Settings" is an
     // Activity and should only do UI-related stuff.
     // But thats not important
-    public PredictionUserParameters getPredictionUserParameters() {
+    public PredictionUserParameters getPredictionUserParameters() throws ClassNotFoundException {
 
         // hardcoded date marking the lower bound for tracking data
         // which should be included in the prediction
@@ -165,8 +171,20 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             bird = new Bird(2911059, 2911040, "Galapagos");
         }
 
+        /**
+        Class<?> algorithm = null;
+        try {
+            algorithm = Class.forName( xml.getAlgorithms()[xml.getUsed_alg()].toString());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Class constructors[] = {algorithm};
+        Object paramValues[] = {ctx};
+        */
+
         return new PredictionUserParameters(
-                new AlgorithmSimilarTrajectoryFunnel(this),
+                new AlgorithmSimilarTrajectoryFunnel(ctx),
                 date_past,
                 date_pred,
                 bird
