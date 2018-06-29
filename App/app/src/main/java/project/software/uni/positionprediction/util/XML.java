@@ -126,8 +126,10 @@ public class XML {
 
             setTag("hours_fut", hours_fut + "", xmlSerializer);
 
+            if(movebank_user != null)
             setTag("movebank_user", movebank_user, xmlSerializer);
 
+            if(movebank_password != null)
             setTag("movebank_password", movebank_password, xmlSerializer);
 
             setTag("used_alg", used_alg + "", xmlSerializer);

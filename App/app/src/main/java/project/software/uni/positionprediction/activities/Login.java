@@ -2,6 +2,7 @@ package project.software.uni.positionprediction.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
@@ -29,6 +31,7 @@ public class Login extends AppCompatActivity {
     private EditText editTextUsername;
     private EditText editTextPassword;
     private Button buttonLogin;
+    RelativeLayout layout;
 
     private XML xml = new XML();
 
@@ -36,6 +39,9 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        layout = findViewById(R.id.login_background);
+        layout.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));
 
         // Define default algorithms and visualization
         Class algorithms[] = new Class[]{
@@ -133,6 +139,14 @@ public class Login extends AppCompatActivity {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
+
+                            layout.setBackgroundResource(R.drawable.stork_animation);
+                            AnimationDrawable animation = (AnimationDrawable) layout.getBackground();
+                            animation.setAlpha(getResources().getInteger(R.integer.background_alpha));
+
+                            animation.stop();
+                            animation.start();
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(login);
                             builder.setMessage(R.string.login_wrong_creds_warning)
                                     .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {

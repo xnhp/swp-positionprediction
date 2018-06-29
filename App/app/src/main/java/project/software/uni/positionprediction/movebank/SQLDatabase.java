@@ -4,11 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -146,7 +145,14 @@ public class SQLDatabase {
      */
     public float updateBirdDataSync(int studyId, int indivId){
 
-        Request request = MovebankConnector.getInstance(context).getBirdDataSync(studyId, indivId);
+        if(!updateForBirdNeeded(studyId, indivId)) return 0.0f;
+
+        Request request;
+        Date date = getLatestTimestamp(studyId, indivId);
+        if(date != null)
+            request = MovebankConnector.getInstance(context).getBirdDataSync(studyId, indivId,
+                    date, new Date());
+        else request = MovebankConnector.getInstance(context).getBirdDataSync(studyId, indivId);
 
         if(request.getResponseStatus() == HttpStatusCode.OK) {
             return insertBirdData(studyId, indivId, request.getResponse());
@@ -167,7 +173,9 @@ public class SQLDatabase {
      */
     public void updateBirdData(final int studyId, final int indivId){
 
-        MovebankConnector.getInstance(context).getBirdData(studyId, indivId, new RequestHandler() {
+        if(!updateForBirdNeeded(studyId, indivId)) return;
+
+        RequestHandler handler = new RequestHandler() {
             @Override
             public void handleResponse(Request response) {
                 if(response.getResponseStatus() == HttpStatusCode.OK){
@@ -176,7 +184,14 @@ public class SQLDatabase {
                     Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
                 }
             }
-        });
+        };
+
+        Date date = getLatestTimestamp(studyId, indivId);
+        if(date != null)
+            MovebankConnector.getInstance(context).getBirdData(studyId, indivId,
+                    date, new Date(), handler);
+        else MovebankConnector.getInstance(context).getBirdData(studyId, indivId, handler);
+
     }
 
     /**
@@ -342,6 +357,12 @@ public class SQLDatabase {
     }
 
 
+    /**
+     * This Method returns the tracking Data for a given bird
+     * @param studyId the study of the bird to get the data for
+     * @param indivId the individualId of the bird to get the data for
+     * @return the BirdData for the given bird
+     */
     public BirdData getBirdData(int studyId, int indivId){
 
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -368,10 +389,13 @@ public class SQLDatabase {
 
         Locations points = new Locations();
 
+
+        int rowIndex = 0;
         while(cursor.moveToNext()) {
             points.add( new LocationWithValue<Date>(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
-                    parseDate(cursor.getString(0))));
+                    new Date(cursor.getLong(0)*1000)));
+            rowIndex++;
         }
 
         cursor.close();
@@ -380,23 +404,52 @@ public class SQLDatabase {
 
     }
 
+
     /**
-     * Parses a date from string.
-     * @param dateString of the pattern 2008-05-31 19:30:18.998
-     * @return a Date object corresponding to the parsed date
+     * This Method returns the tracking Data for a given bird
+     * @param studyId the study of the bird to get the data for
+     * @param indivId the individualId of the bird to get the data for
+     * @return the BirdData for the given bird
      */
-    private Date parseDate(String dateString) {
-        // cf https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
-        Date date = null;
-        try {
-            date = df.parse(dateString);
-        } catch (ParseException e) {
-            Log.e("SQLDatabase", "Could not parse date of row");
-            e.printStackTrace();
+    public BirdData getBirdData(int studyId, int indivId, Date dateStart){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT timestamp, location_long, location_lat, tag_id, " +
+                "individual_id, study_id FROM trackpoints " +
+                "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
+                " AND timestamp >= " + (dateStart.getTime() * 1000) + " ORDER BY timestamp DESC", new String[]{});
+
+        /* TJ 180622
+
+        TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
+
+        int rowIndex = 0;
+        while(cursor.moveToNext()) {
+            Log.e("SQL", ""+cursor.getInt(4));
+            points[rowIndex] = new TrackingPoint(
+                    new Location(cursor.getDouble(1), cursor.getDouble(2)),
+                    new Date(cursor.getLong(0)*1000));
+            rowIndex++;
         }
-        Log.i("SQLDatabase", "retrieved date from db: " + date);
-        return date;
+
+        */
+
+        Locations points = new Locations();
+
+
+        int rowIndex = 0;
+        while(cursor.moveToNext()) {
+            points.add( new LocationWithValue<Date>(
+                    new Location(cursor.getDouble(1), cursor.getDouble(2)),
+                    new Date(cursor.getLong(0)*1000)));
+            rowIndex++;
+        }
+
+        cursor.close();
+
+        return new BirdData(studyId, indivId, points);
+
     }
 
     public Bird[] getBirds(int studyId){
@@ -502,9 +555,71 @@ public class SQLDatabase {
 
         // WHERE TRUE throws error.
         db.execSQL("DELETE FROM trackpoints");
-        //Todo remove trash can from every object
+        db.execSQL("UPDATE birds SET last_update=NULL WHERE TRUE");
     }
 
+    /**
+     * This method checks weather the difference between the latest entry for a given bird and the
+     * current time is bigger than the difference between the last two timestamps.
+     * @param studyId The id of the study the bird belongs to
+     * @param indivId the individual id of the bird
+     * @return true if an update is needed
+     */
+    private boolean updateForBirdNeeded(int studyId, int indivId){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT timestamp FROM trackpoints WHERE individual_id = "
+                + studyId + " AND individual_id = "
+                + indivId+ " ORDER BY timestamp DESC LIMIT 2", new String[]{});
+
+        if(cursor.getCount() < 2){
+            return true;
+        }
+
+        cursor.moveToNext();
+        Date date1 = new Date(cursor.getLong(0) * 1000);
+        cursor.moveToNext();
+        Date date2 = new Date(cursor.getLong(0) * 1000);
+
+        cursor.close();
+
+        long step = date1.getTime() - date2.getTime();
+
+        Date now = new Date();
+
+        long diff = now.getTime() - date1.getTime();
+
+        if(step < diff) return true;
+
+        return false;
+
+    }
+
+
+    /**
+     * This Method returns the latest timestamp in the database
+     * @param studyId
+     * @param indivId
+     * @return
+     */
+    private Date getLatestTimestamp(int studyId, int indivId){
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT timestamp FROM trackpoints WHERE individual_id = "
+                + studyId + " AND individual_id = "
+                + indivId+ " ORDER BY timestamp DESC LIMIT 1", new String[]{});
+
+        if(cursor.getCount() >= 1){
+            cursor.moveToNext();
+            Date date = new Date(cursor.getLong(0)*1000);
+            cursor.close();
+            return date;
+        }
+
+        return null;
+
+    }
 
 }
 

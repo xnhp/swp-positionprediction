@@ -3,6 +3,8 @@ package project.software.uni.positionprediction.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +31,6 @@ public class BirdSelect extends AppCompatActivity {
 
     private Button buttonSettings = null;
     private Button buttonBack = null;
-    private Button buttonOpenMap = null;
-    private Button buttonOpenCesium = null;
 
     private EditText editTextSearch = null;
     private TextView editTextNavbar = null;
@@ -58,7 +58,8 @@ public class BirdSelect extends AppCompatActivity {
         buttonSettings = (Button) findViewById(R.id.navbar_button_settings);
         buttonBack = (Button) findViewById(R.id.navbar_button_back);
 
-        background = findViewById(R.id.background);
+        background = findViewById(R.id.birdselect_layout);
+        background.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));
 
         xml.readFile(this);
 
@@ -86,17 +87,6 @@ public class BirdSelect extends AppCompatActivity {
         });
 
         editTextNavbar.setText(getResources().getString(R.string.bird_select_study_select));
-
-        /** DONT NEED THIS
-        buttonOpenMap.setOnClickListener(createOpenMapClickListener(this));
-
-        buttonOpenCesium.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startIntent =  new Intent(birdSelect, Cesium.class);
-                checkForPermissions();
-            }
-        });*/
 
         editTextSearch.addTextChangedListener(createSearchTextWatcher(this));
 
@@ -228,6 +218,11 @@ public class BirdSelect extends AppCompatActivity {
             textView.setPadding(50, 50, 50, 50);
             textView.setText(studies[i].name);
 
+            textView.setTextColor(getResources().getColor(R.color.text_color));
+            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+            textView.setShadowLayer(getResources().getDimension(R.dimen.birdselect_text_shadow_radius),
+                    0, 0, Color.WHITE);
+
             final int index = i;
 
             textView.setOnClickListener(new View.OnClickListener() {
@@ -293,6 +288,10 @@ public class BirdSelect extends AppCompatActivity {
 
         textView.setText(name);
 
+        textView.setTextColor(getResources().getColor(R.color.text_color));
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        textView.setShadowLayer(getResources().getDimension(R.dimen.birdselect_text_shadow_radius),
+                0, 0, Color.WHITE);
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override

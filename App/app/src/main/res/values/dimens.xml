@@ -33,5 +33,6 @@
     <dimen name="birdselect_start_size">20dp</dimen>
     <dimen name="birdselect_star_margin">5dp</dimen>
     <dimen name="birdselect_start_margin_right">10dp</dimen>
+    <dimen name="birdselect_text_shadow_radius">3px</dimen>
 
 </resources>
