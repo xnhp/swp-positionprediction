@@ -172,7 +172,7 @@ public class Settings extends AppCompatActivity {
                         } catch (NumberFormatException e) {
                             msg.disp_error(c, "Input error",
                                     "You reached the limit of an Integer. " +
-                                            "Please check 'Use all data' to use more date");
+                                            "Please click 'Use all data' to use more date");
                             text_past.setText("0");
                             input_as_int = 0;
                         }
@@ -187,7 +187,7 @@ public class Settings extends AppCompatActivity {
 
 
 
-                } else {
+                } else if (!checkBox.isChecked()){
                     msg.disp_error(settings, "Wrong format", "You can only use numbers!");
                 }
 
