@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.util;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -46,6 +47,7 @@ public class XML {
     }
 
     public void setHours_past(int hours_past) {
+        Log.d("Settings changed", "hours_past" + hours_past);
         this.hours_past = hours_past;
     }
 
@@ -54,6 +56,7 @@ public class XML {
     }
 
     public void setHours_fut(int hours_fut) {
+        Log.d("Settings changed", "hours_future" + hours_fut);
         this.hours_fut = hours_fut;
     }
 
@@ -62,6 +65,7 @@ public class XML {
     }
 
     public void setAlgorithms(Class[] algorithms) {
+        Log.d("Settings changed", "Algorithm changed");
         this.algorithms = algorithms;
     }
 
@@ -70,6 +74,7 @@ public class XML {
     }
 
     public void setVisualizations(Class[] visualizations) {
+        Log.d("Settings changed", "Visualization changed");
         this.visualizations = visualizations;
     }
 
@@ -78,6 +83,7 @@ public class XML {
     }
 
     public void setUsed_alg(int used_alg) {
+        Log.d("Settings changed", "Algorithm " + used_alg + " is used");
         this.used_alg = used_alg;
     }
 
@@ -86,6 +92,7 @@ public class XML {
     }
 
     public void setUsed_vis(int used_vis) {
+        Log.d("Settings changed", "Visualization " + used_vis + " is used");
         this.used_vis = used_vis;
     }
 
@@ -224,6 +231,7 @@ public class XML {
             parserEvent = parser.next();
         }
     }
+
 
 
 

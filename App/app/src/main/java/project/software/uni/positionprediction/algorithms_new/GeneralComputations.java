@@ -16,6 +16,8 @@ public class GeneralComputations {
 
     public double getAngleVariance(Trajectory data) {
 
+
+
         DescriptiveStatistics angles = new DescriptiveStatistics();
 
         for (int i = 1; i<data.size(); i++) {
@@ -27,6 +29,12 @@ public class GeneralComputations {
         }
 
         double var = angles.getVariance();
+
+        if (var == 0) {
+            Log.e("Error", "Computation of Variance probably went wrong!");
+        }
+
+
         Log.d("uncertainty", ""+var);
         return var;
     }

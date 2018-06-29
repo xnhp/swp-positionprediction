@@ -17,6 +17,7 @@ import project.software.uni.positionprediction.datatypes_new.PredictionResultDat
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.util.Message;
+import project.software.uni.positionprediction.util.XML;
 
 
 public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturnsTrajectories {
@@ -141,6 +142,13 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
     private Collection<Trajectory> get_trajectories_from_indices(LinkedList<Number> possible_indices, double uncertainty, double pred_traj_length) {
 
+        if (possible_indices.size() == 0) {
+            Log.d("Warning", "No similar trajectories found");
+            return null;
+        }
+
+
+
         Collection<Trajectory> trajectories = new Collection<Trajectory>();
 
         // Compute main angle. All other angles (delta_angles) are computed relative to this one.
@@ -194,6 +202,13 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         int n = data.getTrajectory().size()-1;
         LocationWithValue location = (LocationWithValue) data.getTrajectory().getLocation(n);
         Date date_now_minus_hours_pred = get_past_date();
+
+        if (date_now_minus_hours_pred == null) {
+            Log.e("Error","No hours between now and pred");
+            return 0;
+        }
+
+
         int count = 0;
         Date date_of_location = (Date) location.getValue();
         while (date_of_location.after(date_now_minus_hours_pred)) {
@@ -213,6 +228,8 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         long duration = date_pred - now;
         long hours = duration / 1000 / 60 / 60 ;
         Log.e("hours computation", ""+hours);
+        Log.e("Date pred", params.date_pred.toString());
+        int hours1 = Log.e("Hours", ""+new XML().getHours_fut());
         long past = now - hours;
         return new Date(past);
     }
@@ -222,6 +239,12 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
 
     private LinkedList<Number> get_possible_trajectory_indices(LinkedList<Number> angles){
+
+        if (angles.size() == 0) {
+            Log.d("Warning", "No angles are in the list.");
+            return null;
+        }
+
 
         LinkedList<Number> possible_indices = new LinkedList<Number>();
         Trajectory traj = data.getTrajectory();

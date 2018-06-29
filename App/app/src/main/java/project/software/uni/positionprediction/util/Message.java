@@ -89,7 +89,6 @@ public class Message {
                                 }
                         )
                         .setTitle(errorTitle)
-                        //.setIcon(R.id.)
                         .create();
                 alert.show();
             }
