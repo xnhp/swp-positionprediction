@@ -174,7 +174,7 @@ public class BirdSelect extends AppCompatActivity {
             case STUDY_SELECT:
             {
                 fillStudiesListView(SQLDatabase.getInstance(this).searchStudie(
-                        editTextSearch.getText().toString()), false);
+                        editTextSearch.getText().toString()), editTextSearch.getText().toString().equals(""));
                 break;
             }
         }
