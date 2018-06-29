@@ -42,7 +42,7 @@ public class Settings extends AppCompatActivity {
 
     // Other
     private XML xml = new XML();
-    Message m = new Message();
+    Message msg = new Message();
     SQLDatabase db = SQLDatabase.getInstance(this);
 
     // this is a field because we need to be able to access it in click handlers.
@@ -72,6 +72,20 @@ public class Settings extends AppCompatActivity {
         text_future = findViewById(R.id.text_future);
         delete_btn = findViewById(R.id.delete_btn);
         checkBox = findViewById(R.id.checkbox);
+
+        // Set values correct
+        if (xml.getHours_past() == -1) {
+            seekbar_past.setProgress(seekbar_past.getMax());
+            text_past.setText("All");
+            checkBox.setChecked(true);
+        } else {
+            seekbar_past.setProgress(xml.getHours_past());
+            text_past.setText(""+xml.getHours_past());
+        }
+
+        seekbar_future.setProgress(xml.getHours_fut());
+        text_future.setText(""+xml.getHours_fut());
+
 
 
         // Define Dropdown for algorithms
@@ -148,10 +162,21 @@ public class Settings extends AppCompatActivity {
                 boolean isNumber = isDigitsOnly(input_as_str);
 
                 if (isNumber) {
+                    Log.e("isNumber ", ""+input_as_str);
                     if (input_as_str.length() == 0) {
                         input_as_int = 0;
                     } else {
-                        input_as_int = Integer.parseInt(s.toString());
+
+                        // Catch if its larger than integer
+                        try {
+                            input_as_int = Integer.parseInt(s.toString());
+                        } catch (NumberFormatException e) {
+                            msg.disp_error(c, "Input error",
+                                    "You reached the limit of an Integer. " +
+                                            "Please click 'Use all data' to use more date");
+                            text_past.setText("0");
+                            input_as_int = 0;
+                        }
                     }
 
                     xml.setHours_past(input_as_int);
@@ -163,8 +188,8 @@ public class Settings extends AppCompatActivity {
 
 
 
-                } else {
-                    m.disp_error(settings, "Wrong format", "You can only use numbers!");
+                } else if (!checkBox.isChecked()){
+                    msg.disp_error(settings, "Wrong format", "You can only use numbers!");
                 }
 
             }
@@ -215,7 +240,7 @@ public class Settings extends AppCompatActivity {
                                 input_as_int = Integer.parseInt(s.toString());
                             }
 
-                            xml.setHours_past(input_as_int);
+                            xml.setHours_fut(input_as_int);
 
                             int max = seekbar_future.getMax();
                             input_as_int = input_as_int > max ? max : input_as_int;
@@ -225,7 +250,7 @@ public class Settings extends AppCompatActivity {
 
 
                         } else {
-                            m.disp_error(settings, "Wrong format", "You can only use numbers!");
+                            msg.disp_error(settings, "Wrong format", "You can only use numbers!");
                         }
                     }
 
@@ -234,7 +259,8 @@ public class Settings extends AppCompatActivity {
         spinner_alg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                Log.d("Algorithm changed", "ID " + position);
+                xml.setUsed_alg(position);
             }
 
             @Override
@@ -246,7 +272,8 @@ public class Settings extends AppCompatActivity {
         spinner_vis.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                Log.d("Visualization changed", "ID " + position);
+                xml.setUsed_vis(position);
             }
 
             @Override
@@ -261,7 +288,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.dropAllData();
-                m.disp_success(c, "Deleted", "All data where deleted successfully");
+                msg.disp_success(c, "Deleted", "All data where deleted successfully");
             }
         });
 
@@ -271,11 +298,10 @@ public class Settings extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     xml.setHours_past(-1);
-                    text_past.setText(""+seekbar_past.getMax());
-                    text_past.setText("all");
-
+                    seekbar_past.setProgress(seekbar_past.getMax());
+                    text_past.setText("All");
                 } else {
-                    xml.setHours_past(seekbar_past.getMax());
+                    //xml.setHours_past(seekbar_past.getMax());
                     text_past.setText("0");
 
                 }

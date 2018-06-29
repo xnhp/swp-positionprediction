@@ -110,7 +110,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @param data
      * @return
      */
-    public PredictionResultData make_prediction(Trajectory data, Date date_past, Date date_pred) {
+    private PredictionResultData make_prediction(Trajectory data, Date date_past, Date date_pred) {
 
         // 1. Get old vectors
         ArrayList<Location> vector_collection = get_past_vectors(data, date_past);
