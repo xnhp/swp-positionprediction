@@ -301,7 +301,7 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
         // Get average time between Tracking points
         long sum = 0;
         int m = delta_ms.size();
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < nr_of_pts; j++) {
             sum = sum + (long) delta_ms.get(j);
         }
         long avg = sum / m;

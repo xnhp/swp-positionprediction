@@ -148,9 +148,9 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      */
     private Location predict_next_Location(Trajectory data, ArrayList<Location> vector_collection, double pred_factor){
         // avg has altitude or not based on the data that is passed in
-        Location avg = weighted_average(vector_collection);
+        Location avg = weighted_average(vector_collection).to3D();
         // curr_loc has altitude or not based on the data that is passed in
-        Location curr_loc = data.getLocation(data.size() - 1);
+        Location curr_loc = data.getLocation(data.size() - 1).to3D();
 
         return curr_loc.add( avg.multiply( pred_factor));
     }
@@ -293,7 +293,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // Get average time between Tracking points
         long sum = 0;
         int m = delta_ms.size();
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < nr_of_pts; j++) {
             sum = sum + (long) delta_ms.get(j);
         }
         long avg = sum / m;

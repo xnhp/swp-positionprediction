@@ -520,6 +520,9 @@ public class SQLDatabase {
 
         int rowIndex = 0;
         while(cursor.moveToNext()) {
+            if (!cursor.isNull(3)) {
+                Log.e("Timestamp", ""+cursor.getString(3));
+            }
             birds[rowIndex] = new Bird(
                     cursor.getInt(0),
                     cursor.getInt(2),
@@ -651,7 +654,7 @@ class SQLDatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_DELETE_BIRDS = "DROP TABLE birds;";
 
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "Movebank.db";
 
     public SQLDatabaseHelper(Context context) {

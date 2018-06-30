@@ -179,7 +179,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             public void onLocationChanged(Location location) {
                 // fill class field with location.
                 // location is accessed by e.g. getUserLocationJSON
-                Log.i("location", location.toString());
+                //Log.i("location", location.toString());
                 userLocation = location;
             }
 
