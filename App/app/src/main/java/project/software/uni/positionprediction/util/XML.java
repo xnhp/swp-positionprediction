@@ -238,28 +238,6 @@ public class XML {
     }
 
 
-    private PredictionAlgorithm getPredictionAlgorithm(final Context context){
-
-        PredictionAlgorithm predictionAlgorithm = null;
-
-        try {
-
-            Class<?> type = algorithms[used_alg];
-            Constructor<?> constructor = type.getConstructor(Context.class);
-
-            Object obj = constructor.newInstance(context);
-
-            if(obj instanceof PredictionAlgorithm) predictionAlgorithm = (PredictionAlgorithm) obj;
-
-
-        } catch (IllegalAccessException | InstantiationException
-                | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return predictionAlgorithm;
-    }
-
     public PredictionAlgorithm getPredictionAlgorithm(final Context context){
 
         PredictionAlgorithm predictionAlgorithm = null;
