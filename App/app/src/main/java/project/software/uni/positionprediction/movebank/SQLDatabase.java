@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -149,6 +151,7 @@ public class SQLDatabase {
 
         Request request;
         Date date = getLatestTimestamp(studyId, indivId);
+
         if(date != null)
             request = MovebankConnector.getInstance(context).getBirdDataSync(studyId, indivId,
                     date, new Date());
@@ -222,7 +225,7 @@ public class SQLDatabase {
                 } else badDataCounter++;
             }
 
-            db.execSQL("UPDATE birds SET last_update=DATE('now') WHERE study_id=" + studyId + " AND id=" + indivId);
+            db.execSQL("UPDATE birds SET last_update=DATETIME('now') WHERE study_id=" + studyId + " AND id=" + indivId);
         }
 
         if(table.length > 0) return ((float)badDataCounter) / ((float)table[0].length);
@@ -394,7 +397,7 @@ public class SQLDatabase {
         while(cursor.moveToNext()) {
             points.add( new LocationWithValue<Date>(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
-                    new Date(cursor.getLong(0)*1000)));
+                    new Date(Timestamp.valueOf(cursor.getString(0)).getTime())));
             rowIndex++;
         }
 
@@ -418,22 +421,8 @@ public class SQLDatabase {
         Cursor cursor = db.rawQuery("SELECT timestamp, location_long, location_lat, tag_id, " +
                 "individual_id, study_id FROM trackpoints " +
                 "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
-                " AND timestamp >= " + (dateStart.getTime() * 1000) + " ORDER BY timestamp DESC", new String[]{});
-
-        /* TJ 180622
-
-        TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
-
-        int rowIndex = 0;
-        while(cursor.moveToNext()) {
-            Log.e("SQL", ""+cursor.getInt(4));
-            points[rowIndex] = new TrackingPoint(
-                    new Location(cursor.getDouble(1), cursor.getDouble(2)),
-                    new Date(cursor.getLong(0)*1000));
-            rowIndex++;
-        }
-
-        */
+                " AND timestamp >= " + new Timestamp(dateStart.getTime()).toString() + " ORDER BY timestamp DESC", new String[]{});
+        
 
         Locations points = new Locations();
 
@@ -442,7 +431,7 @@ public class SQLDatabase {
         while(cursor.moveToNext()) {
             points.add( new LocationWithValue<Date>(
                     new Location(cursor.getDouble(1), cursor.getDouble(2)),
-                    new Date(cursor.getLong(0)*1000)));
+                    new Date(Timestamp.valueOf(cursor.getString(0)).getTime())));
             rowIndex++;
         }
 
@@ -469,7 +458,8 @@ public class SQLDatabase {
                     studyId,
                     cursor.getString(1),
                     cursor.getString(2).equals("TRUE"),
-                    cursor.isNull(3) ? null : new Date(cursor.getLong(3) * 1000));
+                    cursor.isNull(3) ? null :
+                            new Date(Timestamp.valueOf(cursor.getString(3)).getTime()));
             rowIndex++;
         }
 
@@ -496,7 +486,8 @@ public class SQLDatabase {
                     cursor.getInt(0),
                     studyId, cursor.getString(1),
                     cursor.getString(2).equals("TRUE"),
-                    cursor.isNull(3) ? null : new Date(cursor.getLong(3) * 1000));
+                    cursor.isNull(3) ? null :
+                            new Date(Timestamp.valueOf(cursor.getString(3)).getTime()));
             rowIndex++;
         }
 
@@ -534,7 +525,8 @@ public class SQLDatabase {
                     cursor.getInt(2),
                     cursor.getString(1),
                     true,
-                    (cursor.isNull(3) ? null : new Date(cursor.getLong(3)*1000)));
+                    (cursor.isNull(3) ? null :
+                            new Date(Timestamp.valueOf(cursor.getString(3)).getTime())));
             rowIndex++;
         }
 
@@ -578,9 +570,9 @@ public class SQLDatabase {
         }
 
         cursor.moveToNext();
-        Date date1 = new Date(cursor.getLong(0) * 1000);
+        Date date1 = new Date(Timestamp.valueOf(cursor.getString(0)).getTime());
         cursor.moveToNext();
-        Date date2 = new Date(cursor.getLong(0) * 1000);
+        Date date2 = new Date(Timestamp.valueOf(cursor.getString(0)).getTime());
 
         cursor.close();
 
@@ -606,13 +598,14 @@ public class SQLDatabase {
     private Date getLatestTimestamp(int studyId, int indivId){
         SQLiteDatabase db = helper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT timestamp FROM trackpoints WHERE individual_id = "
+        Cursor cursor = db.rawQuery("SELECT timestamp FROM trackpoints WHERE study_id = "
                 + studyId + " AND individual_id = "
                 + indivId+ " ORDER BY timestamp DESC LIMIT 1", new String[]{});
 
         if(cursor.getCount() >= 1){
             cursor.moveToNext();
-            Date date = new Date(cursor.getLong(0)*1000);
+            Timestamp timestamp = Timestamp.valueOf(cursor.getString(0));
+            Date date = new Date(timestamp.getTime());
             cursor.close();
             return date;
         }

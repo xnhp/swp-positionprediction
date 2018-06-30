@@ -26,6 +26,9 @@
 
     <string name="loading_indicator_text">Laden...</string>
 
+    <string name="percentage_bad_data_warning_dialog">%1$d%% der Einträge in der Movebank konnten nicht gelesen werden!</string>
+    <string name="percentage_bad_date_warning">Warnung!</string>
+
 
     <string name="alert_ok">OK</string>
     <string name="alert_cancel">Abbrechen</string>

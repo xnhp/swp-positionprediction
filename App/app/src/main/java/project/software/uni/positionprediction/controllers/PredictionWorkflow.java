@@ -1,8 +1,14 @@
 package project.software.uni.positionprediction.controllers;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
+import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
 import project.software.uni.positionprediction.datatypes_new.Cloud;
@@ -15,6 +21,7 @@ import project.software.uni.positionprediction.datatypes_new.Shape;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.EShape;
+import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.visualisation_new.CloudVis;
 import project.software.uni.positionprediction.visualisation_new.Funnel;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
@@ -146,8 +153,24 @@ public class PredictionWorkflow extends Controller {
     private void requestData() /*throws RequestFailedException*/ {
         // Make an async network request for new data
         Log.i("OSM_new", "userParams.bird is null: " + (userParams.bird == null));
-        SQLDatabase.getInstance(context)
-                .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId());
+        final int percentag_bad_data = (int) (SQLDatabase.getInstance(context)
+                .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId()) * 100.0f);
+
+        // TODO: fix error message
+
+        new Handler(Looper.getMainLooper()).post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if(percentag_bad_data >=
+                                context.getResources().getInteger(R.integer.percentage_bad_data_warning)) {
+                            Message.disp_error(context,
+                                    context.getResources().getString(R.string.percentage_bad_date_warning),
+                                    context.getResources().getString(R.string.percentage_bad_data_warning_dialog,
+                                            percentag_bad_data));
+                        }
+                    }
+                });
     }
 
 
