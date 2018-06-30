@@ -151,7 +151,6 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         }
 
 
-
         Collection<Trajectory> trajectories = new Collection<Trajectory>();
 
         // Compute main angle. All other angles (delta_angles) are computed relative to this one.
