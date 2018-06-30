@@ -317,4 +317,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         startActivity(buttonIntent);
     }
 
+    @Override
+    public void onRefreshClick() {
+        // TODO: implement recalculation of prediction
+    }
+
 }

@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
@@ -174,23 +177,23 @@ public class PredictionWorkflow extends Controller {
     }
 
 
-   /**
-   * Prepare any data that will be used for the prediction.
-   * The returned object will be handed to the predicition algorithm
-   * as the sole ressource.
-   *
-   * in the future, might access different sources of information here (e.g. current weather)
-     and save that in PredictionBaseDate to be used for a position prediction
+    /**
+    * Prepare any data that will be used for the prediction.
+    * The returned object will be handed to the predicition algorithm
+    * as the sole ressource.
+    *
+    * in the future, might access different sources of information here (e.g. current weather)
+    * and save that in PredictionBaseDate to be used for a position prediction
     */
     private PredictionBaseData fetchData() throws InsufficientTrackingDataException {
-        // TODO: do this based on date
-        // todo: link this to hardcoded limit in algorithm
-        int pastDataPoints = 50; // Use last 10 data points
+
+        // TODO: link this to hardcoded limit in algorithm
 
         SQLDatabase db = SQLDatabase.getInstance(context);
         BirdData birddata = db.getBirdData(
                 userParams.bird.getStudyId(),
-                userParams.bird.getId());
+                userParams.bird.getId(),
+                userParams.date_past);
         Locations tracks = birddata.getTrackingPoints();
 
         // Check data
@@ -199,14 +202,12 @@ public class PredictionWorkflow extends Controller {
             throw new InsufficientTrackingDataException("Size of data is 0");
         }
 
-        // Use only needed data
-        // todo: do this via SQL request?
 
         Trajectory pastTracks = new Trajectory();
         int size = tracks.size();
-        for (int i = 0; i < pastDataPoints; i++) {
+        for (int i = 0; i < size; i++) {
             // get the i last points
-            pastTracks.addLocation(tracks.get(tracks.size() - 1 - pastDataPoints + i));
+            pastTracks.addLocation(tracks.get(size - 1 - + i));
         }
 
         PredictionBaseData data = new PredictionBaseData(pastTracks);

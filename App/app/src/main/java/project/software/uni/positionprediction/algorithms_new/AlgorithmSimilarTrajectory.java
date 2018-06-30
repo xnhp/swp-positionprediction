@@ -1,8 +1,10 @@
 package project.software.uni.positionprediction.algorithms_new;
 
 
+import android.content.Context;
 import android.util.Log;
 
+import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ import project.software.uni.positionprediction.algorithms_new.PredictionAlgorith
 
 public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajectories {
 
-    public AlgorithmSimilarTrajectory() {
+    public AlgorithmSimilarTrajectory(Context context) {
     }
 
 

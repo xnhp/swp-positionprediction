@@ -50,6 +50,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     private Context ctx;
     OSMDroidMap osmDroidMap;
     private XML xml = new XML();
+    private PredictionWorkflow predWorkflow = null;
 
     // padding to edges of map when zooming/panning
     // to view something on the map.
@@ -100,7 +101,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         // todo: this should be done in activity BirdSelect or Settings
         // instead in order to get something to draw: access static fields from PredictionWorkflow,
         // hand it and adapter to visualisatiion controller
-        PredictionWorkflow predWorkflow = null;
+
         try {
             predWorkflow = new PredictionWorkflow(
                     this,
@@ -110,7 +111,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        predWorkflow.trigger();
+        if(predWorkflow != null) predWorkflow.trigger();
 
 
 
@@ -297,6 +298,15 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         finish();
         Intent buttonIntent = new Intent(this, Cesium.class);
         startActivity(buttonIntent);
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
+    public void onRefreshClick() {
+        if(predWorkflow != null) predWorkflow.trigger();
     }
 
     /**

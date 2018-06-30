@@ -421,7 +421,7 @@ public class SQLDatabase {
         Cursor cursor = db.rawQuery("SELECT timestamp, location_long, location_lat, tag_id, " +
                 "individual_id, study_id FROM trackpoints " +
                 "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
-                " AND timestamp >= " + new Timestamp(dateStart.getTime()).toString() + " ORDER BY timestamp DESC", new String[]{});
+                " AND timestamp >= '" + new Timestamp(dateStart.getTime()).toString() + "' ORDER BY timestamp DESC", new String[]{});
         
 
         Locations points = new Locations();
@@ -547,7 +547,7 @@ public class SQLDatabase {
 
         // WHERE TRUE throws error.
         db.execSQL("DELETE FROM trackpoints");
-        db.execSQL("UPDATE birds SET last_update=NULL WHERE TRUE");
+        db.execSQL("UPDATE birds SET last_update=NULL");
     }
 
     /**

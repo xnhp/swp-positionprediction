@@ -194,7 +194,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
             // Break if date until we want the data is reached or use all data when something went wrong with the date
             if (date_t.before(date_past) && !use_all_data) {
-                Log.e("Break", "" + c + " data points where used for prediction");
+                Log.e("Break", "" + c + " data points were used for prediction");
                 break;
             }
             c++; // Count for Log.e

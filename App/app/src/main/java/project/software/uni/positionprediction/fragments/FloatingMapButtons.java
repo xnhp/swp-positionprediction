@@ -66,6 +66,13 @@ public class FloatingMapButtons extends android.support.v4.app.Fragment {
             }
         });
 
+        view.findViewById(R.id.fab_refresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.onRefreshClick();
+            }
+        });
+
         return view;
     }
 
@@ -105,6 +112,7 @@ public class FloatingMapButtons extends android.support.v4.app.Fragment {
         void onShowPredClick();
         void onShowLocClick();
         void onSwitchModeClick();
+        void onRefreshClick();
     }
 
     /**

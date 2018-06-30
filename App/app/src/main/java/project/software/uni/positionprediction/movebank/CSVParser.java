@@ -35,11 +35,13 @@ public class CSVParser {
                 case STATE_READ:
                     switch(c) {
                         case ',':
+                            // ',' indicates a new column
                             lineList.add(stringBuilder.toString());
                             stringBuilder = new StringBuilder();
                             break;
 
                         case '\n':
+                            // '\n' indicates a new row if it is outside a String
                             lineList.add(stringBuilder.toString());
                             stringBuilder = new StringBuilder();
                             resultList.add(lineList);
@@ -47,13 +49,16 @@ public class CSVParser {
                             break;
 
                         case '\r':
+                            // ignore '\r'
                             break;
 
                         case '"':
+                            // A String starts
                             state = ReadState.STATE_STRING;
                             break;
 
                         default:
+                            // nothing special. Add char to current column
                             stringBuilder.append(c);
                             break;
                     }
@@ -61,6 +66,7 @@ public class CSVParser {
 
                 case STATE_STRING:
                     if(c == '"'){
+                        // End of a String
                         state = ReadState.STATE_READ;
                     }else{
                         stringBuilder.append(c);
@@ -69,11 +75,13 @@ public class CSVParser {
             }
         }
 
+        // add last line to the result list
         lineList.add(stringBuilder.toString());
         if(lineList.size() > 1){
             resultList.add(lineList);
         }
 
+        // convert lists to array
         String result[][] = new String[resultList.size()][];
 
         int row_index = 0;
@@ -96,12 +104,20 @@ public class CSVParser {
 
     }
 
+    /**
+     * This Method parses a CSV-File to a 2 dimensional array of Strings.
+     * The first dimension are the columns, the second the rows
+     * @param input the CSV-File as String
+     * @return 2 dimensional Array of Strings
+     */
     public static String[][] parseColumnsRows(String input){
 
+        // get Rows and Columns
         String rowCol[][] = parseRowsColumns(input);
 
         String result[][] = new String[rowCol[0].length][];
 
+        // exchange dimensions of the array
         for(int i = 0; i < rowCol[0].length; i++){
 
             result[i] = new String[rowCol.length];
@@ -116,8 +132,17 @@ public class CSVParser {
 
     }
 
+    /**
+     * THis Method takes a 2 dimensional Array where the first dimension represents the columns
+     * and the second dimension represents the rows. It returns the Array with the selected columns
+     * only
+     * @param input 2 dimensional Array
+     * @param columns an Array of columns
+     * @return 2 dimensional Array with the selected columns only
+     */
     public static String[][] getColumns(String[][] input, String[] columns){
 
+        // put all columns into a HashMap
         HashMap<String, String[]> columnMap = new HashMap<String, String[]>();
 
         for(int i = 0; i < input.length; i++){
@@ -126,6 +151,7 @@ public class CSVParser {
 
         String result[][] = new String[columns.length][];
 
+        // get selected columns from HashMap
         for(int i = 0; i < columns.length; i++){
             result[i] = columnMap.get(columns[i]);
             if(result[i] == null){

@@ -35,4 +35,9 @@
     <dimen name="birdselect_start_margin_right">10dp</dimen>
     <dimen name="birdselect_text_shadow_radius">3px</dimen>
 
+    // Floating Map Buttons
+    <dimen name="floatingbuttons_margin_bottom">10dp</dimen>
+    <dimen name="floatingbuttons_margin_end">16dp</dimen>
+    <dimen name="floatingbuttons_butto_size">40dp</dimen>
+
 </resources>
