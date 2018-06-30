@@ -284,6 +284,12 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
             delta_ms.add(delta_t);
         }
 
+        if (delta_ms.size() == 0) {
+            msg.disp_error(c, "d", "d");
+            return 1;
+        }
+
+
         // Get average time between Tracking points
         long sum = 0;
         int m = delta_ms.size();

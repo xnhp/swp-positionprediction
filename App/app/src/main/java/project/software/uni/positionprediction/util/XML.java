@@ -14,9 +14,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
 
 public class XML {
 
@@ -232,6 +235,30 @@ public class XML {
             }
             parserEvent = parser.next();
         }
+    }
+
+
+
+    public PredictionAlgorithm getPredictionAlgorithm(final Context context){
+
+        PredictionAlgorithm predictionAlgorithm = null;
+
+        try {
+            Class<?> type = algorithms[used_alg];
+            Constructor<?> constructor = type.getConstructor(Context.class);
+
+            Object obj = constructor.newInstance(context);
+
+            if(obj instanceof PredictionAlgorithm) predictionAlgorithm = (PredictionAlgorithm) obj;
+
+            Log.d("Algorithm", ""+algorithms[used_alg].toString() + " is used...");
+
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e){
+            e.printStackTrace();
+        }
+
+        return predictionAlgorithm;
+
     }
 
 

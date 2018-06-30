@@ -100,11 +100,16 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         // todo: this should be done in activity BirdSelect or Settings
         // instead in order to get something to draw: access static fields from PredictionWorkflow,
         // hand it and adapter to visualisatiion controller
-        PredictionWorkflow predWorkflow = new PredictionWorkflow(
-                this,
-                getPredictionUserParameters(),
-                myVisAdap
-        );
+        PredictionWorkflow predWorkflow = null;
+        try {
+            predWorkflow = new PredictionWorkflow(
+                    this,
+                    getPredictionUserParameters(),
+                    myVisAdap
+            );
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         predWorkflow.trigger();
 
 
@@ -144,10 +149,27 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
 
         int hoursInPast = xml.getHours_past();
-        Calendar clp = Calendar.getInstance();
-        clp.setTime(new Date());
-        clp.add(Calendar.HOUR, hoursInPast);
-        Date date_past = clp.getTime();
+
+        // If used all data is clicked
+        Date date_past;
+
+        if (hoursInPast == -1){
+            Log.d("Controller", "All data will be used by algorithm");
+            date_past = new Date(0);
+            Log.e("date_past all data", "" + date_past.toString());
+            Log.e("hours all data", "" + date_past.getHours());
+
+
+            // If an hour is set in settings
+        } else {
+            Calendar clp = Calendar.getInstance();
+            clp.setTime(new Date());
+            clp.add(Calendar.HOUR, -hoursInPast);
+            date_past = clp.getTime();
+        }
+
+
+
 
 
         // for what point in the future we want the prediction
@@ -171,20 +193,9 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             bird = new Bird(2911059, 2911040, "Galapagos");
         }
 
-        /**
-        Class<?> algorithm = null;
-        try {
-            algorithm = Class.forName( xml.getAlgorithms()[xml.getUsed_alg()].toString());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Class constructors[] = {algorithm};
-        Object paramValues[] = {ctx};
-        */
 
         return new PredictionUserParameters(
-                new AlgorithmSimilarTrajectoryFunnel(ctx),
+                xml.getPredictionAlgorithm(ctx),
                 date_past,
                 date_pred,
                 bird

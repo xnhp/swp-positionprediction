@@ -65,6 +65,9 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
             msg.disp_error(this.c, "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
+        if (params.date_past == new Date(0)){
+            use_all_data = true;
+        }
         if (params.date_past.after(new Date())) {
             msg.disp_error(this.c, "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
             use_all_data = true;
