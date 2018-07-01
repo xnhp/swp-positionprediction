@@ -93,11 +93,11 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         // Check data
         if (data.getTrajectory().getLocation(0) instanceof LocationWithValue) {
             has_timestamps = true;
-            Log.e("Type-checking", "Locations have timestamps!");
+            Log.d("Type-checking", "Locations have timestamps!");
         } else if (data.getTrajectory().getLocation(0) instanceof Location) {
-            Log.e("Type-checking", "Locations don't have timestamps!");
+            Log.d("Type-checking", "Locations don't have timestamps!");
         } else {
-            Log.e("Type-checking", "Type couldn't be resolved!");
+            Log.d("Type-checking", "Type couldn't be resolved!");
         }
 
 
