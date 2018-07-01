@@ -532,7 +532,9 @@ public class BirdSelect extends AppCompatActivity {
 
                                     if (birds.length > 0) fillBirdsList(birds);
                                     else {
-                                        // TODO: dispaly warning (no accessable birds for study)
+                                        Message.disp_error(birdSelect,
+                                                birdSelect.getResources().getString(R.string.dialog_warning_title),
+                                                birdSelect.getResources().getString(R.string.dialog_no_birds_available));
                                     }
                                     break;
 

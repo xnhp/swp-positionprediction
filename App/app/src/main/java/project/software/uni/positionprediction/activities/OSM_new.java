@@ -43,6 +43,8 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     // CONTENTS
     // ========
 
+    // TODO: find a nicer way to do this
+    private static boolean settingsChanged;
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
@@ -74,6 +76,8 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         super.onCreate(savedInstanceState);
 
         final Context ctx = this;
+
+        settingsChanged = false;
 
 
         // 1.) Create OSMdroid map.
@@ -123,8 +127,6 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         registerEventHandlers(this);
 
     }
-
-
 
 
 
@@ -234,6 +236,11 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         if (osmDroidMap != null) osmDroidMap.onResume(); // needed for overlays (location, ...)
+
+        if(settingsChanged) {
+            settingsChanged = false;
+            refreshPrediction();
+        }
     }
 
     /*
@@ -306,7 +313,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
      */
     @Override
     public void onRefreshClick() {
-        if(predWorkflow != null) predWorkflow.trigger();
+        refreshPrediction();
     }
 
     /**
@@ -378,6 +385,10 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         }
     }
 
+    public static void setSettingsChanged(){
+        settingsChanged = true;
+    }
+
     /**
      * Toggle the icon of the "show location" button
      * @param state true if currently following the users location
@@ -389,6 +400,23 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             fragment.toggleShowLocBtn(state);
         } else {
             Log.e("FloatingMapButtons", "No fragment button to toggle! This probably means that no fragment is attached.");
+        }
+    }
+
+    /**
+     * This Method refreshes the Prediction
+     */
+    private void refreshPrediction(){
+        if(predWorkflow != null) {
+
+            try {
+                PredictionUserParameters userParams = getPredictionUserParameters();
+                predWorkflow.setUserParams(userParams);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            predWorkflow.trigger();
         }
     }
 

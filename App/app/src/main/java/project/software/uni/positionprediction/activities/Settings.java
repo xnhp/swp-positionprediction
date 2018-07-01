@@ -92,11 +92,13 @@ public class Settings extends AppCompatActivity {
         Class[] items_alg = xml.getAlgorithms();
         ArrayAdapter<String> adapter_alg = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_alg));
         spinner_alg.setAdapter(adapter_alg);
+        spinner_alg.setSelection(xml.getUsed_alg());
 
         // Define dropdown for Visualization
         Class[] items_vis = xml.getVisualizations();
         ArrayAdapter<String> adapter_vis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_vis));
         spinner_vis.setAdapter(adapter_vis);
+        spinner_vis.setSelection(xml.getUsed_vis());
 
 
         // check cache size and display a note to the user if its large
@@ -118,6 +120,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 xml.writeFile(c);
+                OSM_new.setSettingsChanged();
                 settings.finish();
             }
         });

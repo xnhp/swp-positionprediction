@@ -116,6 +116,7 @@ public class Login extends AppCompatActivity {
         // check weather the user typed in anything
         if(password.equals("") || username.equals("")){
             AlertDialog.Builder builder = new AlertDialog.Builder(login);
+            loadingIndicator.hide();
             builder.setMessage(R.string.login_field_missing)
                     .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
                         @Override

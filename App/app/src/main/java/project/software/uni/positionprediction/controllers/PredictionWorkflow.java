@@ -1,17 +1,15 @@
 package project.software.uni.positionprediction.controllers;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.datatypes_new.Location;
+import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
 import project.software.uni.positionprediction.datatypes_new.Cloud;
@@ -24,6 +22,7 @@ import project.software.uni.positionprediction.datatypes_new.Shape;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.EShape;
+import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.visualisation_new.CloudVis;
 import project.software.uni.positionprediction.visualisation_new.Funnel;
@@ -68,6 +67,7 @@ public class PredictionWorkflow extends Controller {
 
 
 
+
     public PredictionWorkflow(
             Context context,
             PredictionUserParameters userParams,
@@ -89,7 +89,10 @@ public class PredictionWorkflow extends Controller {
             public void run() {
 
                 // get tracking points from the movebank api
-                // TODO: indicate activity / progress to user
+
+                // show LoadingIndicator
+                LoadingIndicator.getInstance().show(context);
+
                 // TODO: try/catch RequestFailedException
                 requestData();
 
@@ -142,8 +145,8 @@ public class PredictionWorkflow extends Controller {
                     e.printStackTrace();
                 }
 
-
-
+                // hide LoadingIndicator
+                LoadingIndicator.getInstance().hide();
 
 
             }
@@ -210,6 +213,33 @@ public class PredictionWorkflow extends Controller {
             pastTracks.addLocation(tracks.get(size - 1 - + i));
         }
 
+        Location lastLocaation = tracks.get(size -1);
+        if(lastLocaation instanceof LocationWithValue){
+            LocationWithValue lastLocationWithValue = (LocationWithValue) lastLocaation;
+            if(lastLocationWithValue.getValue() instanceof  Date){
+
+                final Date date = (Date) lastLocationWithValue.getValue();
+
+                Date now = new Date();
+                // check if latest Location is older than a week
+                if(now.getTime() - date.getTime() >
+                        context.getResources().getInteger(R.integer.old_data_warning_time_difference)){
+
+                    new Handler(Looper.getMainLooper()).post(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    Message.disp_error(context,
+                                            context.getResources().getString(R.string.old_data_warning),
+                                            context.getResources().getString(
+                                                    R.string.old_data_warning_dialog,
+                                                    date.toString()));
+                                }
+                            });
+                }
+            }
+        }
+
         PredictionBaseData data = new PredictionBaseData(pastTracks);
 
         return data;
@@ -271,6 +301,10 @@ public class PredictionWorkflow extends Controller {
 
         return new TrajectoryVis(line);
 
+    }
+
+    public void setUserParams(PredictionUserParameters userParams){
+        this.userParams = userParams;
     }
 
 
