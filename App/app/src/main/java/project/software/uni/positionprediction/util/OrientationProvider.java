@@ -79,10 +79,12 @@ public class OrientationProvider implements SensorEventListener {
 
             // Computes the device's orientation (w.r.t to world coordinates) based on the rotation matrix.
             SensorManager.getOrientation(rotationMatrix, orientationVals);
-            // Log.i("OrientationTestActivity", String.format("Orientation: %f, %f, %f",
-            //        orientationVals[0], orientationVals[1], orientationVals[2]));
 
-            float orientationDegrees = (float) Math.toDegrees(orientationVals[0] + 2 * Math.PI);
+            // 180 when device is upstanding
+            // range of orientiationVals[0] is -pi..+pi, hence we add pi to
+            // get a range from 0..2pi (radians)
+            float orientationDegrees = (float) Math.toDegrees(orientationVals[0] + Math.PI);
+
 
             listener.onOrientationChanged(orientationDegrees);
         }

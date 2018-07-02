@@ -44,8 +44,11 @@ public class BearingProvider implements LocationListener, OrientationListener {
     // location
     @Override
     public void onLocationChanged(Location location) {
-        userLocation = location;
-        updateBearing();
+        // in the emulator, getLastKnownLocation might return null
+        this.userLocation = location;
+        if (this.userLocation != null) {
+            updateBearing();
+        }
     }
 
     // location
@@ -73,8 +76,15 @@ public class BearingProvider implements LocationListener, OrientationListener {
      */
     @Override
     public void onOrientationChanged(float newOrientation) {
+
+        Log.i("BearingProvider, or", Float.toString(newOrientation));
+
         this.userOrientation = newOrientation;
-        updateBearing();
+        // need to wait for user location to also be initialised
+        // android emulator gives null for getLastKnownLocation in LocationProvider
+        if (this.userLocation != null) {
+            updateBearing();
+        }
     }
 
 

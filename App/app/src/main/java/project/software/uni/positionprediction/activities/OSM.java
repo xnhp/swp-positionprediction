@@ -43,7 +43,6 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     private Button buttonSettings = null;
     private Button buttonDownload = null;
     private Button buttonBack     = null;
-    private ImageView compassArrow = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,71 +90,12 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
 
         // todo Set color in offline mode
 
-        compassArrow = findViewById(R.id.compassArrow);
+
 
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
         buttonDownload = findViewById(R.id.map_download_button);
         registerEventHandlers(osm);
-
-
-        // this.testOrientationProvider();
-        this.testBearingProvider();
-
-
-    }
-
-    private void testOrientationProvider() {
-        OrientationProvider op = new OrientationProvider(this);
-        op.registerOrientationUpdates(new OrientationListener() {
-            @Override
-            public void onOrientationChanged(float newOrientation) {
-                Log.i("OSM", "received new orientation: " + newOrientation);
-            }
-        });
-    }
-
-    private void testBearingProvider() {
-        // todo: only for testing
-        BearingProvider provider = new BearingProvider();
-
-        Location targetLocation = new Location("foo");
-        targetLocation.setLatitude(48.856614); // somewhere in
-        targetLocation.setLongitude(2.352222); // paris
-
-        provider.registerBearingUpdates(this, targetLocation, new BearingListener() {
-            @Override
-            public void onBearingChanged(float newBearing) {
-                Log.i("OSM", "received bearing: " + newBearing);
-                rotateArrow(newBearing);
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-            }
-        });
-    }
-
-
-    private void rotateArrow(float angle){
-        // todo: angle = 0 -> no rotation
-        // so if image is of arrow pointing leftwards,
-        // rotate it by 90°.
-        // todo: set origin of rotation to center of graphic
-        // todo: have graphic not be clipped
-        // todo: move all this into fragment
-        // todo: comments in calculation of angle in BearingProvider (the +2*pi thing)
-        Matrix matrix = new Matrix();
-        compassArrow.setScaleType(ImageView.ScaleType.MATRIX);
-        matrix.postRotate(angle, 100f, 100f);
-        compassArrow.setImageMatrix(matrix);
     }
 
 

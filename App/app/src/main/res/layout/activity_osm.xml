@@ -38,29 +38,30 @@
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/download"/>
 
-            <ImageView
-                android:id="@+id/compassArrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/arrow_left" />
-
-
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:gravity="center_vertical">
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <fragment
                 android:id="@+id/floating_map_buttons"
                 android:name="project.software.uni.positionprediction.fragments.FloatingMapButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                />
+
+            <fragment
+                android:id="@+id/fragment_compass"
+                android:name="project.software.uni.positionprediction.fragments.Compass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
 
 
         </LinearLayout>
