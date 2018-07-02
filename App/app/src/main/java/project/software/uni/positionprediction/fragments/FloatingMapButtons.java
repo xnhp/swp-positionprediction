@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import project.software.uni.positionprediction.R;
 
+
 public class FloatingMapButtons extends android.support.v4.app.Fragment {
 
     private final String logTag = "FloatingMapButtons";
