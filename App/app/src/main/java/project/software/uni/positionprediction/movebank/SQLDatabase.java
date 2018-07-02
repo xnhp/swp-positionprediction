@@ -9,6 +9,8 @@ import android.util.Log;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -518,6 +520,15 @@ public class SQLDatabase {
 
         Bird birds[] = new Bird[cursor.getCount()];
 
+        /*
+            (bm)
+            note that in the last_update column, only the
+            day is saved (format 2018-06-26).
+            for this, i reintroduced my parseDate method.
+            It seems ok to me to use the `Timestamp` class
+            for the rest.
+         */
+
         int rowIndex = 0;
         while(cursor.moveToNext()) {
             birds[rowIndex] = new Bird(
@@ -526,7 +537,7 @@ public class SQLDatabase {
                     cursor.getString(1),
                     true,
                     (cursor.isNull(3) ? null :
-                            new Date(Timestamp.valueOf(cursor.getString(3)).getTime())));
+                            parseDate(cursor.getString(3))));
             rowIndex++;
         }
 
@@ -613,6 +624,34 @@ public class SQLDatabase {
         return null;
 
     }
+
+
+    /**
+     * Parses a date from string.
+     * @param dateString of the pattern 2008-05-31 19:30:18.998 or 2008-05-31
+     * @return a Date object corresponding to the parsed date
+     */
+    private Date parseDate(String dateString) {
+        // cf https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+        DateFormat dfPrecise = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+        DateFormat dfDate = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        Date date = null;
+        try {
+            date = dfPrecise.parse(dateString);
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+            try {
+                date = dfDate.parse(dateString);
+            } catch (ParseException e1) {
+                Log.e("SQLDatabase", "Could not parse date of row");
+                e1.printStackTrace();
+            }
+        }
+        Log.i("SQLDatabase", "retrieved date from db: " + date);
+        return date;
+    }
+
 
 }
 
