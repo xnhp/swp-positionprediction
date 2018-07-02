@@ -37,11 +37,18 @@
                 android:gravity="center_vertical">
 
                 <fragment
-                    android:id="@+id/fragment"
+                    android:id="@+id/floating_map_buttons"
                     android:name="project.software.uni.positionprediction.fragments.FloatingMapButtons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    />
+
+                <fragment
+                    android:id="@+id/fragment_compass"
+                    android:name="project.software.uni.positionprediction.fragments.Compass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
 
 
             </LinearLayout>
