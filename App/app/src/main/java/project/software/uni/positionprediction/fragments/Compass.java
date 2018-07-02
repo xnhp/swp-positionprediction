@@ -82,7 +82,7 @@ public class Compass extends Fragment {
         targetLocation.setLatitude(48.856614); // somewhere in
         targetLocation.setLongitude(2.352222); // paris
 
-        BearingProvider provider = new BearingProvider();
+        BearingProvider provider = BearingProvider.getInstance();
         provider.registerBearingUpdates(this.context, targetLocation, new BearingListener() {
             @Override
             public void onBearingChanged(float newBearing) {

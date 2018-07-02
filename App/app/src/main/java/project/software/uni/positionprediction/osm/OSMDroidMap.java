@@ -123,7 +123,7 @@ public class OSMDroidMap {
     }
 
 
-    public void initMap(MapView view, GeoPoint center, final double zoom) throws MapInitException {
+    public void initMap(MapView view, GeoPoint center, final double zoom) {
         // I decided to only take a MapView here instead of taking the layout id and doing the cast
         // to `MapView` here because after all the mapping from view id to to a MapView object is not
         // the responsibility of this class.
@@ -131,12 +131,14 @@ public class OSMDroidMap {
         mapView = (MapView) view;
         mapController = mapView.getController();
 
-        // initialise a CacheManager with a tile writer as additional argument
+        // this ensures that the garbage collection methods of *this* CacheManager
+        //    don't remove any tiles saved by it.
+        // initialise a CacheManager with a custom tile writer as additional argument
         // for *persistent* offline saving
         // cf https://github.com/osmdroid/osmdroid/wiki/Offline-Map-Tiles, look for "Tile Archives"
-        SqlTileWriter tileWriter = OSMCacheControl.getInstance(this.context).tileWriter;
+        SqlTileWriter noDelTilewriter = OSMCacheControl.getInstance(this.context).tileWriter;
         //tileWriter.setCleanupOnStart(false);
-        cacheManager = new CacheManager(mapView, tileWriter);
+        cacheManager = new CacheManager(mapView, noDelTilewriter);
 
         // use Mapnik by default
         // TODO: other tile sources interesting?
@@ -148,6 +150,8 @@ public class OSMDroidMap {
 
         // disable gray zoom buttons at bottom of map (enabled by default)
         mapView.setBuiltInZoomControls(false);
+
+
 
 
         setZoom(zoom);
@@ -445,67 +449,6 @@ public class OSMDroidMap {
         if (locationOverlay !=null) locationOverlay.onPause();
         if (compassOverlay !=null) compassOverlay.onPause();
     }
-
-
-    /**
-     * Saves all zoom levels within range of parameters of a specified region to the cache.
-     * osmdroid checks if tiles are already downloaded and does not redownload in that case.
-     * (cf. CacheManager.loadTile())
-     * osmdroid checks if cached tiles exceed a hardcoded capacity, then removes tiles that are not
-     * in or close to the viewport, cf:
-     *      - MapTileCache.garbageCollection()    (check & removal)
-     *      - MapTileCache constructor            (hardcoded limit)
-     * @param bbox area to be saved
-     * @param zoomMin minimal zoom level to be saved
-     * @param zoomMax maximum zoom level to be saved
-     */
-    public void saveAreaToCache(BoundingBox bbox, int zoomMin, int zoomMax) {
-        // TODO: What should the UI look like when downloading maps? should there be a progress bar?
-        // TODO: osmdroid also provides other methods for downloading. which is best suited?
-
-        // TODO: move callbacks out of this module?
-
-        cacheManager.downloadAreaAsync(context, bbox, 5, 7, new CacheManager.CacheManagerCallback() {
-            @Override
-            public void onTaskComplete() {
-                Toast.makeText(context, R.string.dialog_map_download_complete, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onTaskFailed(int errors) {
-                // TODO
-                Toast.makeText(context, "Download complete with " + errors + " errors", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void updateProgress(int progress, int currentZoomLevel, int zoomMin, int zoomMax) {
-                // TODO
-                //NOOP since we are using the built in UI
-            }
-
-            @Override
-            public void downloadStarted() {
-                // TODO
-                //NOOP since we are using the built in UI
-                System.out.println("download started");
-            }
-
-            @Override
-            public void setPossibleTilesInArea(int total) {
-                // TODO
-                //NOOP since we are using the built in UI
-                System.out.println("set possible tiles");
-            }
-        });
-    }
-
-    // todo: remove
-    public void cleanAreaFromCache(BoundingBox bbox, int zoomMin, int zoomMax) {
-        // zoom levels are of type `int` here because `cleanAreaAsync` requires it. This seems to  be
-        // an inconsistency in osmdroid.
-        cacheManager.cleanAreaAsync(context, bbox, zoomMin, zoomMax);
-    }
-
 
 
     /**

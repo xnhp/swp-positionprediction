@@ -4,19 +4,38 @@ package project.software.uni.positionprediction.osm;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Cache;
 
 import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.cachemanager.CacheManager;
+import org.osmdroid.tileprovider.modules.IFilesystemCache;
 import org.osmdroid.tileprovider.modules.SqlTileWriter;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBox;
+
+import project.software.uni.positionprediction.R;
 
 public class OSMCacheControl {
 
     // the tileWriter is the central mechanism for reading/writing/managing data
     public final SqlTileWriter tileWriter;
-    // private Context context;
+
+    // osmDroids cacheManager class provides functionality for downloading tiles
+    // some things have to be manually provided i.o.t. be able to instantiate
+    // it without a map view.
+    // we build ourselves our own CacheManager with our
+    // special tileWriter that avoids deletion of tiles.
+    public CacheManager cacheManager;
+    private Context context;
 
     public final long maxCacheSize = 600L * 1024 * 1024; // 600MB
 
     private static OSMCacheControl self;
+    private int downloadMinZoom = 5;
+    private int downloadMaxZoom = 7;
 
     /**
      * note: a context is required for initialisation, however
@@ -32,9 +51,24 @@ public class OSMCacheControl {
     }
 
     public OSMCacheControl(Context ctx) {
-        // context is only used for this
+        this.context = ctx;
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         this.tileWriter = new SqlNoDelTileWriter();
+        this.cacheManager = buildCacheManager();
+    }
+
+    /**
+     * Builds a CacheManager without needing a MapView
+     * which osmdroid would only use to acess some properties of it
+     * we provide these here explicitly
+     * @return
+     */
+    private CacheManager buildCacheManager() {
+        ITileSource tileSource = TileSourceFactory.MAPNIK; // todo: synchronise with OSMDroidMap
+        IFilesystemCache fsCache = tileWriter;
+        int minZoom = tileSource.getMinimumZoomLevel();
+        int maxZoom = tileSource.getMaximumZoomLevel();
+        return new CacheManager(tileSource, fsCache, minZoom, maxZoom);
     }
 
     /**
@@ -54,8 +88,11 @@ public class OSMCacheControl {
         tileWriter.purgeCache();
     }
 
+    /**
+     * Check if cache exceeds a given size
+     * @return
+     */
     public boolean isCacheTooLarge() {
-        //return getCacheSize() > maxCacheSize;
         return getCacheSize() > maxCacheSize;
     }
 
@@ -63,6 +100,62 @@ public class OSMCacheControl {
         String cacheSize = android.text.format.Formatter.formatShortFileSize(context,
                 this.getCacheSize());
         return cacheSize;
+    }
+
+    /**
+     * Saves all zoom levels within range of parameters of a specified region to the cache.
+     * osmdroid checks if tiles are already downloaded and does not redownload in that case.
+     * (cf. CacheManager.loadTile())
+     * By default, osmdroid checks if cached tiles exceed a hardcoded capacity, then removes tiles
+     * that are not in or close to the viewport, cf:
+     *      - MapTileCache.garbageCollection()    (check & removal)
+     *      - MapTileCache constructor            (hardcoded limit)
+     * This has been circumvented by using our own custom TileWriter (cf `OSMCacheControl`).
+     * @param bbox area to be saved
+     */
+    public void saveAreaToCache(BoundingBox bbox) {
+        // TODO: What should the UI look like when downloading maps? should there be a progress bar?
+        // TODO: osmdroid also provides other methods for downloading. which is best suited?
+
+        cacheManager.downloadAreaAsync(context, bbox, downloadMinZoom, downloadMaxZoom, new CacheManager.CacheManagerCallback() {
+            @Override
+            public void onTaskComplete() {
+                Toast.makeText(context, R.string.dialog_map_download_complete, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onTaskFailed(int errors) {
+                // TODO
+                Toast.makeText(context, "Download complete with " + errors + " errors", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void updateProgress(int progress, int currentZoomLevel, int zoomMin, int zoomMax) {
+                // TODO
+                //NOOP since we are using the built in UI
+            }
+
+            @Override
+            public void downloadStarted() {
+                // TODO
+                //NOOP since we are using the built in UI
+                System.out.println("download started");
+            }
+
+            @Override
+            public void setPossibleTilesInArea(int total) {
+                // TODO
+                //NOOP since we are using the built in UI
+                System.out.println("set possible tiles");
+            }
+        });
+    }
+
+    // todo: probably not needed anymore.
+    public void cleanAreaFromCache(BoundingBox bbox, int zoomMin, int zoomMax) {
+        // zoom levels are of type `int` here because `cleanAreaAsync` requires it. This seems to  be
+        // an inconsistency in osmdroid.
+        cacheManager.cleanAreaAsync(context, bbox, zoomMin, zoomMax);
     }
 
 }

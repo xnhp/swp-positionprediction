@@ -18,6 +18,7 @@ import android.util.Log;
  */
 public class BearingProvider implements LocationListener, OrientationListener {
 
+
     private Location targetLocation;
     private BearingListener listener;
     private Location userLocation;
@@ -27,7 +28,17 @@ public class BearingProvider implements LocationListener, OrientationListener {
     double userOrientation;
 
 
-    public  void registerBearingUpdates(Context ctx,
+    private static BearingProvider self;
+
+    public static BearingProvider getInstance() {
+        if (self == null) {
+            self = new BearingProvider();
+        }
+        return self;
+    }
+
+
+    public void registerBearingUpdates(Context ctx,
                                         Location targetLocation,
                                         BearingListener listener) {
         this.targetLocation = targetLocation;
@@ -142,4 +153,10 @@ public class BearingProvider implements LocationListener, OrientationListener {
         return value;
     }
 
+
+
+    public void setTargetLocation(Location targetLocation) {
+        this.targetLocation = targetLocation;
+        updateBearing();
+    }
 }
