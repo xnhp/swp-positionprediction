@@ -40,4 +40,5 @@ public class TrajectoryVis extends Visualisation {
     public Polyline getLine() {
         return line;
     }
+    public Polygon getFunnel() {return funnel;}
 }

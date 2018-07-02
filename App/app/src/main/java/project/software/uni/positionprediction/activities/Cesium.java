@@ -31,17 +31,24 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
+import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.datatypes_new.EShape;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.Bird;
+import project.software.uni.positionprediction.util.JSONUtils;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.PermissionManager;
 import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
-
+import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation_new.Visualisation;
+import project.software.uni.positionprediction.visualisation_new.Visualisations;
 
 
 /**
@@ -133,6 +140,70 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     class JsObject {
 
         /**
+         * Call this from within the Cesium JavaScript to get the past vis
+         * @return
+         */
+        @JavascriptInterface
+        public String getPastVisJSON() {
+
+            TrajectoryVis visPast = PredictionWorkflow.vis_past;
+
+            if (visPast == null) {
+                Log.e("json", "no vis_past available (yet?)");
+                return new JSONObject().toString();
+            }
+
+            String res = null;
+
+            try {
+                res = JSONUtils.getSingleTrajJSON(visPast).toString();
+            } catch (JSONException e) {
+                Log.e("JSON", "Could not JSONify the past vis!");
+                e.printStackTrace();
+            }
+
+            return res;
+
+        }
+
+        /**
+         * for example output, refer to JSONUtils.getMultTrajJSON,
+         * JSONUtils, getCloudJSON
+         * @return
+         */
+        @JavascriptInterface
+        public String getPredVisJSON() {
+            Visualisations visPred = PredictionWorkflow.vis_pred;
+            if (visPred == null) {
+                Log.e("json", "no vis_pred available (yet?)");
+                return new JSONObject().toString();
+            }
+
+            String res = null;
+
+            try {
+
+                for (Map.Entry<EShape, Collection<? extends Visualisation>> entry : visPred.entrySet()) {
+                    if (entry.getKey() == EShape.TRAJECTORY) {
+                        res = JSONUtils.getMultTrajJSON(entry.getValue()).toString();
+                    }
+                    if (entry.getKey() == EShape.CLOUD) {
+                        res = JSONUtils.getCloudJSON(entry.getValue()).toString();
+                    }
+                    // other cases...
+                }
+
+            } catch (JSONException e) {
+                Log.e("JSON", "Could not JSONify the past vis!");
+                e.printStackTrace();
+            }
+
+            return res;
+        }
+
+
+
+        /**
          * return a json string containing the current user location.
          * Note: the default way to receive a location is letting the LocationManager
          * actively call a listener in the application.
@@ -142,7 +213,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
          * We have the javascript regularly access this getter for location updates.
          *
          * I decided to not fetch location via javascript since that introduces
-         * a range of different problems concerning javascript and the WebView.
+         * a range of different concerns concerning javascript and the WebView.
          *
          * @return a JSON string containing lat and lng if a location fix has been
          * previously obtained. an empty JSON string otherwise.

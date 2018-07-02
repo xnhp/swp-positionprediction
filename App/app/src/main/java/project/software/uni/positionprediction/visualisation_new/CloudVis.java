@@ -4,8 +4,8 @@ import org.osmdroid.util.BoundingBox;
 
 public class CloudVis extends Visualisation {
 
-    Points points;
-    Polygon hull;
+    public Points points;
+    public Polygon hull;
 
     @Override
     public BoundingBox getBoundingBox() {
