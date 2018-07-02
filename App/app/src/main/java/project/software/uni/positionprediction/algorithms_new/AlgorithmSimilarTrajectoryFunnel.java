@@ -4,6 +4,7 @@ package project.software.uni.positionprediction.algorithms_new;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,13 +17,30 @@ import project.software.uni.positionprediction.datatypes_new.PredictionResultDat
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.util.Message;
+import project.software.uni.positionprediction.util.XML;
 
 
 public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturnsTrajectories {
 
     Message msg = new Message();
     Context c;
+    GeneralComputations gc = new GeneralComputations();
 
+    // Variables for robustness
+    private boolean use_all_data = false;
+    private boolean no_date_pred_available = false;
+    private boolean has_timestamps = false;
+
+    // Class variables
+    PredictionUserParameters params;
+    PredictionBaseData data;
+
+    // Other variables
+    private double eps = 0.1;
+    private int traj_length = 5;
+
+
+    // Constructor
     public AlgorithmSimilarTrajectoryFunnel(Context c) {
         this.c = c;
     }
@@ -42,59 +60,200 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
      *
      * @return
      */
-    public PredictionResultData predict(PredictionUserParameters algParams, PredictionBaseData data) {
+    public PredictionResultData predict(PredictionUserParameters params, PredictionBaseData data) {
 
+        // Check input
+        // ===========
 
-        // Length of trajectory
-        int traj_length = 5;
-        int pred_traj_length = 5;
-
-        Collection<Trajectory> trajectories = new Collection<>();
-
-        // Algorithm
-        int size = data.getTrajectory().size();
-
-        double eps = 0.1; //1E-5;
-
-        // Get the trajectory (list of angles) you want to compare other trajectories
-        List<Number> delta_angles = new LinkedList<Number>();
-
-        // Compute main angle. All other angles (delta_angles) are computed relative to this one.
-        Location n0 = data.getTrajectory().getLocation(size - 1).to3D();
-        Location n1 = data.getTrajectory().getLocation(size - 2).to3D();
-        Location nth_vector = n0.subtract(n1);
-
-        // Compare all other angles with main vector to get relative angles (rotation of n_th vector doesn't matter)
-        for (int j = 2; j <= traj_length; j++) {
-            Location loc1 = data.getTrajectory().getLocation(size - j).to3D();
-            Location loc2 = data.getTrajectory().getLocation(size - j - 1).to3D();
-            Location vector = loc1.subtract(loc2);
-            double alpha = vector.getAngle(nth_vector);
-            delta_angles.add(alpha);
+        // Check trajectory size
+        if (data == null || data.getTrajectory().size() == 0) {
+            msg.disp_error(this.c, "Data size", "The algorithm doesn't get enough data");
+            return null;
         }
-
-        // Find possible other trajectories and add the index of the last point to list
-        List<Number> possible_indices = new LinkedList<Number>();
-
-
-        // Check for datatype correctness
-        boolean has_timestamps = false;
+        // Check dates
+        if (params.date_past == null) {
+            msg.disp_error(this.c, "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
+            use_all_data = true;
+        }
+        if (params.date_past == new Date(0)){
+            use_all_data = true;
+        }
+        if (params.date_past.after(new Date())) {
+            msg.disp_error(this.c, "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
+            use_all_data = true;
+        }
+        if (params.date_pred == null) {
+            msg.disp_error(this.c, "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
+            no_date_pred_available = true;
+        }
+        if (params.date_pred.before(new Date())) {
+            msg.disp_error(this.c, "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
+            no_date_pred_available = true;
+        }
+        // Check data
         if (data.getTrajectory().getLocation(0) instanceof LocationWithValue) {
             has_timestamps = true;
-            Log.i("Type-checking", "Locations have timestamps!");
+            Log.d("Type-checking", "Locations have timestamps!");
         } else if (data.getTrajectory().getLocation(0) instanceof Location) {
-            Log.e("Type-checking", "Locations don't have timestamps!");
+            Log.d("Type-checking", "Locations don't have timestamps!");
         } else {
-            Log.e("Type-checking", "Type couldn't be resolved!");
+            Log.d("Type-checking", "Type couldn't be resolved!");
         }
 
 
+        // Save variables
+        this.params = params;
+        this.data = data;
 
 
+        // Compute prediction
+        // ==================
+        return make_prediction();
+
+
+    }
+
+
+
+
+
+
+
+
+    private PredictionResultData make_prediction() {
+
+        // 1. Get List of angles of current trajectory
+        LinkedList<Number> angles = get_angle_list();
+
+        // 2. Compute possible indices where old trajectories are similar
+        LinkedList<Number> possible_indices = get_possible_trajectory_indices(angles);
+
+        // 3. Compute uncertainty of all data
+        double uncertainty = gc.getAngleVariance(data.getTrajectory());
+
+        // 4. Compute how many points we need in the future
+        int pred_traj_length = get_number_of_future_points();
+
+        // 5. Get trajectories of all found indices
+        return createResultData( get_trajectories_from_indices(possible_indices, uncertainty, pred_traj_length) );
+
+    }
+
+
+
+
+
+    private Collection<Trajectory> get_trajectories_from_indices(LinkedList<Number> possible_indices, double uncertainty, double pred_traj_length) {
+
+        if (possible_indices.size() == 0) {
+            Log.d("Warning", "No similar trajectories found");
+            return null;
+        }
+
+
+        Collection<Trajectory> trajectories = new Collection<Trajectory>();
+
+        // Compute main angle. All other angles (delta_angles) are computed relative to this one.
+        Location n0 = data.getTrajectory().getLocation(data.getTrajectory().size()-1).to3D();
+        Location n1 = data.getTrajectory().getLocation(data.getTrajectory().size()-2).to3D();
+        Location nth_vector = n0.subtract(n1);
+
+
+        for (int l = 0; l < possible_indices.size(); l++) {
+
+            Trajectory trajectory = new Trajectory();
+            LocationWithValue new_loc = new LocationWithValue(n0, uncertainty);
+            Location new_vector = nth_vector;
+
+            for (int m = 0; m < pred_traj_length; m++) {
+                // Last locations of similar trajectory
+                Location pos1 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m - 1);
+                Location pos2 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m);
+                // Last vector of known trajectory
+                Location vector = pos2.subtract(pos1);
+
+                // First locations after similar trajectory
+                Location next1 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m + 1);
+                Location next2 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m + 2);
+                // First vector after similiar trajectory (want to get this angle)
+                Location iter_vector = next2.subtract(next1);
+
+                // Relative angle to vector from similiar trajectoy
+                double gamma = iter_vector.dotProduct(vector);
+                // Rotate old vector with relative angle as known from similar trajectories
+                new_vector = new_vector.rotate(gamma);
+                // Add vector to current location
+                new_loc.setLocation( new_loc.add(new_vector) );
+                new_loc.setValue( uncertainty * uncertainty_factor(m+1) );
+
+                // Add new locations to current trajectory
+                trajectory.addLocation(new_loc);
+
+            }
+            // Add trajectory to List
+            Log.i("algorithm", "size of trajectory: " + trajectory.size());
+            trajectories.add(trajectory);
+        }
+
+        return trajectories;
+    }
+
+
+    private int get_number_of_future_points(){
+
+        int n = data.getTrajectory().size()-1;
+        LocationWithValue location = (LocationWithValue) data.getTrajectory().getLocation(n);
+        Date date_now_minus_hours_pred = get_past_date();
+
+        if (date_now_minus_hours_pred == null) {
+            Log.e("Error","No hours between now and pred");
+            return 0;
+        }
+
+
+        int count = 0;
+        Date date_of_location = (Date) location.getValue();
+        while (date_of_location.after(date_now_minus_hours_pred)) {
+            count++;
+            location = (LocationWithValue) data.getTrajectory().getLocation(n-count);
+            date_of_location = (Date) location.getValue();
+        }
+        Log.e("Number of taken points", ""+count);
+        return count;
+    }
+
+
+
+    private Date get_past_date(){
+        long now = new Date().getTime();
+        long date_pred = params.date_pred.getTime();
+        long duration = date_pred - now;
+        long hours = duration / 1000 / 60 / 60 ;
+        Log.e("hours computation", ""+hours);
+        Log.e("Date pred", params.date_pred.toString());
+        int hours1 = Log.e("Hours", ""+new XML().getHours_fut());
+        long past = now - hours;
+        return new Date(past);
+    }
+
+
+
+
+
+    private LinkedList<Number> get_possible_trajectory_indices(LinkedList<Number> angles){
+
+        if (angles.size() == 0) {
+            Log.d("Warning", "No angles are in the list.");
+            return null;
+        }
+
+
+        LinkedList<Number> possible_indices = new LinkedList<Number>();
         Trajectory traj = data.getTrajectory();
 
+        int size = data.getTrajectory().size();
         Date last_known_date = (Date) ((LocationWithValue) data.getTrajectory().getLocation(size-1) ).getValue();
-        long pred_duration = algParams.date_pred.getTime() - last_known_date.getTime();
+        long pred_duration = params.date_pred.getTime() - last_known_date.getTime();
         long date_last_as_long = last_known_date.getTime() - pred_duration;
         Date date_last = new Date(date_last_as_long);
 
@@ -104,7 +263,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
             LocationWithValue loc_t = (LocationWithValue) traj.getLocation(i);
             Date date_t = (Date) loc_t.getValue();
 
-            if (date_t.after(algParams.date_past) && date_t.before(date_last)) {
+            if (date_t.after(params.date_past) && date_t.before(date_last)) {
 
                 System.out.println("LOCATION: " + i);
 
@@ -127,9 +286,9 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
                     Location loc2 = data.getTrajectory().getLocation(i - k - 1).to3D();
                     Location vector = loc1.subtract(loc2);
                     double beta = vector.getAngle(mth_vector);
-                    System.out.println("beta = " + beta + ", other = " + delta_angles.get(k - 1));
+                    System.out.println("beta = " + beta + ", other = " + angles.get(k - 1));
 
-                    if (Math.abs(beta - (double) delta_angles.get(k - 1)) < eps) {
+                    if (Math.abs(beta - (double) angles.get(k - 1)) < eps) {
                         is_similar = true;
                         System.out.println("Similar");
                     }
@@ -146,7 +305,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
             }
         }
 
-
+        // Feedback
         Log.i("algorithm", "possible_indices size: " + possible_indices.size());
         if (possible_indices.size() == 0) {
             Log.e("No trajectory found", "There are no similar trajectories!");
@@ -156,43 +315,57 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
             Log.i("Number of trajectories", ""+possible_indices.size());
         }
 
-        for (int l = 0; l < possible_indices.size(); l++) {
+        return possible_indices;
 
-            Trajectory trajectory = new Trajectory();
-            Location new_loc = n0;
-            Location new_vector = nth_vector;
+    }
 
-            for (int m = 0; m < pred_traj_length; m++) {
-                // Last locations of similar trajectory
-                Location pos1 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m - 1);
-                Location pos2 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m);
-                // Last vector of known trajectory
-                Location vector = pos2.subtract(pos1);
 
-                // First locations after similar trajectory
-                Location next1 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m + 1);
-                Location next2 = data.getTrajectory().getLocation((int) possible_indices.get(l) + m + 2);
-                // First vector after similiar trajectory (want to get this angle)
-                Location iter_vector = next2.subtract(next1);
+    private LinkedList<Number> get_angle_list(){
+        // Length of trajectory
+        int traj_length = 5;
+        int pred_traj_length = 5;
 
-                // Relative angle to vector from similiar trajectoy
-                double gamma = iter_vector.dotProduct(vector);
-                // Rotate old vector with relative angle as known from similar trajectories
-                new_vector = new_vector.rotate(gamma);
-                // Add vector to current location
-                new_loc = new_loc.add(new_vector);
+        Collection<Trajectory> trajectories = new Collection<>();
 
-                // Add new locations to current trajectory
-                trajectory.addLocation(new_loc);
+        // Algorithm
+        int size = data.getTrajectory().size();
 
-            }
-            // Add trajectory to List
-            Log.i("algorithm", "size of trajectory: " + trajectory.size());
-            trajectories.add(trajectory);
+        double eps = 0.1; //1E-5;
+
+        // Get the trajectory (list of angles) you want to compare other trajectories
+        LinkedList<Number> delta_angles = new LinkedList<Number>();
+
+        // Compute main angle. All other angles (delta_angles) are computed relative to this one.
+        Location n0 = data.getTrajectory().getLocation(size - 1).to3D();
+        Location n1 = data.getTrajectory().getLocation(size - 2).to3D();
+        Location nth_vector = n0.subtract(n1);
+
+        // Compare all other angles with main vector to get relative angles (rotation of n_th vector doesn't matter)
+        for (int j = 2; j <= traj_length; j++) {
+            Location loc1 = data.getTrajectory().getLocation(size - j).to3D();
+            Location loc2 = data.getTrajectory().getLocation(size - j - 1).to3D();
+            Location vector = loc1.subtract(loc2);
+            double alpha = vector.getAngle(nth_vector);
+            delta_angles.add(alpha);
         }
 
-        Log.i("algorithm", "size of trajectories: " + trajectories.size());
-        return createResultData(trajectories);
+        return delta_angles;
+    }
+
+
+
+
+
+
+
+
+    /**
+     * todo: possible other function to change the factor which increases factor of uncertainty
+     * @param m
+     * @return
+     */
+    private double uncertainty_factor(int m){
+            return m;
         }
     }
 

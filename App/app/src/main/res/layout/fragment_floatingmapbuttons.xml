@@ -15,16 +15,19 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_switchMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_width="@dimen/floatingbuttons_butto_size"
+            android:layout_height="@dimen/floatingbuttons_butto_size"
             android:clickable="true"
             android:focusable="true"
+            android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
+            android:layout_marginTop="@dimen/floatingbuttons_margin_bottom"
+            android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
             app:backgroundTint="@android:color/white"
             app:elevation="5dp"
             app:fabSize="mini"
@@ -33,18 +36,14 @@
             tools:layout_editor_absoluteY="238dp" />
 
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_showData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_width="@dimen/floatingbuttons_butto_size"
+            android:layout_height="@dimen/floatingbuttons_butto_size"
             android:clickable="true"
             android:focusable="true"
+            android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
+            android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
             app:backgroundTint="@android:color/white"
             app:elevation="5dp"
             app:fabSize="mini"
@@ -52,19 +51,14 @@
             app:srcCompat="@android:drawable/ic_menu_mapmode"
             tools:layout_editor_absoluteY="238dp" />
 
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"></Space>
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_showPred"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_width="@dimen/floatingbuttons_butto_size"
+            android:layout_height="@dimen/floatingbuttons_butto_size"
             android:clickable="true"
             android:focusable="true"
+            android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
+            android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
             app:backgroundTint="@android:color/white"
             app:elevation="5dp"
             app:fabSize="mini"
@@ -73,18 +67,14 @@
             tools:layout_editor_absoluteY="327dp" />
 
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"></Space>
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_showLoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_width="@dimen/floatingbuttons_butto_size"
+            android:layout_height="@dimen/floatingbuttons_butto_size"
             android:clickable="true"
             android:focusable="true"
+            android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
+            android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
             app:backgroundTint="@android:color/white"
             app:elevation="5dp"
             app:fabSize="mini"
@@ -93,14 +83,22 @@
             app:srcCompat="@drawable/osm_ic_follow_me"
             tools:layout_editor_absoluteY="327dp" />
 
-        <!-- this additional Space is intended. we need it because else the shadow
-             of the lowest button would be cut off
-             todo: nicer way?
-        -->
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_refresh"
+            android:layout_width="@dimen/floatingbuttons_butto_size"
+            android:layout_height="@dimen/floatingbuttons_butto_size"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
+            android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
+            app:backgroundTint="@android:color/white"
+            app:elevation="5dp"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:rippleColor="@color/colorAccent"
+            app:srcCompat="@android:drawable/ic_menu_rotate"
+            tools:layout_editor_absoluteY="327dp" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

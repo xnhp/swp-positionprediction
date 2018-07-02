@@ -25,7 +25,6 @@ import java.util.concurrent.TimeoutException;
 
 public class MovebankRequest {
 
-    // TODO: put this in a configuration file
     private String username = null;
     private String password = null;
 

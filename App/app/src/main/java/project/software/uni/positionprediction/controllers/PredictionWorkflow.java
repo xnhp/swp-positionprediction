@@ -1,8 +1,15 @@
 package project.software.uni.positionprediction.controllers;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
+import java.util.Date;
+
+import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.datatypes_new.Location;
+import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
 import project.software.uni.positionprediction.datatypes_new.Cloud;
@@ -15,6 +22,8 @@ import project.software.uni.positionprediction.datatypes_new.Shape;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.EShape;
+import project.software.uni.positionprediction.util.LoadingIndicator;
+import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.visualisation_new.CloudVis;
 import project.software.uni.positionprediction.visualisation_new.Funnel;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
@@ -58,6 +67,7 @@ public class PredictionWorkflow extends Controller {
 
 
 
+
     public PredictionWorkflow(
             Context context,
             PredictionUserParameters userParams,
@@ -79,7 +89,10 @@ public class PredictionWorkflow extends Controller {
             public void run() {
 
                 // get tracking points from the movebank api
-                // TODO: indicate activity / progress to user
+
+                // show LoadingIndicator
+                LoadingIndicator.getInstance().show(context);
+
                 // TODO: try/catch RequestFailedException
                 requestData();
 
@@ -132,8 +145,8 @@ public class PredictionWorkflow extends Controller {
                     e.printStackTrace();
                 }
 
-
-
+                // hide LoadingIndicator
+                LoadingIndicator.getInstance().hide();
 
 
             }
@@ -146,28 +159,44 @@ public class PredictionWorkflow extends Controller {
     private void requestData() /*throws RequestFailedException*/ {
         // Make an async network request for new data
         Log.i("OSM_new", "userParams.bird is null: " + (userParams.bird == null));
-        SQLDatabase.getInstance(context)
-                .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId());
+        final int percentag_bad_data = (int) (SQLDatabase.getInstance(context)
+                .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId()) * 100.0f);
+
+        // TODO: fix error message
+
+        new Handler(Looper.getMainLooper()).post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if(percentag_bad_data >=
+                                context.getResources().getInteger(R.integer.percentage_bad_data_warning)) {
+                            Message.disp_error(context,
+                                    context.getResources().getString(R.string.percentage_bad_date_warning),
+                                    context.getResources().getString(R.string.percentage_bad_data_warning_dialog,
+                                            percentag_bad_data));
+                        }
+                    }
+                });
     }
 
 
-   /**
-   * Prepare any data that will be used for the prediction.
-   * The returned object will be handed to the predicition algorithm
-   * as the sole ressource.
-   *
-   * in the future, might access different sources of information here (e.g. current weather)
-     and save that in PredictionBaseDate to be used for a position prediction
+    /**
+    * Prepare any data that will be used for the prediction.
+    * The returned object will be handed to the predicition algorithm
+    * as the sole ressource.
+    *
+    * in the future, might access different sources of information here (e.g. current weather)
+    * and save that in PredictionBaseDate to be used for a position prediction
     */
     private PredictionBaseData fetchData() throws InsufficientTrackingDataException {
-        // TODO: do this based on date
-        // todo: link this to hardcoded limit in algorithm
-        int pastDataPoints = 50; // Use last 10 data points
+
+        // TODO: link this to hardcoded limit in algorithm
 
         SQLDatabase db = SQLDatabase.getInstance(context);
         BirdData birddata = db.getBirdData(
                 userParams.bird.getStudyId(),
-                userParams.bird.getId());
+                userParams.bird.getId(),
+                userParams.date_past);
         Locations tracks = birddata.getTrackingPoints();
 
         // Check data
@@ -176,14 +205,39 @@ public class PredictionWorkflow extends Controller {
             throw new InsufficientTrackingDataException("Size of data is 0");
         }
 
-        // Use only needed data
-        // todo: do this via SQL request?
 
         Trajectory pastTracks = new Trajectory();
         int size = tracks.size();
-        for (int i = 0; i < pastDataPoints; i++) {
+        for (int i = 0; i < size; i++) {
             // get the i last points
-            pastTracks.addLocation(tracks.get(tracks.size() - 1 - pastDataPoints + i));
+            pastTracks.addLocation(tracks.get(size - 1 - + i));
+        }
+
+        Location lastLocaation = tracks.get(size -1);
+        if(lastLocaation instanceof LocationWithValue){
+            LocationWithValue lastLocationWithValue = (LocationWithValue) lastLocaation;
+            if(lastLocationWithValue.getValue() instanceof  Date){
+
+                final Date date = (Date) lastLocationWithValue.getValue();
+
+                Date now = new Date();
+                // check if latest Location is older than a week
+                if(now.getTime() - date.getTime() >
+                        context.getResources().getInteger(R.integer.old_data_warning_time_difference)){
+
+                    new Handler(Looper.getMainLooper()).post(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    Message.disp_error(context,
+                                            context.getResources().getString(R.string.old_data_warning),
+                                            context.getResources().getString(
+                                                    R.string.old_data_warning_dialog,
+                                                    date.toString()));
+                                }
+                            });
+                }
+            }
         }
 
         PredictionBaseData data = new PredictionBaseData(pastTracks);
@@ -247,6 +301,10 @@ public class PredictionWorkflow extends Controller {
 
         return new TrajectoryVis(line);
 
+    }
+
+    public void setUserParams(PredictionUserParameters userParams){
+        this.userParams = userParams;
     }
 
 

@@ -5,4 +5,7 @@
     <string name="movebank_user">SP_1-2</string>
     <string name="movebank_password">Xamhdg9adB</string>
 
+    <integer name="percentage_bad_data_warning">5</integer>
+    <integer name="old_data_warning_time_difference">604800000</integer>
+
 </resources>

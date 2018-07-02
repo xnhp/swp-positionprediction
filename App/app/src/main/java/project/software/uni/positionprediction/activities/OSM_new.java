@@ -17,12 +17,16 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.lang.reflect.Constructor;
 import java.util.Calendar;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectoryFunnel;
+import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
@@ -39,11 +43,16 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     // CONTENTS
     // ========
 
+    // TODO: find a nicer way to do this
+    private static boolean settingsChanged;
 
     private Button buttonSettings = null;
     private Button buttonDownload = null;
     private Button buttonBack     = null;
+    private Context ctx;
     OSMDroidMap osmDroidMap;
+    private XML xml = new XML();
+    private PredictionWorkflow predWorkflow = null;
 
     // padding to edges of map when zooming/panning
     // to view something on the map.
@@ -66,6 +75,9 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
         super.onCreate(savedInstanceState);
 
+        final Context ctx = this;
+
+        settingsChanged = false;
 
 
         // 1.) Create OSMdroid map.
@@ -93,12 +105,17 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         // todo: this should be done in activity BirdSelect or Settings
         // instead in order to get something to draw: access static fields from PredictionWorkflow,
         // hand it and adapter to visualisatiion controller
-        PredictionWorkflow predWorkflow = new PredictionWorkflow(
-                this,
-                getPredictionUserParameters(),
-                myVisAdap
-        );
-        predWorkflow.trigger();
+
+        try {
+            predWorkflow = new PredictionWorkflow(
+                    this,
+                    getPredictionUserParameters(),
+                    myVisAdap
+            );
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(predWorkflow != null) predWorkflow.trigger();
 
 
 
@@ -115,8 +132,6 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
 
 
-
-
     // PROVISIONAL METHODS (TJ: todo: All of them should be implemented elsewhere!!!)
     // ==============================================================================
 
@@ -125,23 +140,51 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     // bm: Would rather put this somewhere else b/c "Settings" is an
     // Activity and should only do UI-related stuff.
     // But thats not important
-    public PredictionUserParameters getPredictionUserParameters() {
+    public PredictionUserParameters getPredictionUserParameters() throws ClassNotFoundException {
 
         // hardcoded date marking the lower bound for tracking data
         // which should be included in the prediction
         // note that if hour, second, ... is not specified the
         // *current* hour, second, ... will be used
         Calendar cal = Calendar.getInstance();
-        cal.set(2007, Calendar.MAY, 9);
-        Date date_past = cal.getTime();
+
+        //hardcoded for visualization: cal.set(2007, Calendar.MAY, 9);
+
+
+        int hoursInPast = xml.getHours_past();
+
+        // If used all data is clicked
+        Date date_past;
+
+        if (hoursInPast == -1){
+            Log.d("Controller", "All data will be used by algorithm");
+            date_past = new Date(0);
+            Log.e("date_past all data", "" + date_past.toString());
+            Log.e("hours all data", "" + date_past.getHours());
+
+
+            // If an hour is set in settings
+        } else {
+            Calendar clp = Calendar.getInstance();
+            clp.setTime(new Date());
+            clp.add(Calendar.HOUR, -hoursInPast);
+            date_past = clp.getTime();
+        }
+
+
+
+
 
         // for what point in the future we want the prediction
         // hardcoded: 5 hours from current datetime
-        int hoursInFuture = 5;
-        Calendar cl = Calendar.getInstance();
-        cl.setTime(new Date());
-        cl.add(Calendar.HOUR, hoursInFuture);
-        Date date_pred = cl.getTime();
+        int hoursInFuture = xml.getHours_fut();
+        Calendar clf = Calendar.getInstance();
+        clf.setTime(new Date());
+        clf.add(Calendar.HOUR, hoursInFuture);
+        Date date_pred = clf.getTime();
+
+
+
 
         // todo: fetch from PredictionWorkflow controller instead
         Intent i = getIntent();
@@ -153,8 +196,9 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             bird = new Bird(2911059, 2911040, "Galapagos");
         }
 
+
         return new PredictionUserParameters(
-                new AlgorithmExtrapolationExtended(this),
+                xml.getPredictionAlgorithm(ctx),
                 date_past,
                 date_pred,
                 bird
@@ -192,6 +236,11 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         if (osmDroidMap != null) osmDroidMap.onResume(); // needed for overlays (location, ...)
+
+        if(settingsChanged) {
+            settingsChanged = false;
+            refreshPrediction();
+        }
     }
 
     /*
@@ -263,6 +312,15 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
      * fragments.FloatingMapButtons
      */
     @Override
+    public void onRefreshClick() {
+        refreshPrediction();
+    }
+
+    /**
+     * Click handler triggered by the according button in
+     * fragments.FloatingMapButtons
+     */
+    @Override
     public void onShowDataClick() {
         toggleShowLocBtn(false);
 
@@ -327,6 +385,10 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         }
     }
 
+    public static void setSettingsChanged(){
+        settingsChanged = true;
+    }
+
     /**
      * Toggle the icon of the "show location" button
      * @param state true if currently following the users location
@@ -340,5 +402,25 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             Log.e("FloatingMapButtons", "No fragment button to toggle! This probably means that no fragment is attached.");
         }
     }
+
+    /**
+     * This Method refreshes the Prediction
+     */
+    private void refreshPrediction(){
+        if(predWorkflow != null) {
+
+            try {
+                PredictionUserParameters userParams = getPredictionUserParameters();
+                predWorkflow.setUserParams(userParams);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            predWorkflow.trigger();
+        }
+    }
+
+
+
 
 }//class

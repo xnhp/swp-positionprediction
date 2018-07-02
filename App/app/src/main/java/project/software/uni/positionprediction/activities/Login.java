@@ -2,6 +2,7 @@ package project.software.uni.positionprediction.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
@@ -20,15 +22,19 @@ import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
 import project.software.uni.positionprediction.datatypes_new.Request;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
+import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.XML;
 import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation_new.StyledPoint;
 
 public class Login extends AppCompatActivity {
 
-    private EditText editTextUsername;
-    private EditText editTextPassword;
-    private Button buttonLogin;
+    private EditText editTextUsername = null;
+    private EditText editTextPassword = null;
+    private Button buttonLogin = null;
+    RelativeLayout layout = null;
+
+    LoadingIndicator loadingIndicator = null;
 
     private XML xml = new XML();
 
@@ -52,14 +58,21 @@ public class Login extends AppCompatActivity {
         xml.setVisualizations(visualizations);
 
 
-        editTextUsername = (EditText)findViewById(R.id.login_edittext_username);
-        editTextPassword = (EditText)findViewById(R.id.login_edittext_password);
+        this.layout = findViewById(R.id.login_background);
+        this.layout.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));
+        this.editTextUsername = (EditText)findViewById(R.id.login_edittext_username);
+        this.editTextPassword = (EditText)findViewById(R.id.login_edittext_password);
 
-        buttonLogin = (Button)findViewById(R.id.login_button_login);
+        this.buttonLogin = (Button)findViewById(R.id.login_button_login);
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
+        this.loadingIndicator = LoadingIndicator.getInstance();
+
+        final Login login = this;
+
+        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loadingIndicator.show(login);
                 login(  editTextUsername.getText().toString(),
                         editTextPassword.getText().toString() );
             }
@@ -69,15 +82,24 @@ public class Login extends AppCompatActivity {
 
         // try login with saved user data
         if(xml.getMovebank_user() != null && xml.getMovebank_password() != null){
+            this.editTextUsername.setText(xml.getMovebank_user());
+            this.editTextPassword.setText(xml.getMovebank_password());
+            loadingIndicator.show(this);
             login(xml.getMovebank_user(), xml.getMovebank_password());
         }
 
     }
 
+    /**
+     * This Method trys to login with the given credentials
+     * @param username the username to login with
+     * @param password the password to login with
+     */
     private void login(final String username, final String password){
 
         final Login login = this;
 
+        // Use standarf-Password in Debug-Mode if nothing is typed in
         if(BuildConfig.DEBUG){
             if(username.equals("") && password.equals("")){
 
@@ -91,8 +113,10 @@ public class Login extends AppCompatActivity {
             }
         }
 
+        // check weather the user typed in anything
         if(password.equals("") || username.equals("")){
             AlertDialog.Builder builder = new AlertDialog.Builder(login);
+            loadingIndicator.hide();
             builder.setMessage(R.string.login_field_missing)
                     .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -104,6 +128,7 @@ public class Login extends AppCompatActivity {
             return;
         }
 
+        // stard new Thread for the synchronous network-Request
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -111,9 +136,11 @@ public class Login extends AppCompatActivity {
 
                 int status = request.getResponseStatus();
 
-                Log.e("status", status + "");
+                loadingIndicator.hide();
 
                 if(status == HttpStatusCode.OK){
+
+                    // everything ok, credentials valid
                     MovebankConnector.getInstance(login).checkUser(username, password);
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -130,9 +157,19 @@ public class Login extends AppCompatActivity {
 
                     Log.e("creds", "valid");
                 } else if(status == HttpStatusCode.FORBIDDEN) {
+
+                    // invalid credentials
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
+
+                            layout.setBackgroundResource(R.drawable.stork_animation);
+                            AnimationDrawable animation = (AnimationDrawable) layout.getBackground();
+                            animation.setAlpha(getResources().getInteger(R.integer.background_alpha));
+
+                            animation.stop();
+                            animation.start();
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(login);
                             builder.setMessage(R.string.login_wrong_creds_warning)
                                     .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
@@ -145,6 +182,8 @@ public class Login extends AppCompatActivity {
                         }
                     });
                 } else {
+
+                    // something went wrong (unknown error).
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {

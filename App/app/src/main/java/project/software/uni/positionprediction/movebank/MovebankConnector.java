@@ -15,7 +15,6 @@ import project.software.uni.positionprediction.datatypes_new.Request;
  *     MovebankConnector connector = MovebankConnector.getInstance();
  *     String result = connector.getBirdData(22390461, 102937685);
  *
- * TODO: Warnings?
  */
 public class MovebankConnector {
 

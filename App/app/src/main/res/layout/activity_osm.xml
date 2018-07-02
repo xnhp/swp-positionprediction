@@ -52,7 +52,7 @@
             <fragment
                 android:id="@+id/floating_map_buttons"
                 android:name="project.software.uni.positionprediction.fragments.FloatingMapButtons"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
