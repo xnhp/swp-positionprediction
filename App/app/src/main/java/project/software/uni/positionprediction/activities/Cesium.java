@@ -60,7 +60,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     private Button buttonSettings = null;
     private Button buttonBack = null;
-    //private Button buttonOffline = null;
 
     private WebServer webServer;
     private static String CESIUM_URI = "http://localhost:8080/";
@@ -68,16 +67,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
 
     private Context context = this;
-
-    // the bird that was selected in a previous activity
-    Bird selectedBird;
-
-    private int pastDataPoints = 50;
-
-    private ArrayList<Double> longitudes = new ArrayList<>();
-    private ArrayList<Double> latitudes = new ArrayList<>();
-
-    //private Locations pastTracks = new SingleTrajectory();
 
     // android.location, not ours
     Location userLocation;
@@ -93,9 +82,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         this.buttonSettings = findViewById(R.id.navbar_button_settings);
         this.buttonBack = findViewById(R.id.navbar_button_back);
-        //this.buttonOffline = findViewById(R.id.offline_btn);
-
-        this.selectedBird = (Bird) getIntent().getSerializableExtra("selectedBird");
 
         registerEventHandlers(cesium);
 
@@ -121,22 +107,15 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         // Web Location: http://localhost:8080/test.html
         webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
 
-        SQLDatabase db = SQLDatabase.getInstance(this);
-        BirdData birddata = db.getBirdData(2911040, 2911059);
-
-        /*
-        Locations tracks = birddata.getTrackingPoints();
-
-        for (int i = 0; i < pastDataPoints; i++) {
-            //loc_data[i] = tracks[size - 1 - pastDataPoints + i].getLocation().to3D();
-            //pastTracks.add( tracks.get(tracks.length-1 - pastDataPoints + i).getLocation() );
-        }
-        */
         launchWebView(webView);
 
     }
 
 
+    /**
+     * This class provides getter methods which will be called from JavaScript
+     * inside the WebView.
+     */
     class JsObject {
 
         /**
@@ -240,52 +219,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     }
 
 
-    // TODO (bm): replace this with locationListener
-    @SuppressLint("MissingPermission") // we do take care of permissions
-    private void registerLocationListener() {
-        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                // fill class field with location.
-                // location is accessed by e.g. getUserLocationJSON
-                //Log.i("location", location.toString());
-                userLocation = location;
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-            }
-        };
-        locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener);
-    }
-
-    private void addValues() {
-        longitudes.add(9.299999);
-        longitudes.add(9.199999);
-        longitudes.add(9.099999);
-        longitudes.add(8.599999);
-
-        latitudes.add(47.899999);
-        latitudes.add(47.799999);
-        latitudes.add(47.699999);
-        latitudes.add(47.099999);
-    }
-
-
     private void registerEventHandlers(final Cesium cesium){
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,11 +237,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     }
 
-    public void launchBrowser(View view) {
-        Intent launchBrowser = new Intent(Intent.ACTION_VIEW);
-        launchBrowser.setData(Uri.parse(CESIUM_URI));
-        startActivity(launchBrowser);
-    }
 
     // This works only on Lollipop or newer, as at least WebView v36 is required (WebGL support).
     // A correct fallback should maybe be implemented. ;)
@@ -378,19 +306,47 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     @Override
     public void onSwitchModeClick() {
         finish(); // todo: do we really want this? maybe its better to keep the map activities
-                  // so they dont have to be reloaded.
+                  // todo: so they dont have to be reloaded.
         Intent buttonIntent = new Intent(this, OSM_new.class);
-        Log.i("Cesium", "selectedBird is null: " + (selectedBird == null));
-        // pass currently selected bird to other activity.
-        // this should be removed, instead the other activity
-        // should fetch is data from a static field in controllers.PredictionWorkflow
-        buttonIntent.putExtra("selectedBird", selectedBird);
         startActivity(buttonIntent);
     }
 
     @Override
     public void onRefreshClick() {
         // TODO: implement recalculation of prediction
+    }
+
+
+    @SuppressLint("MissingPermission") // we do take care of permissions
+    private void registerLocationListener() {
+        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                // fill class field with location.
+                // location is accessed by e.g. getUserLocationJSON
+                //Log.i("location", location.toString());
+                userLocation = location;
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+        locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener);
     }
 
 }
