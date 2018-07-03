@@ -156,7 +156,7 @@ public class PredictionWorkflow extends Controller {
                     BoundingBox visBB = visBBPast.concat(visBBPred);
                     // this might not be working due to chaotic handling and saving of
                     // context references
-                    OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
+                    // OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
 
                     android.location.Location targetLocation = new android.location.Location("PredWf");
                     targetLocation.setLatitude(visBBPred.getCenterLatitude());
