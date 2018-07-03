@@ -33,6 +33,7 @@ import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.osm.MapInitException;
+import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.util.XML;
@@ -132,11 +133,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
         MapView mapView = (MapView) findViewById(R.id.map);
         GeoPoint center = new GeoPoint(centerLat, centerLon);
-        try {
-            osmDroidMap.initMap(mapView, center, zoom);
-        } catch(MapInitException e) {
-            Log.i("OSM_new", e.getMessage());
-        }
+        osmDroidMap.initMap(mapView, center, zoom);
         return osmDroidMap;
     }
 
@@ -188,7 +185,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             @Override
             public void onClick(View view) {
                 BoundingBox subafrica = new BoundingBox(19.635663, 12.921289,7.006371,-4.305273);
-                osmDroidMap.saveAreaToCache(subafrica, 5,7);
+                OSMCacheControl.getInstance(ctx).saveAreaToCache(subafrica);
             }
         });
 

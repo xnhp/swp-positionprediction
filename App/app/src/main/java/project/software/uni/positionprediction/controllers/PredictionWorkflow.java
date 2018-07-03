@@ -1,11 +1,15 @@
 package project.software.uni.positionprediction.controllers;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import java.util.Calendar;
+
+import java.util.Calendar
+import org.osmdroid.util.BoundingBox;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
@@ -26,6 +30,8 @@ import project.software.uni.positionprediction.datatypes_new.Shape;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.EShape;
+import project.software.uni.positionprediction.osm.OSMCacheControl;
+import project.software.uni.positionprediction.util.BearingProvider;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
@@ -220,17 +226,24 @@ public class PredictionWorkflow extends Controller {
 
         // work in sepearate thread to not block UI
         new Thread(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void run() {
 
-                // get tracking points from the movebank api
-
+                /*
+                    get tracking points from the movebank api
+                    and save in local db
+                 */
                 // show LoadingIndicator
                 LoadingIndicator.getInstance().show(context);
 
                 // TODO: try/catch RequestFailedException
                 requestData();
 
+
+                /*
+                    fetch data from local database
+                 */
                 try {
                     // fetch data (tracking points) from the local database
                     data_past = fetchData();
@@ -241,6 +254,10 @@ public class PredictionWorkflow extends Controller {
                 }
 
 
+                /*
+                    Run Prediction Algo, build Visualisations,
+                    trigger download of maps.
+                 */
                 // TODO: throw (algorithm classes)
                 // TODO: try/catch
                 try {
@@ -283,6 +300,37 @@ public class PredictionWorkflow extends Controller {
                          */
                     }
 
+
+                    /*
+                        Trigger download of maps
+                     */
+                    BoundingBox visBBPast = PredictionWorkflow.vis_past.getBoundingBox();
+                    BoundingBox visBBPred = PredictionWorkflow.vis_pred.getBoundingBox();
+                    BoundingBox visBB = visBBPast.concat(visBBPred);
+                    // this might not be working due to chaotic handling and saving of
+                    // context references
+                    OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
+
+                    android.location.Location targetLocation = new android.location.Location("PredWf");
+                    targetLocation.setLatitude(visBBPred.getCenterLatitude());
+                    targetLocation.setLongitude(visBBPred.getCenterLongitude());
+
+
+                    /*
+                        Set target location for "Compass
+                     */
+                    BearingProvider.getInstance().setTargetLocation(targetLocation);
+
+
+
+                    // TODO: this will be located in the activity
+                    // accessing the prediction results via static fields
+                    VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
+                            context,
+                            visAdapter,
+                            vis_past,
+                            vis_pred);
+                    visWorkflow.trigger();
 
 
                 } catch (NullPointerException e) {

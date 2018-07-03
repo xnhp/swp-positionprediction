@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -569,19 +571,27 @@ public class BirdSelect extends AppCompatActivity {
             }
         }).start();
     }
+
+    /**
+     * Click handler called if a UI column of a bird is selected.
+     * @param bird
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void birdSelected(final Bird bird){
 
-        final BirdSelect birdSelect = this;
+        // trigger vis
+        // ...
+
+        // download of maps is triggered in `PredictionWorkflow`
 
         this.bird = bird;
         startIntent = new Intent(this, Cesium.class);
         startIntent.putExtra("selectedBird", bird);
-        checkForPermissions();
 
         PredictionWorkflow.getInstance(this).setBird(bird);
         PredictionWorkflow.getInstance(this).updateUserParams();
         PredictionWorkflow.getInstance(this).make_prediction(ctx);
-
+        checkForPermissions();
     }
 
     /**

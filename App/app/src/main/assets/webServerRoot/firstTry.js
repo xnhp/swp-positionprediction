@@ -1,5 +1,11 @@
 
-var viewer = new Cesium.Viewer('cesiumContainer');
+// var viewer = new Cesium.Viewer('cesiumContainer');
+
+document.write("hello world");
+
+foo = injectedObject.getPastVisJSON();
+document.write(foo);
+
 
 // "Old" way of retrieving points, for reference
 // plan for the future: get injected json string that
