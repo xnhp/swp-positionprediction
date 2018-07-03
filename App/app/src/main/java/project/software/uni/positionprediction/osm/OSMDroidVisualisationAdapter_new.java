@@ -2,7 +2,6 @@ package project.software.uni.positionprediction.osm;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -13,7 +12,6 @@ import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
@@ -47,10 +45,6 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
         map.setZoom(6);
     }
     */
-
-    public void setMapCenter(GeoPoint center) {
-        map.setCenter(center);
-    }
 
     @Override
     public void panToBoundingBox(BoundingBox boundingBox) {

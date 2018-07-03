@@ -20,9 +20,8 @@ public interface IVisualisationAdapter {
 
     void setCenter(GeoPoint centerWithDateLine);
 
-    void setMapCenter(GeoPoint centerWithDateLine);
-
     void panToBoundingBox(BoundingBox boundingBox);
+
     //void visualiseMultipleTraj(Geometry vis);
     //void visualiseCloud(Geometry vis);
 
