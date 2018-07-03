@@ -3,6 +3,8 @@ package project.software.uni.positionprediction.cesium;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
 
 import java.util.Iterator;
 
@@ -172,6 +174,8 @@ public class JSONUtils {
      *     "lon": [[double]]
      * }
      *
+     * Note that altitude is only set if hasAltititude is true
+     *
      * todo: converting to a JSONObject and then to a JSON string most likely
      * todo: casting or truncating the double. Have to see if that has a negative
      * todo: effect.
@@ -180,10 +184,30 @@ public class JSONUtils {
      * @return
      * @throws JSONException
      */
-    private static JSONObject getLocationJSON(Location l) throws JSONException {
+    public static JSONObject getLocationJSON(Location l) throws JSONException {
         JSONObject jo = new JSONObject();
         jo.put("lat", l.getLat());
         jo.put("lon", l.getLon());
+        if (l.hasAltitude()) {
+            jo.put("lon", l.getAlt());
+        }
+        return jo;
+    }
+
+    public static JSONObject getGeoPointJSON(GeoPoint gp) throws JSONException {
+        JSONObject jo = new JSONObject();
+        jo.put("lat", gp.getLatitude());
+        jo.put("lon", gp.getLongitude());
+        jo.put("alt", gp.getAltitude());
+        return jo;
+    }
+
+    public static JSONObject getBoundingBoxJSON(BoundingBox bb) throws JSONException {
+        JSONObject jo = new JSONObject();
+        jo.put("north", bb.getLatNorth());
+        jo.put("south", bb.getLatSouth());
+        jo.put("west", bb.getLonWest());
+        jo.put("east", bb.getLonEast());
         return jo;
     }
 
