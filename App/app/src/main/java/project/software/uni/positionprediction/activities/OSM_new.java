@@ -17,14 +17,21 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.lang.reflect.Constructor;
 import java.util.Calendar;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectoryFunnel;
+import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
+import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
+import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
+import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;

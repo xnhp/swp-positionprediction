@@ -82,7 +82,7 @@ public class OrientationProvider implements SensorEventListener {
 
             // 180 when device is upstanding
             // range of orientiationVals[0] is -pi..+pi, hence we add pi to
-            // get a range from 0..2pi (radians)
+            // get a range from 0..2pi (radians) that fits to `toDegrees`
             float orientationDegrees = (float) Math.toDegrees(orientationVals[0] + Math.PI);
 
 

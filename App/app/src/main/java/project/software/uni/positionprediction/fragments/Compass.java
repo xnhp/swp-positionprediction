@@ -50,7 +50,7 @@ public class Compass extends Fragment {
     private void rotateArrow(float angle){
         // arrow graphic points leftwards.
         // angle of 0 means that we are facing our target.
-        // angle -= 90;
+        angle -= 90;
 
         compassArrow.setPivotX(compassArrow.getWidth()/2);
         compassArrow.setPivotY(compassArrow.getHeight()/2);
