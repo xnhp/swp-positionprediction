@@ -54,20 +54,7 @@ public class CesiumVisAdapter implements IVisualisationAdapter {
         }
     }
 
-    /**
-     * Call the specified JS function with methodName
-     * with jsonData as a String argument.
-     *
-     * As of now, no check is made whether that method
-     * is actually defined in the JS.
-     *
-     * @param methodName
-     * @param jsonData
-     */
     private void callJS(String methodName, String jsonData) {
-        // jsonData = jsonData.replaceAll("\"","\\\"" );
-        String callString = methodName + "(" + "'" + jsonData + "'" + ")" + ";";
-
-        webView.evaluateJavascript(callString, null);
+        JSCaller.callJS(this.webView, methodName, jsonData);
     }
 }

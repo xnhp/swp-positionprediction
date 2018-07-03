@@ -35,6 +35,7 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
 import project.software.uni.positionprediction.cesium.CesiumVisAdapter;
+import project.software.uni.positionprediction.cesium.JSCaller;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Collection;
 import project.software.uni.positionprediction.datatypes_new.EShape;
@@ -69,9 +70,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     CesiumVisAdapter visAdap;
 
     private Context context = this;
-
-    // android.location, not ours
-    Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,114 +159,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         predWorkflow.trigger();
     }
 
-
-    /**
-     * This class provides getter methods which will be called from JavaScript
-     * inside the WebView.
-     */
-    class JsObject {
-
-        /**
-         * Call this from within the Cesium JavaScript to get the past vis
-         * @return
-         */
-        @JavascriptInterface
-        public String getPastVisJSON() {
-
-            TrajectoryVis visPast = PredictionWorkflow.vis_past;
-
-            if (visPast == null) {
-                Log.e("json", "no vis_past available (yet?)");
-                return new JSONObject().toString();
-            }
-
-            String res = null;
-
-            try {
-                res = JSONUtils.getSingleTrajJSON(visPast).toString();
-            } catch (JSONException e) {
-                Log.e("JSON", "Could not JSONify the past vis!");
-                e.printStackTrace();
-            }
-
-            return res;
-
-        }
-
-        /**
-         * for example output, refer to JSONUtils.getMultTrajJSON,
-         * JSONUtils, getCloudJSON
-         * @return
-         */
-        @JavascriptInterface
-        public String getPredVisJSON() {
-            Visualisations visPred = PredictionWorkflow.vis_pred;
-            if (visPred == null) {
-                Log.e("json", "no vis_pred available (yet?)");
-                return new JSONObject().toString();
-            }
-
-            String res = null;
-
-            try {
-
-                for (Map.Entry<EShape, Collection<? extends Visualisation>> entry : visPred.entrySet()) {
-                    if (entry.getKey() == EShape.TRAJECTORY) {
-                        res = JSONUtils.getMultTrajJSON(entry.getValue()).toString();
-                    }
-                    if (entry.getKey() == EShape.CLOUD) {
-                        res = JSONUtils.getCloudJSON(entry.getValue()).toString();
-                    }
-                    // other cases...
-                }
-
-            } catch (JSONException e) {
-                Log.e("JSON", "Could not JSONify the past vis!");
-                e.printStackTrace();
-            }
-
-            return res;
-        }
-
-
-
-        /**
-         * return a json string containing the current user location.
-         * Note: the default way to receive a location is letting the LocationManager
-         * actively call a listener in the application.
-         * However, we need to *provide* a method that will return the location.
-         * We have a (locally defined) listener write the most recent location into
-         * a field which is then accessed by a getter method.
-         * We have the javascript regularly access this getter for location updates.
-         *
-         * I decided to not fetch location via javascript since that introduces
-         * a range of different concerns concerning javascript and the WebView.
-         *
-         * @return a JSON string containing lat and lng if a location fix has been
-         * previously obtained. an empty JSON string otherwise.
-         */
-        @SuppressLint("MissingPermission") // todo
-        @JavascriptInterface
-        public String getUserLocationJSON() {
-            JSONObject jo = new JSONObject();
-            try {
-                if (userLocation != null) {
-                    jo.put("lat", userLocation.getLatitude());
-                    jo.put("lng", userLocation.getLongitude());
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return jo.toString();
-            // cf:
-            // Building JSONObjects: https://stackoverflow.com/a/18983290/156884
-            // the thing with the "builder pattern in java 7" does not work here.
-            // https://duckduckgo.com/?q=javascript+parse+json&t=ffab&ia=qa
-        }
-
-    }
-
-
     private void registerEventHandlers(final Cesium cesium){
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,8 +190,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         this.webView = findViewById(R.id.cesium_webview);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        webView.addJavascriptInterface(new JsObject(), "injectedObject");
-
         final Activity activity = this;
 
         webView.setWebViewClient(new WebViewClient() {
@@ -325,7 +213,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         registerOnPageLoadHandler();
 
-        registerLocationListener();
+
     }
 
     /**
@@ -346,6 +234,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                 // cant do that yet here because we have no synchronisation
                 // with PredWfCtrl
                 // visAdap.visualiseSingleTraj(PredictionWorkflow.vis_past);
+
+
+                registerLocationListener(webView);
             }
         });
     }
@@ -395,6 +286,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         // in this naive way we dont have a way to ensure that
         // the calculation is done (vis_past is set) before
         // this is called.
+        // we will be able to move this into registerOnPageloadHandler()
+        // when we have integrated the changes that the prediction is made
+        // before the cesium activity is launched
         // TODO: implement recalculation of prediction
         if (PredictionWorkflow.vis_past == null) {
             Log.e("cesium", "no vis_past set (yet?)");
@@ -404,16 +298,17 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
 
     @SuppressLint("MissingPermission") // we do take care of permissions
-    private void registerLocationListener() {
+    private void registerLocationListener(final WebView webView) {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // fill class field with location.
-                // location is accessed by e.g. getUserLocationJSON
-                //Log.i("location", location.toString());
-                userLocation = location;
+                try {
+                    JSCaller.callJS(webView, "updateLocation", JSONUtils.getAndroidLocationJSON(location).toString() );
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

@@ -194,6 +194,16 @@ public class JSONUtils {
         return jo;
     }
 
+    public static JSONObject getAndroidLocationJSON(android.location.Location l) throws JSONException {
+        JSONObject jo = new JSONObject();
+        jo.put("lat", l.getLatitude());
+        jo.put("lon", l.getLongitude());
+        if (l.hasAltitude()) {
+            jo.put("lon", l.getAltitude());
+        }
+        return jo;
+    }
+
     public static JSONObject getGeoPointJSON(GeoPoint gp) throws JSONException {
         JSONObject jo = new JSONObject();
         jo.put("lat", gp.getLatitude());
