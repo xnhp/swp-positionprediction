@@ -1,0 +1,44 @@
+Allg.
+	✓ Kompass
+	✓ Cache abgecheckt
+
+	? Neuberechnung nach Änderung von Einstellungen
+	? Aktualisierung von Vorhersage
+        (Se, Si)
+        
+	✔ Trigger von VisCtrlr in OSM
+    ? Trigger von VisCtrlr in Cesium 
+        (B)
+	✔ Pseudo-Algo für Trichter
+
+    Vorbereitung Präsentation
+        (Se)
+
+
+OSM
+	? set map center to vis on activity start
+        (Se) (Cesium schon vorhanden)
+	✓ Funktionalität FloatingMapButtons
+
+    Vis. Trichter fertig (T)
+    Vis. Cloud fertig (T)
+    Vis. MultipleTraj (T)
+    ✔ Vis. SingleTraj
+
+Cesium
+	? Vis. user-location
+        (B)
+	? Funktionalität FloatingMapButtons
+        (B)
+	
+    ? Visualisierung Vorhersage
+        SingleTraj (O)
+        MultipleTraj (O)
+        Cloud (Si)
+        Trichter (Si)
+
+	✔ Visualisierung Vergangenheit
+
+	✓ Datentransfer Java->JavaScript
+	✓ VisAdapter
+
