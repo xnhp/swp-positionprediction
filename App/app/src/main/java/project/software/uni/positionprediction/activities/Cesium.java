@@ -34,6 +34,7 @@ import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.cesium.CesiumVisAdapter;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Collection;
 import project.software.uni.positionprediction.datatypes_new.EShape;
@@ -65,6 +66,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     private static String CESIUM_URI = "http://localhost:8080/";
     private WebView webView;
 
+    CesiumVisAdapter visAdap;
 
     private Context context = this;
 
@@ -79,6 +81,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         LoadingIndicator.getInstance().hide();
 
         final Cesium cesium = this;
+        visAdap = new CesiumVisAdapter();
 
         this.buttonSettings = findViewById(R.id.navbar_button_settings);
         this.buttonBack = findViewById(R.id.navbar_button_back);
@@ -317,7 +320,34 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         // Load the URL
         webView.loadUrl(CESIUM_URI);
 
+
+        visAdap.linkMap(webView);
+
+        registerOnPageLoadHandler();
+
         registerLocationListener();
+    }
+
+    /**
+     * Functionality to be executed when the webView is done loading.
+     */
+    private void registerOnPageLoadHandler() {
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                // todo: remove this
+                // todo: call VisController with own visAdap
+
+                if (PredictionWorkflow.vis_past == null) {
+                    Log.e("cesium", "no vis_past set (yet?)");
+                }
+                // cant do that yet here because we have no synchronisation
+                // with PredWfCtrl
+                // visAdap.visualiseSingleTraj(PredictionWorkflow.vis_past);
+            }
+        });
     }
 
 
@@ -361,7 +391,15 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     @Override
     public void onRefreshClick() {
+        // this is here because when calculating the prediction
+        // in this naive way we dont have a way to ensure that
+        // the calculation is done (vis_past is set) before
+        // this is called.
         // TODO: implement recalculation of prediction
+        if (PredictionWorkflow.vis_past == null) {
+            Log.e("cesium", "no vis_past set (yet?)");
+        }
+        visAdap.visualiseSingleTraj(PredictionWorkflow.vis_past);
     }
 
 

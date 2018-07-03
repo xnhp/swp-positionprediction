@@ -19,10 +19,22 @@
 <body>
     <script>
 
+        function visualiseSingleTraj(jsonData) {
+            json = JSON.parse(jsonData);
+            console.log("received data", json);
+            // do stuff
+        }
+
+        function setCenter(jsonData) {
+            // ...
+        }
+
+        function panToBoundingBox(jsonData) {
+            // ...
+        }
+
         document.write("hello world");
 
-        foo = injectedObject.getPastVisJSON();
-        document.write(foo);
     </script>
     <div id="cesiumContainer"></div>
     <!--<script src="firstTry.js"></script>-->
