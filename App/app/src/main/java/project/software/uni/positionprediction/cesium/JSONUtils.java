@@ -1,4 +1,4 @@
-package project.software.uni.positionprediction.util;
+package project.software.uni.positionprediction.cesium;
 
 import org.json.JSONArray;
 import org.json.JSONException;
