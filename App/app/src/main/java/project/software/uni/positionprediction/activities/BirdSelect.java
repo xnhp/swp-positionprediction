@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +21,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
+import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.LoadingIndicator;
@@ -42,11 +50,14 @@ public class BirdSelect extends AppCompatActivity {
     private final static int BIRD_SELECT = 1;
     private final static  int STUDY_SELECT = 2;
 
+    private Bird bird = null;
     private int state;
     private int selectedStudy;
-
+    private Message msg = new Message();
     private Intent startIntent = null;
     private XML xml = new XML();
+    private static Context ctx = null;
+    private PredictionWorkflow predWorkflow = null;
 
     private LoadingIndicator loadingIndicator = null;
 
@@ -59,6 +70,7 @@ public class BirdSelect extends AppCompatActivity {
         this.xml.readFile(this);
         this.loadingIndicator = LoadingIndicator.getInstance();
 
+        ctx = this;
         final BirdSelect birdSelect = this;
 
         // initialize GUI elements
@@ -561,9 +573,14 @@ public class BirdSelect extends AppCompatActivity {
 
         final BirdSelect birdSelect = this;
 
+        this.bird = bird;
         startIntent = new Intent(this, Cesium.class);
         startIntent.putExtra("selectedBird", bird);
         checkForPermissions();
+
+        PredictionWorkflow.getInstance(this).setBird(bird);
+        PredictionWorkflow.getInstance(this).updateUserParams();
+        PredictionWorkflow.getInstance(this).make_prediction(ctx);
 
     }
 
@@ -679,4 +696,11 @@ public class BirdSelect extends AppCompatActivity {
     }
 
 
+    public static Context getCtx() {
+        return ctx;
+    }
+
+    public void setCtx(Context ctx) {
+        this.ctx = ctx;
+    }
 }

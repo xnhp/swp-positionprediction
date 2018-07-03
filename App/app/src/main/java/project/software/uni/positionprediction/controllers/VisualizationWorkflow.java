@@ -31,10 +31,15 @@ public class VisualizationWorkflow extends Controller {
     }
 
     public void trigger() {
+        // No prediction, no visualization
+        if (past == null) {
+            return;
+        }
 
         Log.i("osm adapter", "past BoundingBox: " + past.getBoundingBox().toString());
         Log.i("osm adapter", "past BoundingBox center: " + past.getBoundingBox().getCenterWithDateLine());
         Log.i("vis workflow", "traj line is null: " + (past.getLine() == null));
+
 
         // todo: TJ 180623: There is a multithread error
         // visAdapter.panToBoundingBox(past.getBoundingBox());

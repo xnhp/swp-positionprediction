@@ -64,6 +64,9 @@ public class Message {
      *
      */
     public static void disp_error(final Context c, final String errorTitle, final String errorMsg) {
+        if (c == null) {
+            Log.e("Warning", "No context for disp_error-method");
+        }
         if (errorTitle == null) {
             Log.e("Warning", "No error title");
         }
@@ -138,6 +141,46 @@ public class Message {
             alert.show();
     }
 
+
+
+    public static void disp_error_asynch(final Context c, final String errorTitle, final String errorMsg) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                if (c == null) {
+                    Log.e("Warning", "No context for disp_error-method");
+                }
+                if (errorTitle == null) {
+                    Log.e("Warning", "No error title");
+                }
+                if (errorMsg == null) {
+                    Log.e("Warning", "No error message");
+                }
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(c);
+
+                alert.setMessage
+                        (
+                                errorMsg
+                        )
+                        .setPositiveButton("Continue", new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                        )
+                        .setTitle(errorTitle)
+                        .create();
+                alert.show();
+            }
+        });
+
+
+
+    }
 
 
 

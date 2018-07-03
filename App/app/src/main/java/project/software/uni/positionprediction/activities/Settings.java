@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.Message;
@@ -121,6 +122,8 @@ public class Settings extends AppCompatActivity {
             public void onClick(View view) {
                 xml.writeFile(c);
                 OSM_new.setSettingsChanged();
+                // todo Cesium setSeetingschanged
+                PredictionWorkflow.getInstance(c).requestRefresh();
                 settings.finish();
             }
         });
@@ -363,6 +366,11 @@ public class Settings extends AppCompatActivity {
 
     // Other methods
     public String[] asStringArray(Class[] array) {
+        if (array == null) {
+            Log.e("Error", "No algorithms are in list");
+            return null;
+        }
+
         int n = array.length;
         String r_array[] = new String[n];
         for (int i = 0; i<n; i++) {

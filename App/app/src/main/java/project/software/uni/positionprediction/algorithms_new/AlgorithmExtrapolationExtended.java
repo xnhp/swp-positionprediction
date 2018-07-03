@@ -1,5 +1,7 @@
 package project.software.uni.positionprediction.algorithms_new;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.util.Log;
 
@@ -57,24 +59,25 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
         // Check trajectory size
         if (data == null || data.getTrajectory().size() == 0) {
-            msg.disp_error(this.c, "Data size", "The algorithm doesn't get enough data");
+            Log.e("Error", "Algorithm has no data to work with!");
+            msg.disp_error_asynch(this.c, "Data size", "The algorithm doesn't get enough data");
             return null;
         }
         // Check dates
         if (params.date_past == null) {
-            msg.disp_error(this.c, "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
+            msg.disp_error_asynch(this.c, "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
         if (params.date_past.after(new Date())) {
-            msg.disp_error(this.c, "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
+            msg.disp_error_asynch(this.c, "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
         if (params.date_pred == null) {
-            msg.disp_error(this.c, "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
+            msg.disp_error_asynch(this.c, "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         if (params.date_pred.before(new Date())) {
-            msg.disp_error(this.c, "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
+            msg.disp_error_asynch(this.c, "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         // Check data
@@ -121,10 +124,19 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // 3. Compute prediction
         Location predicted_Location = predict_next_Location(data, vector_collection, pred_factor);
 
+        Log.d("Debug", "The following settings are set: \n\n" +
+                        "Date past: " + date_past.toString() + "\n" +
+                        "Prediction datea: " + date_pred.toString() + "\n" +
+                        "Data size: " + data.size() + " Locations are used!"
+        );
+
+
         // 4. Make Prediction result date
         return create_prediction_result_data(predicted_Location);
 
     }
+
+
 
 
     /**
@@ -285,7 +297,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         }
 
         if (delta_ms.size() == 0) {
-            msg.disp_error(c, "d", "d");
+            msg.disp_error_asynch(c, "d", "d");
             return 1;
         }
 

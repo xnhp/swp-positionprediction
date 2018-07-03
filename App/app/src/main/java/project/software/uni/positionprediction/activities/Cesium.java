@@ -49,6 +49,7 @@ import project.software.uni.positionprediction.fragments.FloatingMapButtons;
  */
 
 
+
 public class Cesium extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
 
     private Button buttonSettings = null;
@@ -63,7 +64,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     private Context context = this;
 
     // the bird that was selected in a previous activity
-    Bird selectedBird;
+    private Bird bird;
 
     private int pastDataPoints = 50;
 
@@ -88,7 +89,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         this.buttonBack = findViewById(R.id.navbar_button_back);
         //this.buttonOffline = findViewById(R.id.offline_btn);
 
-        this.selectedBird = (Bird) getIntent().getSerializableExtra("selectedBird");
+        this.bird = (Bird) getIntent().getSerializableExtra("selectedBird");
 
         registerEventHandlers(cesium);
 
@@ -309,11 +310,11 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         finish(); // todo: do we really want this? maybe its better to keep the map activities
                   // so they dont have to be reloaded.
         Intent buttonIntent = new Intent(this, OSM_new.class);
-        Log.i("Cesium", "selectedBird is null: " + (selectedBird == null));
+        Log.i("Cesium", "selectedBird is null: " + (bird == null));
         // pass currently selected bird to other activity.
         // this should be removed, instead the other activity
         // should fetch is data from a static field in controllers.PredictionWorkflow
-        buttonIntent.putExtra("selectedBird", selectedBird);
+        buttonIntent.putExtra("selectedBird", bird);
         startActivity(buttonIntent);
     }
 

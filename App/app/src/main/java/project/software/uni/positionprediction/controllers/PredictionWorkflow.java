@@ -5,9 +5,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.activities.BirdSelect;
+import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
 import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
@@ -24,6 +28,7 @@ import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.EShape;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
+import project.software.uni.positionprediction.util.XML;
 import project.software.uni.positionprediction.visualisation_new.CloudVis;
 import project.software.uni.positionprediction.visualisation_new.Funnel;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
@@ -64,20 +69,150 @@ public class PredictionWorkflow extends Controller {
     private IVisualisationAdapter visAdapter;
     public static Visualisations vis_pred;
     public static TrajectoryVis vis_past;
+    public static Bird bird;
+    private static XML xml = new XML();
+
+    private boolean refreshNeeded;
+
+    private static PredictionWorkflow predictionWorkflowSingleton;
 
 
 
-
-    public PredictionWorkflow(
-            Context context,
-            PredictionUserParameters userParams,
-            IVisualisationAdapter visAdapter
+    private PredictionWorkflow(
+            Context context
     ) {
         super(context);
         this.userParams = userParams;
         this.visAdapter = visAdapter;
         //this.algorithm = predictionUserParameters.algorithm;
         // this will be taken from the Settings instead
+    }
+
+    public static PredictionWorkflow getInstance(Context c){
+        if (predictionWorkflowSingleton == null) {
+            predictionWorkflowSingleton = new PredictionWorkflow(c);
+            return predictionWorkflowSingleton;
+        }
+        PredictionWorkflow.predictionWorkflowSingleton.context = c;
+        return predictionWorkflowSingleton;
+    }
+
+
+    public PredictionUserParameters getUserParams() {
+        return userParams;
+    }
+
+    public void updateUserParams(){
+        try {
+            this.userParams = getPredictionUserParameters();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static PredictionUserParameters getPredictionUserParameters() throws ClassNotFoundException {
+
+        // hardcoded date marking the lower bound for tracking data
+        // which should be included in the prediction
+        // note that if hour, second, ... is not specified the
+        // *current* hour, second, ... will be used
+        Calendar cal = Calendar.getInstance();
+
+        //hardcoded for visualization: cal.set(2007, Calendar.MAY, 9);
+
+
+        int hoursInPast = xml.getHours_past();
+
+        // If used all data is clicked
+        Date date_past;
+
+        if (hoursInPast == -1){
+            Log.d("Controller", "All data will be used by algorithm");
+            date_past = new Date(0);
+            Log.e("date_past all data", "" + date_past.toString());
+
+
+            // If an hour is set in settings
+        } else {
+            Calendar clp = Calendar.getInstance();
+            clp.setTime(new Date());
+            clp.add(Calendar.HOUR, -hoursInPast);
+            date_past = clp.getTime();
+        }
+
+
+        // for what point in the future we want the prediction
+        // hardcoded: 5 hours from current datetime
+        int hoursInFuture = xml.getHours_fut();
+        Calendar clf = Calendar.getInstance();
+        clf.setTime(new Date());
+        clf.add(Calendar.HOUR, hoursInFuture);
+        Date date_pred = clf.getTime();
+
+
+        // for debug purposes
+
+        // Catch prediction algorithm which is null
+        PredictionAlgorithm alg = xml.getPredictionAlgorithm(BirdSelect.getCtx());
+        if (alg == null || date_past == null || date_pred == null || bird == null) {
+            return null;
+
+        } else {
+            return new PredictionUserParameters(
+                    alg,
+                    date_past,
+                    date_pred,
+                    bird
+            );
+        }
+    }
+
+    public void make_prediction(Context c){
+
+        if(predictionWorkflowSingleton != null) {
+            Log.d("Prediction" ,"makes Prediction");
+            predictionWorkflowSingleton.trigger();
+        } else {
+            Log.e("Error", "predWorkFlow == null! No Prediction is made!");
+        }
+    }
+
+    public boolean isRefreshNeeded(){
+        return refreshNeeded;
+    }
+
+    public void requestRefresh(){
+        refreshNeeded = true;
+    }
+
+    /**
+     * This Method refreshes the Prediction
+     */
+    public void refreshPrediction(Context c){
+
+        refreshNeeded = false;
+
+        make_prediction(c);
+
+        Log.d("Prediction" ,"gets refreshed");
+        if(predictionWorkflowSingleton != null) {
+            try {
+                PredictionUserParameters userParams = getPredictionUserParameters();
+                if (userParams == null) {
+                    Log.e("Error", "User Params are null");
+                } else {
+                    predictionWorkflowSingleton.setUserParams(userParams);
+                    predictionWorkflowSingleton.trigger();
+                }
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            Log.e("Error", "predWorkFlow == null! No Prediction is made with refreshing!");
+        }
     }
 
 
@@ -110,35 +245,44 @@ public class PredictionWorkflow extends Controller {
                 // TODO: try/catch
                 try {
                     final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
+
                     Log.i("prediction workflow", "data_pred shapes size: " + (data_pred.getShapes().size()));
                     Log.i("prediction workflow", "data_pred keys: " + (data_pred.getShapes().keySet().toString()));
 
-                    // simply build a single traj vis
-                    // for the past tracking data
-                    vis_past = buildSingleTrajectoryVis(
-                            data_past.getTrajectory(),
-                            PastTrajectoryStyle.pointCol,
-                            PastTrajectoryStyle.lineCol,
-                            PastTrajectoryStyle.pointRadius
-                    );
-                    // `buildVisualizations` builds a visualisation
-                    // possibly composed of smaller visualisations
-                    // e.g. multiple trajectories
-                    // `shapes` is a collection of "smaller visualisations"
-                    vis_pred = buildVisualizations(data_pred.getShapes());
 
-                    // these two visualisations are saved in static fields and
-                    // then accessed by the map activities
+                    if ( data_pred == null || data_pred.getShapes().size() == 0){
+                        Log.e("Warning", "No data to visualize");
+                    } else {
+                        // simply build a single traj vis
+                        // for the past tracking data
+                        vis_past = buildSingleTrajectoryVis(
+                                data_past.getTrajectory(),
+                                PastTrajectoryStyle.pointCol,
+                                PastTrajectoryStyle.lineCol,
+                                PastTrajectoryStyle.pointRadius
+                        );
+                        // `buildVisualizations` builds a visualisation
+                        // possibly composed of smaller visualisations
+                        // e.g. multiple trajectories
+                        // `shapes` is a collection of "smaller visualisations"
+                        vis_pred = buildVisualizations(data_pred.getShapes());
+
+                        // these two visualisations are saved in static fields and
+                        // then accessed by the map activities
 
 
-                    // TODO: this will be located in the activity
-                    // accessing the prediction results via static fields
-                    VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
-                            context,
-                            visAdapter,
-                            vis_past,
-                            vis_pred);
-                    visWorkflow.trigger();
+                        // TODO: this will be located in the activity
+                        // accessing the prediction results via static fields
+                        /**
+                         VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
+                         context,
+                         visAdapter,
+                         vis_past,
+                         vis_pred);
+                         visWorkflow.trigger();
+                         */
+                    }
+
 
 
                 } catch (NullPointerException e) {
@@ -307,5 +451,11 @@ public class PredictionWorkflow extends Controller {
         this.userParams = userParams;
     }
 
+    public static Bird getBird() {
+        return bird;
+    }
 
+    public static void setBird(Bird bird) {
+        PredictionWorkflow.bird = bird;
+    }
 }

@@ -245,9 +245,7 @@ public class XML {
         try {
             Class<?> type = algorithms[used_alg];
             Constructor<?> constructor = type.getConstructor(Context.class);
-
             Object obj = constructor.newInstance(context);
-
             if(obj instanceof PredictionAlgorithm) predictionAlgorithm = (PredictionAlgorithm) obj;
 
             Log.d("Algorithm", ""+algorithms[used_alg].toString() + " is used...");
