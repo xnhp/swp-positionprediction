@@ -1,4 +1,31 @@
 
+/*
+    These functions are called from Java
+*/
+function visualiseSingleTraj(jsonData) {
+    json = JSON.parse(jsonData);
+    console.log("received data", json);
+    // do stuff
+}
+
+function setCenter(jsonData) {
+    // ...
+}
+
+function panToBoundingBox(jsonData) {
+    // ...
+}
+
+function updateLocation(jsonData) {
+    console.log("received new location");
+    console.log(jsonData);
+}
+
+
+
+
+/* Cesium initialisation */
+
 var viewer = new Cesium.Viewer('cesiumContainer');
 
 // "Old" way of retrieving points, for reference
