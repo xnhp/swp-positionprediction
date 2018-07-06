@@ -6,18 +6,15 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.JsonReader;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -25,14 +22,11 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
@@ -40,22 +34,18 @@ import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapola
 import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
 import project.software.uni.positionprediction.cesium.CesiumVisAdapter;
 import project.software.uni.positionprediction.cesium.JSCaller;
-import project.software.uni.positionprediction.controllers.PredictionWorkflow;
-import project.software.uni.positionprediction.datatypes_new.Collection;
-import project.software.uni.positionprediction.datatypes_new.EShape;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
-import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.cesium.JSONUtils;
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
+import project.software.uni.positionprediction.controllers.VisualizationWorkflow;
+import project.software.uni.positionprediction.datatypes_new.Bird;
+import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
+import project.software.uni.positionprediction.fragments.FloatingMapButtons;
+import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
+import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.PermissionManager;
-import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.util.XML;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
-import project.software.uni.positionprediction.visualisation_new.Visualisation;
-import project.software.uni.positionprediction.visualisation_new.Visualisations;
 
 
 /**
@@ -155,7 +145,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         predictionUserParameters.bird = bird;
         predictionUserParameters.algorithm = (PredictionAlgorithm) new AlgorithmExtrapolationExtended(context);
 
-
+        /*
         PredictionWorkflow predWorkflow;
         predWorkflow = new PredictionWorkflow(
                 this,
@@ -163,6 +153,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                 myVisAdap
         );
         predWorkflow.trigger();
+        */
     }
 
     private void registerEventHandlers(final Cesium cesium){
@@ -236,18 +227,13 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
 
-                // todo: remove this
-                // todo: call VisController with own visAdap
+                VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
+                        context,
+                        visAdap,
+                        PredictionWorkflow.vis_past,
+                        PredictionWorkflow.vis_pred);
+                visWorkflow.trigger();
 
-                if (PredictionWorkflow.vis_past == null) {
-                    Log.e("cesium", "no vis_past set (yet?)");
-                }
-                // cant do that yet here because we have no synchronisation
-                // with PredWfCtrl
-                // visAdap.visualiseSingleTraj(PredictionWorkflow.vis_past);
-
-
-                registerLocationListener(webView);
             }
         });
     }
@@ -300,11 +286,32 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         // we will be able to move this into registerOnPageloadHandler()
         // when we have integrated the changes that the prediction is made
         // before the cesium activity is launched
-        // TODO: implement recalculation of prediction
-        if (PredictionWorkflow.vis_past == null) {
-            Log.e("cesium", "no vis_past set (yet?)");
-        }
-        visAdap.visualiseSingleTraj(PredictionWorkflow.vis_past);
+        // prediction is still recalculated, even though no visualisation
+        // can be displayed (here)
+        PredictionWorkflow.getInstance(context).refreshPrediction(context, new AsyncTaskCallback(){
+            @Override
+            public void onFinish() {
+                // call visualisation
+                VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
+                        context,
+                        visAdap,
+                        PredictionWorkflow.vis_past,
+                        PredictionWorkflow.vis_pred);
+                visWorkflow.trigger();
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e("OSM", "prediction calculation task/thread interrupted");
+            }
+
+            @Override
+            public Context getContext() {
+                return context;
+            }
+        });
+
+        registerLocationListener(webView);
     }
 
 

@@ -3,7 +3,6 @@ package project.software.uni.positionprediction.visualisation_new;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
-import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.osm.MapInitException;
 
 /**
@@ -45,8 +44,6 @@ public abstract class IVisualisationAdapter {
     public abstract void linkMap(Object mapView) throws MapInitException;
 
     public abstract void visualiseSingleTraj(TrajectoryVis vis);
-
-    public abstract void setCenter(GeoPoint centerWithDateLine);
 
     public abstract void setMapCenter(GeoPoint centerWithDateLine);
 

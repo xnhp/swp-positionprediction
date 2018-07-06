@@ -2,7 +2,6 @@ package project.software.uni.positionprediction.osm;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -13,13 +12,11 @@ import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.software.uni.positionprediction.datatypes_new.Location;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation_new.StyledPoint;
 import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
-import project.software.uni.positionprediction.visualisation_new.Visualisations;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
@@ -111,12 +108,6 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
         if(vis.hasFunnel()); //todo: draw polygon
     }
 
-
-
-    @Override
-    public void setCenter(GeoPoint center) {
-        map.setCenter(center);
-    }
 
 }
 

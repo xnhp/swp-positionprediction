@@ -10,7 +10,7 @@ import org.osmdroid.util.GeoPoint;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
 
-public class CesiumVisAdapter implements IVisualisationAdapter {
+public class CesiumVisAdapter extends IVisualisationAdapter {
 
     WebView webView;
     String LogTag = "CesiumVisAdapter";
@@ -37,7 +37,7 @@ public class CesiumVisAdapter implements IVisualisationAdapter {
     }
 
     @Override
-    public void setCenter(GeoPoint centerWithDateLine) {
+    public void setMapCenter(GeoPoint centerWithDateLine) {
         try {
             callJS("setCenter", JSONUtils.getGeoPointJSON(centerWithDateLine).toString());
         } catch (JSONException e) {
@@ -52,6 +52,11 @@ public class CesiumVisAdapter implements IVisualisationAdapter {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void clear() {
+        // todo
     }
 
     private void callJS(String methodName, String jsonData) {
