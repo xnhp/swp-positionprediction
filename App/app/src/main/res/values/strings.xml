@@ -29,6 +29,9 @@
     <string name="percentage_bad_data_warning_dialog">%1$d%% der Einträge in der Movebank konnten nicht gelesen werden!</string>
     <string name="percentage_bad_date_warning">Warnung!</string>
 
+    <string name="data_network_request_failed_warning_text">Konnte keine Daten aus dem Internet laden.</string>
+    <string name="data_network_request_failed_warning_title">Fehler</string>
+
     <string name="old_data_warning_dialog">Das Datum des letzten bekannten Punktes lautet: %1$s. Der neueste Punkt ist aäter als eine Woche</string>
     <string name="old_data_warning">Warnung!</string>
 
