@@ -19,17 +19,18 @@ import project.software.uni.positionprediction.visualisation_new.IVisualisationA
 import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation_new.StyledPoint;
 import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation_new.Visualisations;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
  * Merely *draws* what is specified in the Geometry obejct
  */
-public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
+public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
 
     public OSMDroidMap map;
-
     public OSMDroidMap getMap() {return map;}
 
+    @Override
     public void linkMap (Object mapView) {
         if (mapView instanceof OSMDroidMap) {
             this.map = (OSMDroidMap) mapView;
@@ -56,6 +57,7 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
     @Override
     public void clear() {
         // OverlayManager is an instance of List<Overlay>
+        // todo: compass also is overlay
         map.mapView.getOverlayManager().clear();
         map.mapView.invalidate();
     }
@@ -63,8 +65,6 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
 
     @Override
     public void visualiseSingleTraj(TrajectoryVis vis) {
-
-        
         // draw styled linesegments
         for (StyledLineSegment seg :
                 vis.getLine().styledLineSegments) {
