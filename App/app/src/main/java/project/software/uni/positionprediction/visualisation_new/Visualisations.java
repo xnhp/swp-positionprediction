@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -58,6 +59,10 @@ public class Visualisations extends Collections<EShape, Visualisation> {
     // i have the time.
     private BoundingBox boundingBoxResult;
 
+    /*
+        todo: this might be a better way to iterate over the map:
+         for (Entry<EShape, Collection<? extends Visualisation>> entry : this.entrySet()) { ... }
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public BoundingBox getBoundingBox(){
         /* does not work like this

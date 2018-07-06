@@ -28,7 +28,7 @@ public abstract class Geometry {
         this.locations = locations;
     }
 
-    public Iterator<Location> locationsIterator() {
+    public Iterator<Location> getLocationsIterator() {
         return locations.iterator();
     }
 

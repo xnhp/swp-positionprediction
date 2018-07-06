@@ -1,11 +1,32 @@
 
-// var viewer = new Cesium.Viewer('cesiumContainer');
+/*
+    These functions are called from Java
+*/
+function visualiseSingleTraj(jsonData) {
+    json = JSON.parse(jsonData);
+    console.log("received data", json);
+    // do stuff
+}
 
-document.write("hello world");
+function setCenter(jsonData) {
+    // ...
+}
 
-foo = injectedObject.getPastVisJSON();
-document.write(foo);
+function panToBoundingBox(jsonData) {
+    // ...
+}
 
+function updateLocation(jsonData) {
+    console.log("received new location");
+    console.log(jsonData);
+}
+
+
+
+
+/* Cesium initialisation */
+
+var viewer = new Cesium.Viewer('cesiumContainer');
 
 // "Old" way of retrieving points, for reference
 // plan for the future: get injected json string that
