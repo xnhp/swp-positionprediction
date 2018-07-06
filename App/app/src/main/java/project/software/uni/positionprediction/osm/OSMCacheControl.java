@@ -117,7 +117,7 @@ public class OSMCacheControl {
         // TODO: What should the UI look like when downloading maps? should there be a progress bar?
         // TODO: osmdroid also provides other methods for downloading. which is best suited?
 
-        cacheManager.downloadAreaAsync(context, bbox, downloadMinZoom, downloadMaxZoom, new CacheManager.CacheManagerCallback() {
+        cacheManager.downloadAreaAsyncNoUI(context, bbox, downloadMinZoom, downloadMaxZoom, new CacheManager.CacheManagerCallback() {
             @Override
             public void onTaskComplete() {
                 Toast.makeText(context, R.string.dialog_map_download_complete, Toast.LENGTH_LONG).show();
