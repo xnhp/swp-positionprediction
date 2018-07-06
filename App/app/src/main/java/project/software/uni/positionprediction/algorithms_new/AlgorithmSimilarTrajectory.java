@@ -142,7 +142,11 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
 
     private Collection<Trajectory> get_trajectories_from_indices(LinkedList<Number> possible_indices, double pred_traj_length) {
 
-        if (possible_indices.size() == 0) {
+        if (possible_indices == null) {
+            Log.d("Warning", "No similar trajectories found");
+            return null;
+        }
+        if (possible_indices.size() == 0){
             Log.d("Warning", "No similar trajectories found");
             return null;
         }
@@ -305,7 +309,7 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         Log.i("algorithm", "possible_indices size: " + possible_indices.size());
         if (possible_indices.size() == 0) {
             Log.e("No trajectory found", "There are no similar trajectories!");
-            msg.disp_error(c, "No trajectory found", "There are no similar trajectories!");
+            msg.disp_error_asynch(c, "No trajectory found", "There are no similar trajectories!");
             return null;
         } else {
             Log.i("Number of trajectories", ""+possible_indices.size());

@@ -296,20 +296,7 @@ public class PredictionWorkflow extends Controller {
 
             final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
 
-
-            /*
-                Check if there is a result
-                (may be none if Settings only allow usage of insufficient data
-             */
-            // contrary to IntelliJs hint, data_pred can indeed become 0
-            if (data_pred == null || data_pred.getShapes().size() == 0) {
-                PredictionWorkflow.vis_pred = null;
-                PredictionWorkflow.vis_past = null;
-                Log.e("Warning", "No data to visualize");
-                return null;
-
-            }
-
+            // Visualize old data, but not the prediction if null (*)
 
             /*
                 Assemble Visualisations
@@ -326,6 +313,16 @@ public class PredictionWorkflow extends Controller {
             // possibly composed of smaller visualisations
             // e.g. multiple trajectories
             // `shapes` is a collection of "smaller visualisations"
+
+
+            // contrary to IntelliJs hint, data_pred can indeed become 0 (*)
+            if (data_pred == null || data_pred.getShapes().size() == 0) {
+                PredictionWorkflow.vis_pred = null;
+                Log.e("Warning", "No prediction to visualize");
+                return null;
+
+            }
+
             vis_pred = buildVisualizations(data_pred.getShapes());
 
             // these two visualisations are saved in static fields and

@@ -72,6 +72,12 @@ public class VisualizationWorkflow extends Controller {
 
         // visualise prediction, in different ways based on its
         // type
+
+        // Catch if no prediction could be made
+        if (pred == null || pred.size() == 0) {
+            return;
+        }
+
         for (Collection<? extends Visualisation> type : pred.values()) {
             //int counter = 1;
             for (Visualisation vis : type) {

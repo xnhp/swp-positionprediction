@@ -33,12 +33,13 @@ public class PredictionResultData {
     }
 
     public PredictionResultData(Collection<? extends Shape> shapes){
-        if(shapes.get(0) instanceof Trajectory){
-            this.shapes.put(EShape.TRAJECTORY, new Collection((Collection<Trajectory>) shapes));
-        } else if(shapes.get(0) instanceof Cloud){
-            this.shapes.put(EShape.CLOUD, new Collection((Collection<Cloud>) shapes));
+        if (shapes != null) {
+            if(shapes.get(0) instanceof Trajectory){
+                this.shapes.put(EShape.TRAJECTORY, new Collection((Collection<Trajectory>) shapes));
+            } else if(shapes.get(0) instanceof Cloud){
+                this.shapes.put(EShape.CLOUD, new Collection((Collection<Cloud>) shapes));
+            }
         }
-
     }
 
 

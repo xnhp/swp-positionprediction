@@ -193,7 +193,7 @@ public class Message {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Message.disp_error(c, title, message);
+                Message.disp_error_asynch(c, title, message);
             }
         });
     }
