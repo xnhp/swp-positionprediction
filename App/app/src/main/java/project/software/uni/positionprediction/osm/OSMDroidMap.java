@@ -428,7 +428,11 @@ public class OSMDroidMap {
      * needed for compass, my location overlays, v6.0.0 and up
      */
     public void onResume() {
-        if (mapView != null) mapView.onResume();
+        if (mapView != null) {
+            mapView.onResume();
+            // in case e.g. the visualisation has changed
+            mapView.invalidate();
+        }
         // resume location, compass updates
         if (locationOverlay != null) {
             locationOverlay.onResume();

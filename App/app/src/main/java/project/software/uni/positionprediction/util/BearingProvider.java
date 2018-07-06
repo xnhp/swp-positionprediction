@@ -157,6 +157,8 @@ public class BearingProvider implements LocationListener, OrientationListener {
 
     public void setTargetLocation(Location targetLocation) {
         this.targetLocation = targetLocation;
-        updateBearing();
+        if (userLocation != null) {
+            updateBearing();
+        }
     }
 }
