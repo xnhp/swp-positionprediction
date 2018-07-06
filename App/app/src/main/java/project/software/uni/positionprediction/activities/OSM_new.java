@@ -78,8 +78,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         visAdap.linkMap(osmDroidMap);
 
 
-        // 3.) In case a prediction is availabe,
-        //     always visualise that on activity start.
+        // 3.) Always visualise the current prediction on activity start.
         //     Hand own VisAdapter to VisWorkflow to
         //     display visualisations on map
         // -----------------------------------------
@@ -128,13 +127,10 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         if (osmDroidMap != null) osmDroidMap.onResume(); // needed for overlays (location, ...)
 
-        // todo: suppose after settings have been changed and pred is recalculated
-        // and we come back to here.
-        // how do we know something has changed and we have to redo the visualisation?
-
-        visAdap.clear();
-
        if ( ! visAdap.areVisCurrent(PredictionWorkflow.vis_past, PredictionWorkflow.vis_pred))  {
+
+           visAdap.clear();
+
            VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
                    ctx,
                    visAdap,
