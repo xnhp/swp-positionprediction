@@ -12,7 +12,6 @@ import project.software.uni.positionprediction.osm.MapInitException;
 public interface IVisualisationAdapter {
 
     // there needs to be a reference to the map that should be drawn on.
-    // as of now, the type is general because it is open what we would receive for cesium here.
     // TODO: more specific subtype possible?
     void linkMap(Object mapView) throws MapInitException;
 
@@ -23,7 +22,13 @@ public interface IVisualisationAdapter {
     void setMapCenter(GeoPoint centerWithDateLine);
 
     void panToBoundingBox(BoundingBox boundingBox);
+
     //void visualiseMultipleTraj(Geometry vis);
     //void visualiseCloud(Geometry vis);
+
+    /**
+     * Clear any visualisations fom the map.
+     */
+    void clear();
 
 }

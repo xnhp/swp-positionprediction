@@ -17,26 +17,13 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-import java.lang.reflect.Constructor;
-import java.util.Calendar;
-import java.util.Date;
-
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectoryFunnel;
-import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
 import project.software.uni.positionprediction.controllers.VisualizationWorkflow;
-import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
-import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
-import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
-import project.software.uni.positionprediction.osm.MapInitException;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
-import project.software.uni.positionprediction.util.XML;
 
 import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_past;
 import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_pred;
@@ -45,19 +32,13 @@ import static project.software.uni.positionprediction.controllers.PredictionWork
 public class OSM_new extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener{
 
 
-    // CONTENTS
-    // ========
-
-    // TODO: find a nicer way to do this
-    private static boolean settingsChanged;
-
     private Button buttonSettings = null;
     private Button buttonDownload = null;
     private Button buttonBack     = null;
     private Context ctx;
     OSMDroidMap osmDroidMap;
-    private XML xml = new XML();
-    private PredictionWorkflow predWorkflow = null;
+
+    OSMDroidVisualisationAdapter_new visAdap;
 
     // padding to edges of map when zooming/panning
     // to view something on the map.
@@ -65,12 +46,8 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     private int zoomPadding = 15;
 
 
-    // BEHAVIOR
-    // ========
-
-
     /** Execute the following procedures:
-     * 1.) Create OSMdroid map
+     * 1.) Create OSMDroid map
      * 2.) Trigger controller workflow
      * @param savedInstanceState
      * @author Benny, Timo
@@ -82,10 +59,8 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
         final Context ctx = this;
 
-        settingsChanged = false;
 
-
-        // 1.) Create OSMdroid map.
+        // 1.) Create OSMDroid map.
         // ------------------------
 
         // This is the blank/default map, before sth. is drawn on it
@@ -93,18 +68,20 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         osmDroidMap = createMap(this, 2.290849, 48.856359, 6);
 
 
-
-
         // 2.) Create OSMDroidVisualizationAdapter
         // ---------------------------------------
 
         // TJ: todo: Alternately, provide Constructor which takes map as argument
-        OSMDroidVisualisationAdapter_new myVisAdap = new OSMDroidVisualisationAdapter_new();
-        myVisAdap.linkMap(osmDroidMap);
+        visAdap = new OSMDroidVisualisationAdapter_new();
+        visAdap.linkMap(osmDroidMap);
 
+
+        // 3.) Hand own VisAdapter to VisWorkflow to
+        //     display visualisations on map
+        // -----------------------------------------
         VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
                 ctx,
-                myVisAdap,
+                visAdap,
                 vis_past,
                 vis_pred);
         visWorkflow.trigger();
@@ -118,8 +95,6 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         registerEventHandlers(this);
 
     }
-
-
 
 
 
@@ -224,7 +199,10 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
      */
     @Override
     public void onRefreshClick() {
-        PredictionWorkflow.getInstance(this).refreshPrediction(ctx);
+        if (visAdap != null) visAdap.clear();
+
+        // todo
+        //PredictionWorkflow.getInstance(this).refreshPrediction(ctx);
     }
 
     /**
@@ -297,7 +275,6 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     }
 
     public static void setSettingsChanged(){
-        settingsChanged = true;
         Log.d("Settings", "OSM got new Settings");
     }
 

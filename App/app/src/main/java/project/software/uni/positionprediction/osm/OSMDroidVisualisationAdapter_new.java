@@ -40,14 +40,6 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
     }
 
 
-    /* TJ 180622
-    public void panToMyLocation() {
-        GeoPoint myLocation = map.getMyLocationOverlay().getMyLocation();
-        map.setCenter(myLocation);
-        map.setZoom(6);
-    }
-    */
-
     public void setMapCenter(GeoPoint center) {
         map.setCenter(center);
     }
@@ -60,12 +52,14 @@ public class OSMDroidVisualisationAdapter_new implements IVisualisationAdapter {
         // map.mapView.zoomToBoundingBox(boundingBox, false);
     }
 
-    /*
-    public void setMapZoom(Locations locs) {
-        map.setZoom(OSMDroidMap.calculateZoomLevel(locs.getSpread()));
+
+    @Override
+    public void clear() {
+        // OverlayManager is an instance of List<Overlay>
+        map.mapView.getOverlayManager().clear();
+        map.mapView.invalidate();
     }
 
-    */
 
     @Override
     public void visualiseSingleTraj(TrajectoryVis vis) {
