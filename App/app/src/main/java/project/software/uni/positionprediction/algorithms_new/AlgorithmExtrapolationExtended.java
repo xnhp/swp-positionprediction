@@ -124,6 +124,10 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // 3. Compute prediction
         Location predicted_Location = predict_next_Location(data, vector_collection, pred_factor);
 
+        Log.e("Prediction-Factor", ""+pred_factor);
+        Log.e("Prediction", ""+predicted_Location.toString());
+        Log.e("Last Position", ""+data.getLocation(data.size()-1).toString());
+
         Log.d("Debug", "The following settings are set: \n\n" +
                         "Date past: " + date_past.toString() + "\n" +
                         "Prediction datea: " + date_pred.toString() + "\n" +
@@ -297,7 +301,6 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         }
 
         if (delta_ms.size() == 0) {
-            msg.disp_error_asynch(c, "d", "d");
             return 1;
         }
 
@@ -313,10 +316,19 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
         // Get relative frequency of avg time in whole in prediction
         long duration_pred = date_pred.getTime();
-        double freq = avg / duration_pred;
+        double freq = duration_pred / avg;
+        Log.e("Duration_pred", ""+duration_pred);
 
+
+        if (freq > 10 || freq < 0.1) {
+            msg.disp_error_asynch(c, "Date warning",
+                    "The time between last datapoint and prediction time is to large!");
+            Log.e("Returned factor", "Because the time between last datapoint and prediction time is to large: "+freq);
+            return 1;
+        }
+
+        Log.e("Returned factor", ""+freq);
         return freq;
-
     }
 
 
