@@ -33,6 +33,8 @@ public class VisualizationWorkflow extends Controller {
     public void trigger() {
         // No prediction, no visualization
         if (past == null) {
+            visAdapter.setCurrentPastVis(null);
+            visAdapter.setCurrentPredVis(null);
             return;
         }
 
@@ -65,7 +67,8 @@ public class VisualizationWorkflow extends Controller {
          */
 
         // simply visualise the past tracking points
-        visAdapter.visualiseSingleTraj(past);
+        visAdapter.visualiseSingleTraj(this.past);
+        visAdapter.setCurrentPastVis(this.past);
 
         // visualise prediction, in different ways based on its
         // type
@@ -81,7 +84,7 @@ public class VisualizationWorkflow extends Controller {
                 //counter++;
                 }
             }
-
         }
+        visAdapter.setCurrentPredVis(this.pred);
     }
 }
