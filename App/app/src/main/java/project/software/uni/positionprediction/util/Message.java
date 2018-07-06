@@ -3,7 +3,10 @@ package project.software.uni.positionprediction.util;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.util.Log;
+
+import org.w3c.dom.DOMStringList;
 
 import project.software.uni.positionprediction.R;
 
@@ -183,5 +186,15 @@ public class Message {
     }
 
 
+    static Handler handler = new Handler();
 
+    public static void disp_error_handled(final Context c, final String title, final String message) {
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Message.disp_error(c, title, message);
+            }
+        });
+    }
 }

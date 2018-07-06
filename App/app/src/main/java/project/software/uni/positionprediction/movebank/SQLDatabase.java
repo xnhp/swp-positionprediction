@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
+import project.software.uni.positionprediction.controllers.RequestFailedException;
 import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.datatypes_new.BirdData;
 import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
@@ -147,7 +148,7 @@ public class SQLDatabase {
      * @param studyId The id of the study the bird belongs to
      * @param indivId The id of the bird
      */
-    public float updateBirdDataSync(int studyId, int indivId){
+    public float updateBirdDataSync(int studyId, int indivId) throws RequestFailedException {
 
         if(!updateForBirdNeeded(studyId, indivId)) return 0.0f;
 
@@ -163,9 +164,8 @@ public class SQLDatabase {
             return insertBirdData(studyId, indivId, request.getResponse());
         } else {
             Log.e("SQLDatabase", "couldn't fetch data for bird: " + indivId + " from study: " + studyId);
+            throw new RequestFailedException();
         }
-
-        return 0.0f;
 
     }
 
