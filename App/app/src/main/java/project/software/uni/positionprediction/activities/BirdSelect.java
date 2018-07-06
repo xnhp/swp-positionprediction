@@ -14,8 +14,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,14 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes_new.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.LoadingIndicator;
@@ -579,19 +572,17 @@ public class BirdSelect extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void birdSelected(final Bird bird){
 
-        // trigger vis
-        // ...
-
         // download of maps is triggered in `PredictionWorkflow`
 
         this.bird = bird;
         startIntent = new Intent(this, Cesium.class);
         startIntent.putExtra("selectedBird", bird);
 
+        ensurePermissionsAndStartActiv();
+
         PredictionWorkflow.getInstance(this).setBird(bird);
         PredictionWorkflow.getInstance(this).updateUserParams();
         PredictionWorkflow.getInstance(this).make_prediction(ctx);
-        checkForPermissions();
     }
 
     /**
@@ -616,7 +607,7 @@ public class BirdSelect extends AppCompatActivity {
      * This Method checks weather the App has the required permissions
      * before it launches the next Activity
      */
-    private void checkForPermissions(){
+    private void ensurePermissionsAndStartActiv(){
         if (PermissionManager.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this) &&
                 PermissionManager.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
             // The App already has all required permissions
@@ -654,7 +645,7 @@ public class BirdSelect extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startIntent = new Intent(birdSelect, Cesium.class);
-                checkForPermissions();
+                ensurePermissionsAndStartActiv();
             }
         };
     }

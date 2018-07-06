@@ -8,7 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 
-import java.util.Calendar
+import java.util.Calendar;
 import org.osmdroid.util.BoundingBox;
 import java.util.Date;
 
@@ -88,10 +88,6 @@ public class PredictionWorkflow extends Controller {
             Context context
     ) {
         super(context);
-        this.userParams = userParams;
-        this.visAdapter = visAdapter;
-        //this.algorithm = predictionUserParameters.algorithm;
-        // this will be taken from the Settings instead
     }
 
     public static PredictionWorkflow getInstance(Context c){
@@ -104,29 +100,12 @@ public class PredictionWorkflow extends Controller {
     }
 
 
-    public PredictionUserParameters getUserParams() {
-        return userParams;
-    }
-
     public void updateUserParams(){
-        try {
-            this.userParams = getPredictionUserParameters();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.userParams = getPredictionUserParameters();
     }
 
 
-    public static PredictionUserParameters getPredictionUserParameters() throws ClassNotFoundException {
-
-        // hardcoded date marking the lower bound for tracking data
-        // which should be included in the prediction
-        // note that if hour, second, ... is not specified the
-        // *current* hour, second, ... will be used
-        Calendar cal = Calendar.getInstance();
-
-        //hardcoded for visualization: cal.set(2007, Calendar.MAY, 9);
-
+    public static PredictionUserParameters getPredictionUserParameters() {
 
         int hoursInPast = xml.getHours_past();
 
@@ -184,6 +163,25 @@ public class PredictionWorkflow extends Controller {
         }
     }
 
+
+    /*
+     * Because making a prediction requires a valid context and
+     * is asynchroneous, triggering the recalculation with
+     * the context of Settings Activity on click
+     * of "Save" button in settings and immediately finishing
+     * the activity afterwards invalidates the context.
+     *
+     * Possible solutions:
+     *
+     * - we remember that a recalculation is needed
+     *   and trigger that when coming back to an activity
+     *   (currently implemented)
+     *
+     * - we implement a callback function that PredWfCtrl
+     *   calls when it is done - *then*, the Settings
+     *   activity is finished.
+     *
+     */
     public boolean isRefreshNeeded(){
         return refreshNeeded;
     }
@@ -203,17 +201,12 @@ public class PredictionWorkflow extends Controller {
 
         Log.d("Prediction" ,"gets refreshed");
         if(predictionWorkflowSingleton != null) {
-            try {
-                PredictionUserParameters userParams = getPredictionUserParameters();
-                if (userParams == null) {
-                    Log.e("Error", "User Params are null");
-                } else {
-                    predictionWorkflowSingleton.setUserParams(userParams);
-                    predictionWorkflowSingleton.trigger();
-                }
-
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            PredictionUserParameters userParams = getPredictionUserParameters();
+            if (userParams == null) {
+                Log.e("Error", "User Params are null");
+            } else {
+                predictionWorkflowSingleton.setUserParams(userParams);
+                predictionWorkflowSingleton.trigger();
             }
 
         } else {
@@ -286,18 +279,6 @@ public class PredictionWorkflow extends Controller {
 
                         // these two visualisations are saved in static fields and
                         // then accessed by the map activities
-
-
-                        // TODO: this will be located in the activity
-                        // accessing the prediction results via static fields
-                        /**
-                         VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
-                         context,
-                         visAdapter,
-                         vis_past,
-                         vis_pred);
-                         visWorkflow.trigger();
-                         */
                     }
 
 
@@ -309,28 +290,15 @@ public class PredictionWorkflow extends Controller {
                     BoundingBox visBB = visBBPast.concat(visBBPred);
                     // this might not be working due to chaotic handling and saving of
                     // context references
-                    OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
+                    // OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
 
+                     /*
+                        Set target location for "Compass
+                     */
                     android.location.Location targetLocation = new android.location.Location("PredWf");
                     targetLocation.setLatitude(visBBPred.getCenterLatitude());
                     targetLocation.setLongitude(visBBPred.getCenterLongitude());
-
-
-                    /*
-                        Set target location for "Compass
-                     */
                     BearingProvider.getInstance().setTargetLocation(targetLocation);
-
-
-
-                    // TODO: this will be located in the activity
-                    // accessing the prediction results via static fields
-                    VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
-                            context,
-                            visAdapter,
-                            vis_past,
-                            vis_pred);
-                    visWorkflow.trigger();
 
 
                 } catch (NullPointerException e) {
