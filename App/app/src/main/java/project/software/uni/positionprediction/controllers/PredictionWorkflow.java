@@ -1,6 +1,7 @@
 package project.software.uni.positionprediction.controllers;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 
+import java.security.InvalidParameterException;
 import java.util.Calendar;
 import org.osmdroid.util.BoundingBox;
 import java.util.Date;
@@ -31,6 +33,7 @@ import project.software.uni.positionprediction.datatypes_new.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.datatypes_new.EShape;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
+import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.BearingProvider;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
@@ -157,7 +160,7 @@ public class PredictionWorkflow extends Controller {
 
         if(predictionWorkflowSingleton != null) {
             Log.d("Prediction" ,"makes Prediction");
-            predictionWorkflowSingleton.trigger();
+            predictionWorkflowSingleton.trigger(c,null);
         } else {
             Log.e("Error", "predWorkFlow == null! No Prediction is made!");
         }
@@ -193,11 +196,9 @@ public class PredictionWorkflow extends Controller {
     /**
      * This Method refreshes the Prediction
      */
-    public void refreshPrediction(Context c){
+    public void refreshPrediction(Context c, AsyncTaskCallback callback){
 
         refreshNeeded = false;
-
-        make_prediction(c);
 
         Log.d("Prediction" ,"gets refreshed");
         if(predictionWorkflowSingleton != null) {
@@ -206,7 +207,7 @@ public class PredictionWorkflow extends Controller {
                 Log.e("Error", "User Params are null");
             } else {
                 predictionWorkflowSingleton.setUserParams(userParams);
-                predictionWorkflowSingleton.trigger();
+                predictionWorkflowSingleton.trigger(c, callback);
             }
 
         } else {
@@ -214,143 +215,206 @@ public class PredictionWorkflow extends Controller {
         }
     }
 
+    public void refreshPrediction(Context c) {
+        refreshPrediction(c, null);
+    }
 
-    public void trigger() {
 
-        // work in sepearate thread to not block UI
-        new Thread(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void run() {
+    public void trigger(Context c, AsyncTaskCallback callback) {
+        LoadingIndicator.getInstance().show(c);
+        new makePredictionTask().execute(callback);
 
-                /*
-                    get tracking points from the movebank api
-                    and save in local db
-                 */
-                // show LoadingIndicator
-                LoadingIndicator.getInstance().show(context);
+    }
 
-                // TODO: try/catch RequestFailedException
+    /**
+     * We run the calculation of a prediction
+     * (fetch data from network into db, read from db, run alg)
+     * in a seperate thread in order to avoid blocking the main thread.
+     *
+     * cf https://developer.android.com/reference/android/os/AsyncTask
+     */
+    private class makePredictionTask extends AsyncTask<AsyncTaskCallback, Void, Void> {
+
+        AsyncTaskCallback callback;
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected Void doInBackground(AsyncTaskCallback... asyncTaskCallbacks) {
+
+            // save callback for reference in onPostExecute
+            if (asyncTaskCallbacks.length > 0) callback = asyncTaskCallbacks[0];
+
+
+            /*
+                get tracking points from the movebank api
+                and save in local db
+             */
+            try {
                 requestData();
+            } catch (Exception e) {
+                // InsufficientDataException, RequestFailedException...
+                // call callback with exception so we can handle them
+                // outside of here
+                this.callback.onException(e);
+            }
 
 
-                /*
-                    fetch data from local database
-                 */
-                try {
-                    // fetch data (tracking points) from the local database
-                    data_past = fetchData();
-                    Log.i("prediction workflow", "data_past locs size: " + data_past.getTrajectory().getLocations().size());
-                } catch (InsufficientTrackingDataException e) {
-                    // TODO: throwing exceptions in threads is a bit tricky
-                    // cant catch this "from outside"
-                }
+            /*
+                fetch data from local database
+             */
+            try {
+                data_past = fetchData();
+                Log.i("prediction workflow", "data_past locs size: " + data_past.getTrajectory().getLocations().size());
+            } catch (InsufficientTrackingDataException e) {
+                // todo: show note to user in this case
+                // no past data, hence no result
+                data_past = null;
+                vis_past = null;
+                vis_pred = null;
+                return null;
+            }
+
+            /*
+                check if data is recent enough
+             */
+            Date mostRecent = data_past.getTrajectory().getLocations().getMostRecentDate();
+            if ( isDataOld( mostRecent )) {
+                callback.onWarning(
+                        context.getResources().getString(R.string.old_data_warning),
+                        context.getResources().getString(
+                                R.string.old_data_warning_dialog,
+                                mostRecent.toString())
+                );
+            }
 
 
-                /*
-                    Run Prediction Algo, build Visualisations,
-                    trigger download of maps.
-                 */
-                // TODO: throw (algorithm classes)
-                // TODO: try/catch
-                try {
-                    final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
+            /*
+                Run Prediction Algo
+             */
+            // TODO: throw (algorithm classes)
+            // TODO: try/catch
 
-                    Log.i("prediction workflow", "data_pred shapes size: " + (data_pred.getShapes().size()));
-                    Log.i("prediction workflow", "data_pred keys: " + (data_pred.getShapes().keySet().toString()));
+            final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
 
 
-                    if ( data_pred == null || data_pred.getShapes().size() == 0){
-                        Log.e("Warning", "No data to visualize");
-                    } else {
-                        // simply build a single traj vis
-                        // for the past tracking data
-                        vis_past = buildSingleTrajectoryVis(
-                                data_past.getTrajectory(),
-                                PastTrajectoryStyle.pointCol,
-                                PastTrajectoryStyle.lineCol,
-                                PastTrajectoryStyle.pointRadius
-                        );
-                        // `buildVisualizations` builds a visualisation
-                        // possibly composed of smaller visualisations
-                        // e.g. multiple trajectories
-                        // `shapes` is a collection of "smaller visualisations"
-                        vis_pred = buildVisualizations(data_pred.getShapes());
-
-                        // these two visualisations are saved in static fields and
-                        // then accessed by the map activities
-                    }
-
-
-                    /*
-                        Trigger download of maps
-                     */
-                    BoundingBox visBBPast = PredictionWorkflow.vis_past.getBoundingBox();
-                    BoundingBox visBBPred = PredictionWorkflow.vis_pred.getBoundingBox();
-                    BoundingBox visBB = visBBPast.concat(visBBPred);
-                    // this might not be working due to chaotic handling and saving of
-                    // context references
-                    // OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
-
-                     /*
-                        Set target location for "Compass
-                     */
-                    android.location.Location targetLocation = new android.location.Location("PredWf");
-                    targetLocation.setLatitude(visBBPred.getCenterLatitude());
-                    targetLocation.setLongitude(visBBPred.getCenterLongitude());
-                    BearingProvider.getInstance().setTargetLocation(targetLocation);
-
-
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-
-                // hide LoadingIndicator
-                LoadingIndicator.getInstance().hide();
-
+            /*
+                Check if there is a result
+                (may be none if Settings only allow usage of insufficient data
+             */
+            // contrary to IntelliJs hint, data_pred can indeed become 0
+            if (data_pred == null || data_pred.getShapes().size() == 0) {
+                PredictionWorkflow.vis_pred = null;
+                PredictionWorkflow.vis_past = null;
+                Log.e("Warning", "No data to visualize");
+                return null;
 
             }
-        }).start();
+
+
+            /*
+                Assemble Visualisations
+             */
+            // simply build a single traj vis
+            // for the past tracking data
+            vis_past = buildSingleTrajectoryVis(
+                    data_past.getTrajectory(),
+                    PastTrajectoryStyle.pointCol,
+                    PastTrajectoryStyle.lineCol,
+                    PastTrajectoryStyle.pointRadius
+            );
+            // `buildVisualizations` builds a visualisation
+            // possibly composed of smaller visualisations
+            // e.g. multiple trajectories
+            // `shapes` is a collection of "smaller visualisations"
+            vis_pred = buildVisualizations(data_pred.getShapes());
+
+            // these two visualisations are saved in static fields and
+            // then accessed by the map activities
+
+
+
+            /*
+                Trigger download of maps - todo
+             */
+            BoundingBox visBBPast = PredictionWorkflow.vis_past.getBoundingBox();
+            BoundingBox visBBPred = PredictionWorkflow.vis_pred.getBoundingBox();
+            BoundingBox visBB = visBBPast.concat(visBBPred);
+            // this might not be working due to chaotic handling and saving of
+            // context references
+            // OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
+
+
+             /*
+                Set target location for "Compass"
+             */
+            android.location.Location targetLocation = new android.location.Location("PredWf");
+            targetLocation.setLatitude(visBBPred.getCenterLatitude());
+            targetLocation.setLongitude(visBBPred.getCenterLongitude());
+            BearingProvider.getInstance().setTargetLocation(targetLocation);
+
+
+            return null; // AsyncTask implementation detail
+        }
+
+        /**
+         * Called when calculation was executed without exception.
+         * @param aVoid
+         */
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            // we dont pass the resulting visualisation as a parameter to the callback
+            // but save it in a static field instead because it will be needed more than there
+            // (in OSM as well as in Cesium)
+            if (callback != null) callback.onFinish();
+
+            // hide LoadingIndicator
+            LoadingIndicator.getInstance().hide();
+
+        }
+
+        /**
+         * Called when calculation thread was cancelled.
+         * @param aVoid
+         */
+        @Override
+        protected void onCancelled(Void aVoid) {
+            super.onCancelled(aVoid);
+            if (callback != null) callback.onCancel();
+        }
     }
 
 
     // Request data update from Movebank
     // TODO: throw RequestFailedException
-    private void requestData() /*throws RequestFailedException*/ {
+
+    /**
+     * Request data from network (movebank)
+     * @throws BadDataException if the amount of usable data is too low
+     */
+    private void requestData() throws BadDataException, RequestFailedException {
         // Make an async network request for new data
         Log.i("OSM_new", "userParams.bird is null: " + (userParams.bird == null));
-        final int percentag_bad_data = (int) (SQLDatabase.getInstance(context)
+        final int percentage_bad_data = (int) (SQLDatabase.getInstance(context)
                 .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId()) * 100.0f);
 
         // TODO: fix error message
 
-        new Handler(Looper.getMainLooper()).post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        if(percentag_bad_data >=
-                                context.getResources().getInteger(R.integer.percentage_bad_data_warning)) {
-                            Message.disp_error(context,
-                                    context.getResources().getString(R.string.percentage_bad_date_warning),
-                                    context.getResources().getString(R.string.percentage_bad_data_warning_dialog,
-                                            percentag_bad_data));
-                        }
-                    }
-                });
+        if (percentage_bad_data >= context.getResources().getInteger(R.integer.percentage_bad_data_warning)) {
+            throw new BadDataException(percentage_bad_data);
+        }
     }
 
 
     /**
     * Prepare any data that will be used for the prediction.
-    * The returned object will be handed to the predicition algorithm
-    * as the sole ressource.
+    * The returned object will be handed to the prediction algorithm
+    * as the sole resource.
     *
     * in the future, might access different sources of information here (e.g. current weather)
-    * and save that in PredictionBaseDate to be used for a position prediction
+    * and save that in PredictionBaseData to be used for a position prediction
     */
     private PredictionBaseData fetchData() throws InsufficientTrackingDataException {
-
-        // TODO: link this to hardcoded limit in algorithm
 
         SQLDatabase db = SQLDatabase.getInstance(context);
         BirdData birddata = db.getBirdData(
@@ -365,39 +429,11 @@ public class PredictionWorkflow extends Controller {
             throw new InsufficientTrackingDataException("Size of data is 0");
         }
 
-
         Trajectory pastTracks = new Trajectory();
         int size = tracks.size();
         for (int i = 0; i < size; i++) {
             // get the i last points
             pastTracks.addLocation(tracks.get(size - 1 - + i));
-        }
-
-        Location lastLocaation = tracks.get(size -1);
-        if(lastLocaation instanceof LocationWithValue){
-            LocationWithValue lastLocationWithValue = (LocationWithValue) lastLocaation;
-            if(lastLocationWithValue.getValue() instanceof  Date){
-
-                final Date date = (Date) lastLocationWithValue.getValue();
-
-                Date now = new Date();
-                // check if latest Location is older than a week
-                if(now.getTime() - date.getTime() >
-                        context.getResources().getInteger(R.integer.old_data_warning_time_difference)){
-
-                    new Handler(Looper.getMainLooper()).post(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    Message.disp_error(context,
-                                            context.getResources().getString(R.string.old_data_warning),
-                                            context.getResources().getString(
-                                                    R.string.old_data_warning_dialog,
-                                                    date.toString()));
-                                }
-                            });
-                }
-            }
         }
 
         PredictionBaseData data = new PredictionBaseData(pastTracks);
@@ -406,6 +442,28 @@ public class PredictionWorkflow extends Controller {
     }
 
 
+
+    /**
+     * Checks if given date is older than a value specified
+     * in R.integer.old_data_warning_time_difference
+     * @param mostRecent
+     * @return
+     */
+    private boolean isDataOld(Date mostRecent) {
+        // check if latest Location is older than a week
+        return (
+             new Date().getTime() - mostRecent.getTime()
+           > context.getResources().getInteger(R.integer.old_data_warning_time_difference)
+        );
+
+
+    }
+
+    /**
+     * Assembles a visualisation object out of prediction results
+     * @param pred
+     * @return
+     */
     private Visualisations buildVisualizations(Collections<EShape, ? extends Shape> pred) {
         Visualisations result = new Visualisations();
         for (Collection<? extends Shape> type : pred.values()) {
@@ -429,6 +487,7 @@ public class PredictionWorkflow extends Controller {
         return result;
     }
 
+    // todo
     private CloudVis buildSingleCloudVis(Cloud locs, int counter) {
         return null;
     }

@@ -2,6 +2,8 @@ package project.software.uni.positionprediction.activities;
 
 import android.content.DialogInterface;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,9 +21,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.controllers.BadDataException;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
+import project.software.uni.positionprediction.controllers.RequestFailedException;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
+import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
 
@@ -116,17 +121,45 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        // Save Button Listener
+        /*
+         * Save button click handler
+         */
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 xml.writeFile(c);
-                OSM_new.setSettingsChanged();
+
+                // OSM_new.setSettingsChanged();
                 // todo Cesium setSeetingschanged
-                PredictionWorkflow.getInstance(c).requestRefresh();
-                settings.finish();
+                // PredictionWorkflow.getInstance(c).requestRefresh();
+
+                PredictionWorkflow predWf = PredictionWorkflow.getInstance(c);
+                predWf.updateUserParams();
+
+                // do not leave Settings until recalculation is complete
+                // in order to not invalidate context
+                predWf.refreshPrediction(c, new AsyncTaskCallback() {
+                    @Override
+                    public void onFinish() {
+                        settings.finish();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        settings.finish();
+                    }
+
+                    @Override
+                    public Context getContext() {
+                        return c;
+                    }
+
+                });
+
+
             }
         });
+
 
         // SeekbarListener (Past)
         seekbar_past.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

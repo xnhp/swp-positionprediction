@@ -24,8 +24,8 @@ import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
+import project.software.uni.positionprediction.util.AsyncTaskCallback;
 
-import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_past;
 import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_pred;
 
 
@@ -57,7 +57,9 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
 
         super.onCreate(savedInstanceState);
 
-        final Context ctx = this;
+        this.ctx = this;
+
+        final Context finalContext = this;
 
 
         // 1.) Create OSMDroid map.
@@ -76,14 +78,16 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         visAdap.linkMap(osmDroidMap);
 
 
-        // 3.) Hand own VisAdapter to VisWorkflow to
+        // 3.) In case a prediction is availabe,
+        //     always visualise that on activity start.
+        //     Hand own VisAdapter to VisWorkflow to
         //     display visualisations on map
         // -----------------------------------------
         VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
-                ctx,
+                finalContext,
                 visAdap,
-                vis_past,
-                vis_pred);
+                PredictionWorkflow.vis_past,
+                PredictionWorkflow.vis_pred);
         visWorkflow.trigger();
 
 
@@ -124,7 +128,22 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         if (osmDroidMap != null) osmDroidMap.onResume(); // needed for overlays (location, ...)
 
-        if(PredictionWorkflow.getInstance(this).isRefreshNeeded()) PredictionWorkflow.getInstance(this).refreshPrediction(this);
+        // todo: suppose after settings have been changed and pred is recalculated
+        // and we come back to here.
+        // how do we know something has changed and we have to redo the visualisation?
+
+        visAdap.clear();
+
+       if ( ! visAdap.areVisCurrent(PredictionWorkflow.vis_past, PredictionWorkflow.vis_pred))  {
+           VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
+                   ctx,
+                   visAdap,
+                   PredictionWorkflow.vis_past,
+                   PredictionWorkflow.vis_pred);
+           visWorkflow.trigger();
+       }
+
+        // if(PredictionWorkflow.getInstance(this).isRefreshNeeded()) PredictionWorkflow.getInstance(this).refreshPrediction(this);
     }
 
 
@@ -200,9 +219,36 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     @Override
     public void onRefreshClick() {
         if (visAdap != null) visAdap.clear();
+        // prediction is still recalculated, even though no visualisation
+        // can be displayed (here)
+        PredictionWorkflow.getInstance(this).refreshPrediction(ctx, new AsyncTaskCallback(){
 
-        // todo
-        //PredictionWorkflow.getInstance(this).refreshPrediction(ctx);
+            @Override
+            public void onFinish() {
+                // call visualisation
+                VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
+                        ctx,
+                        visAdap,
+                        PredictionWorkflow.vis_past,
+                        PredictionWorkflow.vis_pred);
+                visWorkflow.trigger();
+                // instantly refresh map view
+                // (else we'd only get an update on an interaction)
+                osmDroidMap.mapView.invalidate();
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e("OSM", "prediction calculation task/thread interrupted");
+            }
+
+            @Override
+            public Context getContext() {
+                return ctx;
+            }
+        });
+
+
     }
 
     /**
@@ -213,13 +259,13 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
     public void onShowDataClick() {
         toggleShowLocBtn(false);
 
-        if (vis_past == null) {
+        if (PredictionWorkflow.vis_past == null) {
             Log.e("FloatingMapButtons", "no past vis available");
             return;
         }
         osmDroidMap.mapView.invalidate();
         osmDroidMap.safeZoomToBoundingBox(
-                vis_past.getBoundingBox(),
+                PredictionWorkflow.vis_past.getBoundingBox(),
                 false,
                 this.zoomPadding
         );
@@ -238,7 +284,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         Theoretically, zoomToBoundingBox should have been fixed as per
         https://github.com/osmdroid/osmdroid/pull/702
          */
-        if (vis_pred== null) {
+        if (PredictionWorkflow.vis_pred== null) {
             Log.e("FloatingMapButtons", "no prediction visualisation available (yet?)");
             return;
         }

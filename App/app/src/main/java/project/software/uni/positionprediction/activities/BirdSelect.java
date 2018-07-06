@@ -26,6 +26,7 @@ import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes_new.Bird;
 import project.software.uni.positionprediction.datatypes_new.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
+import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.PermissionManager;
@@ -336,6 +337,7 @@ public class BirdSelect extends AppCompatActivity {
                 0, 0, Color.WHITE);
 
         textView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 birdSelected(bird);
@@ -578,11 +580,28 @@ public class BirdSelect extends AppCompatActivity {
         startIntent = new Intent(this, Cesium.class);
         startIntent.putExtra("selectedBird", bird);
 
-        ensurePermissionsAndStartActiv();
-
         PredictionWorkflow.getInstance(this).setBird(bird);
         PredictionWorkflow.getInstance(this).updateUserParams();
-        PredictionWorkflow.getInstance(this).make_prediction(ctx);
+        PredictionWorkflow.getInstance(this).refreshPrediction(ctx, new AsyncTaskCallback() {
+            @Override
+            public void onFinish() {
+                ensurePermissionsAndStartActiv();
+            }
+
+            @Override
+            public void onCancel() {
+                // noop
+            }
+
+            @Override
+            public Context getContext() {
+                return ctx;
+            }
+        });
+
+
+
+
     }
 
     /**
