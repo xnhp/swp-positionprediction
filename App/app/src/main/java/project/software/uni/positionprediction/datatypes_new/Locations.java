@@ -2,7 +2,9 @@ package project.software.uni.positionprediction.datatypes_new;
 
 import org.osmdroid.util.BoundingBox;
 
+import java.security.InvalidParameterException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 
@@ -92,6 +94,19 @@ public class Locations extends Collection<Location> {
         } else {
             return false;
         }
+    }
+
+
+    public Date getMostRecentDate() {
+        int size = this.size();
+        Location lastLocation = this.get(size -1);
+        if(lastLocation instanceof LocationWithValue){
+            LocationWithValue lastLocationWithValue = (LocationWithValue) lastLocation;
+            if(lastLocationWithValue.getValue() instanceof  Date){
+                return (Date) lastLocationWithValue.getValue();
+            }
+        }
+        throw new InvalidParameterException();
     }
 
 
