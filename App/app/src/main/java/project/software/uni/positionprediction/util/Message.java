@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.w3c.dom.DOMStringList;
@@ -147,7 +148,7 @@ public class Message {
 
 
     public static void disp_error_asynch(final Context c, final String errorTitle, final String errorMsg) {
-        new Thread(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
 

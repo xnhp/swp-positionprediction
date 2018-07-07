@@ -1,10 +1,17 @@
 package project.software.uni.positionprediction.algorithms_new;
 
+import android.content.Context;
+
 import project.software.uni.positionprediction.datatypes_new.Collection;
 import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
 import project.software.uni.positionprediction.datatypes_new.Trajectory;
 
 public abstract class PredictionAlgorithmReturnsTrajectories extends PredictionAlgorithm<Collection<Trajectory>> {
+
+    public PredictionAlgorithmReturnsTrajectories(Context c) {
+        super(c);
+    }
+
 
     /**
      * TJ: Subtypes of this class use this method to create proper result data.

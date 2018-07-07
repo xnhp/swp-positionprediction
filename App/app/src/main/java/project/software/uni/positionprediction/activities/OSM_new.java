@@ -217,6 +217,7 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         if (visAdap != null) visAdap.clear();
         // prediction is still recalculated, even though no visualisation
         // can be displayed (here)
+        Log.e("OSM_new", ctx.toString());
         PredictionWorkflow.getInstance(this).refreshPrediction(ctx, new AsyncTaskCallback(){
 
             @Override

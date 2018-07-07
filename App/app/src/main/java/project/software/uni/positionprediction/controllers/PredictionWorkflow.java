@@ -80,6 +80,7 @@ public class PredictionWorkflow extends Controller {
     public static TrajectoryVis vis_past;
     public static Bird bird;
     private static XML xml = new XML();
+    private Message msg = new Message();
 
     private boolean refreshNeeded;
 
@@ -197,7 +198,7 @@ public class PredictionWorkflow extends Controller {
      * This Method refreshes the Prediction
      */
     public void refreshPrediction(Context c, AsyncTaskCallback callback){
-
+        context = c;
         refreshNeeded = false;
 
         Log.d("Prediction" ,"gets refreshed");
@@ -294,7 +295,12 @@ public class PredictionWorkflow extends Controller {
             // TODO: throw (algorithm classes)
             // TODO: try/catch
 
-            final PredictionResultData data_pred = userParams.algorithm.predict(userParams, data_past);
+            PredictionAlgorithm algorithm = userParams.algorithm;
+            algorithm.setContext(context);
+            final PredictionResultData data_pred = algorithm.predict(userParams, data_past);
+
+
+
 
             // Visualize old data, but not the prediction if null (*)
 
@@ -315,13 +321,15 @@ public class PredictionWorkflow extends Controller {
             // `shapes` is a collection of "smaller visualisations"
 
 
-            // contrary to IntelliJs hint, data_pred can indeed become 0 (*)
+            // This have to be after the visualization of the old data
             if (data_pred == null || data_pred.getShapes().size() == 0) {
                 PredictionWorkflow.vis_pred = null;
                 Log.e("Warning", "No prediction to visualize");
+                msg.disp_error_asynch(context, "Warning", "No Prediction could be made!");
                 return null;
 
             }
+
 
             vis_pred = buildVisualizations(data_pred.getShapes());
 

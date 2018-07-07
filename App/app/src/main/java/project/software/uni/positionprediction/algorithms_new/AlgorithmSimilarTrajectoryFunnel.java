@@ -23,7 +23,6 @@ import project.software.uni.positionprediction.util.XML;
 public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturnsTrajectories {
 
     Message msg = new Message();
-    Context c;
     GeneralComputations gc = new GeneralComputations();
 
     // Variables for robustness
@@ -42,9 +41,10 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
     // Constructor
     public AlgorithmSimilarTrajectoryFunnel(Context c) {
-        this.c = c;
+        super(c);
     }
 
+    //todo: even with eps = 1000 there are no similar trajectories! Check algorithm!
 
     /**
      * Main idea:
@@ -67,27 +67,27 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
         // Check trajectory size
         if (data == null || data.getTrajectory().size() == 0) {
-            msg.disp_error_asynch(this.c, "Data size", "The algorithm doesn't get enough data");
+            msg.disp_error_asynch(getContext(), "Data size", "The algorithm doesn't get enough data");
             return null;
         }
         // Check dates
         if (params.date_past == null) {
-            msg.disp_error_asynch(this.c, "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
+            msg.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
         if (params.date_past == new Date(0)){
             use_all_data = true;
         }
         if (params.date_past.after(new Date())) {
-            msg.disp_error_asynch(this.c, "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
+            msg.disp_error_asynch(getContext(), "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
         if (params.date_pred == null) {
-            msg.disp_error_asynch(this.c, "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
+            msg.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         if (params.date_pred.before(new Date())) {
-            msg.disp_error_asynch(this.c, "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
+            msg.disp_error_asynch(getContext(), "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         // Check data
@@ -309,7 +309,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         Log.i("algorithm", "possible_indices size: " + possible_indices.size());
         if (possible_indices.size() == 0) {
             Log.e("No trajectory found", "There are no similar trajectories!");
-            msg.disp_error_asynch(c, "No trajectory found", "There are no similar trajectories!");
+            msg.disp_error_asynch(getContext(), "No trajectory found", "There are no similar trajectories!");
             return null;
         } else {
             Log.i("Number of trajectories", ""+possible_indices.size());

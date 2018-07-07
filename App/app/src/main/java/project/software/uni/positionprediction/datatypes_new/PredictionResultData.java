@@ -10,6 +10,7 @@ public class PredictionResultData {
     // ---------------
 
     private Collections<EShape, Shape> shapes = new Collections();
+    private String message;
 
 
     // ------------
@@ -17,7 +18,6 @@ public class PredictionResultData {
     // ------------
 
     public PredictionResultData(){}
-
 
     public PredictionResultData(Shape shape){
 
