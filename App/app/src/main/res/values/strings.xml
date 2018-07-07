@@ -32,7 +32,7 @@
     <string name="data_network_request_failed_warning_text">Konnte keine Daten aus dem Internet laden.</string>
     <string name="data_network_request_failed_warning_title">Fehler</string>
 
-    <string name="old_data_warning_dialog">Das Datum des letzten bekannten Punktes lautet: %1$s. Der neueste Punkt ist älter als eine Woche</string>
+    <string name="old_data_warning_dialog">Das Datum des letzten bekannten Punktes lautet: %1$s. Der neueste Punkt ist älter als eine Woche. D.h. dass die Vorhersage zeitlich nicht richtig sein kann!</string>
     <string name="old_data_warning">Warnung!</string>
 
 
