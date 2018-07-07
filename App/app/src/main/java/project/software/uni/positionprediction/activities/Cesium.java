@@ -256,12 +256,12 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     @Override
     public void onShowDataClick() {
-
+        JSCaller.callJS(this.webView, "panToBoundingBox", null);
     }
 
     @Override
     public void onShowPredClick() {
-
+        JSCaller.callJS(this.webView, "panToPredPoint", null);
     }
 
     @Override
@@ -298,11 +298,14 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                         PredictionWorkflow.vis_past,
                         PredictionWorkflow.vis_pred);
                 visWorkflow.trigger();
+
+                // right way to refresh?
+                launchWebView(webView);
             }
 
             @Override
             public void onCancel() {
-                Log.e("OSM", "prediction calculation task/thread interrupted");
+                Log.e("Cesium", "prediction calculation task/thread interrupted");
             }
 
             @Override
@@ -311,7 +314,8 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             }
         });
 
-        registerLocationListener(webView);
+        // this function crashes the app because Location Types are messed up (one time android location type, one time "our" location type)
+        // registerLocationListener(webView);
     }
 
 

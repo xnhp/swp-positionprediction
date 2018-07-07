@@ -189,7 +189,7 @@ public class JSONUtils {
         jo.put("lat", l.getLat());
         jo.put("lon", l.getLon());
         if (l.hasAltitude()) {
-            jo.put("lon", l.getAlt());
+            jo.put("alt", l.getAlt());
         }
         return jo;
     }
@@ -199,7 +199,7 @@ public class JSONUtils {
         jo.put("lat", l.getLatitude());
         jo.put("lon", l.getLongitude());
         if (l.hasAltitude()) {
-            jo.put("lon", l.getAltitude());
+            jo.put("alt", l.getAltitude());
         }
         return jo;
     }
