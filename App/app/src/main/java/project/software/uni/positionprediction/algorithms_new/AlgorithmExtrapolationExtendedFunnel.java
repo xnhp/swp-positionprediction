@@ -309,8 +309,16 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
 
         // Get relative frequency of avg time in whole in prediction
         long duration_pred = date_pred.getTime();
-        double freq = avg / duration_pred;
+        double freq = duration_pred / avg;
 
+        if (freq > 10 || freq < 0.1) {
+            msg.disp_error_asynch(c, "Date warning",
+                    "The time between last datapoint and prediction time is to large!");
+            Log.e("Returned factor", "Because the time between last datapoint and prediction time is to large: "+freq);
+            return 1;
+        }
+
+        Log.e("Returned factor", ""+freq);
         return freq;
 
     }
