@@ -99,6 +99,22 @@
             app:srcCompat="@android:drawable/ic_menu_rotate"
             tools:layout_editor_absoluteY="327dp" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_download"
+            android:layout_width="@dimen/floatingbuttons_butto_size"
+            android:layout_height="@dimen/floatingbuttons_butto_size"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
+            android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
+            app:backgroundTint="@android:color/white"
+            app:elevation="5dp"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:rippleColor="@color/colorAccent"
+            app:srcCompat="@android:drawable/ic_menu_save"
+            tools:layout_editor_absoluteY="327dp" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

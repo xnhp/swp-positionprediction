@@ -94,7 +94,6 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
         // -----------------------------------------
         buttonSettings = findViewById(R.id.navbar_button_settings);
         buttonBack = findViewById(R.id.navbar_button_back);
-        buttonDownload = findViewById(R.id.map_download_button);
         registerEventHandlers(this);
 
     }
@@ -171,13 +170,14 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             }
         });
 
+        /**
         buttonDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 BoundingBox subafrica = new BoundingBox(19.635663, 12.921289,7.006371,-4.305273);
                 OSMCacheControl.getInstance(ctx).saveAreaToCache(subafrica);
             }
-        });
+        });*/
 
         /* manual interaction with the map will always disable osmdroid's
            followLocation. This is used to update the button accordingly.
@@ -245,6 +245,12 @@ public class OSM_new extends AppCompatActivity implements FloatingMapButtons.flo
             }
         });
 
+
+    }
+
+    public void onDownloadClick() {
+        BoundingBox subafrica = new BoundingBox(19.635663, 12.921289,7.006371,-4.305273);
+        OSMCacheControl.getInstance(ctx).saveAreaToCache(subafrica);
 
     }
 

@@ -67,6 +67,12 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     private Context context = this;
 
     @Override
+    public void onDownloadClick() {
+        //Todo
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cesium);
