@@ -354,6 +354,8 @@ public class Settings extends AppCompatActivity {
     public void onResume() {
         updateCacheSize();
         super.onResume();
+
+        Message.show_pending_messages(this);
     }
 
     private void updateCacheSize() {

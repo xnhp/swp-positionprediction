@@ -34,6 +34,8 @@ public class Login extends AppCompatActivity {
     private Button buttonLogin = null;
     RelativeLayout layout = null;
 
+    private int loginFailedCounter = 0;
+
     LoadingIndicator loadingIndicator = null;
 
     private XML xml = new XML();
@@ -170,15 +172,19 @@ public class Login extends AppCompatActivity {
                             animation.stop();
                             animation.start();
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(login);
-                            builder.setMessage(R.string.login_wrong_creds_warning)
-                                    .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
+                            loginFailedCounter++;
 
-                                        }
-                                    });
-                            builder.create().show();
+                            if(loginFailedCounter >= 3) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(login);
+                                builder.setMessage(R.string.login_wrong_creds_warning)
+                                        .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            }
+                                        });
+                                builder.create().show();
+                            }
                         }
                     });
                 } else {
