@@ -9,6 +9,7 @@ var close11 = 0;
     These functions are called from Java
 */
 function visualiseSingleTraj(jsonData) {
+
     var json = JSON.parse(jsonData);
     console.log("received data", json);
 
@@ -26,6 +27,10 @@ function visualiseSingleTraj(jsonData) {
             outline : true
             }
         });
+
+        if(json.hasOwnProperty("funnel")){
+            visualiseFunnel(json.funnel);
+        }
     }
 
     // visualise the past data points and the lines between the points
@@ -61,6 +66,80 @@ function visualiseSingleTraj(jsonData) {
     }
 
     viewer.zoomTo(viewer.entities);
+}
+
+function visualiseFunnel(json){
+    var points = [];
+    for(var i = 0; i < json.length; i++){
+        points.push(json[i].lon);
+        points.push(json[i].lat);
+    }
+
+    var funnel = viewer.entities.add({
+        name : 'predFunnel',
+        polygon : {
+            hierarchy : Cesium.Cartesian3.fromDegreesArray(points),
+            height : 5000,
+            material : Cesium.Color.GREEN.withAlpha(0.5),
+            outline : false
+        }
+    });
+}
+
+function visualiseMultipleClounds(jsonData){
+
+    var json = JSON.parse(jsonData);
+    console.log("received data", json);
+
+    for(var i = 0; i < json.clouds.length; i++){
+        visualiseClound(json.clouds[i]);
+    }
+
+}
+
+function visualiseSingleCloud(jsonData){
+
+    var json = JSON.parse(jsonData);
+    console.log("received data", json);
+
+    visualiseClound(json);
+
+}
+
+
+function visualiseClound(json){
+
+    for(var i = 0; i < json.points.length; i++){
+        var pointsPast = viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(json.points.lon[i], json.points.lat[i], 5000),
+            name : 'cloudPoints',
+            ellipse : {
+                semiMinorAxis : 1000.0,
+                semiMajorAxis : 1000.0,
+                height: 5001,
+                material : Cesium.Color.RED,
+                outline : false
+            }
+        });
+    }
+
+    var hull = [];
+
+    for(var j = 0; j < json.hull.length; j++){
+        hull.push(json.hull[j].lon);
+        hull.push(json.hull[j].lat);
+    }
+
+    var cloud = viewer.entities.add({
+        name : 'cloudHull',
+        polygon : {
+            hierarchy : Cesium.Cartesian3.fromDegreesArray(hull),
+            height : 5000,
+            material : Cesium.Color.GREEN.withAlpha(0.5),
+            outline : false
+        }
+    });
+
 }
 
 function setCenter(jsonData) {

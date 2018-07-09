@@ -7,8 +7,11 @@ import org.json.JSONException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.visualisation_new.CloudVis;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation_new.Visualisation;
 
 public class CesiumVisAdapter extends IVisualisationAdapter {
 
@@ -34,6 +37,17 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void visualiseSingleClouds(Collection<CloudVis> vis) {
+        try {
+            String json = JSONUtils.getCloudJSON(vis).toString();
+            callJS("visualiseMultipleClounds", json);
+        } catch (JSONException e) {
+            Log.e(LogTag, "Could not JSONify data");
+            e.printStackTrace();
+        }
     }
 
     @Override

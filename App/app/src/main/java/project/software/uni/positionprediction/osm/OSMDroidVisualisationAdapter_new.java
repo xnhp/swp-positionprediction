@@ -12,7 +12,9 @@ import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import project.software.uni.positionprediction.datatypes_new.Collection;
 import project.software.uni.positionprediction.util.GeoDataUtils;
+import project.software.uni.positionprediction.visualisation_new.CloudVis;
 import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation_new.StyledPoint;
@@ -106,6 +108,11 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
         map.mapView.getOverlays().add(overlay);
 
         if(vis.hasFunnel()); //todo: draw polygon
+    }
+
+    @Override
+    public void visualiseSingleClouds(Collection<CloudVis> vis) {
+        // TODO: implement this
     }
 
 
