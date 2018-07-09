@@ -594,6 +594,9 @@ public class OSMDroidMap {
      * see https://github.com/osmdroid/osmdroid/issues/955
      * and this pull request that might solve it
      * https://github.com/osmdroid/osmdroid/pull/948
+     * Theoretically, zoomToBoundingBox should have been fixed as per
+     * https://github.com/osmdroid/osmdroid/pull/702
+     *
      * I think this is already included in the distr of osmdroid
      * that is used here.
      *

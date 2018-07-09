@@ -88,8 +88,6 @@ public class BearingProvider implements LocationListener, OrientationListener {
     @Override
     public void onOrientationChanged(float newOrientation) {
 
-        Log.i("BearingProvider, or", Float.toString(newOrientation));
-
         this.userOrientation = newOrientation;
         // need to wait for user location to also be initialised
         // android emulator gives null for getLastKnownLocation in LocationProvider
@@ -135,8 +133,6 @@ public class BearingProvider implements LocationListener, OrientationListener {
 
         // up until this, we were in a range of -180..180
         float targetBearing360 = normalizeDegree(targetBearing);
-
-        Log.i("BearingProvider", "determined bearing:" + targetBearing360);
 
         return targetBearing360;
     }
