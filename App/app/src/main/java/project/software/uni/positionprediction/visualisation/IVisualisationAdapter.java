@@ -57,4 +57,12 @@ public abstract class IVisualisationAdapter {
      */
     public abstract void clear();
 
+    /**
+     * zoom/pan to past and prediction visualisation
+     */
+    public abstract void showVisualisation();
+
+    public abstract void showData();
+
+    public abstract void showPrediction();
 }

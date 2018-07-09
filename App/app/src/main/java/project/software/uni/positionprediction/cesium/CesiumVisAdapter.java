@@ -59,6 +59,21 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
         // todo
     }
 
+    @Override
+    public void showVisualisation() {
+        // todo
+    }
+
+    @Override
+    public void showData() {
+        // todo
+    }
+
+    @Override
+    public void showPrediction() {
+        // todo
+    }
+
     private void callJS(String methodName, String jsonData) {
         JSCaller.callJS(this.webView, methodName, jsonData);
     }

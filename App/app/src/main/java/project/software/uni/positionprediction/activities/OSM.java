@@ -40,13 +40,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
 
     OSMDroidVisualisationAdapter_new visAdap;
 
-    // padding to edges of map when zooming/panning
-    // to view something on the map.
-    // e.g. for zoomToBoundingBox
-    private int zoomPadding = 15;
-
-
-    /** Execute the following procedures:
+       /** Execute the following procedures:
      * 1.) Create OSMDroid map
      * 2.) Trigger controller workflow
      * @param savedInstanceState
@@ -89,6 +83,9 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
                 PredictionWorkflow.vis_pred);
         visWorkflow.trigger();
 
+        // zoom/pan past & pred visualisations into view
+        // these are guaranteed to be set because this activity
+        // is not until its ready
 
         // 4.) Set Buttons & register event handlers
         // -----------------------------------------
@@ -136,6 +133,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
                    PredictionWorkflow.vis_past,
                    PredictionWorkflow.vis_pred);
            visWorkflow.trigger();
+
        }
 
         // if(PredictionWorkflow.getInstance(this).isRefreshNeeded()) PredictionWorkflow.getInstance(this).refreshPrediction(this);
@@ -251,8 +249,8 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     public void onDownloadClick() {
         BoundingBox subafrica = new BoundingBox(19.635663, 12.921289,7.006371,-4.305273);
         OSMCacheControl.getInstance(ctx).saveAreaToCache(subafrica);
-
     }
+
 
     /**
      * Click handler triggered by the according button in
@@ -261,17 +259,8 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     @Override
     public void onShowDataClick() {
         toggleShowLocBtn(false);
+        visAdap.showData();
 
-        if (PredictionWorkflow.vis_past == null) {
-            Log.e("FloatingMapButtons", "no past vis available");
-            return;
-        }
-        osmDroidMap.mapView.invalidate();
-        osmDroidMap.safeZoomToBoundingBox(
-                PredictionWorkflow.vis_past.getBoundingBox(),
-                false,
-                this.zoomPadding
-        );
     }
 
     /**
@@ -282,25 +271,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     @Override
     public void onShowPredClick() {
         toggleShowLocBtn(false);
-
-        /*
-        Theoretically, zoomToBoundingBox should have been fixed as per
-        https://github.com/osmdroid/osmdroid/pull/702
-         */
-        if (PredictionWorkflow.vis_pred== null) {
-            Log.e("FloatingMapButtons", "no prediction visualisation available (yet?)");
-            return;
-        }
-        BoundingBox mybb = vis_pred.getBoundingBox();
-        // BoundingBox testbb = new BoundingBox(10, 10, 20, 20);
-        // final BoundingBox testbb = new BoundingBox(44899816, 5020385,44899001,5019482);
-
-
-        MapView mMapView = osmDroidMap.mapView;
-        mMapView.invalidate();
-        osmDroidMap.safeZoomToBoundingBox(mybb, false, this.zoomPadding);
-
-
+        visAdap.showPrediction();
     }
 
     /**
@@ -340,10 +311,6 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
             Log.e("FloatingMapButtons", "No fragment button to toggle! This probably means that no fragment is attached.");
         }
     }
-
-
-
-
 
 
 }//class
