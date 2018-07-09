@@ -3,49 +3,44 @@ package project.software.uni.positionprediction.controllers;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 
-import java.security.InvalidParameterException;
 import java.util.Calendar;
 import org.osmdroid.util.BoundingBox;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.activities.BirdSelect;
-import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
-import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.datatypes_new.Location;
-import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
-import project.software.uni.positionprediction.datatypes_new.BirdData;
-import project.software.uni.positionprediction.datatypes_new.Cloud;
-import project.software.uni.positionprediction.datatypes_new.Collection;
-import project.software.uni.positionprediction.datatypes_new.Collections;
-import project.software.uni.positionprediction.datatypes_new.Locations;
-import project.software.uni.positionprediction.datatypes_new.PredictionBaseData;
-import project.software.uni.positionprediction.datatypes_new.PredictionResultData;
-import project.software.uni.positionprediction.datatypes_new.Shape;
-import project.software.uni.positionprediction.datatypes_new.Trajectory;
+import project.software.uni.positionprediction.algorithms.PredictionAlgorithm;
+import project.software.uni.positionprediction.datatypes.Bird;
+import project.software.uni.positionprediction.datatypes.PredictionUserParameters;
+import project.software.uni.positionprediction.datatypes.BirdData;
+import project.software.uni.positionprediction.datatypes.Cloud;
+import project.software.uni.positionprediction.datatypes.Collection;
+import project.software.uni.positionprediction.datatypes.Collections;
+import project.software.uni.positionprediction.datatypes.Locations;
+import project.software.uni.positionprediction.datatypes.PredictionBaseData;
+import project.software.uni.positionprediction.datatypes.PredictionResultData;
+import project.software.uni.positionprediction.datatypes.Shape;
+import project.software.uni.positionprediction.datatypes.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
-import project.software.uni.positionprediction.datatypes_new.EShape;
+import project.software.uni.positionprediction.datatypes.EShape;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.BearingProvider;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation_new.CloudVis;
-import project.software.uni.positionprediction.visualisation_new.Funnel;
-import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation_new.PastTrajectoryStyle;
-import project.software.uni.positionprediction.visualisation_new.Polyline;
-import project.software.uni.positionprediction.visualisation_new.PredTrajectoryStyle;
-import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
-import project.software.uni.positionprediction.visualisation_new.Visualisations;
+import project.software.uni.positionprediction.visualisation.CloudVis;
+import project.software.uni.positionprediction.visualisation.Funnel;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.PastTrajectoryStyle;
+import project.software.uni.positionprediction.visualisation.Polyline;
+import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
+import project.software.uni.positionprediction.visualisation.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation.Visualisations;
 
 /** Workflow:
 *
@@ -399,7 +394,7 @@ public class PredictionWorkflow extends Controller {
      */
     private void requestData() throws BadDataException, RequestFailedException {
         // Make an async network request for new data
-        Log.i("OSM_new", "userParams.bird is null: " + (userParams.bird == null));
+        Log.i("OSM", "userParams.bird is null: " + (userParams.bird == null));
         final int percentage_bad_data = (int) (SQLDatabase.getInstance(context)
                 .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId()) * 100.0f);
 

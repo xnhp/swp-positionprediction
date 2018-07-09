@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.algorithms.PredictionAlgorithm;
 
 public class XML {
 

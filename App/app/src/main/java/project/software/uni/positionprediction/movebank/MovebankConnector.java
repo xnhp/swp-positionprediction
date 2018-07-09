@@ -5,8 +5,8 @@ import android.content.Context;
 import java.util.Date;
 import java.util.Locale;
 
-import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
-import project.software.uni.positionprediction.datatypes_new.Request;
+import project.software.uni.positionprediction.datatypes.HttpStatusCode;
+import project.software.uni.positionprediction.datatypes.Request;
 
 /**
  * Utility for interactions with the Movebank API.

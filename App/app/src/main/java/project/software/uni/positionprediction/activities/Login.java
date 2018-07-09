@@ -16,17 +16,18 @@ import android.widget.RelativeLayout;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectory;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectoryFunnel;
-import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
-import project.software.uni.positionprediction.datatypes_new.Request;
-import project.software.uni.positionprediction.datatypes_new.Trajectory;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedFunnel;
+import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectory;
+import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectoryFunnel;
+import project.software.uni.positionprediction.datatypes.HttpStatusCode;
+import project.software.uni.positionprediction.datatypes.Request;
+import project.software.uni.positionprediction.datatypes.Trajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation_new.StyledPoint;
+import project.software.uni.positionprediction.visualisation.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 public class Login extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class Login extends AppCompatActivity {
     private EditText editTextPassword = null;
     private Button buttonLogin = null;
     RelativeLayout layout = null;
+
+    private int loginFailedCounter = 0;
 
     LoadingIndicator loadingIndicator = null;
 
@@ -48,6 +51,7 @@ public class Login extends AppCompatActivity {
         Class algorithms[] = new Class[]{
                 AlgorithmExtrapolationExtended.class,
                 AlgorithmSimilarTrajectory.class,
+                AlgorithmExtrapolationExtendedFunnel.class,
                 AlgorithmSimilarTrajectoryFunnel.class
         };
         xml.setAlgorithms(algorithms);
@@ -172,15 +176,19 @@ public class Login extends AppCompatActivity {
                             animation.stop();
                             animation.start();
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(login);
-                            builder.setMessage(R.string.login_wrong_creds_warning)
-                                    .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
+                            loginFailedCounter++;
 
-                                        }
-                                    });
-                            builder.create().show();
+                            if(loginFailedCounter >= 3) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(login);
+                                builder.setMessage(R.string.login_wrong_creds_warning)
+                                        .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            }
+                                        });
+                                builder.create().show();
+                            }
                         }
                     });
                 } else {

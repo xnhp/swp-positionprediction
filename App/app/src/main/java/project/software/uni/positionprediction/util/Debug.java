@@ -4,9 +4,9 @@ import android.util.Log;
 
 import java.util.List;
 
-import project.software.uni.positionprediction.datatypes_new.Location;
-import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
-import project.software.uni.positionprediction.datatypes_new.Trajectory;
+import project.software.uni.positionprediction.datatypes.Location;
+import project.software.uni.positionprediction.datatypes.LocationWithValue;
+import project.software.uni.positionprediction.datatypes.Trajectory;
 
 
 /**

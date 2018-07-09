@@ -4,26 +4,23 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
 import project.software.uni.positionprediction.controllers.RequestFailedException;
-import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.datatypes_new.BirdData;
-import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
-import project.software.uni.positionprediction.datatypes_new.Location;
-import project.software.uni.positionprediction.datatypes_new.Request;
-import project.software.uni.positionprediction.datatypes_new.Study;
-import project.software.uni.positionprediction.datatypes_new.LocationWithValue;
-import project.software.uni.positionprediction.datatypes_new.Locations;
+import project.software.uni.positionprediction.datatypes.Bird;
+import project.software.uni.positionprediction.datatypes.BirdData;
+import project.software.uni.positionprediction.datatypes.HttpStatusCode;
+import project.software.uni.positionprediction.datatypes.Location;
+import project.software.uni.positionprediction.datatypes.Request;
+import project.software.uni.positionprediction.datatypes.Study;
+import project.software.uni.positionprediction.datatypes.LocationWithValue;
+import project.software.uni.positionprediction.datatypes.Locations;
 
 /**
  * Created by simon on 22.05.18.

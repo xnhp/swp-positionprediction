@@ -129,12 +129,18 @@ public class Settings extends AppCompatActivity {
             public void onClick(View view) {
                 xml.writeFile(c);
 
-                // OSM_new.setSettingsChanged();
+                // OSM.setSettingsChanged();
                 // todo Cesium setSeetingschanged
                 // PredictionWorkflow.getInstance(c).requestRefresh();
 
                 PredictionWorkflow predWf = PredictionWorkflow.getInstance(c);
                 predWf.updateUserParams();
+
+                // Catch exception if settings are changed before bird was selected
+                if (PredictionWorkflow.getInstance(c).bird == null) {
+                    settings.finish();
+                    return;
+                }
 
                 // do not leave Settings until recalculation is complete
                 // in order to not invalidate context
@@ -354,6 +360,8 @@ public class Settings extends AppCompatActivity {
     public void onResume() {
         updateCacheSize();
         super.onResume();
+
+        Message.show_pending_messages(this);
     }
 
     private void updateCacheSize() {

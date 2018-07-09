@@ -23,8 +23,8 @@ import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
-import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.datatypes_new.Study;
+import project.software.uni.positionprediction.datatypes.Bird;
+import project.software.uni.positionprediction.datatypes.Study;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.LoadingIndicator;
@@ -186,6 +186,8 @@ public class BirdSelect extends AppCompatActivity {
                 break;
             }
         }
+
+        Message.show_pending_messages(this);
 
     }
 

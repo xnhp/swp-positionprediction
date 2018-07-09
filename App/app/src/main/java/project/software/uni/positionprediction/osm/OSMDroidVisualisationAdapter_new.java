@@ -2,9 +2,13 @@ package project.software.uni.positionprediction.osm;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
 import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
@@ -12,13 +16,14 @@ import org.osmdroid.views.overlay.simplefastpoint.StyledLabelledGeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
-import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.util.GeoDataUtils;
-import project.software.uni.positionprediction.visualisation_new.CloudVis;
-import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation_new.StyledPoint;
-import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation.StyledPoint;
+import project.software.uni.positionprediction.visualisation.TrajectoryVis;
+
+import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_pred;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
@@ -28,6 +33,11 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
 
     public OSMDroidMap map;
     public OSMDroidMap getMap() {return map;}
+
+    // padding to edges of map when zooming/panning
+    // to view something on the map.
+    // e.g. for zoomToBoundingBox
+    private int zoomPadding = 15;
 
     @Override
     public void linkMap (Object mapView) {
@@ -59,6 +69,62 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
         // todo: compass also is overlay
         map.mapView.getOverlayManager().clear();
         map.mapView.invalidate();
+    }
+
+    /**
+     * Zooms/Pans the map so that both past and prediction
+     * visualisation are within view
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void showVisualisation() {
+        if (PredictionWorkflow.vis_past == null || PredictionWorkflow.vis_pred == null) {
+            Log.e("FloatingMapButtons", "visualisation (past or pred) not available");
+            return;
+        }
+
+        BoundingBox bb1 = PredictionWorkflow.vis_past.getBoundingBox();
+        BoundingBox bb2 = PredictionWorkflow.vis_pred.getBoundingBox();
+        BoundingBox targetBB = bb1.concat(bb2);
+
+        map.mapView.invalidate();
+        map.safeZoomToBoundingBox(
+                targetBB,
+                false,
+                this.zoomPadding
+        );
+    }
+
+    @Override
+    public void showData() {
+        if (PredictionWorkflow.vis_past == null) {
+            Log.e("FloatingMapButtons", "no past vis available");
+            return;
+        }
+        map.mapView.invalidate();
+        map.safeZoomToBoundingBox(
+                PredictionWorkflow.vis_past.getBoundingBox(),
+                false,
+                this.zoomPadding
+        );
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public void showPrediction() {
+        if (PredictionWorkflow.vis_pred== null) {
+            Log.e("FloatingMapButtons", "no prediction visualisation available (yet?)");
+            return;
+        }
+        BoundingBox mybb = vis_pred.getBoundingBox();
+        // BoundingBox testbb = new BoundingBox(10, 10, 20, 20);
+        // final BoundingBox testbb = new BoundingBox(44899816, 5020385,44899001,5019482);
+
+
+        MapView mMapView = map.mapView;
+        mMapView.invalidate();
+        map.safeZoomToBoundingBox(mybb, false, this.zoomPadding);
+
     }
 
 

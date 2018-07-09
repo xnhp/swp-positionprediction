@@ -9,11 +9,14 @@ import android.util.Log;
 
 import org.w3c.dom.DOMStringList;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import project.software.uni.positionprediction.R;
 
 public class Message {
 
-
+    private static LinkedList<MessageEntity> messageList = new LinkedList<>();
 
 
     public Message() {
@@ -24,25 +27,45 @@ public class Message {
      * Display a message to the user, together with two options.  either calls a different action.
      */
     public static void disp_choice(Context c, String title, String message,
-                            String positiveLabel,
-                            DialogInterface.OnClickListener positiveCallback,
-                            String negativeLabel,
-                            DialogInterface.OnClickListener negativeCallback) {
+                                   final String positiveLabel,
+                                   final DialogInterface.OnClickListener positiveCallback,
+                                   final String negativeLabel,
+                                   final DialogInterface.OnClickListener negativeCallback) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
-        alert.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(positiveLabel, positiveCallback);
-        if (negativeCallback!=null && negativeLabel!=null) {
-            alert.setNegativeButton(negativeLabel, negativeCallback);
-        } else {
-            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // noop
-                }
-            });
-        }
-        alert.show();
+
+        final MessageEntityHandlers entity = new MessageEntityHandlers();
+
+        alert.setTitle(title).setMessage(message);
+
+        alert.setPositiveButton(positiveLabel == null ? "OK" : positiveLabel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // noop
+                messageList.remove(entity);
+                if(positiveCallback != null && positiveLabel != null) positiveCallback.onClick(dialogInterface, i);
+            }
+        });
+
+        alert.setNegativeButton(negativeLabel == null ? "Cancel" : negativeLabel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // noop
+                messageList.remove(entity);
+                if (negativeCallback!=null && negativeLabel!=null) negativeCallback.onClick(dialogInterface, i);
+            }
+        });
+
+        entity.dialog = alert.show();
+        entity.title = title;
+        entity.message = message;
+        entity.type = MessageType.CHOICE;
+        entity.negativeCallback = negativeCallback;
+        entity.positiveCallback = positiveCallback;
+        entity.negativeLabel = negativeLabel;
+        entity.positiveLabel = positiveLabel;
+
+        messageList.add(entity);
+
     }
 
     /**
@@ -51,9 +74,10 @@ public class Message {
      * @param title
      * @param message
      */
-    public void disp_confirm(Context c, String title, String message, String positiveLabel,
+    public static void disp_confirm(Context c, String title, String message, String positiveLabel,
                              DialogInterface.OnClickListener positiveCallback) {
         disp_choice(c, title, message, positiveLabel, positiveCallback,null, null);
+        messageList.getLast().type = MessageType.CONFIRM;
     }
 
 
@@ -80,6 +104,8 @@ public class Message {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
 
+        final MessageEntity entity = new MessageEntity();
+
         alert.setMessage
                 (
                         errorMsg
@@ -88,13 +114,20 @@ public class Message {
                         {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                messageList.remove(entity);
                                 dialog.dismiss();
                             }
                         }
                 )
                 .setTitle(errorTitle)
                 .create();
-        alert.show();
+
+        entity.dialog = alert.show();
+        entity.title = errorTitle;
+        entity.message = errorMsg;
+        entity.type = MessageType.ERROR;
+
+        messageList.add(entity);
 
     }
 
@@ -103,14 +136,28 @@ public class Message {
     public static void disp_wait (Context c, String title, String msg) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
 
+        final MessageEntity entity = new MessageEntity();
+
         alert.setMessage
                 (
                         msg
                 )
                 //.setIcon(R.drawable.)
-                .setTitle(title)
-                .create();
-        alert.show();
+                .setTitle(title).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                messageList.remove(entity);
+            }
+        }).create();
+
+        entity.dialog = alert.show();
+        entity.title = title;
+        entity.message = msg;
+        entity.type = MessageType.WAIT;
+
+        messageList.add(entity);
+
+
     }
 
 
@@ -120,29 +167,56 @@ public class Message {
      * @param dwTitle
      * @param dwMessage
      */
-    public void disp_download (Context c, String dwTitle, String dwMessage) {
+    public static void disp_download (Context c, String dwTitle, String dwMessage) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
-            alert.setMessage
-                    (
-                            dwMessage
-                    )
-                    .setIcon(R.drawable.download)
-                    .setTitle(dwTitle)
-                    .create();
-            alert.show();
+
+        final MessageEntity entity = new MessageEntity();
+        alert.setMessage
+                (
+                        dwMessage
+                )
+                .setIcon(R.drawable.download)
+                .setTitle(dwTitle).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                messageList.remove(entity);
+            }
+        })
+                .create();
+
+
+        entity.dialog = alert.show();
+        entity.title = dwTitle;
+        entity.message = dwTitle;
+        entity.type = MessageType.DOWNLOAD;
+
+        messageList.add(entity);
+
     }
 
 
     public static void disp_success (Context c, String title, String msg) {
         AlertDialog.Builder alert = new AlertDialog.Builder(c);
-            alert.setMessage
+
+        final MessageEntity entity = new MessageEntity();
+        alert.setMessage
                     (
                             msg
                     )
                     //.setIcon(R.drawable.bonuspack_bubble)
-                    .setTitle(title)
-                    .create();
-            alert.show();
+                    .setTitle(title).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                messageList.remove(entity);
+            }
+        }).create();
+
+        entity.dialog = alert.show();
+        entity.title = title;
+        entity.message = msg;
+        entity.type = MessageType.SUCCESS;
+
+        messageList.add(entity);
     }
 
 
@@ -164,6 +238,8 @@ public class Message {
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(c);
 
+                final MessageEntity entity = new MessageEntity();
+
                 alert.setMessage
                         (
                                 errorMsg
@@ -172,13 +248,22 @@ public class Message {
                                 {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        messageList.remove(entity);
                                         dialog.dismiss();
                                     }
                                 }
                         )
                         .setTitle(errorTitle)
                         .create();
-                alert.show();
+
+                entity.dialog = alert.show();
+                entity.title = errorTitle;
+                entity.message = errorMsg;
+                entity.type = MessageType.ERROR;
+
+                messageList.add(entity);
+
+
             }
         });
 
@@ -198,4 +283,82 @@ public class Message {
             }
         });
     }
+
+    public static void show_pending_messages(Context ctx){
+        Iterator<MessageEntity> iter = messageList.iterator();
+
+        // todo: weird exception when using similiartrajfunnelalgorithm
+
+        if (messageList == null) {
+            return;
+        }
+        if (messageList.size() == 0) {
+            return;
+        }
+
+
+        while (iter.hasNext()) {
+            boolean a = iter.hasNext();
+            MessageEntity e = iter.next();
+
+            if(e.dialog != null){
+                e.dialog.dismiss();
+                e.dialog = null;
+            }
+
+            switch(e.type){
+                case ERROR:
+                    disp_error(ctx, e.title, e.message);
+                    break;
+                case SUCCESS:
+                    disp_success(ctx, e.title, e.message);
+                    break;
+                case WAIT:
+                    disp_wait(ctx, e.title, e.message);
+                    break;
+                case DOWNLOAD:
+                    disp_download(ctx, e.title, e.message);
+                    break;
+                case CONFIRM:
+                    disp_confirm(ctx, e.title, e.message,
+                            ((MessageEntityHandlers)e).positiveLabel,
+                            ((MessageEntityHandlers)e).positiveCallback);
+                    break;
+                case CHOICE:
+                    disp_choice(ctx, e.title, e.message,
+                            ((MessageEntityHandlers)e).positiveLabel,
+                            ((MessageEntityHandlers)e).positiveCallback,
+                            ((MessageEntityHandlers)e).negativeLabel,
+                            ((MessageEntityHandlers)e).negativeCallback);
+                    break;
+            }
+
+            messageList.remove(e);
+        }
+    }
 }
+
+enum MessageType{
+    ERROR,
+    SUCCESS,
+    WAIT,
+    DOWNLOAD,
+    CONFIRM,
+    CHOICE
+}
+
+class MessageEntity{
+    protected String title;
+    protected String message;
+    protected MessageType type;
+
+    AlertDialog dialog = null;
+}
+
+class MessageEntityHandlers extends MessageEntity{
+    DialogInterface.OnClickListener positiveCallback = null;
+    String positiveLabel = null;
+    DialogInterface.OnClickListener negativeCallback = null;
+    String negativeLabel = null;
+}
+
