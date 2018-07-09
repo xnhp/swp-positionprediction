@@ -3,7 +3,7 @@ package project.software.uni.positionprediction.visualisation;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
-import project.software.uni.positionprediction.datatypes_new.Collection;
+import project.software.uni.positionprediction.datatypes.Collection;
 import project.software.uni.positionprediction.osm.MapInitException;
 
 /**

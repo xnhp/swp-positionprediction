@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import project.software.uni.positionprediction.datatypes.Collection;
+import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 

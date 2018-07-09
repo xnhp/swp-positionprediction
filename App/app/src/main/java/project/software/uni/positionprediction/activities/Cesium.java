@@ -322,7 +322,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                 visWorkflow.trigger();
 
                 // right way to refresh?
-                launchWebView(webView);
+                webView.reload();
             }
 
             @Override

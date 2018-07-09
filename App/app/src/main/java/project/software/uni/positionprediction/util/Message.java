@@ -285,20 +285,23 @@ public class Message {
     }
 
     public static void show_pending_messages(Context ctx){
-        Iterator<MessageEntity> iter = messageList.iterator();
+
+        LinkedList<MessageEntity> list = messageList;
+        messageList = new LinkedList<>();
+
+        Iterator<MessageEntity> iter = list.iterator();
 
         // todo: weird exception when using similiartrajfunnelalgorithm
 
-        if (messageList == null) {
+        if (list == null) {
             return;
         }
-        if (messageList.size() == 0) {
+        if (list.size() == 0) {
             return;
         }
 
 
         while (iter.hasNext()) {
-            boolean a = iter.hasNext();
             MessageEntity e = iter.next();
 
             if(e.dialog != null){
@@ -333,7 +336,7 @@ public class Message {
                     break;
             }
 
-            messageList.remove(e);
+            iter.remove();
         }
     }
 }
