@@ -16,16 +16,16 @@ import android.widget.RelativeLayout;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmSimilarTrajectory;
-import project.software.uni.positionprediction.datatypes_new.HttpStatusCode;
-import project.software.uni.positionprediction.datatypes_new.Request;
-import project.software.uni.positionprediction.datatypes_new.Trajectory;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectory;
+import project.software.uni.positionprediction.datatypes.HttpStatusCode;
+import project.software.uni.positionprediction.datatypes.Request;
+import project.software.uni.positionprediction.datatypes.Trajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation_new.StyledPoint;
+import project.software.uni.positionprediction.visualisation.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 public class Login extends AppCompatActivity {
 

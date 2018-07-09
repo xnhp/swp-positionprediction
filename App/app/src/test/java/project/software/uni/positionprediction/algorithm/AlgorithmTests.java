@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import project.software.uni.positionprediction.datatypes_new.Location;
+import project.software.uni.positionprediction.datatypes.Location;
 
 import static org.junit.Assert.assertEquals;
 

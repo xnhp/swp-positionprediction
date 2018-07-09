@@ -8,17 +8,16 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.Iterator;
 
-import project.software.uni.positionprediction.datatypes_new.Collection;
-import project.software.uni.positionprediction.datatypes_new.Location;
-import project.software.uni.positionprediction.datatypes_new.Locations;
-import project.software.uni.positionprediction.datatypes_new.Trajectory;
-import project.software.uni.positionprediction.visualisation_new.CloudVis;
-import project.software.uni.positionprediction.visualisation_new.Polygon;
-import project.software.uni.positionprediction.visualisation_new.Polyline;
-import project.software.uni.positionprediction.visualisation_new.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation_new.StyledPoint;
-import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
-import project.software.uni.positionprediction.visualisation_new.Visualisation;
+import project.software.uni.positionprediction.datatypes.Collection;
+import project.software.uni.positionprediction.datatypes.Location;
+import project.software.uni.positionprediction.datatypes.Locations;
+import project.software.uni.positionprediction.visualisation.CloudVis;
+import project.software.uni.positionprediction.visualisation.Polygon;
+import project.software.uni.positionprediction.visualisation.Polyline;
+import project.software.uni.positionprediction.visualisation.StyledLineSegment;
+import project.software.uni.positionprediction.visualisation.StyledPoint;
+import project.software.uni.positionprediction.visualisation.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation.Visualisation;
 
 /**
  *

@@ -3,13 +3,11 @@ package project.software.uni.positionprediction.controllers;
 import android.content.Context;
 import android.util.Log;
 
-import project.software.uni.positionprediction.datatypes_new.Cloud;
-import project.software.uni.positionprediction.datatypes_new.Collection;
-import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
-import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
-import project.software.uni.positionprediction.visualisation_new.Visualisation;
-import project.software.uni.positionprediction.visualisation_new.Visualisations;
+import project.software.uni.positionprediction.datatypes.Collection;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation.Visualisation;
+import project.software.uni.positionprediction.visualisation.Visualisations;
 
 /** This workflow calls the adapter's visualization methods which, in turn, draw the actual vis. */
 public class VisualizationWorkflow extends Controller {

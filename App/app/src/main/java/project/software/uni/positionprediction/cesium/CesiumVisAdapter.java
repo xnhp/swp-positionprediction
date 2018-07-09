@@ -7,8 +7,8 @@ import org.json.JSONException;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
-import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
-import project.software.uni.positionprediction.visualisation_new.TrajectoryVis;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
 public class CesiumVisAdapter extends IVisualisationAdapter {
 

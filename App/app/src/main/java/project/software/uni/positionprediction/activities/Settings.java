@@ -129,7 +129,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View view) {
                 xml.writeFile(c);
 
-                // OSM_new.setSettingsChanged();
+                // OSM.setSettingsChanged();
                 // todo Cesium setSeetingschanged
                 // PredictionWorkflow.getInstance(c).requestRefresh();
 

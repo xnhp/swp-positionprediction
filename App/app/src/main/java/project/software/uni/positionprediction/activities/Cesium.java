@@ -30,22 +30,22 @@ import java.util.Date;
 
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithms_new.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithms_new.PredictionAlgorithm;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms.PredictionAlgorithm;
 import project.software.uni.positionprediction.cesium.CesiumVisAdapter;
 import project.software.uni.positionprediction.cesium.JSCaller;
 import project.software.uni.positionprediction.cesium.JSONUtils;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.controllers.VisualizationWorkflow;
-import project.software.uni.positionprediction.datatypes_new.Bird;
-import project.software.uni.positionprediction.datatypes_new.PredictionUserParameters;
+import project.software.uni.positionprediction.datatypes.Bird;
+import project.software.uni.positionprediction.datatypes.PredictionUserParameters;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.PermissionManager;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation_new.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 
 
 /**
@@ -279,7 +279,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     public void onSwitchModeClick() {
         finish(); // todo: do we really want this? maybe its better to keep the map activities
                   // todo: so they dont have to be reloaded.
-        Intent buttonIntent = new Intent(this, OSM_new.class);
+        Intent buttonIntent = new Intent(this, OSM.class);
         startActivity(buttonIntent);
     }
 
