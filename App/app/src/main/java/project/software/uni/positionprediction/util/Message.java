@@ -9,6 +9,7 @@ import android.util.Log;
 
 import org.w3c.dom.DOMStringList;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import project.software.uni.positionprediction.R;
@@ -284,8 +285,21 @@ public class Message {
     }
 
     public static void show_pending_messages(Context ctx){
-        for(MessageEntity e : messageList){
-            messageList.remove(e);
+        Iterator<MessageEntity> iter = messageList.iterator();
+
+        // todo: weird exception when using similiartrajfunnelalgorithm
+
+        if (messageList == null) {
+            return;
+        }
+        if (messageList.size() == 0) {
+            return;
+        }
+
+
+        while (iter.hasNext()) {
+            boolean a = iter.hasNext();
+            MessageEntity e = iter.next();
 
             if(e.dialog != null){
                 e.dialog.dismiss();
@@ -318,6 +332,8 @@ public class Message {
                             ((MessageEntityHandlers)e).negativeCallback);
                     break;
             }
+
+            messageList.remove(e);
         }
     }
 }

@@ -17,7 +17,9 @@ import android.widget.RelativeLayout;
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedFunnel;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectory;
+import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectoryFunnel;
 import project.software.uni.positionprediction.datatypes.HttpStatusCode;
 import project.software.uni.positionprediction.datatypes.Request;
 import project.software.uni.positionprediction.datatypes.Trajectory;
@@ -48,7 +50,9 @@ public class Login extends AppCompatActivity {
         // Define default algorithms and visualization
         Class algorithms[] = new Class[]{
                 AlgorithmExtrapolationExtended.class,
-                AlgorithmSimilarTrajectory.class
+                AlgorithmSimilarTrajectory.class,
+                AlgorithmExtrapolationExtendedFunnel.class,
+                AlgorithmSimilarTrajectoryFunnel.class
         };
         xml.setAlgorithms(algorithms);
 

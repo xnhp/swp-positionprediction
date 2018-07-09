@@ -143,6 +143,10 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
     private Collection<Trajectory> get_trajectories_from_indices(LinkedList<Number> possible_indices, double uncertainty, double pred_traj_length) {
 
+        if (possible_indices == null) {
+            Log.d("Warning", "No similar trajectories found");
+            return null;
+        }
         if (possible_indices.size() == 0) {
             Log.d("Warning", "No similar trajectories found");
             return null;
