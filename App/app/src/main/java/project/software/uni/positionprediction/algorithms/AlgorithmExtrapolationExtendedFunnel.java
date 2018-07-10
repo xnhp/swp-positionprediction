@@ -198,7 +198,7 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
         int c = 0;
 
         // Fill collection
-        for (int t = 1; t < n; t++) {
+        for (int t = 1; t <= n; t++) {
             LocationWithValue loc_t = (LocationWithValue) data.getLocation(n - t);
             Date date_t = (Date) loc_t.getValue();
 

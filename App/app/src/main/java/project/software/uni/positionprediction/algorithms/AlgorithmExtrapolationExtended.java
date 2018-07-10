@@ -14,6 +14,7 @@ import project.software.uni.positionprediction.datatypes.PredictionBaseData;
 import project.software.uni.positionprediction.datatypes.PredictionResultData;
 import project.software.uni.positionprediction.datatypes.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes.Trajectory;
+import project.software.uni.positionprediction.util.Debug;
 import project.software.uni.positionprediction.util.Message;
 
 public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTrajectory {
@@ -118,10 +119,6 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // 3. Compute prediction
         Location predicted_Location = predict_next_Location(data, vector_collection, pred_factor);
 
-        Log.i("Prediction-Factor", ""+pred_factor);
-        Log.i("Prediction", ""+predicted_Location.toString());
-        Log.i("Last Position", ""+data.getLocation(data.size()-1).toString());
-
         Log.d("Debug", "The following settings are set: \n\n" +
                         "Date past: " + date_past.toString() + "\n" +
                         "Prediction datea: " + date_pred.toString() + "\n" +
@@ -142,6 +139,10 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @return
      */
     private PredictionResultData create_prediction_result_data(Location predicted_Location) {
+        if (predicted_Location == null) {
+            return null;
+        }
+
         Trajectory traj = new Trajectory();
         traj.addLocation( predicted_Location );
         return new PredictionResultData(traj);
@@ -157,12 +158,20 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @return
      */
     private Location predict_next_Location(Trajectory data, ArrayList<Location> vector_collection, double pred_factor){
+        if (vector_collection == null) {
+            return null;
+        }
+
         // avg has altitude or not based on the data that is passed in
-        Location avg = weighted_average(vector_collection).to3D();
+        Location avg = weighted_average(vector_collection);
         // curr_loc has altitude or not based on the data that is passed in
         Location curr_loc = data.getLocation(data.size() - 1).to3D();
 
-        return curr_loc.add( avg.multiply( pred_factor));
+        if (avg == null) {
+            return null;
+        }
+
+        return curr_loc.add( avg.to3D().multiply( pred_factor));
     }
 
 
@@ -198,7 +207,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         int c = 0;
 
         // Fill collection
-        for (int t = 1; t < n; t++) {
+        for (int t = 1; t <= n; t++) {
             LocationWithValue loc_t = (LocationWithValue) data.getLocation(n - t);
             Date date_t = (Date) loc_t.getValue();
 
@@ -213,7 +222,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
             // Get n-th point
             Location vec_n = data.getLocation(n);
 
-            // Get n-t point
+            // Get n-t-th point
             Location vec_old = data.getLocation(n - t);
 
             // Compute vector between them
@@ -239,9 +248,16 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
      * @return
      */
     private Location weighted_average(ArrayList<Location> collection) {
-        double sum_long = 0;
-        double sum_lat = 0;
-        double sum_height = 0;
+
+        if (collection == null) {
+            return null;
+        }
+        if (collection.size() == 0){
+            return null;
+        }
+
+
+        Location sum = new Location(0,0,0);
 
         // Compute sum
         for (int i = 0; i < collection.size(); i++) {
@@ -252,18 +268,14 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
                 Log.i("algorithm", "a location doesn't have alt set!");
             }
 
-            sum_long += collection.get(i).getLon();
-            sum_lat += collection.get(i).getLat();
-            sum_height += collection.get(i).getAlt();
+            sum = sum.add(collection.get(i).to3D());
         }
 
         // Compute average
         double length = (double) collection.size();
-        double res_long = sum_long / length;
-        double res_lat = sum_lat / length;
-        double res_height = sum_height / length;
+        Location res = sum.divide(length);
 
-        return new Location(res_long, res_lat, res_height);
+        return res;
     }
 
 
