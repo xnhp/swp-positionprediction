@@ -216,7 +216,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
             location = (LocationWithValue) data.getTrajectory().getLocation(n-count);
             date_of_location = (Date) location.getValue();
         }
-        Log.e("Number of taken points", ""+count);
+        Log.i("Number of taken points", ""+count);
         return count;
     }
 
@@ -227,9 +227,9 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         long date_pred = params.date_pred.getTime();
         long duration = date_pred - now;
         long hours = duration / 1000 / 60 / 60 ;
-        Log.e("hours computation", ""+hours);
-        Log.e("Date pred", params.date_pred.toString());
-        int hours1 = Log.e("Hours", ""+new XML().getHours_fut());
+        Log.i("hours computation", ""+hours);
+        Log.i("Date pred", params.date_pred.toString());
+        int hours1 = Log.i("Hours", ""+new XML().getHours_fut());
         long past = now - hours;
         return new Date(past);
     }

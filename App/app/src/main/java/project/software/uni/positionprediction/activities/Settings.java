@@ -201,7 +201,6 @@ public class Settings extends AppCompatActivity {
                 boolean isNumber = isDigitsOnly(input_as_str);
 
                 if (isNumber) {
-                    Log.e("isNumber ", ""+input_as_str);
                     if (input_as_str.length() == 0) {
                         input_as_int = 0;
                     } else {

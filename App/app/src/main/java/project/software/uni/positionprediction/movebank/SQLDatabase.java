@@ -374,20 +374,6 @@ public class SQLDatabase {
                 "WHERE study_id = " + studyId + " AND individual_id = " + indivId +
                 " ORDER BY timestamp DESC", new String[]{});
 
-        /* TJ 180622
-
-        TrackingPoint points[] = new TrackingPoint[cursor.getCount()];
-
-        int rowIndex = 0;
-        while(cursor.moveToNext()) {
-            Log.e("SQL", ""+cursor.getInt(4));
-            points[rowIndex] = new TrackingPoint(
-                    new Location(cursor.getDouble(1), cursor.getDouble(2)),
-                    new Date(cursor.getLong(0)*1000));
-            rowIndex++;
-        }
-
-        */
 
         Locations points = new Locations();
 

@@ -204,7 +204,7 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
 
             // Break if date until we want the data is reached or use all data when something went wrong with the date
             if (date_t.before(date_past) && !use_all_data) {
-                Log.e("Break", "" + c + " data points where used for prediction");
+                Log.i("Break", "" + c + " data points where used for prediction");
                 break;
             }
             c++; // Count for Log.e
@@ -300,7 +300,7 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
             sum = sum + (long) delta_ms.get(j);
         }
         long avg = sum / m;
-        Log.e("Note", "Average of last few data points (in millis) = " + avg );
+        Log.i("Note", "Average of last few data points (in millis) = " + avg );
 
         // Get relative frequency of avg time in whole in prediction
         long duration_pred = date_pred.getTime();
@@ -313,7 +313,7 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
             return 1;
         }
 
-        Log.e("Returned factor", ""+freq);
+        Log.i("Returned factor", ""+freq);
         return freq;
 
     }

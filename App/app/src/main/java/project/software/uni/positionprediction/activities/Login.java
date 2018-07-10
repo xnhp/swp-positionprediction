@@ -155,7 +155,7 @@ public class Login extends AppCompatActivity {
                         }
                     });
 
-                    Log.e("creds", "valid");
+                    Log.i("creds", "valid");
                 } else if(status == HttpStatusCode.FORBIDDEN) {
 
                     // invalid credentials

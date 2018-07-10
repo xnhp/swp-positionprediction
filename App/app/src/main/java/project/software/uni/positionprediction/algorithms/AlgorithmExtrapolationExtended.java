@@ -118,9 +118,9 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // 3. Compute prediction
         Location predicted_Location = predict_next_Location(data, vector_collection, pred_factor);
 
-        Log.e("Prediction-Factor", ""+pred_factor);
-        Log.e("Prediction", ""+predicted_Location.toString());
-        Log.e("Last Position", ""+data.getLocation(data.size()-1).toString());
+        Log.i("Prediction-Factor", ""+pred_factor);
+        Log.i("Prediction", ""+predicted_Location.toString());
+        Log.i("Last Position", ""+data.getLocation(data.size()-1).toString());
 
         Log.d("Debug", "The following settings are set: \n\n" +
                         "Date past: " + date_past.toString() + "\n" +
@@ -204,10 +204,10 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
             // Break if date until we want the data is reached or use all data when something went wrong with the date
             if (date_t.before(date_past) && !use_all_data) {
-                Log.e("Break", "" + c + " data points were used for prediction");
+                Log.i("Break", "" + c + " data points were used for prediction");
                 break;
             }
-            c++; // Count for Log.e
+            c++; // Count for Log.i
 
             // Compute difference of pair n and n-t
             // Get n-th point
@@ -306,20 +306,20 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
             sum = sum + (long) delta_ms.get(j);
         }
         long avg = sum / m;
-        Log.e("Note", "Average of last few data points (in millis) = " + avg );
+        Log.i("Note", "Average of last few data points (in millis) = " + avg );
 
         // Get relative frequency of avg time in whole in prediction
         long duration_pred = date_pred.getTime();
         double freq = duration_pred / avg;
-        Log.e("Duration_pred", ""+duration_pred);
+        Log.i("Duration_pred", ""+duration_pred);
 
 
         if (freq > 10 || freq < 0.1) {
-            Log.e("Returned factor", "Because the time between last datapoint and prediction time is to large: "+freq);
+            Log.i("Returned factor", "Because the time between last datapoint and prediction time is to large: "+freq);
             return 1;
         }
 
-        Log.e("Returned factor", ""+freq);
+        Log.i("Returned factor", ""+freq);
         return freq;
     }
 

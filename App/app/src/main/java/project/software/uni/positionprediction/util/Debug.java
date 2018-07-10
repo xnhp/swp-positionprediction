@@ -77,7 +77,7 @@ public class Debug {
     public void printDates(Trajectory data) {
 
         for (int i = 0; i<data.size(); i++){
-            Log.e("Date", ((LocationWithValue) data.getLocation(i)).getValue().toString() );
+            Log.i("Date", ((LocationWithValue) data.getLocation(i)).getValue().toString() );
         }
     }
 
