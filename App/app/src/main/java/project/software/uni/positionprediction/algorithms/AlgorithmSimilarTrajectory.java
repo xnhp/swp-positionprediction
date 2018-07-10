@@ -309,7 +309,7 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
         Log.i("algorithm", "possible_indices size: " + possible_indices.size());
         if (possible_indices.size() == 0) {
             Log.e("No trajectory found", "There are no similar trajectories!");
-            msg.disp_error_asynch(getContext(), "No trajectory found", "There are no similar trajectories!");
+            msg.disp_error_asynch(getContext(), "Warning", "Es gibt keinen ähnlichen Trajektorien in der Vergangenheit!");
             return null;
         } else {
             Log.i("Number of trajectories", ""+possible_indices.size());

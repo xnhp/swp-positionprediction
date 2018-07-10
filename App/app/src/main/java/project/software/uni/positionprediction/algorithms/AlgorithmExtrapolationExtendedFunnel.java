@@ -307,8 +307,6 @@ public class AlgorithmExtrapolationExtendedFunnel extends PredictionAlgorithmRet
         double freq = duration_pred / avg;
 
         if (freq > 10 || freq < 0.1) {
-            msg.disp_error_asynch(getContext(), "Date warning",
-                    "The time between last datapoint and prediction time is to large!");
             Log.e("Returned factor", "Because the time between last datapoint and prediction time is to large: "+freq);
             return 1;
         }
