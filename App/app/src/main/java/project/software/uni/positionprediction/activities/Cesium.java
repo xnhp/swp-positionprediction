@@ -116,9 +116,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         // Dynamically add a String as a file after the server has started.
         // Web Location: http://localhost:8080/test.html
-        webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
+        // webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
 
-        launchWebView(webView);
+        launchWebView();
 
     }
 
@@ -200,7 +200,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     // we are aware that js is enabled in the webview, however we only access
     // local files and trust Cesium.
     @SuppressLint("SetJavaScriptEnabled")
-    public void launchWebView(View view) {
+    public void launchWebView() {
 
         // Copied and modified from https://stackoverflow.com/questions/7305089/how-to-load-external-webpage-inside-webview#answer-7306176
         this.webView = findViewById(R.id.cesium_webview);
@@ -228,6 +228,8 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         visAdap.linkMap(webView);
 
         registerOnPageLoadHandler();
+
+        registerLocationListener(webView);
 
 
     }
@@ -280,7 +282,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     @Override
     public void onShowLocClick() {
-
+        JSCaller.callJS(this.webView, "panToUserLoc", null);
     }
 
     @Override
@@ -293,15 +295,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     @Override
     public void onRefreshClick() {
-        // this is here because when calculating the prediction
-        // in this naive way we dont have a way to ensure that
-        // the calculation is done (vis_past is set) before
-        // this is called.
-        // we will be able to move this into registerOnPageloadHandler()
-        // when we have integrated the changes that the prediction is made
-        // before the cesium activity is launched
-        // prediction is still recalculated, even though no visualisation
-        // can be displayed (here)
         PredictionWorkflow.getInstance(context).refreshPrediction(context, new AsyncTaskCallback(){
             @Override
             public void onFinish() {
@@ -314,7 +307,8 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                 visWorkflow.trigger();
 
                 // right way to refresh?
-                launchWebView(webView);
+                // todo
+                launchWebView();
             }
 
             @Override
@@ -327,9 +321,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                 return context;
             }
         });
-
-        // this function crashes the app because Location Types are messed up (one time android location type, one time "our" location type)
-        // registerLocationListener(webView);
     }
 
 
