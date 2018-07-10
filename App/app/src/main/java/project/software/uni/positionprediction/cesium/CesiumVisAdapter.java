@@ -12,8 +12,8 @@ import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
 public class CesiumVisAdapter extends IVisualisationAdapter {
 
-    WebView webView;
-    String LogTag = "CesiumVisAdapter";
+    private WebView webView;
+    private String LogTag = "CesiumVisAdapter";
 
     /**
      * Save a reference to the webView for use in other methods.
@@ -75,6 +75,7 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
     }
 
     private void callJS(String methodName, String jsonData) {
+        // Additional argument of webView
         JSCaller.callJS(this.webView, methodName, jsonData);
     }
 }

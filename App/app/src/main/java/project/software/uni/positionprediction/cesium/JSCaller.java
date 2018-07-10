@@ -10,6 +10,10 @@ public class JSCaller {
      * As of now, no check is made whether that method
      * is actually defined in the JS.
      *
+     * Potentially, one could make this more dynamic
+     * by writing a java object that exhibits fake
+     * methods that just call this method.
+     *
      * @param methodName
      * @param jsonData
      */
