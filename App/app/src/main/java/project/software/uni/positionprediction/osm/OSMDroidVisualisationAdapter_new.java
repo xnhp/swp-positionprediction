@@ -131,6 +131,10 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
     @Override
     public void visualiseSingleTraj(TrajectoryVis vis) {
         // draw styled linesegments
+
+        String start_color = "#2A4B6E";
+        int i = 0;
+
         for (StyledLineSegment seg :
                 vis.getLine().styledLineSegments) {
             // todo: note: this will create an "osmdroid overlay" for each segment.
@@ -138,7 +142,9 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
             List<GeoPoint> locs = new ArrayList<>();
             locs.add(GeoDataUtils.LocationToGeoPoint(seg.start));
             locs.add(GeoDataUtils.LocationToGeoPoint(seg.end));
-            map.drawPolyLine(locs, seg.lineColor);
+            map.drawPolyLine(locs, getColor(start_color, i));
+            i++;
+
         }
 
 
@@ -174,6 +180,20 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
         map.mapView.getOverlays().add(overlay);
 
         if(vis.hasFunnel()); //todo: draw polygon
+    }
+
+    private String getColor(String start_color, int i) {
+        long color = Color.parseColor(start_color);
+        long new_color = color+i;
+
+        String ret = start_color;
+        try{
+            ret = "#" + Integer.toHexString((int) new_color);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
     }
 
 
