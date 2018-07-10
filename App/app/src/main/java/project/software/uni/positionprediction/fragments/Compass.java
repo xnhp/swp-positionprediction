@@ -1,7 +1,6 @@
 package project.software.uni.positionprediction.fragments;
 
 import android.content.Context;
-import android.graphics.Matrix;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,15 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.util.BearingListener;
 import project.software.uni.positionprediction.util.BearingProvider;
-import project.software.uni.positionprediction.util.OrientationListener;
-import project.software.uni.positionprediction.util.OrientationProvider;
 
 public class Compass extends Fragment {
 
@@ -86,7 +81,6 @@ public class Compass extends Fragment {
         provider.registerBearingUpdates(this.context, targetLocation, new BearingListener() {
             @Override
             public void onBearingChanged(float newBearing) {
-                Log.i("OSM", "received bearing: " + newBearing);
                 rotateArrow(newBearing);
             }
 
