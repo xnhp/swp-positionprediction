@@ -320,7 +320,7 @@ public class PredictionWorkflow extends Controller {
             if (data_pred == null || data_pred.getShapes().size() == 0) {
                 PredictionWorkflow.vis_pred = null;
                 Log.e("Warning", "No prediction to visualize");
-                msg.disp_error_asynch(context, "Warning", "No Prediction could be made!");
+                msg.disp_error_asynch(context, "Warnung", "Eine Vorhersage konnte NICHT gemacht werden!");
                 return null;
 
             }
