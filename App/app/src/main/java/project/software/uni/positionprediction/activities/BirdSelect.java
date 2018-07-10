@@ -187,6 +187,8 @@ public class BirdSelect extends AppCompatActivity {
             }
         }
 
+        Message.show_pending_messages(this);
+
     }
 
 

@@ -17,7 +17,9 @@ import android.widget.RelativeLayout;
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedFunnel;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectory;
+import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectoryFunnel;
 import project.software.uni.positionprediction.datatypes.HttpStatusCode;
 import project.software.uni.positionprediction.datatypes.Request;
 import project.software.uni.positionprediction.datatypes.Trajectory;
@@ -34,6 +36,8 @@ public class Login extends AppCompatActivity {
     private Button buttonLogin = null;
     RelativeLayout layout = null;
 
+    private int loginFailedCounter = 0;
+
     LoadingIndicator loadingIndicator = null;
 
     private XML xml = new XML();
@@ -46,7 +50,9 @@ public class Login extends AppCompatActivity {
         // Define default algorithms and visualization
         Class algorithms[] = new Class[]{
                 AlgorithmExtrapolationExtended.class,
-                AlgorithmSimilarTrajectory.class
+                AlgorithmSimilarTrajectory.class,
+                AlgorithmExtrapolationExtendedFunnel.class,
+                AlgorithmSimilarTrajectoryFunnel.class
         };
         xml.setAlgorithms(algorithms);
 
@@ -170,15 +176,19 @@ public class Login extends AppCompatActivity {
                             animation.stop();
                             animation.start();
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(login);
-                            builder.setMessage(R.string.login_wrong_creds_warning)
-                                    .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
+                            loginFailedCounter++;
 
-                                        }
-                                    });
-                            builder.create().show();
+                            if(loginFailedCounter >= 3) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(login);
+                                builder.setMessage(R.string.login_wrong_creds_warning)
+                                        .setPositiveButton(R.string.alert_ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                            }
+                                        });
+                                builder.create().show();
+                            }
                         }
                     });
                 } else {

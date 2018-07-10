@@ -43,6 +43,7 @@ import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.LoadingIndicator;
+import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.PermissionManager;
 import project.software.uni.positionprediction.util.XML;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
@@ -119,6 +120,13 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         launchWebView(webView);
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        Message.show_pending_messages(this);
     }
 
     private void triggerTestingPrediction() {

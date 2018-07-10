@@ -25,6 +25,7 @@ import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
+import project.software.uni.positionprediction.util.Message;
 
 import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_pred;
 
@@ -135,6 +136,8 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
            visWorkflow.trigger();
 
        }
+
+        Message.show_pending_messages(this);
 
         // if(PredictionWorkflow.getInstance(this).isRefreshNeeded()) PredictionWorkflow.getInstance(this).refreshPrediction(this);
     }
