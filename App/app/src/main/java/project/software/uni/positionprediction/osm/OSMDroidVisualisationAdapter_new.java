@@ -81,6 +81,7 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
 
         map.mapView.invalidate();
         map.safeZoomToBoundingBox(
+                this,
                 targetBB,
                 false,
                 this.zoomPadding
@@ -95,6 +96,7 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
         }
         map.mapView.invalidate();
         map.safeZoomToBoundingBox(
+                this,
                 PredictionWorkflow.vis_past.getBoundingBox(),
                 false,
                 this.zoomPadding
@@ -115,7 +117,7 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
 
         MapView mMapView = map.mapView;
         mMapView.invalidate();
-        map.safeZoomToBoundingBox(mybb, false, this.zoomPadding);
+        map.safeZoomToBoundingBox(this, mybb, false, this.zoomPadding);
 
     }
 

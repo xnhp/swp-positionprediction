@@ -1,5 +1,6 @@
 package project.software.uni.positionprediction.visualisation;
 
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import project.software.uni.positionprediction.osm.MapInitException;
@@ -12,6 +13,14 @@ public abstract class IVisualisationAdapter {
 
     public Visualisations currentVisPred;
     public TrajectoryVis currentVisPast;
+
+    // minimal size of a bounding box in latitude/longitude difference
+    // (in case it e.g. describes only a single point)
+    // Note: this is risky since the actual distance from some
+    // lat/lon to another is different depending on where on the globe
+    // you are. However, I'll make the assumption that this is not
+    // important here.
+    public double boundingBoxMinSize = 0.1;
 
     /**
      * This is to enforce that the visualisation Adapter remembers
@@ -38,7 +47,7 @@ public abstract class IVisualisationAdapter {
                 );
     }
 
-    // there needs to be a reference to the map that should be drawn on.
+    // a visAdapter needs a reference to a map that it can draw on.
     // TODO: more specific subtype possible?
     public abstract void linkMap(Object mapView) throws MapInitException;
 
@@ -46,8 +55,6 @@ public abstract class IVisualisationAdapter {
 
     public abstract void setMapCenter(GeoPoint centerWithDateLine);
 
-    //void visualiseMultipleTraj(Geometry vis);
-    //void visualiseCloud(Geometry vis);
 
     /**
      * Clear any visualisations fom the map.
@@ -56,10 +63,51 @@ public abstract class IVisualisationAdapter {
 
     /**
      * zoom/pan to past and prediction visualisation
+     * (done on activity start or refresh of activ)
      */
     public abstract void showVisualisation();
 
+    /**
+     * zoom/pan to visualisation of past data
+     * (done on button press)
+     */
     public abstract void showData();
 
+    /**
+     * zoom/pan to visualisation of prediction
+     * (done on button press)
+     */
     public abstract void showPrediction();
+
+    /**
+     * In case the prediction bounding box is overly small,
+     * the map libraries do weird things (osmdroid doesnt move at all,
+     * cesium glitches).
+     *
+     * Hence enforce a minimum size for the bounding box.
+     *
+     * this could also be put in GeoDataUtils
+     * but then the question arises where to get the boundingBoxMinSize from
+     * that should be stored here, so you'd have to pass the visAdap around
+     * as parameter.
+     * @param boundingBox
+     * @return
+     */
+    public BoundingBox getSafeBoundingBox(final BoundingBox boundingBox) {
+        double diff = Math.min(
+                boundingBox.getLatNorth() - boundingBox.getLatSouth(),
+                boundingBox.getLonEast() - boundingBox.getLonWest()
+        );
+
+        // in this case, we simply enlarge the bounding box by a bit.
+        if (diff < 0.0001) {
+            boundingBox.set(
+                    boundingBox.getLatNorth() + this.boundingBoxMinSize/2,
+                    boundingBox.getLonWest() + this.boundingBoxMinSize/2,
+                    boundingBox.getLatSouth() - this.boundingBoxMinSize/2,
+                    boundingBox.getLonEast() - this.boundingBoxMinSize/2
+            );
+        }
+        return boundingBox;
+    }
 }

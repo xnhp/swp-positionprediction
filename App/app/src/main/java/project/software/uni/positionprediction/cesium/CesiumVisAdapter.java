@@ -1,11 +1,15 @@
 package project.software.uni.positionprediction.cesium;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.webkit.WebView;
 
 import org.json.JSONException;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
@@ -49,19 +53,58 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
         // todo
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void showVisualisation() {
-        // todo
+        try {
+
+            BoundingBox bb1 = PredictionWorkflow.vis_past.getBoundingBox();
+            BoundingBox bb2 = PredictionWorkflow.vis_pred.getBoundingBox();
+            BoundingBox targetBB = bb1.concat(bb2);
+
+            BoundingBox bb = getSafeBoundingBox(targetBB);
+
+            String bbJson = JSONUtils.getBoundingBoxJSON(bb).toString();
+
+            callJS("panToBoundingBox", bbJson);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void showData() {
-        // todo
+        try {
+
+            BoundingBox bb = getSafeBoundingBox(
+                    PredictionWorkflow.vis_past.getBoundingBox()
+            );
+
+            String bbJson = JSONUtils.getBoundingBoxJSON(bb).toString();
+
+            callJS("panToBoundingBox", bbJson);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N) // todo
     @Override
     public void showPrediction() {
-        // todo
+        try {
+            BoundingBox bb = getSafeBoundingBox(
+                    PredictionWorkflow.vis_pred.getBoundingBox()
+            );
+
+            String bbJson = JSONUtils.getBoundingBoxJSON(bb).toString();
+
+            callJS("panToBoundingBox", bbJson);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void callJS(String methodName, String jsonData) {

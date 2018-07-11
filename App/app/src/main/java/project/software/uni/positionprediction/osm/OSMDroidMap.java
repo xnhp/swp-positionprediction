@@ -43,6 +43,7 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.datatypes.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.util.PermissionManager;
+import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 
 import static android.graphics.Color.argb;
 import static android.graphics.Color.blue;
@@ -94,13 +95,6 @@ public class OSMDroidMap {
     private MyLocationNewOverlay locationOverlay = null;
     private CompassOverlay compassOverlay = null;
 
-    // minimal size of a bounding box in latitude/longitude difference
-    // (in case it e.g. describes only a single point)
-    // Note: this is risky since the actual distance from some
-    // lat/lon to another is different depending on where on the globe
-    // you are. However, I'll make the assumption that this is not
-    // important here.
-    private double boundingBoxMinSize = 0.1;
 
     // TODO: refresh tiles when switching from offline to inline
     // cf https://github.com/osmdroid/osmdroid/blob/ae026862fe4666ab6c8d037b9e2f8805233c8ebf/OpenStreetMapViewer/src/main/java/org/osmdroid/StarterMapActivity.java#L25
@@ -609,30 +603,16 @@ public class OSMDroidMap {
      * another thing to try would be to use postDelayed instead but, honestly,
      * zooming to some random place and then panning to the correct place,
      * each with animation is absolutely not what we want.
-     *
-     * @param boundingBox
-     * @param animate
-     * @param zoomPadding
      */
-    public void safeZoomToBoundingBox(final BoundingBox boundingBox, final boolean animate, final int zoomPadding) {
-        // calculate nextZoom in advance
-        double diff = Math.min(
-                boundingBox.getLatNorth() - boundingBox.getLatSouth(),
-                boundingBox.getLonEast() - boundingBox.getLonWest()
+    // having this here in the OSMDroidMap class seems convoluted but is
+    // necessary since we call a method on the mapview.
+    public void safeZoomToBoundingBox(IVisualisationAdapter visAdap, final BoundingBox boundingBox, final boolean animate, final int zoomPadding) {
+        mapView.zoomToBoundingBox(
+                visAdap.getSafeBoundingBox(boundingBox),
+                animate,
+                zoomPadding
         );
-
-        // this would cause osmdroid to not zoom/pan at all.
-        // in this case, we simply enlarge the bounding box by a bit.
-        if (diff < 0.0001) {
-            boundingBox.set(
-                    boundingBox.getLatNorth() + this.boundingBoxMinSize/2,
-                    boundingBox.getLonWest() + this.boundingBoxMinSize/2,
-                    boundingBox.getLatSouth() - this.boundingBoxMinSize/2,
-                    boundingBox.getLonEast() - this.boundingBoxMinSize/2
-            );
-        }
-        mapView.zoomToBoundingBox(boundingBox, animate, zoomPadding);
-
-
     }
+
+
 }

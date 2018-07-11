@@ -68,14 +68,31 @@ function visualiseSingleTraj(jsonData) {
             }
         })
     });
-
-    viewer.zoomTo(viewer.entities);
 }
 
 function setCenter(jsonData) {
     // ...
 }
 
+
+// Reason we dont have distinct "pan to past" and "pan to pred"
+// methods in here:
+// VisualisationWorkFlow and VisAdapter are written so that
+// both past and pred visualisation come through the same
+// methods (for instance visualiseSingleTraj)
+// so based on that, there is no distinction between past
+// and pred vis.
+//
+// However, a visualisationAdapter saves the visualisations
+// in a field.
+//
+// So, this should be implemented on the java-side:
+// get the position to zoom to (as bounding box? sample code cf [1]),
+// then call a JS method with that position.
+//
+// [1] https://gis.stackexchange.com/questions/239180/cesium-camera-setview-to-rectangle-clipping-the-rectangle
+// expects a string according to
+// JSONUtils.getBoundingBoxJSON
 /*
     expects a bounding box as a json string
         [
@@ -84,34 +101,11 @@ function setCenter(jsonData) {
             ...
         ]
 */
-function panToPredPoint(jsonData) {
-    data = JSON.parse(jsonData);
-
-
-
-    // todo
-    // VisualisationWorkFlow and VisAdapter are written so that
-    // both past and pred visualisation come through the same
-    // methods (for instance visualiseSingleTraj)
-    // so based on that, there is no distinction between past
-    // and pred vis.
-    //
-    // However, a visualisationAdapter saves the visualisations
-    // in a field.
-    //
-    // So, this should be implemented on the java-side:
-    // get the position to zoom to (as bounding box? sample code cf [1]),
-    // then call a JS method with that position.
-    //
-    // [1] https://gis.stackexchange.com/questions/239180/cesium-camera-setview-to-rectangle-clipping-the-rectangle
-}
-
-function panToBoundingBox() {
-    // todo
-    // this doesnt work correctly right now because the user
-    // location marker also is an entity.
-    // ccf comments in panToPredPoint
-    // viewer.zoomTo(viewer.entities);
+function panToBoundingBox(jsonData) {
+    bb = JSON.parse(jsonData);
+    viewer.camera.setView({
+        destination : Cesium.Rectangle.fromDegrees(bb.west, bb.south, bb.east, bb.north)
+    });
 }
 
 
