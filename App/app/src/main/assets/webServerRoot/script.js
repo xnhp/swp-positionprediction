@@ -76,7 +76,19 @@ function setCenter(jsonData) {
     // ...
 }
 
-function panToPredPoint() {
+/*
+    expects a bounding box as a json string
+        [
+            "north": lat,
+            "south": lat,
+            ...
+        ]
+*/
+function panToPredPoint(jsonData) {
+    data = JSON.parse(jsonData);
+
+
+
     // todo
     // VisualisationWorkFlow and VisAdapter are written so that
     // both past and pred visualisation come through the same
@@ -95,10 +107,11 @@ function panToPredPoint() {
 }
 
 function panToBoundingBox() {
+    // todo
     // this doesnt work correctly right now because the user
     // location marker also is an entity.
     // ccf comments in panToPredPoint
-    viewer.zoomTo(viewer.entities);
+    // viewer.zoomTo(viewer.entities);
 }
 
 

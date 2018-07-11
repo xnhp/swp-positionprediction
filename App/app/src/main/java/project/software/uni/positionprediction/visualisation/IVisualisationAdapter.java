@@ -1,6 +1,5 @@
 package project.software.uni.positionprediction.visualisation;
 
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import project.software.uni.positionprediction.osm.MapInitException;
@@ -46,8 +45,6 @@ public abstract class IVisualisationAdapter {
     public abstract void visualiseSingleTraj(TrajectoryVis vis);
 
     public abstract void setMapCenter(GeoPoint centerWithDateLine);
-
-    public abstract void panToBoundingBox(BoundingBox boundingBox);
 
     //void visualiseMultipleTraj(Geometry vis);
     //void visualiseCloud(Geometry vis);

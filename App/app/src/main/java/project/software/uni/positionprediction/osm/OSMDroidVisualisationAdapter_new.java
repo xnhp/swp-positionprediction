@@ -54,14 +54,6 @@ public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
         map.setCenter(center);
     }
 
-    @Override
-    public void panToBoundingBox(BoundingBox boundingBox) {
-        map.setCenter(boundingBox.getCenterWithDateLine());
-
-        // TJ: Not working (OSM issue discussed on stackoverflow)
-        // map.mapView.zoomToBoundingBox(boundingBox, false);
-    }
-
 
     @Override
     public void clear() {

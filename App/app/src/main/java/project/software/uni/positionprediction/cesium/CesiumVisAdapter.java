@@ -4,7 +4,6 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import org.json.JSONException;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
@@ -40,15 +39,6 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
     public void setMapCenter(GeoPoint centerWithDateLine) {
         try {
             callJS("setCenter", JSONUtils.getGeoPointJSON(centerWithDateLine).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void panToBoundingBox(BoundingBox boundingBox) {
-        try {
-            callJS("panToBoundingBox", JSONUtils.getBoundingBoxJSON(boundingBox).toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

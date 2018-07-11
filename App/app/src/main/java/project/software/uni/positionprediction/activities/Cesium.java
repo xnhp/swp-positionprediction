@@ -272,7 +272,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     @Override
     public void onShowDataClick() {
-        JSCaller.callJS(this.webView, "panToBoundingBox", null);
+        // todo
     }
 
     @Override
