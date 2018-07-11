@@ -29,7 +29,7 @@ import static project.software.uni.positionprediction.controllers.PredictionWork
  * Takes care of calling the correct methods to draw the visualisation on the map.
  * Merely *draws* what is specified in the Geometry obejct
  */
-public class OSMDroidVisualisationAdapter_new extends IVisualisationAdapter {
+public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
 
     public OSMDroidMap map;
     public OSMDroidMap getMap() {return map;}

@@ -26,28 +26,19 @@ import android.widget.Toast;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
 
 import de.movabo.webserver.WebServer;
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithms.PredictionAlgorithm;
 import project.software.uni.positionprediction.cesium.CesiumVisAdapter;
 import project.software.uni.positionprediction.cesium.JSCaller;
 import project.software.uni.positionprediction.cesium.JSONUtils;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.controllers.VisualizationWorkflow;
-import project.software.uni.positionprediction.datatypes.Bird;
-import project.software.uni.positionprediction.datatypes.PredictionUserParameters;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
-import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.PermissionManager;
-import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 
 
 /**
@@ -128,47 +119,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         super.onResume();
 
         Message.show_pending_messages(this);
-    }
-
-    private void triggerTestingPrediction() {
-
-        XML xml = new XML();
-        int hoursInPast = xml.getHours_past();
-
-        // If used all data is clicked
-        Date date_past;
-
-
-        Calendar clp = Calendar.getInstance();
-        //clp.setTime(new Date());
-        clp.set(2005, 01, 01, 00, 00);
-        date_past = clp.getTime();
-
-        Calendar clf = Calendar.getInstance();
-        clf.setTime(new Date());
-        clf.add(Calendar.HOUR, 5);
-        Date date_pred = clf.getTime();
-
-        Bird bird = new Bird(2911059, 2911040, "Galapagos");
-
-
-        // stub/useless vis adapter
-        IVisualisationAdapter myVisAdap = new OSMDroidVisualisationAdapter_new();
-        PredictionUserParameters predictionUserParameters = new PredictionUserParameters();
-        predictionUserParameters.date_past = date_past;
-        predictionUserParameters.date_pred = date_pred;
-        predictionUserParameters.bird = bird;
-        predictionUserParameters.algorithm = (PredictionAlgorithm) new AlgorithmExtrapolationExtended(context);
-
-        /*
-        PredictionWorkflow predWorkflow;
-        predWorkflow = new PredictionWorkflow(
-                this,
-                predictionUserParameters,
-                myVisAdap
-        );
-        predWorkflow.trigger();
-        */
     }
 
     private void registerEventHandlers(final Cesium cesium){

@@ -18,16 +18,14 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.controllers.VisualizationWorkflow;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
+import project.software.uni.positionprediction.controllers.VisualizationWorkflow;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
-import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter_new;
+import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.Message;
-
-import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_pred;
 
 
 public class OSM extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener{
@@ -39,7 +37,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     private Context ctx;
     OSMDroidMap osmDroidMap;
 
-    OSMDroidVisualisationAdapter_new visAdap;
+    OSMDroidVisualisationAdapter visAdap;
 
        /** Execute the following procedures:
      * 1.) Create OSMDroid map
@@ -69,7 +67,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
         // ---------------------------------------
 
         // TJ: todo: Alternately, provide Constructor which takes map as argument
-        visAdap = new OSMDroidVisualisationAdapter_new();
+        visAdap = new OSMDroidVisualisationAdapter();
         visAdap.linkMap(osmDroidMap);
 
 
