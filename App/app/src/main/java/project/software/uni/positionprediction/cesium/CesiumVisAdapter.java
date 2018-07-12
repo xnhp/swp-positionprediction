@@ -58,6 +58,9 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
     public void showVisualisation() {
         try {
 
+            if (PredictionWorkflow.vis_past == null
+                    || PredictionWorkflow.vis_pred == null) return;
+
             BoundingBox bb1 = PredictionWorkflow.vis_past.getBoundingBox();
             BoundingBox bb2 = PredictionWorkflow.vis_pred.getBoundingBox();
             BoundingBox targetBB = bb1.concat(bb2);
@@ -75,6 +78,9 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
 
     @Override
     public void showData() {
+
+        if (PredictionWorkflow.vis_past == null) return;
+
         try {
 
             BoundingBox bb = getSafeBoundingBox(
@@ -93,6 +99,9 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
     @RequiresApi(api = Build.VERSION_CODES.N) // todo
     @Override
     public void showPrediction() {
+
+        if (PredictionWorkflow.vis_past == null) return;
+
         try {
             BoundingBox bb = getSafeBoundingBox(
                     PredictionWorkflow.vis_pred.getBoundingBox()
