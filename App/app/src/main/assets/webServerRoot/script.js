@@ -9,7 +9,7 @@ var viewer = new Cesium.Viewer('cesiumContainer',{
 // however, there are moveStart and moveEnd
 // which are called on zoom.
 // use moveEnd in case zoom is not instantaneous
-// viewer.camera.moveEnd.addEventListener(function() { 
+// viewer.camera.moveEnd.addEventListener(function() {
 //     // get camera's height above ground in meters
 //     alt = getCameraHeightAboveGround;
 //     console.log(alt);
@@ -68,6 +68,86 @@ function visualiseSingleTraj(jsonData) {
             }
         })
     });
+
+    // draw funnel if it exists
+    if(json.hasOwnProperty("funnel")){
+        visualiseFunnel(json.funnel);
+    }
+
+}
+
+function visualiseFunnel(json){
+    var points = [];
+    for(var i = 0; i < json.length; i++){
+        points.push(json[i].lon);
+        points.push(json[i].lat);
+    }
+
+    var funnel = viewer.entities.add({
+        name : 'predFunnel',
+        polygon : {
+            hierarchy : Cesium.Cartesian3.fromDegreesArray(points),
+            height : 5000,
+            material : Cesium.Color.GREEN.withAlpha(0.5),
+            outline : false
+        }
+    });
+}
+
+function visualiseMultipleClounds(jsonData){
+
+    var json = JSON.parse(jsonData);
+    console.log("received data", json);
+
+    for(var i = 0; i < json.clouds.length; i++){
+        visualiseClound(json.clouds[i]);
+    }
+
+}
+
+function visualiseSingleCloud(jsonData){
+
+    var json = JSON.parse(jsonData);
+    console.log("received data", json);
+
+    visualiseClound(json);
+
+}
+
+
+function visualiseClound(json){
+
+    for(var i = 0; i < json.points.length; i++){
+        var pointsPast = viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(json.points.lon[i], json.points.lat[i], 5000),
+            name : 'cloudPoints',
+            ellipse : {
+                semiMinorAxis : 1000.0,
+                semiMajorAxis : 1000.0,
+                height: 5001,
+                material : Cesium.Color.RED,
+                outline : false
+            }
+        });
+    }
+
+    var hull = [];
+
+    for(var j = 0; j < json.hull.length; j++){
+        hull.push(json.hull[j].lon);
+        hull.push(json.hull[j].lat);
+    }
+
+    var cloud = viewer.entities.add({
+        name : 'cloudHull',
+        polygon : {
+            hierarchy : Cesium.Cartesian3.fromDegreesArray(hull),
+            height : 5000,
+            material : Cesium.Color.GREEN.withAlpha(0.5),
+            outline : false
+        }
+    });
+
 }
 
 function setCenter(jsonData) {
@@ -168,9 +248,6 @@ function createSphere(lon, lat, alt, color, radius) {
     return sphere;
 }
 
-/*
-    Create and add an anonymous "Point".
-    cf https://cesiumjs.org/tutorials/Visualizing-Spatial-Data/#points-billboards-and-labels
 
     Note that Points are different from 3D objects.
     Main characteristic is that points stay fixed in screen

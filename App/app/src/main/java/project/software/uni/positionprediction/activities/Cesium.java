@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -111,6 +112,13 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         // webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
 
         launchWebView();
+
+        // make WebView Remote-Debuggable
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))
+            { WebView.setWebContentsDebuggingEnabled(true); }
+        }
+
 
     }
 
@@ -259,8 +267,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                 visWorkflow.trigger();
 
                 // right way to refresh?
-                // todo
-                launchWebView();
+                webView.reload();
             }
 
             @Override

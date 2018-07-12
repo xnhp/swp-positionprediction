@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
+import project.software.uni.positionprediction.datatypes.Collection;
 import project.software.uni.positionprediction.util.GeoDataUtils;
+import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation.StyledPoint;
@@ -188,6 +190,11 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         }
 
         return ret;
+    }
+
+    @Override
+    public void visualiseSingleClouds(Collection<CloudVis> vis) {
+        // TODO: implement this
     }
 
 
