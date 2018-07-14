@@ -127,6 +127,12 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         super.onResume();
 
         Message.show_pending_messages(this);
+
+        if ( ! visAdap.areVisCurrent(PredictionWorkflow.vis_past, PredictionWorkflow.vis_pred))  {
+
+            onRefreshClick();
+
+        }
     }
 
     private void registerEventHandlers(final Cesium cesium){

@@ -11,16 +11,16 @@
     <!-- <uses-permission android:name="android.permission.LOCATION_HARDWARE"/> -->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.Cesium"
             android:label="@string/title_activity_cesium"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity
             android:name=".activities.Settings"
@@ -31,7 +31,8 @@
             android:name=".activities.OSM"
             android:label="@string/title_activity_osm"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity
             android:name=".activities.Prediction"
@@ -50,7 +51,8 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:icon="@drawable/icon">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

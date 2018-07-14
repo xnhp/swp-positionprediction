@@ -239,6 +239,9 @@ public class BirdSelect extends AppCompatActivity {
      */
     private void fillStudiesListView(final Study[] studies, boolean showFavorites){
 
+
+        if(state != STUDY_SELECT) return;
+
         // remove previous content from scrollView
         scrollViewLayout.removeAllViews();
 
@@ -269,8 +272,8 @@ public class BirdSelect extends AppCompatActivity {
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    studySelected(studies[index]);
                     state = BIRD_SELECT;
+                    studySelected(studies[index]);
                     selectedStudy = studies[index].id;
                     editTextSearch.setText("");
                 }
@@ -610,6 +613,7 @@ public class BirdSelect extends AppCompatActivity {
      * This Method switches to STUDY_SELECT mode
      */
     private void switchToStudySelect(){
+        state = STUDY_SELECT;
         loadingIndicator.show(this);
 
         final BirdSelect birdSelect = this;
@@ -622,7 +626,6 @@ public class BirdSelect extends AppCompatActivity {
             }
         });
         editTextSearch.setText("");
-        state = STUDY_SELECT;
     }
     /**
      * This Method checks weather the App has the required permissions
