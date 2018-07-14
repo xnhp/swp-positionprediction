@@ -266,6 +266,8 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         PredictionWorkflow.getInstance(context).refreshPrediction(context, new AsyncTaskCallback(){
             @Override
             public void onFinish() {
+                visAdap.clearVis();
+
                 // call visualisation
                 VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
                         context,
@@ -273,9 +275,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
                         PredictionWorkflow.vis_past,
                         PredictionWorkflow.vis_pred);
                 visWorkflow.trigger();
-
-                // right way to refresh?
-                webView.reload();
             }
 
             @Override
