@@ -42,7 +42,6 @@ public class Settings extends AppCompatActivity {
     private EditText text_past = null;
     private EditText text_future = null;
     private Spinner spinner_alg = null;
-    private Spinner spinner_vis = null;
     private Button delete_btn = null;
     private CheckBox checkBox = null;
 
@@ -69,7 +68,6 @@ public class Settings extends AppCompatActivity {
         xml.readFile(c);
 
         spinner_alg = findViewById(R.id.spinner_alg);
-        spinner_vis = findViewById(R.id.spinner_vis);
         buttonSave = findViewById(R.id.settings_button_save);
         buttonClearCache = findViewById(R.id.settings_button_clearcache);
         seekbar_past = findViewById(R.id.seekbar_past);
@@ -99,13 +97,6 @@ public class Settings extends AppCompatActivity {
         ArrayAdapter<String> adapter_alg = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_alg));
         spinner_alg.setAdapter(adapter_alg);
         spinner_alg.setSelection(xml.getUsed_alg());
-
-        // Define dropdown for Visualization
-        Class[] items_vis = xml.getVisualizations();
-        ArrayAdapter<String> adapter_vis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, asStringArray(items_vis));
-        spinner_vis.setAdapter(adapter_vis);
-        spinner_vis.setSelection(xml.getUsed_vis());
-
 
         // check cache size and display a note to the user if its large
         // todo: check on startup of app?
@@ -311,21 +302,6 @@ public class Settings extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-
-        spinner_vis.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Visualization changed", "ID " + position);
-                xml.setUsed_vis(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-
 
 
         delete_btn.setOnClickListener(new View.OnClickListener() {

@@ -56,13 +56,6 @@ public class Login extends AppCompatActivity {
         };
         xml.setAlgorithms(algorithms);
 
-        Class visualizations[] = new Class[]{
-                Trajectory.class,
-                StyledPoint.class,
-                StyledLineSegment.class
-        };
-        xml.setVisualizations(visualizations);
-
 
         this.layout = findViewById(R.id.login_background);
         this.layout.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));

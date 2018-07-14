@@ -28,7 +28,6 @@ public class XML {
     private static String movebank_user;
     private static String movebank_password;
     private static Class[] algorithms;
-    private static Class[] visualizations;
     private static int used_alg;
     private static int used_vis;
 
@@ -39,7 +38,6 @@ public class XML {
         this.hours_past = hours_past;
         this.hours_fut = hours_fut;
         this.algorithms = algorithms;
-        this.visualizations = visualizations;
         this.used_alg = used_alg;
         this.used_vis = used_vis;
     }
@@ -70,15 +68,6 @@ public class XML {
     public void setAlgorithms(Class[] algorithms) {
         Log.d("Settings changed", "Algorithm changed");
         this.algorithms = algorithms;
-    }
-
-    public Class[] getVisualizations() {
-        return visualizations;
-    }
-
-    public void setVisualizations(Class[] visualizations) {
-        Log.d("Settings changed", "Visualization changed");
-        this.visualizations = visualizations;
     }
 
     public int getUsed_alg() {
