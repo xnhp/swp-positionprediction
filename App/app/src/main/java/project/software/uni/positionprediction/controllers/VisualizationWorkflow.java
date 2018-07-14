@@ -7,7 +7,12 @@ import android.util.Log;
 import java.util.logging.Handler;
 
 import project.software.uni.positionprediction.datatypes.Collection;
+import project.software.uni.positionprediction.datatypes.Location;
+import project.software.uni.positionprediction.datatypes.Locations;
+import project.software.uni.positionprediction.datatypes.Trajectory;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.Polyline;
+import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 import project.software.uni.positionprediction.visualisation.Visualisation;
 import project.software.uni.positionprediction.visualisation.Visualisations;
@@ -62,13 +67,14 @@ public class VisualizationWorkflow extends Controller {
             position - todo
          */
 
-        // simply visualise the past tracking points
+        /*simply visualise the past tracking points*/
         visAdapter.visualiseSingleTraj(this.past);
         visAdapter.setCurrentPastVis(this.past);
 
-        // visualise prediction, in different ways based on its
-        // type
-
+        /*
+        visualise prediction, in different ways based on its
+        type
+        */
         // Catch if no prediction could be made
         if (pred == null || pred.size() == 0) {
             return;
@@ -79,6 +85,14 @@ public class VisualizationWorkflow extends Controller {
             for (Visualisation vis : type) {
                 if (vis instanceof TrajectoryVis) {
                     // case (a)
+                    /* additionally connect the first point of the pred
+                       to the last point of the past vis
+                     */
+                    visAdapter.drawTrajectoryConnection(getConnectingLine((TrajectoryVis) vis));
+
+                    /*
+                    draw prediction visualisation
+                     */
                     visAdapter.visualiseSingleTraj((TrajectoryVis) vis);
                 //} else if (locs instanceof Cloud) {
                     // visualizeCloud(locs, i);
@@ -95,7 +109,18 @@ public class VisualizationWorkflow extends Controller {
                 visAdapter.showVisualisation();
             }
         });
-
-
     }
+
+
+    private Polyline getConnectingLine(TrajectoryVis vis) {
+        // first point of pred
+        Location end = vis.getLine().locations.get(0);
+        // last point of past
+        Location start = this.past.getLine().locations.getLast();
+        Locations locs = new Locations();
+        locs.add(end);
+        locs.add(start);
+        return new Polyline(locs, PredTrajectoryStyle.pointCol, PredTrajectoryStyle.lineCol, PredTrajectoryStyle.pointRadius);
+    }
+
 }

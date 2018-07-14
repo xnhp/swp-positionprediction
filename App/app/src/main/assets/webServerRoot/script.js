@@ -55,27 +55,48 @@ function visualiseSingleTraj(jsonData) {
     json.polyline.styled_line_segments.forEach(seg => {
         // assume alt of 0 if not set
         seg.start.alt = typeof seg.start.alt == 'undefined' ? 0 : seg.start.alt;
-        viewer.entities.add({
-            polyline: {
-                positions: Cesium.Cartesian3.fromDegreesArrayHeights([
-                    seg.start.lon,
-                    seg.start.lat,
-                    seg.start.alt,
-                    seg.end.lon,
-                    seg.end.lat,
-                    seg.end.alt
-                ]),
-                width: 2,
-                material : Cesium.Color.fromCssColorString(seg.line_color)
-            }
-        })
+        drawPolyLine(seg.start, seg.end, seg.line_color);
     });
 
     // draw funnel if it exists
     if(json.hasOwnProperty("funnel")){
         visualiseFunnel(json.funnel);
     }
+}
 
+
+function drawPolyLine(start, end, color) {
+    viewer.entities.add({
+        polyline: {
+            positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+                start.lon,
+                start.lat,
+                start.alt,
+                end.lon,
+                end.lat,
+                end.alt
+            ]),
+            width: 2,
+            material : Cesium.Color.fromCssColorString(color)
+        }
+    });
+}
+
+
+/*
+    we could alternatively directly call drawPolyline
+    from the java side but that doesnt have a json interface defined.
+    this here comes down to the same amount of work and i dont
+    see any downside
+
+    expects: [[PolyLineJSON]]
+*/
+function drawTrajectoryConnection(jsonData) {
+    data = JSON.parse(jsonData);
+    drawPolyLine(
+        data.styled_points[0].location,
+        data.styled_points[1].location,
+        data.styled_line_segments[0].line_color);
 }
 
 function visualiseFunnel(json){

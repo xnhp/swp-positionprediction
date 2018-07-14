@@ -22,6 +22,7 @@ import project.software.uni.positionprediction.datatypes.Location;
 import project.software.uni.positionprediction.datatypes.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.Polyline;
 import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation.StyledPoint;
@@ -29,6 +30,7 @@ import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
 import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_pred;
 import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
+import static project.software.uni.positionprediction.visualisation.PredTrajectoryStyle.lineCol;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
@@ -63,7 +65,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
     @Override
     public void clear() {
         // OverlayManager is an instance of List<Overlay>
-        // todo: compass also is overlay
+        // todo: does this also clear the location marker?
         map.mapView.getOverlayManager().clear();
         map.mapView.invalidate();
     }
@@ -179,7 +181,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
                         PredTrajectoryStyle.funnelOpacity
                 );
                 */
-                map.drawPolygon(funnelCoords, PredTrajectoryStyle.lineCol, PredTrajectoryStyle.lineCol, PredTrajectoryStyle.funnelOpacity);
+                map.drawPolygon(funnelCoords, lineCol, lineCol, PredTrajectoryStyle.funnelOpacity);
             };
         };
 
@@ -236,6 +238,19 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         map.mapView.getOverlays().add(overlay);
 
         if(vis.hasFunnel()); //todo: draw polygon
+    }
+
+    @Override
+    public void drawTrajectoryConnection(Polyline pline) {
+        ArrayList<GeoPoint> locs = new ArrayList<GeoPoint>();
+        locs.add(GeoDataUtils.LocationToGeoPoint(pline.locations.get(0)));
+        locs.add(GeoDataUtils.LocationToGeoPoint(pline.locations.get(1)));
+        map.drawPolyLine(
+                locs,
+                // this is fairly superfluous, i know, but still better
+                // to reuse the concept than write something different.
+                pline.styledLineSegments.get(0).lineColor
+        );
     }
 
     private String getColor(String start_color, int i) {

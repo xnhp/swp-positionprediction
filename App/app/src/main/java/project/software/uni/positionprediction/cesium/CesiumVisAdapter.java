@@ -11,8 +11,11 @@ import org.osmdroid.util.GeoPoint;
 
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes.Collection;
+import project.software.uni.positionprediction.datatypes.Location;
+import project.software.uni.positionprediction.datatypes.Locations;
 import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.Polyline;
 import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
 public class CesiumVisAdapter extends IVisualisationAdapter {
@@ -40,6 +43,17 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
         }
 
         if(vis.hasFunnel()) Log.e("funnel", "found");
+
+    }
+
+    @Override
+    public void drawTrajectoryConnection(Polyline pline) {
+        try {
+            String json = JSONUtils.getPolyLineJSON(pline).toString();
+            callJS("drawTrajectoryConnection",json );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
