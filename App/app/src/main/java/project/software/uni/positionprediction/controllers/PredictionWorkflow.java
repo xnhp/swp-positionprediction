@@ -114,7 +114,7 @@ public class PredictionWorkflow extends Controller {
         if (hoursInPast == -1){
             Log.d("Controller", "All data will be used by algorithm");
             date_past = new Date(0);
-            Log.e("date_past all data", "" + date_past.toString());
+            Log.d("date_past all data", "" + date_past.toString());
 
 
             // If an hour is set in settings
