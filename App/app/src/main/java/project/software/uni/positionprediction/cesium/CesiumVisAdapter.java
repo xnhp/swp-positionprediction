@@ -130,6 +130,11 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
         }
     }
 
+    public void clearVis() {
+        callJS("clearVis", null);
+    }
+
+
     private void callJS(String methodName, String jsonData) {
         // Additional argument of webView
         JSCaller.callJS(this.webView, methodName, jsonData);
