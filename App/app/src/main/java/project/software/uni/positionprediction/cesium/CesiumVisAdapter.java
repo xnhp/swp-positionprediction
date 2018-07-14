@@ -39,10 +39,11 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
             e.printStackTrace();
         }
 
+        if(vis.hasFunnel()) Log.e("funnel", "found");
+
     }
 
-    @Override
-    public void visualiseSingleClouds(Collection<CloudVis> vis) {
+    public void visualiseSingleCloud(Collection<CloudVis> vis) {
         try {
             String json = JSONUtils.getCloudJSON(vis).toString();
             callJS("visualiseMultipleClounds", json);

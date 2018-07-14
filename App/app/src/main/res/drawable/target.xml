@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:viewportWidth="200.13"
+    android:viewportHeight="200.02"
+    android:width="200.13dp"
+    android:height="200.02dp">
+    <group
+        android:translateX="-248.44"
+        android:translateY="-442.39">
+        <group
+            android:scaleX="1.106932"
+            android:scaleY="1.106932"
+            android:translateX="-38.21172"
+            android:translateY="-58.9867">
+            <group
+                android:scaleX="0.41522"
+                android:scaleY="0.41522"
+                android:translateX="203.67"
+                android:translateY="311.84">
+                <path
+                    android:pathData="M531.76691 557.68408A180.62735 180.62735 0 0 1 351.13956 738.31143 180.62735 180.62735 0 0 1 170.51221 557.68408 180.62735 180.62735 0 0 1 351.13956 377.05673 180.62735 180.62735 0 0 1 531.76691 557.68408Z"
+                    android:strokeWidth="24.084"
+                    android:strokeColor="#000000" />
+            </group>
+            <group
+                android:scaleX="0.24913"
+                android:scaleY="0.24913"
+                android:translateX="261.99"
+                android:translateY="404.46">
+                <path
+                    android:pathData="M531.76691 557.68408A180.62735 180.62735 0 0 1 351.13956 738.31143 180.62735 180.62735 0 0 1 170.51221 557.68408 180.62735 180.62735 0 0 1 351.13956 377.05673 180.62735 180.62735 0 0 1 531.76691 557.68408Z"
+                    android:strokeWidth="40.139"
+                    android:strokeColor="#000000" />
+            </group>
+            <group
+                android:scaleX="0.12121"
+                android:scaleY="0.12121"
+                android:translateX="306.91"
+                android:translateY="475.8">
+                <path
+                    android:pathData="M531.76691 557.68408A180.62735 180.62735 0 0 1 351.13956 738.31143 180.62735 180.62735 0 0 1 170.51221 557.68408 180.62735 180.62735 0 0 1 351.13956 377.05673 180.62735 180.62735 0 0 1 531.76691 557.68408Z"
+                    android:fillColor="#000000" />
+            </group>
+            <path
+                android:pathData="M349.48 455.93l0 174.95"
+                android:strokeWidth="5"
+                android:strokeColor="#000000"
+                android:strokeLineCap="round" />
+            <path
+                android:pathData="M436.98 543.41l-174.95 0"
+                android:strokeWidth="5"
+                android:strokeColor="#000000"
+                android:strokeLineCap="round" />
+        </group>
+    </group>
+</vector>

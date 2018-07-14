@@ -222,6 +222,10 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             // Otherwise it will stay on for long.
             this.webServer.stop();
         }
+        if(this.webView != null){
+            webView.destroy();
+            webView = null;
+        }
     }
 
 

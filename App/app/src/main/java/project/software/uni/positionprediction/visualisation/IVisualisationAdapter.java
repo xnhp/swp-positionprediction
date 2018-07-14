@@ -54,8 +54,6 @@ public abstract class IVisualisationAdapter {
 
     public abstract void visualiseSingleTraj(TrajectoryVis vis);
 
-    public abstract void visualiseSingleClouds(Collection<CloudVis> vis);
-
     public abstract void setMapCenter(GeoPoint centerWithDateLine);
 
 

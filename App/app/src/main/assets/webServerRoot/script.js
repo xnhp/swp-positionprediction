@@ -35,6 +35,8 @@ function getCameraHeightAboveGround() {
 function visualiseSingleTraj(jsonData) {
     var json = JSON.parse(jsonData);
 
+    console.log(jsonData);
+
     // draw tracking points of single trajectory
     for(var i = 0; i < json.polyline.styled_points.length; i++) {
         var that = json.polyline.styled_points[i]
@@ -87,7 +89,7 @@ function visualiseFunnel(json){
         name : 'predFunnel',
         polygon : {
             hierarchy : Cesium.Cartesian3.fromDegreesArray(points),
-            height : 5000,
+            height : 0,
             material : Cesium.Color.GREEN.withAlpha(0.5),
             outline : false
         }
@@ -248,7 +250,7 @@ function createSphere(lon, lat, alt, color, radius) {
     return sphere;
 }
 
-
+/*
     Note that Points are different from 3D objects.
     Main characteristic is that points stay fixed in screen
     pixel size, that is, their screen size does not change

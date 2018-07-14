@@ -28,11 +28,11 @@
             android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
             android:layout_marginTop="@dimen/floatingbuttons_margin_bottom"
             android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
-            app:backgroundTint="@android:color/white"
+            app:backgroundTint="@color/button_background_tint"
             app:elevation="5dp"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_set_as"
+            app:srcCompat="@drawable/home"
             tools:layout_editor_absoluteY="238dp" />
 
 
@@ -44,11 +44,11 @@
             android:focusable="true"
             android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
             android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
-            app:backgroundTint="@android:color/white"
+            app:backgroundTint="@color/button_background_tint"
             app:elevation="5dp"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_mapmode"
+            app:srcCompat="@drawable/magnify"
             tools:layout_editor_absoluteY="238dp" />
 
         <android.support.design.widget.FloatingActionButton
@@ -59,11 +59,11 @@
             android:focusable="true"
             android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
             android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
-            app:backgroundTint="@android:color/white"
+            app:backgroundTint="@color/button_background_tint"
             app:elevation="5dp"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_search"
+            app:srcCompat="@drawable/target"
             tools:layout_editor_absoluteY="327dp" />
 
 
@@ -75,12 +75,12 @@
             android:focusable="true"
             android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
             android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
-            app:backgroundTint="@android:color/white"
+            app:backgroundTint="@color/button_background_tint"
             app:elevation="5dp"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:rippleColor="@color/colorAccent"
-            app:srcCompat="@drawable/osm_ic_follow_me"
+            app:srcCompat="@drawable/location"
             tools:layout_editor_absoluteY="327dp" />
 
         <android.support.design.widget.FloatingActionButton
@@ -91,12 +91,12 @@
             android:focusable="true"
             android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
             android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
-            app:backgroundTint="@android:color/white"
+            app:backgroundTint="@color/button_background_tint"
             app:elevation="5dp"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:rippleColor="@color/colorAccent"
-            app:srcCompat="@android:drawable/ic_menu_rotate"
+            app:srcCompat="@drawable/again"
             tools:layout_editor_absoluteY="327dp" />
 
         <android.support.design.widget.FloatingActionButton
@@ -107,12 +107,12 @@
             android:focusable="true"
             android:layout_marginBottom="@dimen/floatingbuttons_margin_bottom"
             android:layout_marginEnd="@dimen/floatingbuttons_margin_end"
-            app:backgroundTint="@android:color/white"
+            app:backgroundTint="@color/button_background_tint"
             app:elevation="5dp"
             app:fabSize="mini"
             app:layout_constraintEnd_toEndOf="parent"
             app:rippleColor="@color/colorAccent"
-            app:srcCompat="@android:drawable/ic_menu_save"
+            app:srcCompat="@drawable/download"
             tools:layout_editor_absoluteY="327dp" />
 
     </LinearLayout>

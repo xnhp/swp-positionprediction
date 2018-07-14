@@ -34,7 +34,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:gravity="center_vertical">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <fragment
                     android:id="@+id/floating_map_buttons"

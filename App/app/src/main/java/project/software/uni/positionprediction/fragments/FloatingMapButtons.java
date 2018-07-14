@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.activities.Cesium;
+import project.software.uni.positionprediction.activities.OSM;
 
 
 public class FloatingMapButtons extends android.support.v4.app.Fragment {
@@ -81,6 +83,14 @@ public class FloatingMapButtons extends android.support.v4.app.Fragment {
             }
         });
 
+        if(getActivity() instanceof OSM){
+            ((FloatingActionButton)view.findViewById(R.id.fab_switchMode))
+                    .setImageResource(R.drawable.outdoor);
+        }else if(getActivity() instanceof Cesium){
+            ((FloatingActionButton)view.findViewById(R.id.fab_switchMode))
+                    .setImageResource(R.drawable.home);
+        }
+
         return view;
     }
 
@@ -97,9 +107,9 @@ public class FloatingMapButtons extends android.support.v4.app.Fragment {
              return;
          }
          if (state) {
-             showLocBtn.setImageResource(R.drawable.osm_ic_follow_me_on);
+             showLocBtn.setImageResource(R.drawable.location_on);
          } else {
-             showLocBtn.setImageResource(R.drawable.osm_ic_follow_me);
+             showLocBtn.setImageResource(R.drawable.location);
          }
      }
 

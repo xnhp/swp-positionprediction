@@ -12,9 +12,11 @@
 
         <ImageView
             android:id="@+id/compassArrow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/arrow_left" />
+            android:layout_width="@dimen/compass_size"
+            android:layout_height="@dimen/compass_size"
+            android:layout_marginEnd="@dimen/compass_margin_end"
+            android:padding="@dimen/compass_padding"
+            app:srcCompat="@drawable/arrow_compass" />
 
     </LinearLayout>
 

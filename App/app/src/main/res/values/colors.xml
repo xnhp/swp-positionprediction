@@ -11,4 +11,14 @@
     <color name="text_color">#000000</color>
 
     <integer name="background_alpha">128</integer>
+
+    // Floating Buttons
+
+    <color name="button_tint">#FF000000</color>
+    <color name="button_background_tint">#FFFFFFFF</color>
+
+    // Compass
+
+    <color name="compass_arrow_color">#AAFF0000</color>
+
 </resources>

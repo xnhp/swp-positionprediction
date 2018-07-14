@@ -40,4 +40,9 @@
     <dimen name="floatingbuttons_margin_end">16dp</dimen>
     <dimen name="floatingbuttons_butto_size">40dp</dimen>
 
+    // Compass
+    <dimen name="compass_size">40dp</dimen>
+    <dimen name="compass_margin_end">16dp</dimen>
+    <dimen name="compass_padding">5dp</dimen>
+
 </resources>
