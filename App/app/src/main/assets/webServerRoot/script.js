@@ -198,6 +198,7 @@ var locationIndicator;
 // pan to location indicated by locationIndicator
 // triggered by click on floating map button
 function panToUserLoc() {
+    if (typeof location == undefined) return;
     viewer.zoomTo(locationIndicator);
 }
 

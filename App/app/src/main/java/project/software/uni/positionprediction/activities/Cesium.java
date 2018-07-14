@@ -1,6 +1,5 @@
 package project.software.uni.positionprediction.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -9,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,8 +36,8 @@ import project.software.uni.positionprediction.controllers.VisualizationWorkflow
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.LoadingIndicator;
+import project.software.uni.positionprediction.util.LocationProvider;
 import project.software.uni.positionprediction.util.Message;
-import project.software.uni.positionprediction.util.PermissionManager;
 
 
 /**
@@ -295,17 +293,18 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     @SuppressLint("MissingPermission") // we do take care of permissions
     private void registerLocationListener(final WebView webView) {
-        PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
+
+        LocationProvider.registerLocationListener(context, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                /*
+
+                if (location == null) return;
+
                 try {
                     JSCaller.callJS(webView, "updateLocation", JSONUtils.getAndroidLocationJSON(location).toString() );
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }*/
+                }
             }
 
             @Override
@@ -320,11 +319,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
             @Override
             public void onProviderDisabled(String s) {
-
+                // todo: remove location icon?
             }
-        };
-        locationListener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, locationListener);
+        });
     }
 
 }
