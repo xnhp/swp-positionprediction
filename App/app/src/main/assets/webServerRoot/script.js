@@ -1,7 +1,11 @@
 
 /* Cesium initialisation */
+Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhNTg4NDcyMy0xZThiLTQyMTctYjgyZS01YjkyMGMyYmYyZTYiLCJpZCI6MjExNiwiaWF0IjoxNTMxNTg0NDA1fQ.MLHzDZbbPFas5AvECd7gDfeGRp2r6h6y90e1OH1Oa3o';
+
 var viewer = new Cesium.Viewer('cesiumContainer',{
-    navigationHelpButton: false,
+    animation : false,
+    baseLayerPicker : false,
+    navigationInstructionsInitiallyVisible: false,
     timeline: false
 });
 
@@ -188,6 +192,11 @@ function panToBoundingBox(jsonData) {
     viewer.camera.setView({
         destination : Cesium.Rectangle.fromDegrees(bb.west, bb.south, bb.east, bb.north)
     });
+}
+
+function clearVis() {
+    viewer.entities.removeAll();
+    viewer.render();
 }
 
 
