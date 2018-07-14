@@ -170,16 +170,17 @@ public class Location {
     public Location getVectorFrom(Location loc){
         double loc_long = this.lon - loc.lon;
         double loc_lat = this.lat - loc.lon;
-        if (!this.has_altitude && !loc.has_altitude) {
+        if (!this.has_altitude || !loc.has_altitude) {
             return new Location(loc_long, loc_lat);
-        } else if (this.has_altitude && loc.has_altitude){
+        } else /*if (this.has_altitude && loc.has_altitude)*/{
             double loc_height = this.alt - loc.alt;
             return new Location(loc_long, loc_lat, loc_height);
-        } else {
+
+        } /*else {
             IncompatibleLocationException e = new IncompatibleLocationException();
             e.printStackTrace();
             throw new RuntimeException();
-        }
+        }*/
     }
 
     /**
@@ -274,6 +275,24 @@ public class Location {
 
         return new Location(res1, res2, res3);
 
+    }
+
+    // TJ
+    public Location normalize() {
+        double length = this.abs();
+        Location vector = new Location(
+                this.getLon() / length,
+                this.getLat() / length,
+                this.getAlt() / length
+        );
+        return vector;
+    }
+
+    // TJ
+    public Location setLength(double length){
+        Location vector = this.normalize();
+        vector = vector.multiply(length);
+        return vector;
     }
 
 

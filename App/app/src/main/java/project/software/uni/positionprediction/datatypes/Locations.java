@@ -50,6 +50,10 @@ public class Locations extends Collection<Location> {
         return bounds;
     }
 
+    public Location getLast(){
+        return this.get(this.size()-1);
+    }
+
     public Location getCenter(){
 
         Map<String, Double> bounds = getBounds();
