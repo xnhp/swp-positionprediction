@@ -18,4 +18,8 @@ public class PredictionBaseData {
         this.trajectory = trajectory;
     }
 
+    public Location getLastLocation(){
+        return trajectory.getLocations().getLast();
+    }
+
 }

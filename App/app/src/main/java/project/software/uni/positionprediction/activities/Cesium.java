@@ -290,11 +290,12 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                /*
                 try {
                     JSCaller.callJS(webView, "updateLocation", JSONUtils.getAndroidLocationJSON(location).toString() );
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
 
             @Override

@@ -18,14 +18,17 @@ import java.util.List;
 
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.datatypes.Collection;
+import project.software.uni.positionprediction.datatypes.Location;
+import project.software.uni.positionprediction.datatypes.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
-import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
+import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation.StyledPoint;
 import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 
 import static project.software.uni.positionprediction.controllers.PredictionWorkflow.vis_pred;
+import static project.software.uni.positionprediction.util.GeoDataUtils.LocationToGeoPoint;
 
 /**
  * Takes care of calling the correct methods to draw the visualisation on the map.
@@ -126,6 +129,63 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
 
     @Override
     public void visualiseSingleTraj(TrajectoryVis vis) {
+
+        // 1.) DRAW FUNNEL
+
+        if(vis.hasFunnel()){
+            // draw fake funnel for testing
+
+            Locations coords_right = new Locations();
+            Locations coords_left = new Locations();
+            for(StyledPoint point : vis.getLine().styledPoints) {
+                Location loc = point.location;
+                Location right = new Location(loc.getLat()+0.000, loc.getLon()+0.000);
+                coords_right.add(right);
+                Location left = new Location(loc.getLat()-0.000, loc.getLon()-0.000);
+                coords_left.add(left);
+            }
+            //List<Integer> aList = new ArrayList<>();
+
+            // assemble polygon coordinates clockwise
+            Locations funnel = new Locations(Collection.add(coords_left, coords_right.reverse()));
+
+            List<GeoPoint> funnelPoints = new ArrayList<>();
+            for(Location loc : funnel){
+                Log.i("OSM adapter", "funnel: " + loc.toString());
+                GeoPoint point = LocationToGeoPoint(loc);
+                new GeoPoint(0.0, 0.0);
+                funnelPoints.add(point);
+            }
+
+
+            List<GeoPoint> funnelTest = new ArrayList<>();
+            funnelTest.add(new GeoPoint(-0.7, -89));
+            funnelTest.add(new GeoPoint(0.2, -91));
+            funnelTest.add(new GeoPoint(-1.4,-90));
+
+
+            List<GeoPoint> funnelCoords = new ArrayList<>();
+            for(Location loc : vis.getFunnel().locations){
+                Log.i("osmDroidAdapter", "funnel coord: " + loc.toString());
+                funnelCoords.add(LocationToGeoPoint(loc));
+            }
+
+            if(true/*vis.hasFunnel()*/){
+                Log.i("osmDroidAdapter", "fake funnel drawn");
+                /*map.drawPolygon(
+                        funnelTest,
+                        PredTrajectoryStyle.lineCol,
+                        PredTrajectoryStyle.lineCol,
+                        PredTrajectoryStyle.funnelOpacity
+                );
+                */
+                map.drawPolygon(funnelCoords, PredTrajectoryStyle.lineCol, PredTrajectoryStyle.lineCol, PredTrajectoryStyle.funnelOpacity);
+            };
+        };
+
+
+        // 2.) DRAW LINE
+
         // draw styled linesegments
 
         String start_color = "#2A4B6E";
@@ -190,11 +250,6 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         }
 
         return ret;
-    }
-
-    @Override
-    public void visualiseSingleClouds(Collection<CloudVis> vis) {
-        // TODO: implement this
     }
 
 

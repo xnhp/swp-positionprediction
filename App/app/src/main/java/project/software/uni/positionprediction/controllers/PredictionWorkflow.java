@@ -513,12 +513,18 @@ public class PredictionWorkflow extends Controller {
                 pointRadius
         );
 
-        if(traj.hasFunnel()){
-            Locations coords = traj.calculateFunnelCoords();
-            Funnel funnel = new Funnel(coords);
+
+        TrajectoryVis trajVis = new TrajectoryVis(line);
+
+        if(traj.hasFunnel()) {
+            Funnel funnel = new Funnel(
+                    traj.calculateFunnelCoords(data_past.getLastLocation())
+            );
+            trajVis.setFunnel(funnel);
+
         }
 
-        return new TrajectoryVis(line);
+        return trajVis;
 
     }
 
