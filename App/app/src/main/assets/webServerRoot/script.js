@@ -39,8 +39,6 @@ function getCameraHeightAboveGround() {
 function visualiseSingleTraj(jsonData) {
     var json = JSON.parse(jsonData);
 
-    console.log(jsonData);
-
     // draw tracking points of single trajectory
     for(var i = 0; i < json.polyline.styled_points.length; i++) {
         var that = json.polyline.styled_points[i]
@@ -124,7 +122,6 @@ function visualiseFunnel(json){
 function visualiseMultipleClounds(jsonData){
 
     var json = JSON.parse(jsonData);
-    console.log("received data", json);
 
     for(var i = 0; i < json.clouds.length; i++){
         visualiseClound(json.clouds[i]);
@@ -135,7 +132,6 @@ function visualiseMultipleClounds(jsonData){
 function visualiseSingleCloud(jsonData){
 
     var json = JSON.parse(jsonData);
-    console.log("received data", json);
 
     visualiseClound(json);
 
@@ -237,10 +233,8 @@ function panToUserLoc() {
 // triggered when android recevies a location update
 function updateLocation(jsonData) {
     data = JSON.parse(jsonData);
-    console.log(data);
     if (typeof locationIndicator == 'undefined') {
         // create, draw sphere and save reference to it
-        console.log("foo");
         locationIndicator = createPoint(
             data.lon,
             data.lat,
