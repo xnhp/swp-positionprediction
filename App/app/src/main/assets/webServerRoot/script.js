@@ -212,7 +212,10 @@ function panToBoundingBox(jsonData) {
 }
 
 function clearVis() {
+    // viewer.entities is of type EntityCollection
+    // cf https://cesiumjs.org/Cesium/Build/Documentation/EntityCollection.html
     viewer.entities.removeAll();
+    viewer.entities.add(locationIndicator);
     viewer.render();
 }
 
