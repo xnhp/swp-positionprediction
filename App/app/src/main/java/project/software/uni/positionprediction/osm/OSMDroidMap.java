@@ -91,7 +91,6 @@ public class OSMDroidMap {
     private Context context;
 
     private LocationManager locationManager;
-    private Marker locationMarker;
     private MyLocationNewOverlay locationOverlay = null;
     private CompassOverlay compassOverlay = null;
 
@@ -149,7 +148,7 @@ public class OSMDroidMap {
         setZoom(zoom);
         setCenter(center);
 
-        // enableCompassOverlay(); // works
+        // enableCompassOverlay(); // works but dont need
         enableRotationGestures(); // works
 
         enableLocationOverlay(); // works
@@ -191,7 +190,8 @@ public class OSMDroidMap {
      * Shows current location of the user using osmdroid's LocationOverlay.
      * provides functionality like always centering the map around the location.
      */
-    private void enableLocationOverlay() {
+    public void enableLocationOverlay() {
+        // not my wording, part of osmdroid ¯\_(ツ)_/¯
         MyLocationNewOverlay overlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), mapView);
 
         overlay.enableMyLocation();
@@ -315,6 +315,7 @@ public class OSMDroidMap {
      * Draw a list of tracks (position records) as points connected by a line.
      * @param tracks
      */
+    // todo: obsolete
     // TODO: this might return a "folder" overlay with the points and the polyline overlay
     public void drawTracksUniform(List<GeoPoint> tracks, String lineColor, String pointColor) {
         // TODO: pass styling in here as parameter

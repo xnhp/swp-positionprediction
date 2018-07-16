@@ -185,6 +185,11 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 toggleShowLocBtn(false);
+                // in fact, osmdroid does this automatically on pan,
+                // however when following the location is enabled and
+                // the pred/vis is refreshed, you pan away from the map
+                // and you will snap back
+                osmDroidMap.disableFollowLocation();
                 return false; // indicates that the touch event was not
                 // successfully handled (it will propagated
                 // further, such as to the mapView to actually
@@ -229,6 +234,11 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
                 // instantly refresh map view
                 // (else we'd only get an update on an interaction)
                 osmDroidMap.mapView.invalidate();
+
+                // this behaviour is horribly coupled but i lack the time.
+                // refreshing the prediction disables following the location
+                // cf OSMDroidVisualisationAdapter.clear()
+                toggleShowLocBtn(false);
             }
 
             @Override
@@ -257,7 +267,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
      */
     @Override
     public void onShowDataClick() {
-        toggleShowLocBtn(false);
+        disableFollowLocationWithUI();
         visAdap.showData();
 
     }
@@ -269,7 +279,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onShowPredClick() {
-        toggleShowLocBtn(false);
+        disableFollowLocationWithUI();
         visAdap.showPrediction();
     }
 
@@ -283,11 +293,27 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
         Log.i("osm activ", "on show loc click");
         // toggle following users current position
         if (!osmDroidMap.isFollowingLocation()) {
+            enableFollowLocationWithUI();
+        } else {
+            disableFollowLocationWithUI();
+        }
+    }
+
+    /*
+        has to be here in the activity because
+        only here we can modify the fragment
+     */
+    private void enableFollowLocationWithUI() {
+        if (!osmDroidMap.isFollowingLocation()) {
             // toggle button
             toggleShowLocBtn(true);
             // enable functionality
             osmDroidMap.enableFollowLocation();
-        } else {
+        }
+    }
+
+    private void disableFollowLocationWithUI() {
+        if (osmDroidMap.isFollowingLocation()) {
             toggleShowLocBtn(false);
             osmDroidMap.disableFollowLocation();
         }

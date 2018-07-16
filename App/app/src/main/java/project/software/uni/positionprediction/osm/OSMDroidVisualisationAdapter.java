@@ -66,8 +66,17 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
     public void clear() {
         // OverlayManager is an instance of List<Overlay>
         // todo: does this also clear the location marker?
+
+        // need to this, which will tell the locationOverlay
+        // to stop following the location
+        // because if it is cleared from the overlay list
+        // , it will still work to follow the location
+        map.disableFollowLocation();
+
         map.mapView.getOverlayManager().clear();
         map.mapView.invalidate();
+
+        map.enableLocationOverlay();
     }
 
     /**
