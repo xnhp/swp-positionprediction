@@ -137,21 +137,13 @@ function visualiseSingleCloud(jsonData){
 
 }
 
-
+// note: contains StyledPoints
 function visualiseCloud(json){
 
     for(var i = 0; i < json.points.length; i++){
-        var pointsPast = viewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(json.points.lon[i], json.points.lat[i], 5000),
-            name : 'cloudPoints',
-            ellipse : {
-                semiMinorAxis : 1000.0,
-                semiMajorAxis : 1000.0,
-                height: 5001,
-                material : Cesium.Color.RED,
-                outline : false
-            }
-        });
+        var color = Cesium.Color.fromCssColorString(json.points[i].point_color);
+        createPoint(json.points[i].location.lon, json.points[i].location.lat, 10, json.points[i].point_radius, color);
+
     }
 
     var hull = [];
@@ -165,7 +157,7 @@ function visualiseCloud(json){
         name : 'cloudHull',
         polygon : {
             hierarchy : Cesium.Cartesian3.fromDegreesArray(hull),
-            height : 5000,
+            height : 0,
             material : Cesium.Color.GREEN.withAlpha(0.5),
             outline : false
         }
@@ -286,6 +278,7 @@ function createSphere(lon, lat, alt, color, radius) {
 
     As far as I can see this already the case of polylines
 */
+
 function createPoint(lon, lat, alt, radius, color){
       return viewer.entities.add({
         position : Cesium.Cartesian3.fromDegrees(lon, lat, alt),
