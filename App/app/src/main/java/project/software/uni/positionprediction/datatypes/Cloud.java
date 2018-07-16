@@ -1,8 +1,5 @@
 package project.software.uni.positionprediction.datatypes;
 
-/**
- * Represents a single cloud
- */
 public class Cloud extends Shape {
 
     private Locations hull;
@@ -15,8 +12,22 @@ public class Cloud extends Shape {
         hull = calculateHull();
     }
 
+    public Cloud(Locations points, Locations hull) {
+        super(points);
+        this.hull = hull;
+    }
+
     // todo: This is a dummy!
     private Locations calculateHull(){
         return locations;
+    }
+
+    public boolean hasHull() {
+        if(hull == null) return false;
+        return true;
+    }
+
+    public Locations getHull() {
+        return hull;
     }
 }
