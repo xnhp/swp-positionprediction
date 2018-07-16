@@ -17,6 +17,8 @@ import project.software.uni.positionprediction.R;
  */
 public class LocationProvider {
 
+    static LocationManager lm;
+
     public LocationProvider() {
         Log.e("LocationProvider", "do not instantiate this class, you can just" +
                 "use the static methods");
@@ -28,21 +30,26 @@ public class LocationProvider {
                 R.string.dialog_permission_finelocation_text,
                 PermissionManager.PERMISSION_FINE_LOCATION,
                 (AppCompatActivity) ctx);
-        LocationManager locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
 
         // because receiving the first location update might take a little bit,
         // we call onLocationChanged immediately with the last known location.
-        Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location lastLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (lastLocation != null) {
-            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            lastLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
         // this probably makes some later null checks obsolete
         if (lastLocation != null) {
-            listener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+            listener.onLocationChanged(lm.getLastKnownLocation(LocationManager.GPS_PROVIDER));
         }
 
         // attach listener
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, listener);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, listener);
 
+    }
+
+    public static void clearLocationListener(LocationListener listener) {
+        if (lm == null) return;
+        lm.removeUpdates(listener);
     }
 }

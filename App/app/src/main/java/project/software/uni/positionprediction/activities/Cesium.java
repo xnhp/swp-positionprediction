@@ -58,6 +58,34 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     private Context context = this;
     private boolean isWebViewLoaded = false;
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+
+            if (location == null) return;
+
+            try {
+                JSCaller.callJS(webView, "updateLocation", JSONUtils.getAndroidLocationJSON(location).toString() );
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+            // todo: remove location icon?
+        }
+    };
 
     @Override
     public void onDownloadClick() {
@@ -118,6 +146,14 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             onRefreshClick();
 
         }
+
+        LocationProvider.registerLocationListener(context, this.locationListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocationProvider.clearLocationListener(this.locationListener);
     }
 
     private void registerEventHandlers(final Cesium cesium){
@@ -214,10 +250,14 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             // Stop the server when the activity has been destroyed!
             // Otherwise it will stay on for long.
             this.webServer.stop();
+
         }
         if(this.webView != null){
             webView.destroy();
             webView = null;
+            // detach the location listener because there will be no more
+            // webview to act on
+            LocationProvider.clearLocationListener(this.locationListener);
         }
     }
 
@@ -282,34 +322,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     @SuppressLint("MissingPermission") // we do take care of permissions
     private void registerLocationListener(final WebView webView) {
 
-        LocationProvider.registerLocationListener(context, new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-
-                if (location == null) return;
-
-                try {
-                    JSCaller.callJS(webView, "updateLocation", JSONUtils.getAndroidLocationJSON(location).toString() );
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                // todo: remove location icon?
-            }
-        });
+        LocationProvider.registerLocationListener(context, this.locationListener);
     }
 
 }
