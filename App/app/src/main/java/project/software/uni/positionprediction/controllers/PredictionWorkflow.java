@@ -3,6 +3,8 @@ package project.software.uni.positionprediction.controllers;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
@@ -345,14 +347,22 @@ public class PredictionWorkflow extends Controller {
             // context references
             OSMCacheControl.getInstance(context).saveAreaToCache(visBB);
 
-
-             /*
-                Set target location for "Compass"
-             */
-            android.location.Location targetLocation = new android.location.Location("PredWf");
-            targetLocation.setLatitude(visBBPred.getCenterLatitude());
-            targetLocation.setLongitude(visBBPred.getCenterLongitude());
-            BearingProvider.getInstance().setTargetLocation(targetLocation);
+            /*
+                    Set target location for "Compass"
+                */
+            // this will at some point affect the ui
+            // (the rotation of the compass arrow is updated)
+            // so we post this back to the ui thread
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                 @Override
+                 public void run() {
+                     android.location.Location targetLocation = new android.location.Location("");
+                     BoundingBox visBBPred = PredictionWorkflow.vis_pred.getBoundingBox();
+                     targetLocation.setLatitude(visBBPred.getCenterLatitude());
+                     targetLocation.setLongitude(visBBPred.getCenterLongitude());
+                     BearingProvider.getInstance().setTargetLocation(targetLocation);
+                 }
+             });
 
 
             return null; // AsyncTask implementation detail
