@@ -3,11 +3,11 @@ package project.software.uni.positionprediction.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,18 +16,17 @@ import android.widget.RelativeLayout;
 
 import project.software.uni.positionprediction.BuildConfig;
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.algorithms.AlgorithmDummyCloud;
+import project.software.uni.positionprediction.algorithms.AlgorithmDummyTrajectories;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedFunnel;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectoryFunnel;
 import project.software.uni.positionprediction.datatypes.HttpStatusCode;
 import project.software.uni.positionprediction.datatypes.Request;
-import project.software.uni.positionprediction.datatypes.Trajectory;
 import project.software.uni.positionprediction.movebank.MovebankConnector;
 import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.XML;
-import project.software.uni.positionprediction.visualisation.StyledLineSegment;
-import project.software.uni.positionprediction.visualisation.StyledPoint;
 
 public class Login extends AppCompatActivity {
 
@@ -52,7 +51,9 @@ public class Login extends AppCompatActivity {
                 AlgorithmExtrapolationExtended.class,
                 AlgorithmSimilarTrajectory.class,
                 AlgorithmExtrapolationExtendedFunnel.class,
-                AlgorithmSimilarTrajectoryFunnel.class
+                AlgorithmSimilarTrajectoryFunnel.class,
+                AlgorithmDummyCloud.class,
+                AlgorithmDummyTrajectories.class
         };
         xml.setAlgorithms(algorithms);
 

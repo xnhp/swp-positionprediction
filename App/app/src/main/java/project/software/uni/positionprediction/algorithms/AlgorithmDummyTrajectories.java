@@ -21,28 +21,28 @@ public class AlgorithmDummyTrajectories extends PredictionAlgorithmReturnsTrajec
 
         Locations locs1 = new Locations();
         LocationWithValue<Double> loc11 = new LocationWithValue(
-            new Location(47.691057, 9.186505),
-            0.001
+            new Location(-89.73, -1.37),
+            0.002
         );
         locs1.add(loc11);
         LocationWithValue<Double> loc12 = new LocationWithValue(
-                new Location(47.693811, 9.189909),
-                0.002
+                new Location(-89.71, -1.36),
+                0.004
         );
         locs1.add(loc12);
         LocationWithValue<Double> loc13 = new LocationWithValue(
-                new Location(47.698893, 9.189131),
-                0.003
+                new Location(-89.68, -1.37),
+                0.006
         );
         locs1.add(loc13);
         LocationWithValue<Double> loc14 = new LocationWithValue(
-                new Location(47.701975, 9.190788),
-                0.004
+                new Location(-89.66, -1.39),
+                0.008
         );
         locs1.add(loc14);
         LocationWithValue<Double> loc15 = new LocationWithValue(
-                new Location(47.704131, 9.189782),
-                0.005
+                new Location(-89.64, -1.40),
+                0.010
         );
         locs1.add(loc15);
 
