@@ -21,6 +21,7 @@ import project.software.uni.positionprediction.datatypes.Collection;
 import project.software.uni.positionprediction.datatypes.Location;
 import project.software.uni.positionprediction.datatypes.Locations;
 import project.software.uni.positionprediction.util.GeoDataUtils;
+import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.Polyline;
 import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
@@ -61,11 +62,12 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         map.setCenter(center);
     }
 
-
+    /**
+     * Clear any visualisation from the map
+     */
     @Override
     public void clear() {
         // OverlayManager is an instance of List<Overlay>
-        // todo: does this also clear the location marker?
 
         // need to this, which will tell the locationOverlay
         // to stop following the location
@@ -78,6 +80,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
 
         map.enableLocationOverlay();
     }
+
 
     /**
      * Zooms/Pans the map so that both past and prediction
@@ -104,6 +107,10 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         );
     }
 
+
+    /**
+     * Zoom/Pan to view the visualisation of past data
+     */
     @Override
     public void showData() {
         if (PredictionWorkflow.vis_past == null) {
@@ -119,6 +126,10 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         );
     }
 
+
+    /**
+     * Zoom/Pan to view the the prediction visualisation
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void showPrediction() {
@@ -181,22 +192,12 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
                 funnelCoords.add(LocationToGeoPoint(loc));
             }
 
-            if(true/*vis.hasFunnel()*/){
-                Log.i("osmDroidAdapter", "fake funnel drawn");
-                /*map.drawPolygon(
-                        funnelTest,
-                        PredTrajectoryStyle.lineCol,
-                        PredTrajectoryStyle.lineCol,
-                        PredTrajectoryStyle.funnelOpacity
-                );
-                */
-                map.drawPolygon(funnelCoords, lineCol, lineCol, PredTrajectoryStyle.funnelOpacity);
-            };
+            map.drawPolygon(funnelCoords, lineCol, lineCol, PredTrajectoryStyle.funnelOpacity);
+
         };
 
 
         // 2.) DRAW LINE
-
         // draw styled linesegments
 
         String start_color = "#2A4B6E";
@@ -213,7 +214,6 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
             i++;
 
         }
-
 
         // draw styled points
         // obtain a list of styled points of the type that osmdroid needs.
@@ -262,6 +262,59 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         );
     }
 
+
+    @Override
+    public void visualiseSingleCloud(CloudVis vis) {
+
+        // 1.) DRAW HULL
+
+        if(vis.hasHull()){
+
+            List<GeoPoint> hullCoords = new ArrayList<>();
+            for(Location loc : vis.getHull().locations){
+                Log.i("osmDroidAdapter", "funnel coord: " + loc.toString());
+                hullCoords.add(LocationToGeoPoint(loc));
+            }
+            map.drawPolygon(hullCoords, PredCloudStyle.lineCol, PredCloudStyle.lineCol, PredCloudStyle.hullOpacity);
+        }
+
+
+        // 2.) DRAW POINTS
+
+        // draw styled points
+        // obtain a list of styled points of the type that osmdroid needs.
+        OSMStyledPointList osmStyledPoints = new OSMStyledPointList();
+        for (StyledPoint styledPoint :
+                vis.getPoints().styledPoints) {
+            Paint pointStyle = new Paint();
+            pointStyle.setColor(Color.parseColor(styledPoint.pointColor));
+            osmStyledPoints.pts.add(
+                    new StyledLabelledGeoPoint(
+                            styledPoint.location.getLat(),
+                            styledPoint.location.getLon(),
+                            null,
+                            pointStyle,
+                            new Paint() // dont care about textStyle?
+                    )
+            );
+        }
+
+        SimpleFastPointOverlayOptions options = PointsOptions
+                .getDefaultStyle()
+                // has to be called first because the parent classes methods return the object in the
+                // more general type
+                .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
+                .setRadius(15) // todo: this shouldnt apply?
+                .setIsClickable(false) // true by default
+                .setCellSize(15) // cf internal doc
+                .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)
+                ;
+        final SimpleFastPointOverlay overlay = new SimpleFastPointOverlay(osmStyledPoints, options);
+        map.mapView.getOverlays().add(overlay);
+
+    }
+
+
     private String getColor(String start_color, int i) {
         long color = Color.parseColor(start_color);
         long new_color = color+i;
@@ -275,7 +328,6 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
 
         return ret;
     }
-
 
 }
 
