@@ -1,7 +1,5 @@
 package project.software.uni.positionprediction.datatypes;
 
-import android.util.Log;
-
 /**
  * Elementary class for holding location values.
  */
@@ -109,17 +107,17 @@ public class Location {
                     this.lat + loc.lat,
                     this.alt + loc.alt
             );
-        } else if (!loc.has_altitude && !this.has_altitude) {
+        } else /*if (!loc.has_altitude && !this.has_altitude)*/ {
             return new Location(
                     this.lon + loc.lon,
                     this.lat + loc.lat
             );
-        } else {
+        } /*else {
             Log.e("Location", "Trying to add a location without altitude to one with altitude ");
             IncompatibleLocationException e = new IncompatibleLocationException();
             e.printStackTrace();
             throw new RuntimeException();
-        }
+        }*/
     }
 
     /**

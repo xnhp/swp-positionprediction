@@ -97,8 +97,18 @@ public class Visualisations extends Collections<EShape, Visualisation> {
                         }
                     });
                 } else if (eShape == EShape.CLOUD) {
-                    // TODO
-                    Log.e("Visualisations", "not implemented yet");
+                    visualisations.forEach(new Consumer<Visualisation>() {
+                        @Override
+                        public void accept(Visualisation visualisation) {
+                            if (boundingBoxResult == null) {
+                                boundingBoxResult = visualisation.getBoundingBox();
+                                Log.i("Visualisations", "initiating boundingbox");
+                            } else {
+                                Log.i("Visualisations", "expanding boundingbox");
+                                boundingBoxResult.concat(visualisation.getBoundingBox());
+                            }
+                        }
+                    });
                 }
                 Log.i("Visualisations", eShape.toString() + " " + visualisations.toString());
             }

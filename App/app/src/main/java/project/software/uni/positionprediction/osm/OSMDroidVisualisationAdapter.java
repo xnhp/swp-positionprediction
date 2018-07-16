@@ -24,6 +24,7 @@ import project.software.uni.positionprediction.util.GeoDataUtils;
 import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.Polyline;
+import project.software.uni.positionprediction.visualisation.PredCloudStyle;
 import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation.StyledLineSegment;
 import project.software.uni.positionprediction.visualisation.StyledPoint;
@@ -192,6 +193,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
                 funnelCoords.add(LocationToGeoPoint(loc));
             }
 
+            Log.i("osmDroidAdapter", "fake funnel drawn");
             map.drawPolygon(funnelCoords, lineCol, lineCol, PredTrajectoryStyle.funnelOpacity);
 
         };

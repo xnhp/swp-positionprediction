@@ -54,15 +54,16 @@ public class Trajectory extends Shape {
         Location vector;
 
         // calculate LEFT vector
-        if (angle1 <= 180)// left turn
+        /*if (angle1 <= 180)// left turn
         {
+        */
             angle2 = angle1 / 2;
             vector = v.rotate(180 - angle2);
-        } else // right turn
+        /*} else // right turn
         {
             angle2 = (360 - angle1) / 2;
             vector = v.rotate(angle2);
-        }
+        }*/
 
         vector = vector.setLength(p1.getValue());
         //vectors.add(vector);
@@ -131,7 +132,7 @@ public class Trajectory extends Shape {
                     locs_left.add(left);
                     locs_right.add(right);
 
-                    for (int i = 1; i < last - 1; i++) {
+                    for (int i = 1; i < last; i++) {
 
                         p0 = (LocationWithValue<Double>) locations.get(i - 1);
                         p1 = (LocationWithValue<Double>) locations.get(i);

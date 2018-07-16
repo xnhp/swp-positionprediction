@@ -3,9 +3,6 @@ package project.software.uni.positionprediction.visualisation;
 import org.osmdroid.util.BoundingBox;
 
 import project.software.uni.positionprediction.datatypes.Locations;
-import project.software.uni.positionprediction.visualisation.Points;
-import project.software.uni.positionprediction.visualisation.Polygon;
-import project.software.uni.positionprediction.visualisation.Visualisation;
 
 public class CloudVis extends Visualisation {
 
