@@ -2,8 +2,10 @@ package project.software.uni.positionprediction.fragments;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import project.software.uni.positionprediction.R;
+import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.util.BearingListener;
 import project.software.uni.positionprediction.util.BearingProvider;
 
@@ -27,6 +30,7 @@ public class Compass extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -68,14 +72,25 @@ public class Compass extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initBearingProvider() {
 
         // todo: fetch location from prediction here
         // (do this after merge from master so i have it
         //  available)
-        Location targetLocation = new Location("foo");
+        /*Location targetLocation = new Location("foo");
         targetLocation.setLatitude(48.856614); // somewhere in
         targetLocation.setLongitude(2.352222); // paris
+*/
+
+        if (PredictionWorkflow.vis_pred == null) return;
+
+        double targetLat = PredictionWorkflow.vis_pred.getBoundingBox().getCenterLatitude();
+        double targetLon = PredictionWorkflow.vis_pred.getBoundingBox().getCenterLongitude();
+        Location targetLocation = new Location("target location");
+        targetLocation.setLatitude(targetLat);
+        targetLocation.setLongitude(targetLon);
+
 
         BearingProvider provider = BearingProvider.getInstance();
         provider.registerBearingUpdates(this.context, targetLocation, new BearingListener() {
