@@ -60,7 +60,7 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
     public void visualiseSingleCloud(CloudVis vis) {
         try {
             String json = JSONUtils.getSingleCloudJSON(vis).toString();
-            callJS("visualiseCloud", json);
+            callJS("visualiseSingleCloud", json);
         } catch (JSONException e) {
             Log.e(LogTag, "Could not JSONify data");
             e.printStackTrace();

@@ -264,7 +264,16 @@ public class JSONUtils {
         JSONObject jo = new JSONObject();
         // for consistency with single trajectory
         jo.put("type", "single_cloud");
-        jo.put("points", getLocationsJSONArr(cloud.points.locations));
+
+        JSONArray styledPoints = new JSONArray();
+        for (StyledPoint pt :
+                cloud.points.styledPoints) {
+            styledPoints.put(getStyledPointJSON(pt));
+        }
+
+        //jo.put("points", getLocationsJSONArr(cloud.points.locations));
+        jo.put("points", styledPoints);
+
         jo.put("hull", getLocationsJSONArr(cloud.hull.locations));
         return jo;
     }

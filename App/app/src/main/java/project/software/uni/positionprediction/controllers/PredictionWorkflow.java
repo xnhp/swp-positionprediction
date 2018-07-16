@@ -6,27 +6,27 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import org.osmdroid.util.BoundingBox;
 
 import java.util.Calendar;
-import org.osmdroid.util.BoundingBox;
 import java.util.Date;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.activities.BirdSelect;
 import project.software.uni.positionprediction.algorithms.PredictionAlgorithm;
 import project.software.uni.positionprediction.datatypes.Bird;
-import project.software.uni.positionprediction.datatypes.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes.BirdData;
 import project.software.uni.positionprediction.datatypes.Cloud;
 import project.software.uni.positionprediction.datatypes.Collection;
 import project.software.uni.positionprediction.datatypes.Collections;
+import project.software.uni.positionprediction.datatypes.EShape;
 import project.software.uni.positionprediction.datatypes.Locations;
 import project.software.uni.positionprediction.datatypes.PredictionBaseData;
 import project.software.uni.positionprediction.datatypes.PredictionResultData;
+import project.software.uni.positionprediction.datatypes.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes.Shape;
 import project.software.uni.positionprediction.datatypes.Trajectory;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
-import project.software.uni.positionprediction.datatypes.EShape;
 import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.BearingProvider;
@@ -37,7 +37,9 @@ import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.Funnel;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.PastTrajectoryStyle;
+import project.software.uni.positionprediction.visualisation.Points;
 import project.software.uni.positionprediction.visualisation.Polyline;
+import project.software.uni.positionprediction.visualisation.PredCloudStyle;
 import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation.TrajectoryVis;
 import project.software.uni.positionprediction.visualisation.Visualisations;
@@ -479,7 +481,12 @@ public class PredictionWorkflow extends Controller {
                                     PredTrajectoryStyle.pointRadius)
                     );
                 } else if (locs instanceof Cloud) {
-                    result.add(buildSingleCloudVis((Cloud) locs, counter));
+                    result.add(
+                            buildSingleCloudVis(
+                                    (Cloud) locs,
+                                    PredCloudStyle.pointCol,
+                                    PredCloudStyle.pointRadius)
+                    );
                 }
                 counter++;
             }
@@ -488,8 +495,25 @@ public class PredictionWorkflow extends Controller {
     }
 
     // todo
-    private CloudVis buildSingleCloudVis(Cloud locs, int counter) {
-        return null;
+    private CloudVis buildSingleCloudVis(
+            Cloud cloud,
+            String pointColor,
+            int pointRadius
+    ) {
+        Points points = new Points(
+                cloud.getLocations(),
+                pointColor,
+                pointRadius
+        );
+
+        CloudVis cloudVis = new CloudVis(points);
+
+        if(cloud.hasHull()) {
+            cloudVis.setHull(cloud.getHull());
+
+        }
+
+        return cloudVis;
     }
 
 
