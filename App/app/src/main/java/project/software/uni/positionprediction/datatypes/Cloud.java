@@ -1,5 +1,8 @@
 package project.software.uni.positionprediction.datatypes;
 
+/**
+ * Represents a single cloud
+ */
 public class Cloud extends Shape {
 
     private Locations hull;

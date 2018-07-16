@@ -90,9 +90,11 @@ public class VisualizationWorkflow extends Controller {
                     draw prediction visualisation
                      */
                     visAdapter.visualiseSingleTraj((TrajectoryVis) vis);
+
                 } else if (vis instanceof CloudVis) {
                     visAdapter.visualiseSingleCloud((CloudVis) vis);
                 }
+
             }
         }
         visAdapter.setCurrentPredVis(this.pred);
