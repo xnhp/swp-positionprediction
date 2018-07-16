@@ -43,37 +43,25 @@ public class Trajectory extends Shape {
             LocationWithValue<Double> p1,
             LocationWithValue<Double> p2)
     {
-        Location v = p1.getVectorFrom(p0);
-        Location w = p2.getVectorFrom(p1);
 
-        // Log.i("osm adapter", "v has alt " + v.hasAltitude()); // returns false
-        // Log.i("osm adapter", "w has alt " + w.hasAltitude()); // returns false
+        Vector3 v0 = Vector3.fromLocation(p0);
+        Vector3 v1 = Vector3.fromLocation(p1);
+        Vector3 v2 = Vector3.fromLocation(p2);
 
-        double angle1 = v.getAngle(w); // throws RuntimeException
-        double angle2;
-        Location vector;
+        Vector3 v = Vector3.sub(v1, v0);
+        Vector3 w = Vector3.sub(v2, v1);
 
-        // calculate LEFT vector
-        /*if (angle1 <= 180)// left turn
-        {
-        */
-            angle2 = angle1 / 2;
-            vector = v.rotate(180 - angle2);
-        /*} else // right turn
-        {
-            angle2 = (360 - angle1) / 2;
-            vector = v.rotate(angle2);
-        }*/
+        double angle = Vector3.getAngle(v, w);
 
-        vector = vector.setLength(p1.getValue());
-        //vectors.add(vector);
+        Vector3 vector;
+
+        vector = v.rotate(Math.PI/2 + (angle / 2.0));
+        vector.setLength(0.05 * p1.getValue());
+
+        Location left = Vector3.add(v1, vector).toLocation();
+        Location right = Vector3.sub(v1, vector).toLocation();
 
 
-        Location left = p1.add(vector);
-        Location right = p1.add(vector.multiply(-1));
-
-        //Log.i("osm adapter", "left " + left.toString());
-        //Log.i("osm adapter", "right " + right.toString());
 
         Locations result = new Locations();
         result.add(left);
@@ -86,22 +74,23 @@ public class Trajectory extends Shape {
             LocationWithValue<Double> p0,
             LocationWithValue<Double> p1
     ){
-        Location v = p1.getVectorFrom(p0);
+        Vector3 v0 = Vector3.fromLocation(p0);
+        Vector3 v1 = Vector3.fromLocation(p1);
+        Vector3 v = Vector3.sub(v1, v0);
 
-        Location vector = v.rotate(90);
 
-        vector = vector.setLength(p1.getValue());
+        Vector3 vector = v.rotate(Math.PI / 2.0);
 
-        Location left = p1.add(vector);
-        Location right = p1.add(vector.multiply(-1));
+        vector.setLength(0.05 * p1.getValue());
+
+        Location left = Vector3.add(v1, vector).toLocation();
+        Location right = Vector3.sub(v1, vector).toLocation();
 
         Locations result = new Locations();
         result.add(left);
         result.add(right);
         return result;
 
-        //Log.i("osm adapter", "last left " + left.toString());
-        //Log.i("osm adapter", "last right " + right.toString());
     }
 
 
