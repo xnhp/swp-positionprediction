@@ -32,7 +32,10 @@ public class LocationProvider {
 
         // because receiving the first location update might take a little bit,
         // we call onLocationChanged immediately with the last known location.
-        Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (lastLocation != null) {
+            lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
         // this probably makes some later null checks obsolete
         if (lastLocation != null) {
             listener.onLocationChanged(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
