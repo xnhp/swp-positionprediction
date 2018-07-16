@@ -11,7 +11,7 @@ public class PredCloudStyle extends TrajectoryStyle {
     static public String connectingLineColor = "#f7f300"; // yellow
 
     // funnel style
-    static public String hullLineCol = "ff0000";
-    static public String hullFillCol = "ff0000";
+    static public String hullLineCol = "#ff0000"; // red
+    static public String hullFillCol = "#ff0000"; // red
     static public float hullOpacity = 0.5f;
 }

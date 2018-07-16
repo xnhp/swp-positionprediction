@@ -519,7 +519,10 @@ public class PredictionWorkflow extends Controller {
         CloudVis cloudVis = new CloudVis(points);
 
         if(cloud.hasHull()) {
-            cloudVis.setHull(cloud.getHull());
+            cloudVis.setHull(cloud.getHull(),
+                    PredCloudStyle.hullLineCol,
+                    PredCloudStyle.hullFillCol,
+                    PredCloudStyle.hullOpacity);
 
         }
 
@@ -552,7 +555,10 @@ public class PredictionWorkflow extends Controller {
 
         if(traj.hasFunnel()) {
             Funnel funnel = new Funnel(
-                    traj.calculateFunnelCoords(data_past.getLastLocation())
+                    traj.calculateFunnelCoords(data_past.getLastLocation()),
+                    PredTrajectoryStyle.funnelFillCol,
+                    PredTrajectoryStyle.funnelLineCol,
+                    PredTrajectoryStyle.funnelOpacity
             );
             trajVis.setFunnel(funnel);
 

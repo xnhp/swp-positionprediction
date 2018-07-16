@@ -55,9 +55,19 @@ public class JSONUtils {
     }
 
 
-    private static JSONArray getFunnelJSON(Polygon funnel) throws JSONException {
+    private static JSONObject getFunnelJSON(Polygon funnel) throws JSONException {
         // skipping the step in the inheritance chain over `Polygon`.
-        return getLocationsJSONArr(funnel.locations);
+
+        JSONObject jo = new JSONObject();
+
+        // funnel is a polygon
+        jo.put("fill_color", funnel.fillColor);
+        jo.put("line_color", funnel.outlineColor);
+        jo.put("fill_opacity", funnel.fillOpacity);
+
+        jo.put("locations", getLocationsJSONArr(funnel.locations));
+
+        return jo;
     }
 
 
@@ -274,7 +284,13 @@ public class JSONUtils {
         //jo.put("points", getLocationsJSONArr(cloud.points.locations));
         jo.put("points", styledPoints);
 
-        jo.put("hull", getLocationsJSONArr(cloud.hull.locations));
+        JSONObject hull = new JSONObject();
+        hull.put("hull_line_color", cloud.hull.outlineColor);
+        hull.put("hull_fill_color", cloud.hull.fillColor);
+        hull.put("hull_opacity", cloud.hull.fillOpacity);
+        hull.put("locations", getLocationsJSONArr(cloud.hull.locations));
+
+        jo.put("hull", hull);
         return jo;
     }
 }

@@ -11,7 +11,7 @@ public class PredTrajectoryStyle extends TrajectoryStyle {
     static public String connectingLineColor = "#f7f300"; // yellow
 
     // funnel style
-    static public String funnelLineCol = "ff0000";
-    static public String funnelFillCol = "ff0000";
+    static public String funnelLineCol = "#ff0000";
+    static public String funnelFillCol = "#ff0000";
     static public float funnelOpacity = 0.5f;
 }

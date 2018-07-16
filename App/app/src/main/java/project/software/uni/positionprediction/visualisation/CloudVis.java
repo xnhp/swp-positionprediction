@@ -6,15 +6,15 @@ import project.software.uni.positionprediction.datatypes.Locations;
 
 public class CloudVis extends Visualisation {
 
-    public Points points;
-    public Polygon hull;
+    public Points points; // also contains the styling of the points
+    public Polygon hull; // points denoting the hull boundaries
 
     public CloudVis(Points points){
         this.points = points;
     }
 
-    public void setHull(Locations locs) {
-        this.hull = new Polygon(locs);
+    public void setHull(Locations locs, String hullLineCol, String hullFillCol, float hullOpacity) {
+        this.hull = new Polygon(locs, hullLineCol, hullFillCol, hullOpacity);
     }
 
     @Override

@@ -194,6 +194,8 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
             }
 
             Log.i("osmDroidAdapter", "fake funnel drawn");
+            // todo: this is hardcoded here because at the time this was written it wasnt possible yet
+            // todo: but we actually have all the color information in the funnel (polygon) object
             map.drawPolygon(funnelCoords, lineCol, lineCol, PredTrajectoryStyle.funnelOpacity);
 
         };

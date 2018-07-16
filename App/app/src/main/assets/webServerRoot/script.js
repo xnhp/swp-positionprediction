@@ -101,11 +101,17 @@ function drawTrajectoryConnection(jsonData) {
         data.styled_line_segments[0].line_color);
 }
 
-function visualiseFunnel(json){
+function visualiseFunnel(funnel){
+
+    // var locations = funnel.loca
+    var lineColor = Cesium.Color.fromCssColorString(funnel.line_color);
+    var fillColor = Cesium.Color.fromCssColorString(funnel.fill_color);
+    var fillOpacity = funnel.fill_opacity;
+
     var points = [];
-    for(var i = 0; i < json.length; i++){
-        points.push(json[i].lon);
-        points.push(json[i].lat);
+    for(var i = 0; i < funnel.locations.length; i++){
+        points.push(funnel.locations[i].lon);
+        points.push(funnel.locations[i].lat);
     }
 
     var funnel = viewer.entities.add({
@@ -113,8 +119,9 @@ function visualiseFunnel(json){
         polygon : {
             hierarchy : Cesium.Cartesian3.fromDegreesArray(points),
             height : 0,
-            material : Cesium.Color.GREEN.withAlpha(0.5),
-            outline : false
+            material : fillColor.withAlpha(fillOpacity),
+            outline : true,
+            outlineColor: lineColor
         }
     });
 }
@@ -141,25 +148,36 @@ function visualiseSingleCloud(jsonData){
 function visualiseCloud(json){
 
     for(var i = 0; i < json.points.length; i++){
+
+
+        var lon = json.points[i].location.lon;
+        var lat = json.points[i].location.lat;
+        var alt = 10;
+        var radius = json.points[i].point_radius
         var color = Cesium.Color.fromCssColorString(json.points[i].point_color);
-        createPoint(json.points[i].location.lon, json.points[i].location.lat, 10, json.points[i].point_radius, color);
+        createPoint(lon, lat, alt, radius, color);
 
     }
 
     var hull = [];
 
-    for(var j = 0; j < json.hull.length; j++){
-        hull.push(json.hull[j].lon);
-        hull.push(json.hull[j].lat);
+    for(var j = 0; j < json.hull.locations.length; j++){
+        hull.push(json.hull.locations[j].lon);
+        hull.push(json.hull.locations[j].lat);
     }
+
+    var hullFillColor = Cesium.Color.fromCssColorString(json.hull.hull_fill_color);
+    var hullLineColor = Cesium.Color.fromCssColorString(json.hull.hull_line_color);
+    var hullOpacity = json.hull.hull_opacity;
 
     var cloud = viewer.entities.add({
         name : 'cloudHull',
         polygon : {
             hierarchy : Cesium.Cartesian3.fromDegreesArray(hull),
             height : 0,
-            material : Cesium.Color.GREEN.withAlpha(0.5),
-            outline : false
+            material : hullFillColor.withAlpha(hullOpacity),
+            outline : true,
+            outlineColor: hullLineColor
         }
     });
 
