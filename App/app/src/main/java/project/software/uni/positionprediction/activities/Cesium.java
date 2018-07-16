@@ -57,6 +57,7 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
     CesiumVisAdapter visAdap;
 
     private Context context = this;
+    private boolean isWebViewLoaded = false;
 
     @Override
     public void onDownloadClick() {
@@ -87,27 +88,12 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
         // Load the webserver.
         this.webServer = new WebServer(getAssets());
 
-        /*
-        // dont need no csv
-        try {
-            // Dynamically add the input stream (a copy of webServerRoot/test.csv) before the server has started
-            // Web Location: http://localhost:8080/copy.csv
-            webServer.setVariableData("copy.csv", getAssets().open("webServerRoot/test.csv"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-
         try {
             // Start the server
             this.webServer.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Dynamically add a String as a file after the server has started.
-        // Web Location: http://localhost:8080/test.html
-        // webServer.setVariableData("test.html", "<!DOCTYPE HTML><html><head><title>test</title></head><body><h1>Test</h1></body></html>");
 
         launchWebView();
 
@@ -126,8 +112,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         Message.show_pending_messages(this);
 
-        if ( ! visAdap.areVisCurrent(PredictionWorkflow.vis_past, PredictionWorkflow.vis_pred))  {
-
+        if ( !visAdap.areVisCurrent(PredictionWorkflow.vis_past, PredictionWorkflow.vis_pred)
+                && isWebViewLoaded) {
+            // dont call in case the activity is just launched and the web view is not ready yet.
             onRefreshClick();
 
         }
@@ -205,6 +192,8 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+
+                isWebViewLoaded = true;
 
                 VisualizationWorkflow visWorkflow = new VisualizationWorkflow(
                         context,
