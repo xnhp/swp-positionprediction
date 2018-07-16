@@ -4,12 +4,10 @@ import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.logging.Handler;
-
 import project.software.uni.positionprediction.datatypes.Collection;
 import project.software.uni.positionprediction.datatypes.Location;
 import project.software.uni.positionprediction.datatypes.Locations;
-import project.software.uni.positionprediction.datatypes.Trajectory;
+import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.Polyline;
 import project.software.uni.positionprediction.visualisation.PredTrajectoryStyle;
@@ -81,10 +79,8 @@ public class VisualizationWorkflow extends Controller {
         }
 
         for (Collection<? extends Visualisation> type : pred.values()) {
-            //int counter = 1;
             for (Visualisation vis : type) {
                 if (vis instanceof TrajectoryVis) {
-                    // case (a)
                     /* additionally connect the first point of the pred
                        to the last point of the past vis
                      */
@@ -94,10 +90,8 @@ public class VisualizationWorkflow extends Controller {
                     draw prediction visualisation
                      */
                     visAdapter.visualiseSingleTraj((TrajectoryVis) vis);
-                //} else if (locs instanceof Cloud) {
-                    // visualizeCloud(locs, i);
-                //}
-                //counter++;
+                } else if (vis instanceof CloudVis) {
+                    visAdapter.visualiseSingleCloud((CloudVis) vis);
                 }
             }
         }

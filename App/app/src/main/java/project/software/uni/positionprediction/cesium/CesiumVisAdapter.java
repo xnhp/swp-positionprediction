@@ -10,9 +10,6 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
-import project.software.uni.positionprediction.datatypes.Collection;
-import project.software.uni.positionprediction.datatypes.Location;
-import project.software.uni.positionprediction.datatypes.Locations;
 import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.Polyline;
@@ -57,10 +54,13 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
 
     }
 
-    public void visualiseSingleCloud(Collection<CloudVis> vis) {
+    // again, a prediction might result in several cloud vis's
+    // but the visualisationWorkflow unwraps that and calls this
+    // once for each cloud
+    public void visualiseSingleCloud(CloudVis vis) {
         try {
-            String json = JSONUtils.getCloudJSON(vis).toString();
-            callJS("visualiseMultipleClounds", json);
+            String json = JSONUtils.getSingleCloudJSON(vis).toString();
+            callJS("visualiseCloud", json);
         } catch (JSONException e) {
             Log.e(LogTag, "Could not JSONify data");
             e.printStackTrace();

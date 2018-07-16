@@ -119,12 +119,12 @@ function visualiseFunnel(json){
     });
 }
 
-function visualiseMultipleClounds(jsonData){
+function visualiseMultipleClouds(jsonData){
 
     var json = JSON.parse(jsonData);
 
     for(var i = 0; i < json.clouds.length; i++){
-        visualiseClound(json.clouds[i]);
+        visualiseCloud(json.clouds[i]);
     }
 
 }
@@ -133,12 +133,12 @@ function visualiseSingleCloud(jsonData){
 
     var json = JSON.parse(jsonData);
 
-    visualiseClound(json);
+    visualiseCloud(json);
 
 }
 
 
-function visualiseClound(json){
+function visualiseCloud(json){
 
     for(var i = 0; i < json.points.length; i++){
         var pointsPast = viewer.entities.add({

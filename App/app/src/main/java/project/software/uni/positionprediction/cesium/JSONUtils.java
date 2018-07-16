@@ -247,7 +247,7 @@ public class JSONUtils {
         return jo;
     }
 
-    public static JSONObject getCloudJSON(Collection<? extends Visualisation> clouds) throws JSONException {
+    public static JSONObject getMultipleCloudsJSON(Collection<? extends Visualisation> clouds) throws JSONException {
         JSONObject jo = new JSONObject();
         JSONArray a = new JSONArray();
         for (Visualisation cloud : clouds) {
@@ -260,7 +260,7 @@ public class JSONUtils {
         return jo;
     }
 
-    private static JSONObject getSingleCloudJSON(CloudVis cloud) throws JSONException {
+    public static JSONObject getSingleCloudJSON(CloudVis cloud) throws JSONException {
         JSONObject jo = new JSONObject();
         // for consistency with single trajectory
         jo.put("type", "single_cloud");

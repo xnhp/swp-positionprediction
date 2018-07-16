@@ -53,6 +53,8 @@ public abstract class IVisualisationAdapter {
 
     public abstract void visualiseSingleTraj(TrajectoryVis vis);
 
+    public abstract void visualiseSingleCloud(CloudVis vis);
+
     /*
         connect last point of past trajectory and
         and first point prediction trajectory by a straight line.
