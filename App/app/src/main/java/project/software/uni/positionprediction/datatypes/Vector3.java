@@ -132,6 +132,14 @@ public class Vector3 {
     }
 
 
+    public static Vector3 devide(Vector3 v, double d){
+        return new Vector3(v.x / d, v.y, v.z / d);
+    }
+
+    public static Vector3 multiply(Vector3 v, double d){
+        return new Vector3(v.x * d, v.y, v.z * d);
+    }
+
     public String toString(){
         return "[" + x + ", " + y + ", " + z + "]";
     }

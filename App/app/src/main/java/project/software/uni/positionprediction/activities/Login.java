@@ -20,6 +20,7 @@ import project.software.uni.positionprediction.algorithms.AlgorithmDummyCloud;
 import project.software.uni.positionprediction.algorithms.AlgorithmDummyTrajectories;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedFunnel;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedCartesian;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectoryFunnel;
 import project.software.uni.positionprediction.datatypes.HttpStatusCode;
@@ -53,7 +54,8 @@ public class Login extends AppCompatActivity {
                 AlgorithmExtrapolationExtendedFunnel.class,
                 AlgorithmSimilarTrajectoryFunnel.class,
                 AlgorithmDummyCloud.class,
-                AlgorithmDummyTrajectories.class
+                AlgorithmDummyTrajectories.class,
+                AlgorithmExtrapolationExtendedCartesian.class
         };
         xml.setAlgorithms(algorithms);
 
