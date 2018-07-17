@@ -128,7 +128,7 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
     @Override
     public void showPrediction() {
 
-        if (PredictionWorkflow.vis_past == null) return;
+        if (PredictionWorkflow.vis_pred == null) return;
 
         try {
             BoundingBox bb = getSafeBoundingBox(
