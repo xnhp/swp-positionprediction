@@ -2,8 +2,9 @@ package project.software.uni.positionprediction.movebank;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import java.sql.Timestamp;
@@ -17,10 +18,10 @@ import project.software.uni.positionprediction.datatypes.Bird;
 import project.software.uni.positionprediction.datatypes.BirdData;
 import project.software.uni.positionprediction.datatypes.HttpStatusCode;
 import project.software.uni.positionprediction.datatypes.Location;
-import project.software.uni.positionprediction.datatypes.Request;
-import project.software.uni.positionprediction.datatypes.Study;
 import project.software.uni.positionprediction.datatypes.LocationWithValue;
 import project.software.uni.positionprediction.datatypes.Locations;
+import project.software.uni.positionprediction.datatypes.Request;
+import project.software.uni.positionprediction.datatypes.Study;
 
 /**
  * Created by simon on 22.05.18.
@@ -296,16 +297,40 @@ public class SQLDatabase {
 
         if (table.length > 0) {
             for (int i = 1; i < table[0].length; i++) {
-                db.execSQL("INSERT OR IGNORE INTO birds (comments, death_comments, id, study_id, nick_name) VALUES ("
-                        + (table[0][i].equals("") ? "NULL" : "'" + table[0][i] + "'") + ", "
-                        + (table[1][i].equals("") ? "NULL" : "'" + table[1][i] + "'") + ", "
-                        + table[2][i] + ", "
-                        + studyId + ", "
-                        + (table[3][i].equals("") ? "NULL" : "'" + table[3][i] + "'") + ")");
+//                db.execSQL("INSERT OR IGNORE INTO birds (comments, death_comments, id, study_id, nick_name) VALUES ("
+//                        + (table[0][i].equals("") ? "NULL" : "'" + table[0][i] + "'") + ", "
+//                        + (table[1][i].equals("") ? "NULL" : "'" + table[1][i] + "'") + ", "
+//                        + table[2][i] + ", "
+//                        + studyId + ", "
+//                        + (table[3][i].equals("") ? "NULL" : "'" + table[3][i] + "'") + ")");
+
+
+                SQLiteStatement statement = db.compileStatement("INSERT OR IGNORE INTO birds" +
+                        "(comments, death_comments, id, study_id, nick_name) " +
+                        "VALUES (?, ?, ?, ?, ?)");
+
+                bindConditionallyNull(table[0][i], statement, 1);
+                bindConditionallyNull(table[1][i], statement, 2);
+                statement.bindString(3, table[2][i]);
+                statement.bindLong(4, studyId); // this is also used for ints
+                bindConditionallyNull(table[3][i], statement, 5);
+
             }
 
         }
 
+    }
+
+    /**
+     * binds the provided value to the placeholder with the specified index
+     * in the statement.
+     */
+    private void bindConditionallyNull(String value, SQLiteStatement target, int index) {
+        if (value == null || value.equals("")) {
+            target.bindNull(index);
+        } else {
+            target.bindString(index, value);
+        }
     }
 
     /**
