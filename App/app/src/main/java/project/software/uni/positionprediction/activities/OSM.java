@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 
 import org.osmdroid.config.Configuration;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
@@ -21,7 +20,6 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
 import project.software.uni.positionprediction.controllers.VisualizationWorkflow;
 import project.software.uni.positionprediction.fragments.FloatingMapButtons;
-import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.osm.OSMDroidMap;
 import project.software.uni.positionprediction.osm.OSMDroidVisualisationAdapter;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
@@ -253,11 +251,6 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
         });
 
 
-    }
-
-    public void onDownloadClick() {
-        BoundingBox subafrica = new BoundingBox(19.635663, 12.921289,7.006371,-4.305273);
-        OSMCacheControl.getInstance(ctx).saveAreaToCache(subafrica);
     }
 
 

@@ -39,12 +39,6 @@ import project.software.uni.positionprediction.util.LoadingIndicator;
 import project.software.uni.positionprediction.util.LocationProvider;
 import project.software.uni.positionprediction.util.Message;
 
-
-/**
- * todo: TJ 180622: to be replaced by correct workflow
- */
-
-
 public class Cesium extends AppCompatActivity implements FloatingMapButtons.floatingMapButtonsClickListener {
 
     private Button buttonSettings = null;
@@ -86,11 +80,6 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
             // todo: remove location icon?
         }
     };
-
-    @Override
-    public void onDownloadClick() {
-        //Todo
-    }
 
 
     @Override

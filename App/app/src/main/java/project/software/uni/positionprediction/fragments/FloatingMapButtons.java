@@ -1,6 +1,5 @@
 package project.software.uni.positionprediction.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -76,13 +75,6 @@ public class FloatingMapButtons extends android.support.v4.app.Fragment {
             }
         });
 
-        view.findViewById(R.id.fab_download).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickListener.onDownloadClick();
-            }
-        });
-
         if(getActivity() instanceof OSM){
             ((FloatingActionButton)view.findViewById(R.id.fab_switchMode))
                     .setImageResource(R.drawable.outdoor);
@@ -131,7 +123,6 @@ public class FloatingMapButtons extends android.support.v4.app.Fragment {
         void onShowLocClick();
         void onSwitchModeClick();
         void onRefreshClick();
-        void onDownloadClick();
     }
 
     /**
