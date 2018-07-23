@@ -185,10 +185,6 @@ public class JSONUtils {
      *
      * Note that altitude is only set if hasAltititude is true
      *
-     * todo: converting to a JSONObject and then to a JSON string most likely
-     * todo: casting or truncating the double. Have to see if that has a negative
-     * todo: effect.
-     *
      * @param l
      * @return
      * @throws JSONException

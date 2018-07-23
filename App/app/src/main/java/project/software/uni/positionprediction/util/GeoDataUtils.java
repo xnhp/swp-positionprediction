@@ -27,7 +27,6 @@ public abstract class GeoDataUtils {
         return newPoints;
     }
 
-    // TODO: redundant. TJ: Why?
     public static List<IGeoPoint> GeoPointsToIGeoPoints(List<GeoPoint> points) {
         List<IGeoPoint> newPoints = new ArrayList<>();
         for (GeoPoint pt : points) {

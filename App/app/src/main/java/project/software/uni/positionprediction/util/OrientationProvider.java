@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -16,9 +15,6 @@ import static android.content.Context.SENSOR_SERVICE;
  * Getting the device orientation w.r.t to world coordinates
  * actually requires the result from two sensors: Accelerometer
  * and Magnetic Field
- *
- * todo: detach sensors onPause, reattach onResume
- * todo: make this static
  */
 public class OrientationProvider implements SensorEventListener {
 

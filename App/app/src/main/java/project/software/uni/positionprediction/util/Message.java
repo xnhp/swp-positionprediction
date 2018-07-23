@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import org.w3c.dom.DOMStringList;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -290,8 +288,6 @@ public class Message {
         messageList = new LinkedList<>();
 
         Iterator<MessageEntity> iter = list.iterator();
-
-        // todo: weird exception when using similiartrajfunnelalgorithm
 
         if (list == null) {
             return;

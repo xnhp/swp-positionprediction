@@ -360,7 +360,7 @@ public class AlgorithmSimilarTrajectory extends PredictionAlgorithmReturnsTrajec
 
 
     /**
-     * todo: possible other function to change the factor which increases factor of uncertainty
+     * improvement: possible other function to change the factor which increases factor of uncertainty
      * @param m
      * @return
      */

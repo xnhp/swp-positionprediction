@@ -19,10 +19,4 @@ public class Collections<K, T> extends HashMap<K, Collection<? extends T>>{
         put(key, collection);
     }
 
-    // todo
-    protected void add(K key, T element) {}
-
-    // todo
-    protected void add(K key, Collection<? extends T> collection) {}
-
 }

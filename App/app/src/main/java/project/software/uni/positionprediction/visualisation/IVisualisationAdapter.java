@@ -48,7 +48,6 @@ public abstract class IVisualisationAdapter {
     }
 
     // a visAdapter needs a reference to a map that it can draw on.
-    // TODO: more specific subtype possible?
     public abstract void linkMap(Object mapView) throws MapInitException;
 
     public abstract void visualiseSingleTraj(TrajectoryVis vis);
@@ -66,11 +65,6 @@ public abstract class IVisualisationAdapter {
 
     public abstract void setMapCenter(GeoPoint centerWithDateLine);
 
-
-    /**
-     * Clear any visualisations fom the map.
-     */
-    public abstract void clear();
 
     /**
      * zoom/pan to past and prediction visualisation

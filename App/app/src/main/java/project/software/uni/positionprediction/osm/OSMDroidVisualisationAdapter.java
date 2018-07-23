@@ -66,7 +66,6 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
     /**
      * Clear any visualisation from the map
      */
-    @Override
     public void clear() {
         // OverlayManager is an instance of List<Overlay>
 
@@ -193,9 +192,6 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
                 funnelCoords.add(LocationToGeoPoint(loc));
             }
 
-            Log.i("osmDroidAdapter", "fake funnel drawn");
-            // todo: this is hardcoded here because at the time this was written it wasnt possible yet
-            // todo: but we actually have all the color information in the funnel (polygon) object
             map.drawPolygon(funnelCoords, lineCol, lineCol, PredTrajectoryStyle.funnelOpacity);
 
         };
@@ -209,8 +205,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
 
         for (StyledLineSegment seg :
                 vis.getLine().styledLineSegments) {
-            // todo: note: this will create an "osmdroid overlay" for each segment.
-            // this is potentially bad for performance
+            // note: this will create an "osmdroid overlay" for each segment.
             List<GeoPoint> locs = new ArrayList<>();
             locs.add(GeoDataUtils.LocationToGeoPoint(seg.start));
             locs.add(GeoDataUtils.LocationToGeoPoint(seg.end));
@@ -242,7 +237,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
                 // has to be called first because the parent classes methods return the object in the
                 // more general type
                 .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
-                .setRadius(15) // todo: this shouldnt apply?
+                .setRadius(15)
                 .setIsClickable(false) // true by default
                 .setCellSize(15) // cf internal doc
                 .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)
@@ -250,7 +245,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
         final SimpleFastPointOverlay overlay = new SimpleFastPointOverlay(osmStyledPoints, options);
         map.mapView.getOverlays().add(overlay);
 
-        if(vis.hasFunnel()); //todo: draw polygon
+        if(vis.hasFunnel());
     }
 
     @Override
@@ -308,7 +303,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
                 // has to be called first because the parent classes methods return the object in the
                 // more general type
                 .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
-                .setRadius(15) // todo: this shouldnt apply?
+                .setRadius(15) // doesnt apply
                 .setIsClickable(false) // true by default
                 .setCellSize(15) // cf internal doc
                 .setSymbol(SimpleFastPointOverlayOptions.Shape.CIRCLE)

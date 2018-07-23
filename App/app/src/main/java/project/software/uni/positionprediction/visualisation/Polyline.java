@@ -10,9 +10,6 @@ import project.software.uni.positionprediction.datatypes.Locations;
 public class Polyline extends Geometry {
 
 
-        // todo: only keep either locations or styledPoints
-        // todo: this might be pulled up into a common ancestor "TrajectoryVis" but im not
-        // sure yet how we will do it for multiple trajectories
         public final ArrayList<StyledPoint> styledPoints = new ArrayList<>();
         public final ArrayList<StyledLineSegment> styledLineSegments = new ArrayList<>();
         // why this?
@@ -34,7 +31,6 @@ public class Polyline extends Geometry {
         }
 
 
-        // todo: rewrite
         private void makeStyledObjects(String pointColor, String lineColor, int pointRadius) {
             Iterator<Location> it = locations.iterator();
             Location prev = locations.get(0);
@@ -58,7 +54,6 @@ public class Polyline extends Geometry {
          * @param connectingLineColor Colour for connecting line
          * @return
          */
-        // todo: data type for colors
         public static Polyline concat(Polyline a, Polyline b, String connectingLineColor) {
             // add all points
             Polyline c = new Polyline(a.locations);

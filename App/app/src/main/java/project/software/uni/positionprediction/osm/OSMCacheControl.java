@@ -6,8 +6,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.Cache;
-
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
 import org.osmdroid.tileprovider.modules.IFilesystemCache;
@@ -64,7 +62,7 @@ public class OSMCacheControl {
      * @return
      */
     private CacheManager buildCacheManager() {
-        ITileSource tileSource = TileSourceFactory.MAPNIK; // todo: synchronise with OSMDroidMap
+        ITileSource tileSource = TileSourceFactory.MAPNIK;
         IFilesystemCache fsCache = tileWriter;
         int minZoom = tileSource.getMinimumZoomLevel();
         int maxZoom = tileSource.getMaximumZoomLevel();
@@ -114,8 +112,6 @@ public class OSMCacheControl {
      * @param bbox area to be saved
      */
     public void saveAreaToCache(BoundingBox bbox) {
-        // TODO: What should the UI look like when downloading maps? should there be a progress bar?
-        // TODO: osmdroid also provides other methods for downloading. which is best suited?
 
         cacheManager.downloadAreaAsyncNoUI(context, bbox, downloadMinZoom, downloadMaxZoom, new CacheManager.CacheManagerCallback() {
             @Override
@@ -125,37 +121,24 @@ public class OSMCacheControl {
 
             @Override
             public void onTaskFailed(int errors) {
-                // TODO
                 Toast.makeText(context, "Download complete with " + errors + " errors", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void updateProgress(int progress, int currentZoomLevel, int zoomMin, int zoomMax) {
-                // TODO
                 //NOOP since we are using the built in UI
             }
 
             @Override
             public void downloadStarted() {
-                // TODO
                 //NOOP since we are using the built in UI
-                System.out.println("download started");
             }
 
             @Override
             public void setPossibleTilesInArea(int total) {
-                // TODO
                 //NOOP since we are using the built in UI
-                System.out.println("set possible tiles");
             }
         });
-    }
-
-    // todo: probably not needed anymore.
-    public void cleanAreaFromCache(BoundingBox bbox, int zoomMin, int zoomMax) {
-        // zoom levels are of type `int` here because `cleanAreaAsync` requires it. This seems to  be
-        // an inconsistency in osmdroid.
-        cacheManager.cleanAreaAsync(context, bbox, zoomMin, zoomMax);
     }
 
 }

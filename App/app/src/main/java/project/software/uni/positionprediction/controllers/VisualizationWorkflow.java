@@ -52,17 +52,17 @@ public class VisualizationWorkflow extends Controller {
             (a)
             In the case where the prediction result is a single or multiple
             trajectories, we additionally want a line from the last data point
-            of the prediction to the first point of the resp. trajectory - todo
+            of the prediction to the first point of the resp. trajectory
 
             (b)
             In the case where the prediction result is a funnel,
             there is no extra work (funnel will be positioned with the pointy
-            end at the end of the past trajectory) - todo
+            end at the end of the past trajectory)
 
             (c)
             in the case where the prediction result is a cloud,
             there is no extra work - the cloud is just drawn at its
-            position - todo
+            position
          */
 
         /*simply visualise the past tracking points*/

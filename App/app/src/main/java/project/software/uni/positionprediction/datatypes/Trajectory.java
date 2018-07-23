@@ -175,28 +175,6 @@ public class Trajectory extends Shape {
 
     }
 
-    /*
-    public Locations calculateFunnelCoords() {
-        Locations coords_right = new Locations();
-        Locations coords_left = new Locations();
-        for(Location loc : locations) {
-            if (loc instanceof LocationWithValue) {
-                if (((LocationWithValue) loc).getValue() instanceof Number) {
-                    Location right = new Location();
-                    coords_right.add(right);
-                    Location left = new Location();
-                    coords_left.add(left);
-                    // todo (Sebastian): calculate coords for funnel
-                }
-            }
-        }
-        //List<Integer> aList = new ArrayList<>();
-
-        // assemble polygon coordinates clockwise
-        return new Locations(Collection.add(coords_left, coords_right.reverse()));
-
-    }
-    */
 }
 
 

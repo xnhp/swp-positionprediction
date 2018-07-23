@@ -1,7 +1,6 @@
 package project.software.uni.positionprediction.datatypes;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -9,8 +8,7 @@ import java.util.Date;
  * Actual tracking data is stored in the database
  */
 
-// TODO "Parcelable" might be better?
-// cf http://sohailaziz05.blogspot.com/2012/04/passing-custom-objects-between-android.html
+// improvement: cf http://sohailaziz05.blogspot.com/2012/04/passing-custom-objects-between-android.html
 public class Bird implements Serializable {
 
     private int id;

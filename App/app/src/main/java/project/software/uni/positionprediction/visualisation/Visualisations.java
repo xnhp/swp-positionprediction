@@ -57,18 +57,9 @@ public class Visualisations extends Collections<EShape, Visualisation> {
     // i have the time.
     private BoundingBox boundingBoxResult;
 
-    /*
-        todo: this might be a better way to iterate over the map:
-         for (Entry<EShape, Collection<? extends Visualisation>> entry : this.entrySet()) { ... }
-     */
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public BoundingBox getBoundingBox(){
-        /* does not work like this
-        // todo: for(Visualization vis : this){
-        //     result.concat(vis.getBoundigBox);
-        // }
-        */
-
         // alternative approach:
         boundingBoxResult = null; // this is a field because
         // inside a consumer we can neither modify external local variables

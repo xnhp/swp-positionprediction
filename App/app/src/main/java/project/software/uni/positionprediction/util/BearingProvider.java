@@ -5,7 +5,6 @@ import android.hardware.GeomagneticField;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.util.Log;
 
 /**
  * This class will provide means to get the direction
@@ -114,7 +113,7 @@ public class BearingProvider implements LocationListener, OrientationListener {
 
         // heading of the user relative to degrees east of
         // (magnetic) north pole.
-        float headWrtMagnNorth = (float) this.userOrientation; // todo: cast okay?
+        float headWrtMagnNorth = (float) this.userOrientation;
 
         // declination is the angle between magnetic and geographic
         // north pole. cf http://www.magnetic-declination.com/what-is-magnetic-declination.php

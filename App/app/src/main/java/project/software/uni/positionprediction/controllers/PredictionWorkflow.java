@@ -266,7 +266,6 @@ public class PredictionWorkflow extends Controller {
                 data_past = fetchData();
                 Log.i("prediction workflow", "data_past locs size: " + data_past.getTrajectory().getLocations().size());
             } catch (InsufficientTrackingDataException e) {
-                // todo: show note to user in this case
                 // no past data, hence no result
                 data_past = null;
                 vis_past = null;
@@ -291,9 +290,6 @@ public class PredictionWorkflow extends Controller {
             /*
                 Run Prediction Algo
              */
-            // TODO: throw (algorithm classes)
-            // TODO: try/catch
-
             PredictionAlgorithm algorithm = userParams.algorithm;
             algorithm.setContext(context);
             final PredictionResultData data_pred = algorithm.predict(userParams, data_past);
@@ -324,7 +320,8 @@ public class PredictionWorkflow extends Controller {
             if (data_pred == null || data_pred.getShapes().size() == 0) {
                 PredictionWorkflow.vis_pred = null;
                 Log.e("Warning", "No prediction to visualize");
-                msg.disp_error_asynch(context, "Warnung", "Eine Vorhersage konnte NICHT gemacht werden!");
+                msg.disp_error_asynch(context, "Warnung", "" +
+                        "Eine Vorhersage konnte NICHT gemacht werden!");
                 return null;
 
             }
@@ -338,7 +335,7 @@ public class PredictionWorkflow extends Controller {
 
 
             /*
-                Trigger download of maps - todo
+                Trigger download of maps
              */
             BoundingBox visBBPast = PredictionWorkflow.vis_past.getBoundingBox();
             BoundingBox visBBPred = PredictionWorkflow.vis_pred.getBoundingBox();
@@ -398,7 +395,6 @@ public class PredictionWorkflow extends Controller {
 
 
     // Request data update from Movebank
-    // TODO: throw RequestFailedException
 
     /**
      * Request data from network (movebank)
@@ -409,8 +405,6 @@ public class PredictionWorkflow extends Controller {
         Log.i("OSM", "userParams.bird is null: " + (userParams.bird == null));
         final int percentage_bad_data = (int) (SQLDatabase.getInstance(context)
                 .updateBirdDataSync(userParams.bird.getStudyId(), userParams.bird.getId()) * 100.0f);
-
-        // TODO: fix error message
 
         if (percentage_bad_data >= context.getResources().getInteger(R.integer.percentage_bad_data_warning)) {
             throw new BadDataException(percentage_bad_data);
@@ -504,7 +498,6 @@ public class PredictionWorkflow extends Controller {
         return result;
     }
 
-    // todo
     private CloudVis buildSingleCloudVis(
             Cloud cloud,
             String pointColor,

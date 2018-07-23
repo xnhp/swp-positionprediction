@@ -20,36 +20,6 @@ public class PredictionUserParameters {
     public Bird bird;
     public Date time_of_day;
 
-    public PredictionUserParameters() {
-
-    }
-
-    /* TJ 180622
-    // TODO: remove this when OSM is working
-    public PredictionUserParameters(
-            Date date_past,
-            Date date_pred,
-            Bird bird
-    ) {
-        this.date_past = date_past;
-        this.date_pred = date_pred;
-        this.bird = bird;
-    }
-
-    // TODO: remove this when OSM is working
-    public PredictionUserParameters(
-            Date date_past,
-            Date date_pred,
-            Bird bird,
-            Date time_of_day
-    ) {
-        this.date_past = date_past;
-        this.date_pred = date_pred;
-        this.bird = bird;
-        this.time_of_day = time_of_day;
-    }
-    */
-
     public PredictionUserParameters(
             PredictionAlgorithm algorithm,
             Date date_past,

@@ -1,11 +1,9 @@
 package project.software.uni.positionprediction.activities;
 
-import android.content.DialogInterface;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,11 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import project.software.uni.positionprediction.R;
-import project.software.uni.positionprediction.controllers.BadDataException;
 import project.software.uni.positionprediction.controllers.PredictionWorkflow;
-import project.software.uni.positionprediction.controllers.RequestFailedException;
-import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.movebank.SQLDatabase;
+import project.software.uni.positionprediction.osm.OSMCacheControl;
 import project.software.uni.positionprediction.util.AsyncTaskCallback;
 import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
@@ -99,7 +95,7 @@ public class Settings extends AppCompatActivity {
         spinner_alg.setSelection(xml.getUsed_alg());
 
         // check cache size and display a note to the user if its large
-        // todo: check on startup of app?
+        // improvement: check on startup of app?
         checkCacheSize();
         // get cache size and display it in the UI
         updateCacheSize();
@@ -119,10 +115,6 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 xml.writeFile(c);
-
-                // OSM.setSettingsChanged();
-                // todo Cesium setSeetingschanged
-                // PredictionWorkflow.getInstance(c).requestRefresh();
 
                 PredictionWorkflow predWf = PredictionWorkflow.getInstance(c);
                 predWf.updateUserParams();

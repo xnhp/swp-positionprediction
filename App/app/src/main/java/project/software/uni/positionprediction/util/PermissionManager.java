@@ -1,17 +1,14 @@
 package project.software.uni.positionprediction.util;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 
 import project.software.uni.positionprediction.R;
 
@@ -53,9 +50,6 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
      * @param message The id of the String Resource to be displayed in the alert box
      * @param requestCode The Permission index
      * @param activity The activity that asks for the Permission
-     * TODO: What happens if permission cant be obtained? (i.e. user declines)
-     * TODO: When executing a task that triggers this, does executing that task have to be tried \
-     *       again after the permission was granted?
      */
     public static void requestPermission(final String permission, int message, final int requestCode, final AppCompatActivity activity){
 

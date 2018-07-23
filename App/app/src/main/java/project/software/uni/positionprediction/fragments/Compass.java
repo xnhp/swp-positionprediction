@@ -75,14 +75,6 @@ public class Compass extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void initBearingProvider() {
 
-        // todo: fetch location from prediction here
-        // (do this after merge from master so i have it
-        //  available)
-        /*Location targetLocation = new Location("foo");
-        targetLocation.setLatitude(48.856614); // somewhere in
-        targetLocation.setLongitude(2.352222); // paris
-*/
-
         if (PredictionWorkflow.vis_pred == null) return;
 
         double targetLat = PredictionWorkflow.vis_pred.getBoundingBox().getCenterLatitude();
@@ -120,12 +112,10 @@ public class Compass extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        // todo: disable sensor listeners
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // todo: reenable sensor listeners
     }
 }

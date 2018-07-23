@@ -95,20 +95,14 @@ public class OSMDroidMap {
     private CompassOverlay compassOverlay = null;
 
 
-    // TODO: refresh tiles when switching from offline to inline
-    // cf https://github.com/osmdroid/osmdroid/blob/ae026862fe4666ab6c8d037b9e2f8805233c8ebf/OpenStreetMapViewer/src/main/java/org/osmdroid/StarterMapActivity.java#L25
-
-
     public OSMDroidMap(Context ctx) {
 
         context = ctx;
 
         // load OSMDroid configuration
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-        Configuration.getInstance().setUserAgentValue("SP_1-2"); // todo: put this somewhere else
+        Configuration.getInstance().setUserAgentValue("SP_1-2");
 
-        // TODO: What happens if obtaining permission fails?
-        // todo: need this here?
         PermissionManager.requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, R.string.dialog_permission_storage_text, 0,(AppCompatActivity) context);
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, 0,(AppCompatActivity) context);
     }
@@ -131,9 +125,14 @@ public class OSMDroidMap {
         //tileWriter.setCleanupOnStart(false);
         cacheManager = new CacheManager(mapView, noDelTilewriter);
 
+
         // use Mapnik by default
-        // TODO: other tile sources interesting?
-        // such as https://wiki.openstreetmap.org/wiki/Hike_%26_Bike_Map
+        // there is a number of interesting tile sources out there wich are
+        // suited for outdoor terrain like e.g.
+        // http://www.thunderforest.com/maps/outdoors/
+        // in fact, i already contacted the person who provides these and
+        // persistently saving tiles would be ok.
+
         // (!!) note that this calls for a clearing of the cache (cf cacheManager)
         // however, the interface implementation of IFileSystemCache given to the CacheManager
         // may override the `remove()` method.
@@ -141,9 +140,6 @@ public class OSMDroidMap {
 
         // disable gray zoom buttons at bottom of map (enabled by default)
         mapView.setBuiltInZoomControls(false);
-
-
-
 
         setZoom(zoom);
         setCenter(center);
@@ -153,21 +149,7 @@ public class OSMDroidMap {
 
         enableLocationOverlay(); // works
 
-        // enableFollowLocation();
 
-        /*
-        This is an alternative method of a location marker
-        the marker and obtaining/updating the location is managed "manually",
-        without using the osmdroid library.
-        This potentially provides more flexibility
-        locationMarker = createMarker(mapView, context.getDrawable(R.drawable.ic_menu_mylocation));
-        placeMarker(mapView, locationMarker, center);
-        // Note that as of now, the marker has to have already been placed on the map with placeMarker()
-        // this means we have to supply it with an initial position (or else we would have to rethink
-        // what the placeMarker method is for).
-        // TODO: not do that, check dynamically whether marker is already placed or not.
-        enableCustomLocationMarker(locationMarker);
-        */
     }
 
     /**
@@ -249,7 +231,6 @@ public class OSMDroidMap {
      * Binds a marker to the user's current position.
      * When the device location changes, the marker location on the map also changes.
      * Note that as of now, the marker has to have already been placed on the map with placeMarker()
-     * TODO: onResume(), does the location have to be explicitly updated?
      */
     private void enableCustomLocationMarker(final Marker marker) {
         PermissionManager.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, R.string.dialog_permission_finelocation_text, PermissionManager.PERMISSION_FINE_LOCATION, (AppCompatActivity) context);
@@ -259,15 +240,10 @@ public class OSMDroidMap {
 
         // we encapsulate the LocationListener here and not in a method of the class
         // because the callback content is specific to that marker.
-        // TODO: At some point, we will most likely want to access the user's current location for
-        // other purposes as well (such as centering the map around it).
-        // Then we could either use Marker.getPosition() or make save the location in a field and
-        // rewrite this.
         registerLocationUpdates(new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 Log.d("location on map", "location changed to " + location);
-                // TODO: error handling
                 if (location != null) {
                     marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
                 }
@@ -276,21 +252,17 @@ public class OSMDroidMap {
 
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
-                Log.d("location on map", "status changed");
-                // cf https://developer.android.com/reference/android/location/LocationListener.html#onStatusChanged(java.lang.String,%20int,%20android.os.Bundle)
-                // TODO: Hide marker?
+                // noop
             }
 
             @Override
             public void onProviderEnabled(String s) {
-                Log.d("location on map", "provider enabled");
-                // TODO: redisplay marker?
+                // noop
             }
 
             @Override
             public void onProviderDisabled(String s) {
-                Log.d("location on map", "provider disabled");
-                // TODO: hide marker?
+                // noop
             }
         });
     }
@@ -299,7 +271,7 @@ public class OSMDroidMap {
      * Update the device location and call the callback with the new location.
      * @param listener
      */
-    @SuppressLint("MissingPermission") // TODO
+    @SuppressLint("MissingPermission")
     private void registerLocationUpdates(LocationListener listener) {
         Log.d("Location on map", "call to update location");
         // because receiving the first location might take a while,
@@ -315,10 +287,8 @@ public class OSMDroidMap {
      * Draw a list of tracks (position records) as points connected by a line.
      * @param tracks
      */
-    // todo: obsolete
-    // TODO: this might return a "folder" overlay with the points and the polyline overlay
+    // improvement: this might return a "folder" overlay with the points and the polyline overlay
     public void drawTracksUniform(List<GeoPoint> tracks, String lineColor, String pointColor) {
-        // TODO: pass styling in here as parameter
         drawPolyLine(tracks, lineColor);
         drawPointsUniform(tracks, pointColor,10);
     }
@@ -386,7 +356,6 @@ public class OSMDroidMap {
      */
 
     private void enableRotationGestures() {
-        // TODO: deprecation warning, what else to use?
         RotationGestureOverlay overlay = new RotationGestureOverlay(context, mapView);
         overlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
@@ -400,7 +369,6 @@ public class OSMDroidMap {
      * NOTE: contrary to osmdroid's documentation (cf MyLocationNewOverlay)
      * this DOES NOT disable manual panning. In fact, on panning the map
      * locationOverlay.isFollowLocationEnabled() is set to false again.
-     * TODO: Error handling?
      */
     public void enableFollowLocation() {
         if (locationOverlay != null) {

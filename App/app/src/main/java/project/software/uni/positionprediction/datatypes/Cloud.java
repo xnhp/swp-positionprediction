@@ -20,7 +20,6 @@ public class Cloud extends Shape {
         this.hull = hull;
     }
 
-    // todo: This is a dummy!
     private Locations calculateHull(){
         return locations;
     }

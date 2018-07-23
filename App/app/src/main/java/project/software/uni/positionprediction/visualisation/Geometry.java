@@ -18,7 +18,6 @@ import project.software.uni.positionprediction.datatypes.Locations;
 public abstract class Geometry {
 
     // Data
-    // todo: remove, only use styledPoints TJ: Why remove?!
     public Locations locations;
 
     // Constructors

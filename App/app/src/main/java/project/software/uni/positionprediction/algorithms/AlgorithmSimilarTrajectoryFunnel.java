@@ -42,8 +42,6 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         super(c);
     }
 
-    //todo: even with eps = 1000 there are no similar trajectories! Check algorithm!
-
     /**
      * Main idea:
      * <p>
@@ -362,7 +360,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
 
     /**
-     * todo: possible other function to change the factor which increases factor of uncertainty
+     * improvement: possible other function to change the factor which increases factor of uncertainty
      * @param m
      * @return
      */

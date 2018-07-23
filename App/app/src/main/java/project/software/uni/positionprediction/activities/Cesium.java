@@ -67,17 +67,18 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
         @Override
         public void onStatusChanged(String s, int i, Bundle bundle) {
-
+            // noop
         }
 
         @Override
         public void onProviderEnabled(String s) {
-
+            // noop
         }
 
         @Override
         public void onProviderDisabled(String s) {
-            // todo: remove location icon?
+            // noop
+            // potentially show error message or remove location icon
         }
     };
 
@@ -273,8 +274,9 @@ public class Cesium extends AppCompatActivity implements FloatingMapButtons.floa
 
     @Override
     public void onSwitchModeClick() {
-        finish(); // todo: do we really want this? maybe its better to keep the map activities
-                  // todo: so they dont have to be reloaded.
+        // improvement: do we really want to finish the activity? maybe it would
+        // be better to leave it alive.
+        finish();
         Intent buttonIntent = new Intent(this, OSM.class);
         startActivity(buttonIntent);
     }

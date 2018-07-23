@@ -247,8 +247,6 @@ public class Location {
      * @return
      */
     public Location rotate(double angle) {
-        // TODO: not set alt=0 here
-        // work with 2D vector instead
         if (!has_altitude) {
             this.setAlt(0);
         }

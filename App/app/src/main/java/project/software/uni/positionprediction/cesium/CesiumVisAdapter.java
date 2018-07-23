@@ -76,11 +76,6 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
         }
     }
 
-    @Override
-    public void clear() {
-        // todo
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void showVisualisation() {
@@ -124,7 +119,7 @@ public class CesiumVisAdapter extends IVisualisationAdapter {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N) // todo
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void showPrediction() {
 

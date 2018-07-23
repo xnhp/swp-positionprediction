@@ -16,7 +16,6 @@ public class Points extends Geometry {
     }
 
 
-    // todo: rewrite
     private void makeStyledObjects(String pointColor, int pointRadius) {
         Iterator<Location> it = locations.iterator();
         Location prev = locations.get(0);

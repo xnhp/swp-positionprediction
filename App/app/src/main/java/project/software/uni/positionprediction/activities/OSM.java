@@ -55,16 +55,12 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
 
         // 1.) Create OSMDroid map.
         // ------------------------
-
         // This is the blank/default map, before sth. is drawn on it
-        // TJ: todo: There should be an appropriate constructor in class "OSMdroidMap" to do this
         osmDroidMap = createMap(this, 2.290849, 48.856359, 6);
 
 
         // 2.) Create OSMDroidVisualizationAdapter
         // ---------------------------------------
-
-        // TJ: todo: Alternately, provide Constructor which takes map as argument
         visAdap = new OSMDroidVisualisationAdapter();
         visAdap.linkMap(osmDroidMap);
 
@@ -93,8 +89,6 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
     }
 
 
-
-    // TJ: todo: This should be implemented in the OSMDroidMap constructor, not here!
     private OSMDroidMap createMap(Context ctx, double centerLon, double centerLat, int zoom){
         // note: the actions in the OSMDroidMap constructor have to happen *before*
         // setContentView is called.
