@@ -34,26 +34,19 @@ import project.software.uni.positionprediction.util.XML;
 
 public class BirdSelect extends AppCompatActivity {
 
-    private Button buttonSettings = null;
-    private Button buttonBack = null;
-
     private EditText editTextSearch = null;
     private TextView editTextNavbar = null;
 
     private LinearLayout scrollViewLayout = null;
-    private RelativeLayout background = null;
 
     private final static int BIRD_SELECT = 1;
     private final static  int STUDY_SELECT = 2;
 
-    private Bird bird = null;
     private int state;
     private int selectedStudy;
-    private Message msg = new Message();
     private Intent startIntent = null;
     private XML xml = new XML();
     private static Context ctx = null;
-    private PredictionWorkflow predWorkflow = null;
 
     private LoadingIndicator loadingIndicator = null;
 
@@ -70,17 +63,17 @@ public class BirdSelect extends AppCompatActivity {
         final BirdSelect birdSelect = this;
 
         // initialize GUI elements
-        this.scrollViewLayout = (LinearLayout) findViewById(R.id.birdselect_scrollview);
-        this.editTextSearch = (EditText) findViewById(R.id.birdselect_edittext_search);
-        this.editTextNavbar = (TextView) findViewById(R.id.navbar_text);
-        this.buttonSettings = (Button) findViewById(R.id.navbar_button_settings);
-        this.buttonBack = (Button) findViewById(R.id.navbar_button_back);
+        this.scrollViewLayout = findViewById(R.id.birdselect_scrollview);
+        this.editTextSearch = findViewById(R.id.birdselect_edittext_search);
+        this.editTextNavbar = findViewById(R.id.navbar_text);
+        Button buttonSettings = findViewById(R.id.navbar_button_settings);
+        Button buttonBack = findViewById(R.id.navbar_button_back);
 
-        this.background = findViewById(R.id.birdselect_layout);
-        this.background.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));
+        RelativeLayout background = findViewById(R.id.birdselect_layout);
+        background.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));
 
 
-        this.buttonSettings.setOnClickListener(new View.OnClickListener() {
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent buttonIntent =  new Intent(birdSelect, Settings.class);
@@ -88,7 +81,7 @@ public class BirdSelect extends AppCompatActivity {
             }
         });
 
-        this.buttonBack.setOnClickListener(new View.OnClickListener() {
+        buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(state == BIRD_SELECT) switchToStudySelect();
@@ -147,7 +140,6 @@ public class BirdSelect extends AppCompatActivity {
                             getResources().getString(R.string.dialog_error_title),
                             getResources().getString(R.string.dialog_permissions_needed));
                 }
-                return;
         }
     }
 
@@ -581,7 +573,6 @@ public class BirdSelect extends AppCompatActivity {
 
         // download of maps is triggered in `PredictionWorkflow`
 
-        this.bird = bird;
         startIntent = new Intent(this, Cesium.class);
         startIntent.putExtra("selectedBird", bird);
 
@@ -725,7 +716,4 @@ public class BirdSelect extends AppCompatActivity {
         return ctx;
     }
 
-    public void setCtx(Context ctx) {
-        this.ctx = ctx;
-    }
 }

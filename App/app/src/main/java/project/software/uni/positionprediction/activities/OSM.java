@@ -30,7 +30,6 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
 
 
     private Button buttonSettings = null;
-    private Button buttonDownload = null;
     private Button buttonBack     = null;
     private Context ctx;
     OSMDroidMap osmDroidMap;
@@ -96,7 +95,7 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
 
         setContentView(R.layout.activity_osm);
 
-        MapView mapView = (MapView) findViewById(R.id.map);
+        MapView mapView = findViewById(R.id.map);
         GeoPoint center = new GeoPoint(centerLat, centerLon);
         osmDroidMap.initMap(mapView, center, zoom);
         return osmDroidMap;
@@ -160,15 +159,6 @@ public class OSM extends AppCompatActivity implements FloatingMapButtons.floatin
                 finish();
             }
         });
-
-        /**
-        buttonDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BoundingBox subafrica = new BoundingBox(19.635663, 12.921289,7.006371,-4.305273);
-                OSMCacheControl.getInstance(ctx).saveAreaToCache(subafrica);
-            }
-        });*/
 
         /* manual interaction with the map will always disable osmdroid's
            followLocation. This is used to update the button accordingly.

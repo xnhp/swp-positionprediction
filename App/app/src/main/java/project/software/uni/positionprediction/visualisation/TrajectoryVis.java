@@ -16,8 +16,7 @@ public class TrajectoryVis extends Visualisation {
     }
 
     public boolean hasFunnel(){
-        if(funnel == null) return false;
-        return true;
+        return funnel != null;
     }
 
     @Override

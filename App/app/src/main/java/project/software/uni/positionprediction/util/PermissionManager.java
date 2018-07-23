@@ -3,7 +3,6 @@ package project.software.uni.positionprediction.util;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,12 +26,6 @@ public class PermissionManager implements ActivityCompat.OnRequestPermissionsRes
     public final static int PERMISSION_FINE_LOCATION = 2;
 
     private static final String loggingTag = "PermissionManager";
-    private static final String loggingPrefix = loggingTag + ": ";
-
-    private static final int PERM_REQ_MAP = 1;
-
-    private AppCompatActivity currentActivity = null;
-    private Intent currentIntent = null;
 
     /**
      * This Method tells if a certain permission is granted

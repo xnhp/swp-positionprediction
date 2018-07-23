@@ -87,7 +87,6 @@ public class OSMDroidMap {
     public MapView mapView = null; // initialised by constructor
     // exposed for calling public methods from the activity
     private IMapController mapController = null;
-    private CacheManager cacheManager = null;
     private Context context;
 
     private LocationManager locationManager;
@@ -113,7 +112,7 @@ public class OSMDroidMap {
         // to `MapView` here because after all the mapping from view id to to a MapView object is not
         // the responsibility of this class.
         // sample usage: argument `view` could e.g. be given as `(MapView) findViewById(R.id.mapView)`;
-        mapView = (MapView) view;
+        mapView = view;
         mapController = mapView.getController();
 
         // this ensures that the garbage collection methods of *this* CacheManager
@@ -123,7 +122,7 @@ public class OSMDroidMap {
         // cf https://github.com/osmdroid/osmdroid/wiki/Offline-Map-Tiles, look for "Tile Archives"
         SqlTileWriter noDelTilewriter = OSMCacheControl.getInstance(this.context).tileWriter;
         //tileWriter.setCleanupOnStart(false);
-        cacheManager = new CacheManager(mapView, noDelTilewriter);
+        CacheManager cacheManager = new CacheManager(mapView, noDelTilewriter);
 
 
         // use Mapnik by default

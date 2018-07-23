@@ -601,9 +601,7 @@ public class SQLDatabase {
 
         long diff = now.getTime() - date1.getTime();
 
-        if(step < diff) return true;
-
-        return false;
+        return step < diff;
 
     }
 

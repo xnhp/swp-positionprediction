@@ -156,7 +156,7 @@ public class Location {
             e.printStackTrace();
             throw new RuntimeException();
         }
-        return this.multiply( (double) (1/number));
+        return this.multiply(1/number);
     }
 
 
@@ -276,12 +276,11 @@ public class Location {
     // TJ
     public Location normalize() {
         double length = this.abs();
-        Location vector = new Location(
+        return new Location(
                 this.getLon() / length,
                 this.getLat() / length,
                 this.getAlt() / length
         );
-        return vector;
     }
 
     // TJ

@@ -37,7 +37,6 @@ import project.software.uni.positionprediction.util.Message;
 import project.software.uni.positionprediction.util.XML;
 import project.software.uni.positionprediction.visualisation.CloudVis;
 import project.software.uni.positionprediction.visualisation.Funnel;
-import project.software.uni.positionprediction.visualisation.IVisualisationAdapter;
 import project.software.uni.positionprediction.visualisation.PastTrajectoryStyle;
 import project.software.uni.positionprediction.visualisation.Points;
 import project.software.uni.positionprediction.visualisation.Polyline;
@@ -74,12 +73,10 @@ public class PredictionWorkflow extends Controller {
 
     public static PredictionBaseData data_past;
     private PredictionUserParameters userParams;
-    private IVisualisationAdapter visAdapter;
     public static Visualisations vis_pred;
     public static TrajectoryVis vis_past;
     public static Bird bird;
     private static XML xml = new XML();
-    private Message msg = new Message();
 
     private boolean refreshNeeded;
 
@@ -153,16 +150,6 @@ public class PredictionWorkflow extends Controller {
                     date_pred,
                     bird
             );
-        }
-    }
-
-    public void make_prediction(Context c){
-
-        if(predictionWorkflowSingleton != null) {
-            Log.d("Prediction" ,"makes Prediction");
-            predictionWorkflowSingleton.trigger(c,null);
-        } else {
-            Log.e("Error", "predWorkFlow == null! No Prediction is made!");
         }
     }
 
@@ -320,7 +307,7 @@ public class PredictionWorkflow extends Controller {
             if (data_pred == null || data_pred.getShapes().size() == 0) {
                 PredictionWorkflow.vis_pred = null;
                 Log.e("Warning", "No prediction to visualize");
-                msg.disp_error_asynch(context, "Warnung", "" +
+                Message.disp_error_asynch(context, "Warnung", "" +
                         "Eine Vorhersage konnte NICHT gemacht werden!");
                 return null;
 
@@ -432,7 +419,7 @@ public class PredictionWorkflow extends Controller {
         // Check data
         if (tracks.size() == 0) {
             Log.e("Error", "Size of data is 0");
-            throw new InsufficientTrackingDataException("Size of data is 0");
+            throw new InsufficientTrackingDataException();
         }
 
         Trajectory pastTracks = new Trajectory();
@@ -442,9 +429,7 @@ public class PredictionWorkflow extends Controller {
             pastTracks.addLocation(tracks.get(size - 1 - + i));
         }
 
-        PredictionBaseData data = new PredictionBaseData(pastTracks);
-
-        return data;
+        return new PredictionBaseData(pastTracks);
     }
 
 

@@ -71,13 +71,13 @@ public class BearingProvider implements LocationListener, OrientationListener {
     @Override
     public void onProviderEnabled(String s) {
         // hand through
-        listener.onProviderEnabled(s);
+        listener.onProviderEnabled();
     }
 
     // location
     @Override
     public void onProviderDisabled(String s) {
-        listener.onProviderDisabled(s);
+        listener.onProviderDisabled();
     }
 
     /**
@@ -131,9 +131,8 @@ public class BearingProvider implements LocationListener, OrientationListener {
         float targetBearing = bearWrtMagnNorth - headWrtMagnNorth;
 
         // up until this, we were in a range of -180..180
-        float targetBearing360 = normalizeDegree(targetBearing);
 
-        return targetBearing360;
+        return normalizeDegree(targetBearing);
     }
 
 

@@ -6,6 +6,6 @@ package project.software.uni.positionprediction.util;
  */
 public interface BearingListener {
     void onBearingChanged(float newBearing);
-    void onProviderEnabled(String s);
-    void onProviderDisabled(String s);
+    void onProviderEnabled();
+    void onProviderDisabled();
 }

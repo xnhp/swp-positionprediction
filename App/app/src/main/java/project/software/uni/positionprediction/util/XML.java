@@ -35,11 +35,11 @@ public class XML {
     }
 
     public XML(int hours_past, int hours_fut, Class[] algorithms, Class[] visualizations, int used_alg, int used_vis, LinkedList<String> downloaded_studies) {
-        this.hours_past = hours_past;
-        this.hours_fut = hours_fut;
-        this.algorithms = algorithms;
-        this.used_alg = used_alg;
-        this.used_vis = used_vis;
+        XML.hours_past = hours_past;
+        XML.hours_fut = hours_fut;
+        XML.algorithms = algorithms;
+        XML.used_alg = used_alg;
+        XML.used_vis = used_vis;
     }
 
 
@@ -49,7 +49,7 @@ public class XML {
 
     public void setHours_past(int hours_past) {
         Log.d("Settings changed", "hours_past" + hours_past);
-        this.hours_past = hours_past;
+        XML.hours_past = hours_past;
     }
 
     public int getHours_fut() {
@@ -58,7 +58,7 @@ public class XML {
 
     public void setHours_fut(int hours_fut) {
         Log.d("Settings changed", "hours_future" + hours_fut);
-        this.hours_fut = hours_fut;
+        XML.hours_fut = hours_fut;
     }
 
     public Class[] getAlgorithms() {
@@ -67,7 +67,7 @@ public class XML {
 
     public void setAlgorithms(Class[] algorithms) {
         Log.d("Settings changed", "Algorithm changed");
-        this.algorithms = algorithms;
+        XML.algorithms = algorithms;
     }
 
     public int getUsed_alg() {
@@ -76,7 +76,7 @@ public class XML {
 
     public void setUsed_alg(int used_alg) {
         Log.d("Settings changed", "Algorithm " + used_alg + " is used");
-        this.used_alg = used_alg;
+        XML.used_alg = used_alg;
     }
 
     public int getUsed_vis() {
@@ -85,7 +85,7 @@ public class XML {
 
     public void setUsed_vis(int used_vis) {
         Log.d("Settings changed", "Visualization " + used_vis + " is used");
-        this.used_vis = used_vis;
+        XML.used_vis = used_vis;
     }
 
     public String getMovebank_user() {
@@ -148,10 +148,7 @@ public class XML {
 
     private boolean fileExists( String filename, Context context) {
         File file = context.getFileStreamPath(filename);
-        if(file == null || !file.exists()) {
-            return false;
-        }
-        return true;
+        return file != null && file.exists();
     }
 
     public void readFile(Context context){

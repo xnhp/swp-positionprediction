@@ -1,7 +1,5 @@
 package project.software.uni.positionprediction.movebank;
 
-import project.software.uni.positionprediction.R;
-
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
@@ -20,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import project.software.uni.positionprediction.R;
 
 
 
@@ -48,7 +48,7 @@ public class MovebankRequest {
         this.password = context.getResources().getString(R.string.movebank_password);
         this.username = context.getResources().getString(R.string.movebank_user);
 
-        this.statusMap = new HashMap<Integer, Integer>();
+        statusMap = new HashMap<Integer, Integer>();
     }
 
     public MovebankRequest(Context context) {
@@ -60,7 +60,7 @@ public class MovebankRequest {
         this.password = context.getResources().getString(R.string.movebank_password);
         this.username = context.getResources().getString(R.string.movebank_user);
 
-        this.statusMap = new HashMap<Integer, Integer>();
+        statusMap = new HashMap<Integer, Integer>();
 
     }
 

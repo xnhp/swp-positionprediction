@@ -3,8 +3,6 @@ package project.software.uni.positionprediction.visualisation;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 
-import project.software.uni.positionprediction.osm.MapInitException;
-
 /**
  * Specifies the methods than need to be implemented in order to draw a visualisation.
  * This is implemented e.g. by OSMDroidVisualisationAdapter
@@ -48,7 +46,7 @@ public abstract class IVisualisationAdapter {
     }
 
     // a visAdapter needs a reference to a map that it can draw on.
-    public abstract void linkMap(Object mapView) throws MapInitException;
+    public abstract void linkMap(Object mapView);
 
     public abstract void visualiseSingleTraj(TrajectoryVis vis);
 

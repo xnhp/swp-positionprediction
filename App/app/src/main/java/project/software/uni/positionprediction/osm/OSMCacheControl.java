@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.cachemanager.CacheManager;
-import org.osmdroid.tileprovider.modules.IFilesystemCache;
 import org.osmdroid.tileprovider.modules.SqlTileWriter;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -32,8 +31,6 @@ public class OSMCacheControl {
     public final long maxCacheSize = 600L * 1024 * 1024; // 600MB
 
     private static OSMCacheControl self;
-    private int downloadMinZoom = 5;
-    private int downloadMaxZoom = 7;
 
     /**
      * note: a context is required for initialisation, however
@@ -63,10 +60,9 @@ public class OSMCacheControl {
      */
     private CacheManager buildCacheManager() {
         ITileSource tileSource = TileSourceFactory.MAPNIK;
-        IFilesystemCache fsCache = tileWriter;
         int minZoom = tileSource.getMinimumZoomLevel();
         int maxZoom = tileSource.getMaximumZoomLevel();
-        return new CacheManager(tileSource, fsCache, minZoom, maxZoom);
+        return new CacheManager(tileSource, tileWriter, minZoom, maxZoom);
     }
 
     /**
@@ -95,9 +91,8 @@ public class OSMCacheControl {
     }
 
     public String getCacheSizeReadable(Context context) {
-        String cacheSize = android.text.format.Formatter.formatShortFileSize(context,
+        return android.text.format.Formatter.formatShortFileSize(context,
                 this.getCacheSize());
-        return cacheSize;
     }
 
     /**
@@ -113,6 +108,8 @@ public class OSMCacheControl {
      */
     public void saveAreaToCache(BoundingBox bbox) {
 
+        int downloadMaxZoom = 7;
+        int downloadMinZoom = 5;
         cacheManager.downloadAreaAsyncNoUI(context, bbox, downloadMinZoom, downloadMaxZoom, new CacheManager.CacheManagerCallback() {
             @Override
             public void onTaskComplete() {

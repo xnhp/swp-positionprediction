@@ -26,8 +26,7 @@ public class CloudVis extends Visualisation {
     }
 
     public boolean hasHull(){
-        if(hull == null) return false;
-        return true;
+        return hull != null;
     }
 
     public Polygon getHull() {

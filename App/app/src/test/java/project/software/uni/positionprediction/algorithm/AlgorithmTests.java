@@ -15,7 +15,7 @@ public class AlgorithmTests {
 
 
     @Test
-    public void path() throws Exception {
+    public void path() {
         File dir = new File("src/main/java/project/software/uni/positionprediction/algorithm");
         if (dir.exists()) {
             System.out.println("Project Path " +dir.getPath() + " exists");
@@ -29,7 +29,7 @@ public class AlgorithmTests {
 
 
     @Test
-    public void arithmetic() throws Exception {
+    public void arithmetic() {
         Location a = new Location(4.55, 11, -1);
         Location b = new Location(2, -3, 4);
         double number = 3.11;
@@ -70,7 +70,7 @@ public class AlgorithmTests {
 
 
     @Test
-    public void vector() throws Exception {
+    public void vector() {
 
         // getangle
         Location v01 = new Location(1,0,0);

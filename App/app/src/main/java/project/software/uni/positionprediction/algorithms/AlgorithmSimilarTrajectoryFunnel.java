@@ -20,21 +20,11 @@ import project.software.uni.positionprediction.util.XML;
 
 public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturnsTrajectories {
 
-    Message msg = new Message();
     GeneralComputations gc = new GeneralComputations();
-
-    // Variables for robustness
-    private boolean use_all_data = false;
-    private boolean no_date_pred_available = false;
-    private boolean has_timestamps = false;
 
     // Class variables
     PredictionUserParameters params;
     PredictionBaseData data;
-
-    // Other variables
-    private double eps = 0.1;
-    private int traj_length = 5;
 
 
     // Constructor
@@ -63,32 +53,34 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
 
         // Check trajectory size
         if (data == null || data.getTrajectory().size() == 0) {
-            msg.disp_error_asynch(getContext(), "Data size", "The algorithm doesn't get enough data");
+            Message.disp_error_asynch(getContext(), "Data size", "The algorithm doesn't get enough data");
             return null;
         }
         // Check dates
+        boolean use_all_data = false;
         if (params.date_past == null) {
-            msg.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
+            Message.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
         if (params.date_past == new Date(0)){
             use_all_data = true;
         }
         if (params.date_past.after(new Date())) {
-            msg.disp_error_asynch(getContext(), "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
+            Message.disp_error_asynch(getContext(), "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
+        boolean no_date_pred_available = false;
         if (params.date_pred == null) {
-            msg.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
+            Message.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         if (params.date_pred.before(new Date())) {
-            msg.disp_error_asynch(getContext(), "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
+            Message.disp_error_asynch(getContext(), "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         // Check data
         if (data.getTrajectory().getLocation(0) instanceof LocationWithValue) {
-            has_timestamps = true;
+            boolean has_timestamps = true;
             Log.d("Type-checking", "Locations have timestamps!");
         } else if (data.getTrajectory().getLocation(0) instanceof Location) {
             Log.d("Type-checking", "Locations don't have timestamps!");
@@ -258,6 +250,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         Date date_last = new Date(date_last_as_long);
 
         // Run through all locations (or endpoint of all trajectories)
+        int traj_length = 5;
         for (int i = traj_length + 1; i < size; i++) {
 
             LocationWithValue loc_t = (LocationWithValue) traj.getLocation(i);
@@ -288,6 +281,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
                     double beta = vector.getAngle(mth_vector);
                     System.out.println("beta = " + beta + ", other = " + angles.get(k - 1));
 
+                    double eps = 0.1;
                     if (Math.abs(beta - (double) angles.get(k - 1)) < eps) {
                         is_similar = true;
                         System.out.println("Similar");
@@ -309,7 +303,7 @@ public class AlgorithmSimilarTrajectoryFunnel extends PredictionAlgorithmReturns
         Log.i("algorithm", "possible_indices size: " + possible_indices.size());
         if (possible_indices.size() == 0) {
             Log.e("No trajectory found", "There are no similar trajectories!");
-            msg.disp_error_asynch(getContext(), "Warning", "Es gibt keinen ähnlichen Trajektorien in der Vergangenheit!");
+            Message.disp_error_asynch(getContext(), "Warning", "Es gibt keinen ähnlichen Trajektorien in der Vergangenheit!");
             return null;
         } else {
             Log.i("Number of trajectories", ""+possible_indices.size());

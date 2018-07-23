@@ -90,14 +90,8 @@ public class Locations extends Collection<Location> {
         return new BoundingBox(north, east, south, west);
     }
 
-    public boolean haveValues(){
-        if (this.size() == 0){
-            return false;
-        } else if (this.get(0) instanceof LocationWithValue) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean haveValues() {
+        return this.size() != 0 && this.get(0) instanceof LocationWithValue;
     }
 
 

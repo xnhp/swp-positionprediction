@@ -14,14 +14,9 @@ import project.software.uni.positionprediction.datatypes.PredictionBaseData;
 import project.software.uni.positionprediction.datatypes.PredictionResultData;
 import project.software.uni.positionprediction.datatypes.PredictionUserParameters;
 import project.software.uni.positionprediction.datatypes.Trajectory;
-import project.software.uni.positionprediction.util.Debug;
 import project.software.uni.positionprediction.util.Message;
 
 public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTrajectory {
-
-    // General variables
-    private GeneralComputations gc = new GeneralComputations();
-    private Message msg = new Message();
 
 
     // Variables for robustness
@@ -55,24 +50,24 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
         // Check trajectory size
         if (data == null || data.getTrajectory().size() == 0) {
             Log.e("Error", "Algorithm has no data to work with!");
-            msg.disp_error_asynch(getContext(), "Data size", "The algorithm doesn't get enough data");
+            Message.disp_error_asynch(getContext(), "Data size", "The algorithm doesn't get enough data");
             return null;
         }
         // Check dates
         if (params.date_past == null) {
-            msg.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
+            Message.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
         if (params.date_past.after(new Date())) {
-            msg.disp_error_asynch(getContext(), "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
+            Message.disp_error_asynch(getContext(), "Date Error", "Date is in the future. Trying to use all data in given Trajectory!");
             use_all_data = true;
         }
         if (params.date_pred == null) {
-            msg.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
+            Message.disp_error_asynch(getContext(), "Date Error", "No date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         if (params.date_pred.before(new Date())) {
-            msg.disp_error_asynch(getContext(), "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
+            Message.disp_error_asynch(getContext(), "Date Error", "No correct date avaiable. Prediction will be made, but the future time is not correct!");
             no_date_pred_available = true;
         }
         // Check data
@@ -273,9 +268,8 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
 
         // Compute average
         double length = (double) collection.size();
-        Location res = sum.divide(length);
 
-        return res;
+        return sum.divide(length);
     }
 
 
@@ -290,7 +284,7 @@ public class AlgorithmExtrapolationExtended extends PredictionAlgorithmReturnsTr
     private double compute_pred_length(Locations data, Date date_pred, int nr_of_pts) {
         if (data.size() < nr_of_pts ){
             Message m = new Message();
-            m.disp_error(getContext(), "Data size", "There is to less data to compute a good result");
+            Message.disp_error(getContext(), "Data size", "There is to less data to compute a good result");
             return 1;
         }
 

@@ -25,8 +25,7 @@ public class Cloud extends Shape {
     }
 
     public boolean hasHull() {
-        if(hull == null) return false;
-        return true;
+        return hull != null;
     }
 
     public Locations getHull() {

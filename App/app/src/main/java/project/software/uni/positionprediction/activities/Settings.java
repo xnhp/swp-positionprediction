@@ -30,20 +30,14 @@ import static android.text.TextUtils.isDigitsOnly;
 
 public class Settings extends AppCompatActivity {
 
-    // Components
-    private Button buttonSave = null;
-    private Button buttonClearCache = null;
     private SeekBar seekbar_past = null;
     private SeekBar seekbar_future = null;
     private EditText text_past = null;
     private EditText text_future = null;
-    private Spinner spinner_alg = null;
-    private Button delete_btn = null;
     private CheckBox checkBox = null;
 
     // Other
     private XML xml = new XML();
-    Message msg = new Message();
     SQLDatabase db = SQLDatabase.getInstance(this);
 
     // this is a field because we need to be able to access it in click handlers.
@@ -63,14 +57,14 @@ public class Settings extends AppCompatActivity {
 
         xml.readFile(c);
 
-        spinner_alg = findViewById(R.id.spinner_alg);
-        buttonSave = findViewById(R.id.settings_button_save);
-        buttonClearCache = findViewById(R.id.settings_button_clearcache);
+        Spinner spinner_alg = findViewById(R.id.spinner_alg);
+        Button buttonSave = findViewById(R.id.settings_button_save);
+        Button buttonClearCache = findViewById(R.id.settings_button_clearcache);
         seekbar_past = findViewById(R.id.seekbar_past);
         seekbar_future = findViewById(R.id.seekbar_future);
         text_past = findViewById(R.id.text_past);
         text_future = findViewById(R.id.text_future);
-        delete_btn = findViewById(R.id.delete_btn);
+        Button delete_btn = findViewById(R.id.delete_btn);
         checkBox = findViewById(R.id.checkbox);
 
         // Set values correct
@@ -198,7 +192,7 @@ public class Settings extends AppCompatActivity {
                         try {
                             input_as_int = Integer.parseInt(s.toString());
                         } catch (NumberFormatException e) {
-                            msg.disp_error(c, "Input error",
+                            Message.disp_error(c, "Input error",
                                     "You reached the limit of an Integer. " +
                                             "Please click 'Use all data' to use more date");
                             text_past.setText("0");
@@ -216,7 +210,7 @@ public class Settings extends AppCompatActivity {
 
 
                 } else if (!checkBox.isChecked()){
-                    msg.disp_error(settings, "Wrong format", "You can only use numbers!");
+                    Message.disp_error(settings, "Wrong format", "You can only use numbers!");
                 }
 
             }
@@ -277,7 +271,7 @@ public class Settings extends AppCompatActivity {
 
 
                         } else {
-                            msg.disp_error(settings, "Wrong format", "You can only use numbers!");
+                            Message.disp_error(settings, "Wrong format", "You can only use numbers!");
                         }
                     }
 
@@ -300,7 +294,7 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.dropAllData();
-                msg.disp_success(c, "Deleted", "All data where deleted successfully");
+                Message.disp_success(c, "Deleted", "All data where deleted successfully");
             }
         });
 
@@ -356,8 +350,7 @@ public class Settings extends AppCompatActivity {
         String format = getString(R.string.settings_cache_size_prompt_text);
         String text = String.format(format, osmCacheControl.getCacheSizeReadable(this));
         String positiveLabel = getString(R.string.settings_cache_size_prompt_confirm);
-        Message m = new Message();
-        m.disp_confirm(this, title, text, positiveLabel, new DialogInterface.OnClickListener() {
+        Message.disp_confirm(this, title, text, positiveLabel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 osmCacheControl.clearCache();

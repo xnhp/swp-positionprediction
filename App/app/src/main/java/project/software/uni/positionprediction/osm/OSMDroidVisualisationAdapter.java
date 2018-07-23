@@ -194,7 +194,7 @@ public class OSMDroidVisualisationAdapter extends IVisualisationAdapter {
 
             map.drawPolygon(funnelCoords, lineCol, lineCol, PredTrajectoryStyle.funnelOpacity);
 
-        };
+        }
 
 
         // 2.) DRAW LINE

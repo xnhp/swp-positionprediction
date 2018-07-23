@@ -21,7 +21,7 @@ class OSMStyledPointList implements SimpleFastPointOverlay.PointAdapter{
 
     @Override
     public IGeoPoint get(int i) {
-        return (IGeoPoint) pts.get(i);
+        return pts.get(i);
     }
 
     @Override

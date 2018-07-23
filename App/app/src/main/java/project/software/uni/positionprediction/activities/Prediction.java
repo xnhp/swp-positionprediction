@@ -1,7 +1,7 @@
 package project.software.uni.positionprediction.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -9,14 +9,12 @@ import project.software.uni.positionprediction.R;
 
 public class Prediction extends AppCompatActivity {
 
-    private Button predictButton = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prediction);
 
-        predictButton = findViewById(R.id.prediction_button_predict);
+        Button predictButton = findViewById(R.id.prediction_button_predict);
 
         final Prediction prediction = this;
         

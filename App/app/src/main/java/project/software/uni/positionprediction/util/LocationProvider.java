@@ -7,7 +7,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import project.software.uni.positionprediction.R;
 
@@ -18,11 +17,6 @@ import project.software.uni.positionprediction.R;
 public class LocationProvider {
 
     static LocationManager lm;
-
-    public LocationProvider() {
-        Log.e("LocationProvider", "do not instantiate this class, you can just" +
-                "use the static methods");
-    }
 
     @SuppressLint("MissingPermission") // we do take care of permissions
     public static void registerLocationListener(Context ctx, LocationListener listener) {

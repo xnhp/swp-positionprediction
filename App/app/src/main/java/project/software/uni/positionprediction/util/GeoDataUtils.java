@@ -10,7 +10,6 @@ import project.software.uni.positionprediction.datatypes.Location;
 
 /**
  * Utility methods for manipulating geographical data (types).
- * TJ: Not needed at the moment.
  */
 public abstract class GeoDataUtils {
 
@@ -29,26 +28,10 @@ public abstract class GeoDataUtils {
 
     public static List<IGeoPoint> GeoPointsToIGeoPoints(List<GeoPoint> points) {
         List<IGeoPoint> newPoints = new ArrayList<>();
-        for (GeoPoint pt : points) {
-            newPoints.add((IGeoPoint) pt);
-        }
+        newPoints.addAll(points);
         return newPoints;
     }
 
-
-    /* TJ 180622
-    public static List<GeoPoint> ListLocationToGeoPoint(ArrayList<Location3D> points) {
-        List<GeoPoint> newPoints = new ArrayList<>();
-        for (Location3D loc : points) {
-            newPoints.add(new GeoPoint(loc.getLoc_lat(), loc.getLoc_long()));
-        }
-        return newPoints;
-    }
-
-    public static GeoPoint Location3DToGeoPoint(Location3D loc) {
-        return new GeoPoint(loc.getLoc_lat(), loc.getLoc_long());
-    }
-    */
 
     public static GeoPoint LocationToGeoPoint(Location loc) {
         return new GeoPoint(loc.getLat(), loc.getLon());

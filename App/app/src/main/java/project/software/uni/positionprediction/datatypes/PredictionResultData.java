@@ -23,11 +23,11 @@ public class PredictionResultData {
 
         if(shape instanceof Trajectory){
             Log.i("predictionResultData", "Is instance of Trajectory");
-            Collection<Trajectory> c = new Collection((Trajectory) shape);
+            Collection<Trajectory> c = new Collection(shape);
             Log.i("predictionResultData","collection size: " + c.size());
             this.shapes.put(EShape.TRAJECTORY, c);
         } else if(shape instanceof Cloud){
-            this.shapes.put(EShape.CLOUD, new Collection((Cloud) shape));
+            this.shapes.put(EShape.CLOUD, new Collection(shape));
         }
 
     }
@@ -35,9 +35,9 @@ public class PredictionResultData {
     public PredictionResultData(Collection<? extends Shape> shapes){
         if (shapes != null) {
             if(shapes.get(0) instanceof Trajectory){
-                this.shapes.put(EShape.TRAJECTORY, new Collection((Collection<Trajectory>) shapes));
+                this.shapes.put(EShape.TRAJECTORY, new Collection(shapes));
             } else if(shapes.get(0) instanceof Cloud){
-                this.shapes.put(EShape.CLOUD, new Collection((Collection<Cloud>) shapes));
+                this.shapes.put(EShape.CLOUD, new Collection(shapes));
             }
         }
     }

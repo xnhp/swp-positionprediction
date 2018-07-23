@@ -20,7 +20,6 @@ import project.software.uni.positionprediction.util.BearingProvider;
 
 public class Compass extends Fragment {
 
-    private final String logTag = "Compass";
     private ImageView compassArrow = null;
     private Context context;
 
@@ -34,6 +33,7 @@ public class Compass extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        String logTag = "Compass";
         Log.i(logTag, "onCreateView");
         View view =  inflater.inflate(R.layout.fragment_compass, container, false);
 
@@ -92,12 +92,12 @@ public class Compass extends Fragment {
             }
 
             @Override
-            public void onProviderEnabled(String s) {
+            public void onProviderEnabled() {
 
             }
 
             @Override
-            public void onProviderDisabled(String s) {
+            public void onProviderDisabled() {
 
             }
         });

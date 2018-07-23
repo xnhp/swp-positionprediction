@@ -1,25 +1,6 @@
 package project.software.uni.positionprediction.osm;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
-
-import org.osmdroid.api.IMapView;
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.modules.DatabaseFileArchive;
-import org.osmdroid.tileprovider.modules.SqlTileWriter;
-import org.osmdroid.tileprovider.modules.SqliteArchiveTileWriter;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.util.StreamUtils;
-import org.osmdroid.util.MapTileIndex;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * We dont subclass SqliteArchiveTileWriter because then we wouldnt

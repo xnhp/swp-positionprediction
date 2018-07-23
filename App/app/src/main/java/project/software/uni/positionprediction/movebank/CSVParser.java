@@ -167,5 +167,5 @@ public class CSVParser {
 
 enum ReadState{
     STATE_READ,
-    STATE_STRING;
+    STATE_STRING
 }

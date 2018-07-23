@@ -1,7 +1,6 @@
 package project.software.uni.positionprediction.util;
 
 import android.content.Context;
-import android.os.Handler;
 
 import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.controllers.BadDataException;

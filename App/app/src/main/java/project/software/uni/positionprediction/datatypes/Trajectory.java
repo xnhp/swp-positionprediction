@@ -9,7 +9,6 @@ import java.security.InvalidParameterException;
  */
 public class Trajectory extends Shape {
 
-    private boolean hasFunnel = false;
     public Trajectory() {
         super();
     }
@@ -20,7 +19,7 @@ public class Trajectory extends Shape {
         super(locs);
         if (has_funnel){
             if(locs.haveValues()) {
-                this.hasFunnel = true;
+                boolean hasFunnel = true;
             } else {
                 throw new InvalidParameterException("Locations must have values");
             }
@@ -28,14 +27,9 @@ public class Trajectory extends Shape {
     }
 
     public boolean hasFunnel(){
-        if(locations.size() > 0
+        return locations.size() > 0
                 && locations.get(0) instanceof LocationWithValue
-                && ((LocationWithValue) locations.get(0)).getValue() instanceof Number
-                //&& (double)((LocationWithValue) locations.get(0)).getValue() != 0
-                ){
-            return true;
-        }
-        return false;
+                && ((LocationWithValue) locations.get(0)).getValue() instanceof Number;
     }
 
     public Locations calculateFunnelSegment(
@@ -169,9 +163,8 @@ public class Trajectory extends Shape {
         }
 
         // assemble polygon coordinates clockwise
-        Locations funnelLocs = new Locations(Collection.add(locs_left, locs_right.reverse()));
 
-        return funnelLocs;
+        return new Locations(Collection.add(locs_left, locs_right.reverse()));
 
     }
 

@@ -14,11 +14,6 @@ import project.software.uni.positionprediction.datatypes.Trajectory;
  */
 public class Debug {
 
-    // Constructor
-    public Debug() {
-
-    }
-
 
     // Methods
 

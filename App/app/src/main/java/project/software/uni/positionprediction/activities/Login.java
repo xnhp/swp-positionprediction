@@ -19,8 +19,8 @@ import project.software.uni.positionprediction.R;
 import project.software.uni.positionprediction.algorithms.AlgorithmDummyCloud;
 import project.software.uni.positionprediction.algorithms.AlgorithmDummyTrajectories;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtended;
-import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedFunnel;
 import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedCartesian;
+import project.software.uni.positionprediction.algorithms.AlgorithmExtrapolationExtendedFunnel;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectory;
 import project.software.uni.positionprediction.algorithms.AlgorithmSimilarTrajectoryFunnel;
 import project.software.uni.positionprediction.datatypes.HttpStatusCode;
@@ -33,7 +33,6 @@ public class Login extends AppCompatActivity {
 
     private EditText editTextUsername = null;
     private EditText editTextPassword = null;
-    private Button buttonLogin = null;
     RelativeLayout layout = null;
 
     private int loginFailedCounter = 0;
@@ -62,16 +61,16 @@ public class Login extends AppCompatActivity {
 
         this.layout = findViewById(R.id.login_background);
         this.layout.getBackground().setAlpha(getResources().getInteger(R.integer.background_alpha));
-        this.editTextUsername = (EditText)findViewById(R.id.login_edittext_username);
-        this.editTextPassword = (EditText)findViewById(R.id.login_edittext_password);
+        this.editTextUsername = findViewById(R.id.login_edittext_username);
+        this.editTextPassword = findViewById(R.id.login_edittext_password);
 
-        this.buttonLogin = (Button)findViewById(R.id.login_button_login);
+        Button buttonLogin = findViewById(R.id.login_button_login);
 
         this.loadingIndicator = LoadingIndicator.getInstance();
 
         final Login login = this;
 
-        this.buttonLogin.setOnClickListener(new View.OnClickListener() {
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadingIndicator.show(login);

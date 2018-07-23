@@ -16,8 +16,6 @@ import project.software.uni.positionprediction.activities.OSM;
 
 public class FloatingMapButtons extends android.support.v4.app.Fragment {
 
-    private final String logTag = "FloatingMapButtons";
-
     private floatingMapButtonsClickListener clickListener;
     private FloatingActionButton showLocBtn;
 
@@ -30,6 +28,7 @@ public class FloatingMapButtons extends android.support.v4.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        String logTag = "FloatingMapButtons";
         Log.i(logTag, "onCreateView");
         // tmpl: return super.onCreateView(inflater, container, savedInstanceState);
         View view =  inflater.inflate(R.layout.fragment_floatingmapbuttons, container, false);
