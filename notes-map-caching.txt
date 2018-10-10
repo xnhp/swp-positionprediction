@@ -1,0 +1,31 @@
+does garbage collection even happen?
+only thing calling MapTileCache.garbageCollection is TilesOverlay.finaliseLoop
+and AndStu doesn't find usages for that
+
+I could set a breakpoint and test but thats not reliable.
+
+Maybe, in order to 
+
+
+
+ways a tile is removed (usages of MapTileCache.remove)
+	- MapTileCache.clear
+		via MapTileProviderArray.setTileSource:
+			can avoid that
+
+		via MapTileProviderBase.detach
+			this is called (not exclusively) by MapView.DetachedFromWindow,
+			which may be called when the activity
+			goes into background [1,2]
+			(how does that even make sense? who would implement a caching
+			 feature like this?)
+			~> confirm this by experiment?
+
+		via MapTileProviderBase.setTileSource
+
+	- MapTileCache.garbageCollection
+	- MapTileProviderBase.ZoomOutTileLooper
+
+
+[1] https://stackoverflow.com/questions/9554885/activity-methodsoncreate-and-ondestroy
+[2] https://developer.android.com/reference/android/view/View.html#onDetachedFromWindow()

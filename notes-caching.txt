@@ -1,0 +1,43 @@
+want to get a cachemgr before the activity is alive
+
+--> instantiate a CacheManager correctly
+	and save it statically in OSMCacheControl
+	using constructor of CacheManager:99
+
+		-> need a ITileSource
+			can just use TileSourceFactory.DEFAULT_TILE_SOURCE?
+	✓ 
+
+
+--> use it (by extension its Tilewriter)
+	in PredWfCtrl to download map stuff.
+	✓ 
+
+-------
+
+?! Wie wird denn sichergestellt, dass der mapView auch
+	wirklich auf die gecachten Daten zugreift und nicht
+	sein eigenes Ding macht?
+
+	wie wird denn auf tiles zugegriffen?
+
+	Zugriff wär jetzt nicht schlimm, solange beiden in selben
+	Cache schreiben.
+
+	Aber garbage collection? 
+		vielleicht von einem CacheManager der mit Erstellung des
+		MapViews standardmäßig erstellt wird?
+
+	Bei Zoom können Tiles durch die mit einer anderen Zoomstufe
+	ersetzt werden, cf
+	MapView -> MapTileProviderBase -> finaliseLoop()
+		-> MapTileCache.putTile()
+
+	Hab gedacht ich hätte das abgeklärt?
+	Denke, ich muss es mal so lassen...
+
+	Was wäre, wenn?
+		Müsste mir meinen eigenen TileProvider bzw
+		MapTileProviderBase bauen und den in den MapView-
+		Konstruktur geben.
+		Sonst was?
